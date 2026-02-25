@@ -179,13 +179,11 @@
 
   /* Sections */
   .section {
-    display: none;
+    display: block;
     max-width: 1100px;
     margin: 0 auto;
     padding: 48px 24px 80px;
   }
-
-  .section.active { display: block; }
 
   .section-title {
     font-size: 13px;
@@ -775,9 +773,9 @@
 
 <!-- Nav -->
 <nav>
-  <button class="nav-btn active" onclick="showSection('gps')">① GPS Clock-In Failure</button>
-  <button class="nav-btn" onclick="showSection('notif')">② Push Notification Chaos</button>
-  <button class="nav-btn" onclick="showSection('sprint')">③ Android Stabilization Sprint</button>
+  <button class="nav-btn active" onclick="scrollToSection('gps')">① GPS Clock-In Failure</button>
+  <button class="nav-btn" onclick="scrollToSection('notif')">② Push Notification Chaos</button>
+  <button class="nav-btn" onclick="scrollToSection('sprint')">③ Android Stabilization Sprint</button>
 </nav>
 
 <!-- Section 1: GPS Clock-In Failure -->
@@ -988,7 +986,6 @@
       </div>
     </div>
   </div>
-<div style="text-align:center;margin-top:32px;"><a href="https://www.elinext.com/contacts/" class="cta-btn" style="text-decoration:none;">Get in Touch</a></div>
 </section>
 
 <!-- Section 2: Push Notification Chaos -->
@@ -1111,7 +1108,6 @@
       </ul>
     </div>
   </div>
-<div style="text-align:center;margin-top:32px;"><a href="https://www.elinext.com/contacts/" class="cta-btn" style="text-decoration:none;">Get in Touch</a></div>
 </section>
 
 <!-- Section 3: Sprint Plan -->
@@ -1278,14 +1274,24 @@
 </footer>
 
 <script>
-  function showSection(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    const idx = ['gps','notif','sprint'].indexOf(id);
-    document.querySelectorAll('.nav-btn')[idx].classList.add('active');
-    window.scrollTo({ top: document.querySelector('nav').offsetTop - 10, behavior: 'smooth' });
+  function scrollToSection(id) {
+    const el = document.getElementById(id);
+    const navH = document.querySelector('nav').offsetHeight;
+    window.scrollTo({ top: el.offsetTop - navH - 10, behavior: 'smooth' });
   }
+
+  // Highlight active nav button on scroll
+  window.addEventListener('scroll', () => {
+    const navH = document.querySelector('nav').offsetHeight + 20;
+    const ids = ['gps','notif','sprint'];
+    const btns = document.querySelectorAll('.nav-btn');
+    let active = 0;
+    ids.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY + navH >= el.offsetTop) active = i;
+    });
+    btns.forEach((b, i) => b.classList.toggle('active', i === active));
+  });
 </script>
 <div style="margin-top:40px;padding:20px 30px;border-top:1px solid #e0e0e0;font-size:12px;color:#888;text-align:center;">
   <p>This page is an independent technical analysis and concept demo prepared by <a href="https://www.elinext.com" style="color:#888;text-decoration:underline;">Elinext</a>. It is not a security audit and is not affiliated with or endorsed by the analyzed company.</p>
