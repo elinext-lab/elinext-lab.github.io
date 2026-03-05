@@ -301,9 +301,77 @@
       </div>
     </div>
 
-    <a class="cta-hero" href="mailto:yshauchenka+lab@elinext.com?subject=App%20Analysis%20Request&body=Hi%2C%0A%0ALink%20to%20my%20app%3A%20%0A%0AI%E2%80%99m%20looking%20for%20a%20partner%20who%20can%20help%20with%3A%0A%0A" onclick="gtag('event','click_discuss_app',{event_category:'CTA',event_label:'hero_discuss_app'})">
-      Let's Discuss Your App →
-    </a>
+    <button class="cta-hero" id="showFormBtn" onclick="document.getElementById('protoForm').style.display='block';this.style.display='none';gtag('event','click_get_prototype',{event_category:'CTA',event_label:'hero_get_prototype'});">
+      Get a Free Prototype →
+    </button>
+
+    <div id="protoForm" style="display:none;max-width:480px;margin:2rem auto 0;background:#f8f9fa;border-radius:16px;padding:2rem;text-align:left;">
+      <h3 style="margin-bottom:0.5rem;font-size:1.2rem;color:#111;">Get your free prototype</h3>
+      <p style="margin-bottom:1.5rem;font-size:0.9rem;color:#666;">Paste your app link. We'll email you a working prototype within 24 hours.</p>
+      <form id="leadForm" onsubmit="return submitLeadForm(event)">
+        <label style="display:block;margin-bottom:0.4rem;font-size:0.85rem;font-weight:600;color:#333;">📱 App Store or Google Play URL *</label>
+        <input type="url" id="appUrl" required placeholder="https://apps.apple.com/... or https://play.google.com/..." style="width:100%;padding:0.7rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;margin-bottom:1rem;">
+        
+        <label style="display:block;margin-bottom:0.4rem;font-size:0.85rem;font-weight:600;color:#333;">📧 Your email *</label>
+        <input type="email" id="leadEmail" required placeholder="Where to send the prototype" style="width:100%;padding:0.7rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;margin-bottom:1rem;">
+        
+        <button type="button" onclick="document.getElementById('extraFields').style.display=document.getElementById('extraFields').style.display==='none'?'block':'none'" style="background:none;border:none;color:#2563eb;cursor:pointer;font-size:0.85rem;margin-bottom:1rem;padding:0;">⚡ More details (optional)</button>
+        
+        <div id="extraFields" style="display:none;">
+          <label style="display:block;margin-bottom:0.4rem;font-size:0.85rem;font-weight:600;color:#333;">Your name</label>
+          <input type="text" id="leadName" placeholder="John Doe" style="width:100%;padding:0.7rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;margin-bottom:1rem;">
+          
+          <label style="display:block;margin-bottom:0.4rem;font-size:0.85rem;font-weight:600;color:#333;">LinkedIn profile</label>
+          <input type="url" id="linkedinUrl" placeholder="https://www.linkedin.com/in/..." style="width:100%;padding:0.7rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;margin-bottom:1rem;">
+          
+          <label style="display:block;margin-bottom:0.4rem;font-size:0.85rem;font-weight:600;color:#333;">Company website</label>
+          <input type="url" id="companyUrl" placeholder="https://yourcompany.com" style="width:100%;padding:0.7rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;margin-bottom:1rem;">
+        </div>
+        
+        <button type="submit" id="submitBtn" style="width:100%;padding:0.8rem;background:#2563eb;color:white;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:background 0.2s;">Get Free Prototype →</button>
+      </form>
+      <div id="formSuccess" style="display:none;text-align:center;padding:2rem 0;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">✅</div>
+        <h3 style="color:#111;margin-bottom:0.5rem;">Got it!</h3>
+        <p style="color:#666;">We'll email your prototype within 24 hours.</p>
+      </div>
+    </div>
+
+    <script>
+    function submitLeadForm(e) {
+      e.preventDefault();
+      var btn = document.getElementById('submitBtn');
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+      
+      var data = {
+        appUrl: document.getElementById('appUrl').value,
+        email: document.getElementById('leadEmail').value,
+        name: document.getElementById('leadName').value || '',
+        linkedinUrl: document.getElementById('linkedinUrl').value || '',
+        companyWebsite: document.getElementById('companyUrl').value || '',
+        timestamp: new Date().toISOString()
+      };
+      
+      fetch('https://YOUR_N8N_WEBHOOK_URL/webhook/lead-proto', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      }).then(function() {
+        document.getElementById('leadForm').style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+        gtag('event','submit_prototype_request',{event_category:'CTA',event_label:'form_submit',value:1});
+      }).catch(function() {
+        // Fallback to mailto if webhook fails
+        var subject = encodeURIComponent('Prototype Request: ' + data.appUrl);
+        var body = encodeURIComponent('App: ' + data.appUrl + '\nEmail: ' + data.email + '\nName: ' + data.name + '\nLinkedIn: ' + data.linkedinUrl + '\nWebsite: ' + data.companyWebsite);
+        window.location.href = 'mailto:yshauchenka+lab@elinext.com?subject=' + subject + '&body=' + body;
+        btn.textContent = 'Get Free Prototype →';
+        btn.disabled = false;
+      });
+      return false;
+    }
+    </script>
   </div>
 
   <footer>
