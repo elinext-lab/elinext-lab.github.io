@@ -309,9 +309,9 @@
       <h3 style="margin-bottom:0.5rem;font-size:1.2rem;color:#111;">Get your free prototype</h3>
       <p style="margin-bottom:1.5rem;font-size:0.9rem;color:#666;">Paste your app link. We'll email you a working prototype within 24 hours.</p>
       <form id="leadForm" onsubmit="return submitLeadForm(event)" novalidate>
-        <label style="display:block;margin-bottom:0.4rem;font-size:0.85rem;font-weight:600;color:#333;">📱 Link to your mobile app *</label>
-        <input type="text" id="appUrl" placeholder="App Store, Google Play, or any app link" style="width:100%;padding:0.7rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;margin-bottom:0.2rem;">
-        <div id="appUrlError" style="display:none;color:#dc2626;font-size:0.8rem;margin-bottom:0.8rem;">Please paste a link to your app</div>
+        <label style="display:block;margin-bottom:0.4rem;font-size:0.85rem;font-weight:600;color:#333;">📱 Link to your mobile app or website *</label>
+        <input type="text" id="appUrl" placeholder="App Store, Google Play, or company website" style="width:100%;padding:0.7rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;margin-bottom:0.2rem;">
+        <div id="appUrlError" style="display:none;color:#dc2626;font-size:0.8rem;margin-bottom:0.8rem;">Please paste a link</div>
         
         <label style="display:block;margin-bottom:0.4rem;font-size:0.85rem;font-weight:600;color:#333;">✉️ Your email *</label>
         <input type="text" id="leadEmail" placeholder="You'll get a reply here" style="width:100%;padding:0.7rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;margin-bottom:0.2rem;">
@@ -324,10 +324,7 @@
           <input type="text" id="leadName" placeholder="John Doe" style="width:100%;padding:0.7rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;margin-bottom:1rem;">
           
           <label style="display:block;margin-bottom:0.4rem;font-size:0.85rem;font-weight:600;color:#333;">LinkedIn profile</label>
-          <input type="url" id="linkedinUrl" placeholder="https://www.linkedin.com/in/..." style="width:100%;padding:0.7rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;margin-bottom:1rem;">
-          
-          <label style="display:block;margin-bottom:0.4rem;font-size:0.85rem;font-weight:600;color:#333;">Company website</label>
-          <input type="url" id="companyUrl" placeholder="https://yourcompany.com" style="width:100%;padding:0.7rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;margin-bottom:1rem;">
+          <input type="text" id="linkedinUrl" placeholder="https://www.linkedin.com/in/..." style="width:100%;padding:0.7rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;margin-bottom:1rem;">
         </div>
         
         <button type="submit" id="submitBtn" style="width:100%;padding:0.8rem;background:#2563eb;color:white;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:background 0.2s;">Get Free Prototype →</button>
@@ -374,11 +371,10 @@
         email: document.getElementById('leadEmail').value,
         name: document.getElementById('leadName').value || '',
         linkedinUrl: document.getElementById('linkedinUrl').value || '',
-        companyWebsite: document.getElementById('companyUrl').value || '',
         timestamp: new Date().toISOString()
       };
       
-      fetch('https://YOUR_N8N_WEBHOOK_URL/webhook/lead-proto', {
+      fetch('https://sage-firewire-oscar-scholarships.trycloudflare.com/webhook/lead-proto', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
@@ -389,7 +385,7 @@
       }).catch(function() {
         // Fallback to mailto if webhook fails
         var subject = encodeURIComponent('Prototype Request: ' + data.appUrl);
-        var body = encodeURIComponent('App: ' + data.appUrl + '\nEmail: ' + data.email + '\nName: ' + data.name + '\nLinkedIn: ' + data.linkedinUrl + '\nWebsite: ' + data.companyWebsite);
+        var body = encodeURIComponent('App: ' + data.appUrl + '\nEmail: ' + data.email + '\nName: ' + data.name + '\nLinkedIn: ' + data.linkedinUrl);
         window.location.href = 'mailto:yshauchenka+lab@elinext.com?subject=' + subject + '&body=' + body;
         btn.textContent = 'Get Free Prototype →';
         btn.disabled = false;
