@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuildOps Mobile — AI Teardown by Elinext</title>
+
+    <!-- OG Meta Tags -->
+    <meta property="og:image" content="https://elinext-lab.github.io/prototypes/buildops_2026-03-06_15:53/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:title" content="BuildOps Mobile — AI Teardown">
+    <meta property="og:description" content="What if BuildOps never lost a technician's work — even in a basement with zero signal? An AI-powered offline-first concept for commercial field service.">
+    <meta name="author" content="Yauheni Shauchenka, Elinext">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+
+    <!-- Ratings as of 2026-03-06: iOS 3.15 (364 reviews, source: iTunes API), Android unverified (source: Google Play scraping blocked) -->
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f1629;
+            color: #e2e8f0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #0f1629 0%, #1a1f3a 50%, #0f1629 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 30% 40%, rgba(249, 115, 22, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(59, 130, 246, 0.06) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(249, 115, 22, 0.12);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            border-radius: 100px;
+            padding: 8px 20px;
+            font-size: 14px;
+            color: #f97316;
+            margin-bottom: 32px;
+        }
+
+        .hero-badge img {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            color: #ffffff;
+        }
+
+        .hero h1 .highlight {
+            color: #f97316;
+        }
+
+        .hero p.subtitle {
+            font-size: clamp(16px, 2vw, 20px);
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .rating-bar {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .rating-bar .stars {
+            color: #f97316;
+            font-size: 16px;
+        }
+
+        .rating-bar .score {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* Section base */
+        .section {
+            position: relative;
+            padding: 100px 20px;
+            z-index: 1;
+        }
+
+        .section-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #f97316;
+            margin-bottom: 12px;
+        }
+
+        .section h2 {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .section p.desc {
+            font-size: 17px;
+            color: #94a3b8;
+            max-width: 600px;
+            margin-bottom: 48px;
+        }
+
+        /* Problem Section */
+        .problem-section {
+            background: #0d1220;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .problem-card {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: 16px;
+            padding: 28px;
+        }
+
+        .problem-card .icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(239, 68, 68, 0.12);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        .problem-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f87171;
+            margin-bottom: 8px;
+        }
+
+        .problem-card p {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        .problem-card .quote {
+            margin-top: 12px;
+            font-style: italic;
+            font-size: 13px;
+            color: #f87171;
+            opacity: 0.8;
+            border-left: 2px solid rgba(239, 68, 68, 0.3);
+            padding-left: 12px;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: linear-gradient(180deg, #0d1220 0%, #0f1629 100%);
+        }
+
+        .phone-comparison {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .phone-column {
+            text-align: center;
+        }
+
+        .phone-column .label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .phone-column.before .label { color: #ef4444; }
+        .phone-column.after .label { color: #22c55e; }
+
+        /* Phone mockup */
+        .phone-frame {
+            width: 280px;
+            height: 520px;
+            background: #1a1a2e;
+            border-radius: 32px;
+            border: 3px solid #2a2a4a;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+        }
+
+        .phone-frame .status-bar {
+            height: 44px;
+            background: #111827;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 12px;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .phone-frame .status-bar .time { font-size: 14px; }
+        .phone-frame .status-bar .icons { display: flex; gap: 4px; font-size: 11px; }
+
+        .phone-content {
+            height: 476px;
+            overflow-y: auto;
+            background: #111827;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.1) transparent;
+        }
+
+        .phone-content::-webkit-scrollbar { width: 3px; }
+        .phone-content::-webkit-scrollbar-track { background: transparent; }
+        .phone-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+        /* Before phone content */
+        .before-content .app-header {
+            background: #1e3a5f;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .before-content .app-header .logo {
+            width: 32px;
+            height: 32px;
+            background: #f97316;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: white;
+        }
+
+        .before-content .app-header span {
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .loading-screen {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: #f97316;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-text {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .error-toast {
+            margin: 16px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .error-toast .err-icon {
+            color: #ef4444;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .error-toast .err-text {
+            font-size: 12px;
+            color: #fca5a5;
+            line-height: 1.4;
+        }
+
+        .error-toast .err-text strong {
+            display: block;
+            font-size: 13px;
+            color: #ef4444;
+            margin-bottom: 2px;
+        }
+
+        .crashed-form {
+            padding: 16px;
+        }
+
+        .crashed-form .form-row {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+        }
+
+        .crashed-form .form-label {
+            font-size: 10px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .crashed-form .form-value {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        .crashed-form .form-value.lost {
+            color: #ef4444;
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .data-lost-banner {
+            margin: 16px;
+            padding: 14px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .data-lost-banner .big-icon { font-size: 28px; margin-bottom: 6px; }
+        .data-lost-banner .title { color: #ef4444; font-weight: 700; font-size: 14px; }
+        .data-lost-banner .sub { color: #94a3b8; font-size: 11px; margin-top: 4px; }
+
+        /* After phone content */
+        .after-content .app-header {
+            background: linear-gradient(135deg, #1e3a5f, #1a365d);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .after-content .app-header .logo {
+            width: 32px;
+            height: 32px;
+            background: #f97316;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: white;
+        }
+
+        .after-content .app-header span {
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .after-content .app-header .sync-badge {
+            margin-left: auto;
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 100px;
+        }
+
+        .offline-banner {
+            background: rgba(249, 115, 22, 0.12);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #f97316;
+            font-weight: 500;
+        }
+
+        .offline-banner .dot {
+            width: 6px;
+            height: 6px;
+            background: #f97316;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .smart-form {
+            padding: 16px;
+        }
+
+        .smart-form .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .smart-form .ai-badge {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .smart-form .form-row {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .smart-form .form-row.ai-filled {
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .smart-form .form-row.ai-filled::after {
+            content: 'AI';
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            font-size: 8px;
+            font-weight: 700;
+            color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.15);
+            padding: 1px 5px;
+            border-radius: 3px;
+        }
+
+        .smart-form .form-label {
+            font-size: 10px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .smart-form .form-value {
+            font-size: 13px;
+            color: #e2e8f0;
+            margin-top: 2px;
+        }
+
+        .voice-input {
+            margin: 12px 16px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(99, 102, 241, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .voice-input .mic {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .voice-input .voice-text {
+            font-size: 11px;
+            color: #c4b5fd;
+            line-height: 1.4;
+        }
+
+        .voice-input .voice-text strong {
+            color: #e2e8f0;
+            display: block;
+            font-size: 12px;
+            margin-bottom: 2px;
+        }
+
+        .sync-status {
+            margin: 12px 16px;
+            padding: 10px 14px;
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sync-status .check {
+            color: #22c55e;
+            font-size: 18px;
+        }
+
+        .sync-status .sync-text {
+            font-size: 11px;
+            color: #86efac;
+            line-height: 1.3;
+        }
+
+        .sync-status .sync-text strong {
+            display: block;
+            color: #22c55e;
+            font-size: 12px;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: #0f1629;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 28px;
+            text-align: center;
+        }
+
+        .stat-card .stat-value {
+            font-size: 42px;
+            font-weight: 800;
+            color: #f97316;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-card .stat-label {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        /* Solution Section */
+        .solution-section {
+            background: linear-gradient(180deg, #0f1629 0%, #0d1220 100%);
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .solution-card {
+            background: rgba(34, 197, 94, 0.04);
+            border: 1px solid rgba(34, 197, 94, 0.12);
+            border-radius: 16px;
+            padding: 28px;
+        }
+
+        .solution-card .icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(34, 197, 94, 0.12);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        .solution-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22c55e;
+            margin-bottom: 8px;
+        }
+
+        .solution-card p {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: #0d1220;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .cta-section p {
+            font-size: 17px;
+            color: #94a3b8;
+            max-width: 500px;
+            margin: 0 auto 32px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 16px 36px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(249, 115, 22, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(249, 115, 22, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: #0a0e1a;
+            padding: 32px 20px;
+            text-align: center;
+            font-size: 13px;
+            color: #475569;
+        }
+
+        .footer a {
+            color: #64748b;
+            text-decoration: none;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .section { padding: 60px 16px; }
+            .phone-comparison { gap: 32px; }
+            .phone-frame { width: 260px; height: 490px; }
+            .phone-content { height: 446px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .hero { padding: 40px 16px; min-height: auto; }
+            .phone-frame { width: 250px; height: 470px; }
+            .phone-content { height: 426px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .problem-grid { grid-template-columns: 1fr; }
+            .solution-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <img src="assets/app-icon.png" alt="BuildOps icon">
+            BuildOps Mobile Teardown
+        </div>
+        <h1>What if BuildOps <span class="highlight">never lost a tech's work</span> — even underground?</h1>
+        <p class="subtitle">An AI-powered concept for offline-first field service — built for commercial contractors who can't afford data loss.</p>
+        <div class="rating-bar">
+            <span class="stars">&#9733;&#9733;&#9733;&#9734;&#9734;</span>
+            <span class="score">3.15</span>
+            <span>/ 5.0 &middot; 364 iOS ratings</span>
+        </div>
+    </div>
+</section>
+
+<!-- Problem Section -->
+<section class="section problem-section">
+    <div class="section-inner">
+        <div class="section-label">The Problem</div>
+        <h2>Field techs are losing work<br>and losing patience</h2>
+        <p class="desc">Real complaints from BuildOps users — the pain points that cost billable hours and erode technician trust.</p>
+
+        <div class="problem-grid">
+            <div class="problem-card">
+                <div class="icon">&#128165;</div>
+                <h3>Crashes & Data Loss</h3>
+                <p>App crashes mid-job, losing hours of entered data. Techs must reinstall repeatedly just to keep working.</p>
+                <div class="quote">"I've had to uninstall and reinstall at least 10 times in one year."</div>
+            </div>
+            <div class="problem-card">
+                <div class="icon">&#9203;</div>
+                <h3>Painfully Slow</h3>
+                <p>Basic actions take minutes instead of seconds. Morning peak hours are worst — right when dispatch matters most.</p>
+                <div class="quote">"Basic selections take minutes, making it tedious and time-consuming."</div>
+            </div>
+            <div class="problem-card">
+                <div class="icon">&#128683;</div>
+                <h3>No Offline Mode</h3>
+                <p>Basements, mechanical rooms, rooftops — commercial techs work where signal doesn't reach. Data entered offline is at risk.</p>
+                <div class="quote">"After 4 hours of adding assets from a job, it lost them all."</div>
+            </div>
+            <div class="problem-card">
+                <div class="icon">&#9997;&#65039;</div>
+                <h3>Manual Everything</h3>
+                <p>Repetitive data entry for every job. No smart suggestions, no voice input, no AI assistance. Techs type when they should be fixing.</p>
+                <div class="quote">"Slower workflows on mobile, especially entering property data or forms."</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Comparison Section -->
+<section class="section comparison-section">
+    <div class="section-inner">
+        <div class="section-label">Before & After</div>
+        <h2>Same job. Different experience.</h2>
+        <p class="desc">A technician arrives at a commercial HVAC job in a building basement. Zero cell signal. Here's what happens.</p>
+
+        <div class="phone-comparison">
+            <!-- Before Phone -->
+            <div class="phone-column before">
+                <div class="label">&#10060; Current Experience</div>
+                <div class="phone-frame">
+                    <div class="status-bar">
+                        <span class="time">9:41</span>
+                        <span class="icons">No Service</span>
+                    </div>
+                    <div class="phone-content before-content">
+                        <div class="app-header">
+                            <div class="logo">B</div>
+                            <span>BuildOps</span>
+                        </div>
+
+                        <div class="loading-screen">
+                            <div class="spinner"></div>
+                            <div class="loading-text">Loading work order...</div>
+                            <div class="loading-text" style="margin-top:8px; font-size:11px; color:#475569;">Waiting for connection</div>
+                        </div>
+
+                        <div class="error-toast">
+                            <div class="err-icon">&#9888;&#65039;</div>
+                            <div class="err-text">
+                                <strong>Connection Lost</strong>
+                                Unable to load work order #4892. Please check your internet connection and try again.
+                            </div>
+                        </div>
+
+                        <div class="crashed-form">
+                            <div style="font-size:12px; color:#64748b; margin-bottom:10px;">Previously entered data:</div>
+                            <div class="form-row">
+                                <div class="form-label">Equipment</div>
+                                <div class="form-value lost">Carrier 50XC 15-ton RTU</div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-label">Notes</div>
+                                <div class="form-value lost">Compressor making grinding noise, checked refrigerant levels...</div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-label">Photos</div>
+                                <div class="form-value lost">3 photos — upload failed</div>
+                            </div>
+                        </div>
+
+                        <div class="data-lost-banner">
+                            <div class="big-icon">&#128561;</div>
+                            <div class="title">Data Lost</div>
+                            <div class="sub">45 minutes of work gone.<br>Please re-enter when back online.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- After Phone -->
+            <div class="phone-column after">
+                <div class="label">&#9989; AI-Powered Concept</div>
+                <div class="phone-frame">
+                    <div class="status-bar">
+                        <span class="time">9:41</span>
+                        <span class="icons">Offline &#128268;</span>
+                    </div>
+                    <div class="phone-content after-content">
+                        <div class="app-header">
+                            <div class="logo">B</div>
+                            <span>BuildOps</span>
+                            <div class="sync-badge">&#128994; Offline Ready</div>
+                        </div>
+
+                        <div class="offline-banner">
+                            <div class="dot"></div>
+                            Working offline &middot; 12 items queued for sync
+                        </div>
+
+                        <div class="smart-form">
+                            <div class="section-title">
+                                Work Order #4892
+                                <span class="ai-badge">AI Assist</span>
+                            </div>
+
+                            <div class="form-row ai-filled">
+                                <div class="form-label">Equipment</div>
+                                <div class="form-value">Carrier 50XC 15-ton RTU</div>
+                            </div>
+                            <div class="form-row ai-filled">
+                                <div class="form-label">Location</div>
+                                <div class="form-value">Bldg A — Mechanical Room B2</div>
+                            </div>
+                            <div class="form-row ai-filled">
+                                <div class="form-label">Last Service</div>
+                                <div class="form-value">Jan 15, 2026 — Filter replacement</div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-label">Diagnosis</div>
+                                <div class="form-value">Compressor grinding noise, low refrigerant (confirmed via gauges)</div>
+                            </div>
+                        </div>
+
+                        <div class="voice-input">
+                            <div class="mic">&#127908;</div>
+                            <div class="voice-text">
+                                <strong>Voice Note → Auto-Fill</strong>
+                                "Compressor making grinding noise on startup, checked refrigerant — 15 PSI low..."
+                            </div>
+                        </div>
+
+                        <div class="sync-status">
+                            <div class="check">&#9989;</div>
+                            <div class="sync-text">
+                                <strong>All data saved locally</strong>
+                                Will sync automatically when connected. Zero data loss guaranteed.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="section stats-section">
+    <div class="section-inner">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">0</div>
+                <div class="stat-label">Data loss incidents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">70%</div>
+                <div class="stat-label">Less manual data entry</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">100%</div>
+                <div class="stat-label">Offline functionality</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">&lt;1s</div>
+                <div class="stat-label">Screen load time</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Solution Section -->
+<section class="section solution-section">
+    <div class="section-inner">
+        <div class="section-label">How It Works</div>
+        <h2>Three changes that transform<br>the field experience</h2>
+        <p class="desc">Built on proven patterns from apps that work in extreme conditions — banking, aviation, emergency services.</p>
+
+        <div class="solution-grid">
+            <div class="solution-card">
+                <div class="icon">&#128225;</div>
+                <h3>Offline-First Architecture</h3>
+                <p>Every screen, every form, every photo works without signal. Local SQLite database syncs intelligently when connection returns. Conflict resolution handles simultaneous edits. Technicians never see "Connection Lost" again.</p>
+            </div>
+            <div class="solution-card">
+                <div class="icon">&#129302;</div>
+                <h3>AI Voice-to-Form</h3>
+                <p>Technicians speak naturally — AI extracts equipment models, readings, part numbers, and diagnosis into structured fields. On-device processing means it works offline. 70% less typing for field teams.</p>
+            </div>
+            <div class="solution-card">
+                <div class="icon">&#9889;</div>
+                <h3>Instant Load, Zero Crash</h3>
+                <p>Pre-cached work orders load in under 1 second. Native rendering replaces React Native bridge bottlenecks for critical screens. Background sync prevents the blocking requests that cause freezes.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <h2>Ready to eliminate data loss<br>for your field teams?</h2>
+    <p>Elinext has 150+ mobile engineers ready to build. AI-powered development means we ship 30x faster.</p>
+    <a href="https://www.elinext.com/contacts/" class="cta-button">
+        Get in Touch &#8594;
+    </a>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>AI-powered mobile teardown by <a href="https://www.elinext.com">Elinext</a> &middot; Analysis based on public App Store reviews and data &middot; Not affiliated with BuildOps, Inc.</p>
+</footer>
+
+</body>
+</html>
