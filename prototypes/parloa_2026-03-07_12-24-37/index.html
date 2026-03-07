@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parloa Mobile — AI Teardown by Elinext</title>
+
+<!-- GA -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+
+<!-- OG -->
+<meta property="og:image" content="https://elinext-lab.github.io/prototypes/parloa/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:title" content="Parloa Mobile — AI Teardown">
+<meta property="og:description" content="What if Parloa's AI agents lived natively in every mobile app? Your competitors ship mobile SDKs. Here's what yours could look like — built in a week.">
+<meta name="author" content="Yauheni Shauchenka, Elinext">
+
+<!-- Ratings as of 2026-03-07: No mobile app exists. Parloa has no iOS or Android app. Website Lighthouse mobile score: 35/100 (source: Lighthouse audit 2026-03-07) -->
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --parloa-blue: #4263EB;
+    --parloa-purple: #7C3AED;
+    --parloa-dark: #0f1629;
+    --parloa-gray: #1a2035;
+    --accent: #FF8C32;
+    --text: #E8ECF4;
+    --text-muted: #8892A8;
+    --card-bg: #1E2A45;
+    --success: #10B981;
+    --danger: #EF4444;
+    --warning: #F59E0B;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--parloa-dark);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--parloa-dark) 0%, #1a1f3a 50%, #1e2845 100%);
+    padding: 80px 20px 60px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(66, 99, 235, 0.15), transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(124, 58, 237, 0.1), transparent 50%);
+    z-index: -1;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(66, 99, 235, 0.15);
+    color: var(--parloa-blue);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    border: 1px solid rgba(66, 99, 235, 0.3);
+  }
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #fff 0%, #c7d2fe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--parloa-blue), var(--parloa-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 18px;
+    color: var(--text-muted);
+    max-width: 640px;
+    margin: 0 auto 32px;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 60px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .section-dark {
+    background-color: #0d1220;
+  }
+  .section-alt {
+    background-color: #111827;
+  }
+  .section h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .section .subtitle {
+    color: var(--text-muted);
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 48px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* PROBLEM CARDS */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .problem-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .problem-card .metric {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--danger);
+    margin-bottom: 8px;
+  }
+  .problem-card .metric.warn { color: var(--warning); }
+  .problem-card h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .problem-card p {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  /* PHONE MOCKUPS */
+  .phones-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 48px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+  .phone-wrapper {
+    text-align: center;
+  }
+  .phone-label {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .phone-label.before {
+    color: var(--danger);
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+  .phone-label.after {
+    color: var(--success);
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  .phone {
+    width: 280px;
+    height: 580px;
+    background: #000;
+    border-radius: 36px;
+    border: 3px solid #333;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+  }
+  .phone-notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 28px;
+    background: #000;
+    border-radius: 0 0 16px 16px;
+    z-index: 10;
+  }
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 36px 14px 14px;
+    background: #f8fafc;
+    -webkit-overflow-scrolling: touch;
+  }
+  .phone-screen::-webkit-scrollbar { width: 0; }
+
+  /* BEFORE phone content */
+  .before-screen {
+    background: #fff;
+  }
+  .before-screen .loading-bar {
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .before-screen .loading-bar::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 30%;
+    height: 100%;
+    background: var(--danger);
+    animation: loading 2s ease-in-out infinite;
+  }
+  @keyframes loading {
+    0% { left: -30%; }
+    100% { left: 100%; }
+  }
+  .before-screen .skeleton {
+    background: #f1f5f9;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .before-screen .web-chat {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+  }
+  .before-screen .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .before-screen .chat-avatar {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--parloa-blue), var(--parloa-purple));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .before-screen .chat-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+  .before-screen .chat-status {
+    font-size: 11px;
+    color: #94a3b8;
+  }
+  .before-screen .msg-bubble {
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    max-width: 85%;
+  }
+  .before-screen .msg-bot {
+    background: #f1f5f9;
+    color: #334155;
+  }
+  .before-screen .msg-user {
+    background: var(--parloa-blue);
+    color: white;
+    margin-left: auto;
+  }
+  .before-screen .lag-indicator {
+    text-align: center;
+    padding: 20px 10px;
+    margin-top: 12px;
+  }
+  .before-screen .lag-indicator .lag-time {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--danger);
+  }
+  .before-screen .lag-indicator p {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+  .before-screen .issue-list {
+    margin-top: 16px;
+  }
+  .before-screen .issue-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f8fafc;
+    font-size: 12px;
+    color: #64748b;
+  }
+  .before-screen .issue-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+  .before-screen .issue-icon.red {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+  }
+
+  /* AFTER phone content */
+  .after-screen {
+    background: #f8fafc;
+  }
+  .after-screen .native-header {
+    background: linear-gradient(135deg, var(--parloa-blue), var(--parloa-purple));
+    margin: -36px -14px 0;
+    padding: 44px 16px 16px;
+    color: white;
+  }
+  .after-screen .native-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .after-screen .native-header p {
+    font-size: 12px;
+    opacity: 0.8;
+  }
+  .after-screen .status-bar {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .after-screen .status-pill {
+    background: rgba(255,255,255,0.2);
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .after-screen .status-pill.active {
+    background: rgba(16, 185, 129, 0.3);
+  }
+  .after-screen .native-body {
+    padding: 16px 0;
+  }
+  .after-screen .native-card {
+    background: white;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .after-screen .native-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .after-screen .chat-native {
+    background: white;
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .after-screen .native-msg {
+    padding: 8px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    max-width: 85%;
+  }
+  .after-screen .native-msg.bot {
+    background: #f1f5f9;
+    color: #334155;
+  }
+  .after-screen .native-msg.user {
+    background: var(--parloa-blue);
+    color: white;
+    margin-left: auto;
+  }
+  .after-screen .native-msg.bot .response-time {
+    display: inline-block;
+    font-size: 10px;
+    color: var(--success);
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .after-screen .native-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #f1f5f9;
+    border-radius: 24px;
+  }
+  .after-screen .native-input span {
+    color: #94a3b8;
+    font-size: 13px;
+    flex: 1;
+  }
+  .after-screen .native-input .send-btn {
+    width: 28px;
+    height: 28px;
+    background: var(--parloa-blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+  }
+  .after-screen .perf-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  /* COMPARISON TABLE */
+  .comparison {
+    margin-top: 48px;
+    overflow-x: auto;
+  }
+  .comparison table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .comparison th, .comparison td {
+    padding: 14px 20px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 14px;
+  }
+  .comparison th {
+    background: rgba(66, 99, 235, 0.1);
+    font-weight: 600;
+    color: var(--parloa-blue);
+  }
+  .comparison .check { color: var(--success); }
+  .comparison .cross { color: var(--danger); }
+  .comparison .highlight-row { background: rgba(66, 99, 235, 0.05); }
+
+  /* CTA */
+  .cta-section {
+    text-align: center;
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #0f1629, #1a2040);
+    position: relative;
+    z-index: 1;
+  }
+  .cta-section h2 {
+    font-size: 36px;
+    margin-bottom: 16px;
+  }
+  .cta-section p {
+    color: var(--text-muted);
+    max-width: 500px;
+    margin: 0 auto 32px;
+    font-size: 16px;
+  }
+  .cta-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--parloa-blue), var(--parloa-purple));
+    color: white;
+    padding: 16px 40px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(66, 99, 235, 0.4);
+  }
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(66, 99, 235, 0.5);
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 32px 20px;
+    color: var(--text-muted);
+    font-size: 13px;
+    background-color: var(--parloa-dark);
+  }
+  .footer a {
+    color: var(--parloa-blue);
+    text-decoration: none;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 28px; }
+    .hero p { font-size: 15px; }
+    .section h2 { font-size: 24px; }
+    .phones-container { gap: 32px; }
+  }
+  @media (max-width: 480px) {
+    .phone { width: 300px; }
+    .hero { padding: 60px 16px 40px; }
+    .section { padding: 40px 16px; }
+    .problem-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">AI-Powered Mobile Teardown</div>
+  <h1>What if <span>Parloa's AI agents</span> lived natively in every mobile app?</h1>
+  <p>Your competitors ship mobile SDKs. Your enterprise customers need native mobile AI agents. Here's what that could look like — designed and built in one sprint.</p>
+</section>
+
+<!-- PROBLEM -->
+<section class="section-dark">
+  <div class="section">
+    <h2>The Mobile Gap</h2>
+    <p class="subtitle">Parloa dominates voice AI for contact centers. But on mobile, there's a critical blind spot.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="metric">35<span style="font-size:24px;color:var(--text-muted)">/100</span></div>
+        <h3>Mobile Performance Score</h3>
+        <p>Lighthouse audit of parloa.com on mobile. Time to interactive: 19.3 seconds. LCP: 18.3 seconds. Enterprise buyers notice this.</p>
+      </div>
+      <div class="problem-card">
+        <div class="metric" style="color:var(--warning)">0</div>
+        <h3>Mobile SDKs Available</h3>
+        <p>Zendesk offers iOS + Android SDKs. Intercom offers native mobile messaging. Parloa has neither — forcing customers into WebView fallbacks.</p>
+      </div>
+      <div class="problem-card">
+        <div class="metric warn">60%+</div>
+        <h3>Commerce Is Mobile</h3>
+        <p>Over 60% of e-commerce happens on mobile devices. Parloa's enterprise customers need AI agents where their users actually are — in native apps.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHONE MOCKUPS -->
+<section class="section-alt">
+  <div class="section">
+    <h2>Before & After</h2>
+    <p class="subtitle">Current: WebView chat widget with 19s load time. Proposed: Native SDK with instant AI agent interactions.</p>
+
+    <div class="phones-container">
+      <!-- BEFORE -->
+      <div class="phone-wrapper">
+        <div class="phone-label before">Current: WebView</div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen before-screen">
+            <div class="loading-bar"></div>
+            <div class="skeleton" style="height:12px;width:60%"></div>
+            <div class="skeleton" style="height:40px;width:100%"></div>
+            <div class="skeleton" style="height:12px;width:80%"></div>
+
+            <div class="web-chat">
+              <div class="chat-header">
+                <div class="chat-avatar">P</div>
+                <div>
+                  <div class="chat-name">Parloa Agent</div>
+                  <div class="chat-status">Loading WebView...</div>
+                </div>
+              </div>
+              <div class="msg-bubble msg-bot">
+                <div class="skeleton" style="height:10px;width:90%;margin-bottom:4px"></div>
+                <div class="skeleton" style="height:10px;width:70%"></div>
+              </div>
+              <div class="msg-bubble msg-user">How do I return my order?</div>
+              <div class="msg-bubble msg-bot" style="opacity:0.5">
+                <div class="skeleton" style="height:10px;width:80%;margin-bottom:4px"></div>
+                <div class="skeleton" style="height:10px;width:60%"></div>
+              </div>
+            </div>
+
+            <div class="lag-indicator">
+              <div class="lag-time">19.3s</div>
+              <p>Time to interactive<br>Lighthouse Mobile Audit</p>
+            </div>
+
+            <div class="issue-list">
+              <div class="issue-item">
+                <div class="issue-icon red">✕</div>
+                No push notifications
+              </div>
+              <div class="issue-item">
+                <div class="issue-icon red">✕</div>
+                No offline support
+              </div>
+              <div class="issue-item">
+                <div class="issue-icon red">✕</div>
+                No native gestures
+              </div>
+              <div class="issue-item">
+                <div class="issue-icon red">✕</div>
+                WebView memory overhead
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="phone-wrapper">
+        <div class="phone-label after">Proposed: Native SDK</div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen after-screen">
+            <div class="native-header">
+              <h3>Parloa AI Assistant</h3>
+              <p>Acme E-Commerce App</p>
+              <div class="status-bar">
+                <span class="status-pill active">● Live</span>
+                <span class="status-pill">EN · DE · FR</span>
+              </div>
+            </div>
+
+            <div class="native-body">
+              <div class="native-card">
+                <h4>🎯 Quick Actions</h4>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <span style="background:#f1f5f9;padding:6px 12px;border-radius:20px;font-size:12px;color:#475569">Track Order</span>
+                  <span style="background:#f1f5f9;padding:6px 12px;border-radius:20px;font-size:12px;color:#475569">Return Item</span>
+                  <span style="background:#f1f5f9;padding:6px 12px;border-radius:20px;font-size:12px;color:#475569">Get Help</span>
+                </div>
+              </div>
+
+              <div class="chat-native">
+                <div class="native-msg user">How do I return my order?</div>
+                <div class="native-msg bot">
+                  I can help you with that! I see order #4829 was delivered yesterday. Would you like to start a return for that order?
+                  <br><span class="response-time">⚡ 120ms response</span>
+                </div>
+                <div class="native-msg user">Yes please</div>
+                <div class="native-msg bot">
+                  Done! I've initiated the return for order #4829. You'll receive a prepaid shipping label via push notification in the next 2 minutes. Anything else I can help with?
+                  <br><span class="response-time">⚡ 95ms response</span>
+                </div>
+                <div class="native-input">
+                  <span>Ask anything...</span>
+                  <div class="send-btn">→</div>
+                </div>
+              </div>
+
+              <div class="perf-badge">⚡ Native SDK — instant load, zero WebView overhead</div>
+
+              <div class="native-card" style="margin-top:12px">
+                <h4>📊 SDK Capabilities</h4>
+                <div style="font-size:12px;color:#64748b;line-height:1.6">
+                  ✓ Push notifications for agent responses<br>
+                  ✓ Offline message queue<br>
+                  ✓ Native haptic feedback<br>
+                  ✓ Biometric auth handoff<br>
+                  ✓ Deep link to conversation threads<br>
+                  ✓ iOS + Android + Flutter
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="section-dark">
+  <div class="section">
+    <h2>Mobile SDK: Parloa vs. Competitors</h2>
+    <p class="subtitle">The features enterprise mobile teams expect from their AI customer service platform.</p>
+    <div class="comparison">
+      <table>
+        <tr>
+          <th>Feature</th>
+          <th>Parloa (Current)</th>
+          <th>Zendesk</th>
+          <th>Intercom</th>
+          <th>Parloa + Elinext</th>
+        </tr>
+        <tr>
+          <td>iOS Native SDK</td>
+          <td class="cross">✕</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check" style="font-weight:700">✓</td>
+        </tr>
+        <tr>
+          <td>Android Native SDK</td>
+          <td class="cross">✕</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check" style="font-weight:700">✓</td>
+        </tr>
+        <tr>
+          <td>Flutter / React Native</td>
+          <td class="cross">✕</td>
+          <td class="cross">✕</td>
+          <td class="check">✓</td>
+          <td class="check" style="font-weight:700">✓</td>
+        </tr>
+        <tr>
+          <td>Push Notifications</td>
+          <td class="cross">✕</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check" style="font-weight:700">✓</td>
+        </tr>
+        <tr>
+          <td>Offline Queue</td>
+          <td class="cross">✕</td>
+          <td class="cross">✕</td>
+          <td class="cross">✕</td>
+          <td class="check" style="font-weight:700">✓</td>
+        </tr>
+        <tr>
+          <td>Voice AI Integration</td>
+          <td class="check">✓ (web)</td>
+          <td class="cross">✕</td>
+          <td class="cross">✕</td>
+          <td class="check" style="font-weight:700">✓ (native)</td>
+        </tr>
+        <tr class="highlight-row">
+          <td>130+ Languages</td>
+          <td class="check">✓ (web)</td>
+          <td class="cross">✕</td>
+          <td class="cross">✕</td>
+          <td class="check" style="font-weight:700">✓ (native)</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="section-alt">
+  <div class="section">
+    <h2>How We'd Build It</h2>
+    <p class="subtitle">150 mobile engineers. iOS, Android, Flutter. AI-accelerated development — 30x productivity gains demonstrated.</p>
+    <div class="problem-grid">
+      <div class="problem-card" style="border-left:3px solid var(--parloa-blue)">
+        <h3>Sprint 1-2: SDK Core</h3>
+        <p>Native chat UI, real-time messaging via WebSocket, auth layer integration, Parloa API bridge. iOS (Swift) + Android (Kotlin).</p>
+      </div>
+      <div class="problem-card" style="border-left:3px solid var(--parloa-purple)">
+        <h3>Sprint 3-4: Voice + AI</h3>
+        <p>Native voice agent integration, push notifications, offline message queue, deep linking, multi-language support.</p>
+      </div>
+      <div class="problem-card" style="border-left:3px solid var(--accent)">
+        <h3>Sprint 5-6: Ship & Scale</h3>
+        <p>Flutter wrapper, SDK documentation, sample apps, App Store submission support, performance testing at scale.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Let's Build Parloa's Mobile SDK</h2>
+  <p>We have 150 mobile engineers ready. The prototype above took one afternoon. Imagine what a dedicated team could ship in 6 sprints.</p>
+  <a href="https://www.elinext.com/contacts/" class="cta-btn">Get in Touch</a>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>AI-powered teardown by <a href="https://www.elinext.com">Elinext</a> · Data sourced from Lighthouse, public APIs, and competitive analysis · March 2026</p>
+</footer>
+
+</body>
+</html>
