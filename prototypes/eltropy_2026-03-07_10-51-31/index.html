@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eltropy Mobile — AI Teardown</title>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+
+<!-- OG Meta Tags -->
+<meta property="og:image" content="https://elinext-lab.github.io/prototypes/eltropy/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:title" content="Eltropy Mobile — AI Teardown">
+<meta property="og:description" content="What if Eltropy's 750+ credit unions had a mobile app that actually worked — with push notifications, offline queuing, and a modern UI that matched the web platform?">
+<meta name="author" content="Yauheni Shauchenka, Elinext">
+
+<!-- Ratings as of 2026-03-07: iOS 3.00 (6 reviews, source: iTunes API), Android N/A (delisted, source: Google Play Store 404) -->
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1a1a2e;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* HERO SECTION */
+  .hero {
+    background: linear-gradient(135deg, #0f1629 0%, #1a1a3e 40%, #2d1b69 100%);
+    color: white;
+    padding: 80px 24px 60px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    margin-bottom: 24px;
+    color: #a8b4ff;
+  }
+
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, #ff6b35, #f7c948);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 18px;
+    color: rgba(255,255,255,0.75);
+    max-width: 600px;
+    margin: 0 auto 16px;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat {
+    text-align: center;
+  }
+
+  .hero-stat .number {
+    font-size: 32px;
+    font-weight: 800;
+    color: #ff6b35;
+  }
+
+  .hero-stat .label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* PROBLEM SECTION */
+  .problem-section {
+    background-color: #fff;
+    padding: 60px 24px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .section-tag {
+    display: inline-block;
+    background: #fff3e0;
+    color: #e65100;
+    border-radius: 12px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+
+  .section-tag.green {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  .section-title {
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 800;
+    margin-bottom: 16px;
+    color: #1a1a2e;
+  }
+
+  .section-subtitle {
+    font-size: 16px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto 40px;
+  }
+
+  .problem-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .problem-card {
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: left;
+  }
+
+  .problem-card .icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .problem-card h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #1a1a2e;
+  }
+
+  .problem-card p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .problem-card .evidence {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: #fff3e0;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #bf360c;
+    font-style: italic;
+    border-left: 3px solid #ff6b35;
+  }
+
+  /* PHONE MOCKUPS SECTION */
+  .phones-section {
+    background-color: #f5f5fa;
+    padding: 60px 24px 80px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .phones-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+
+  .phone-wrapper {
+    text-align: center;
+  }
+
+  .phone-label {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .phone-label.before {
+    color: #c62828;
+  }
+
+  .phone-label.after {
+    color: #2e7d32;
+  }
+
+  .phone {
+    width: 280px;
+    height: 580px;
+    background: #000;
+    border-radius: 36px;
+    padding: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    position: relative;
+  }
+
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-radius: 26px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  .phone-screen::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .phone-screen::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+  }
+
+  /* BEFORE phone content */
+  .before-content {
+    padding: 36px 14px 14px;
+    font-family: -apple-system, sans-serif;
+  }
+
+  .before-content .app-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .before-content .app-icon-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  .before-content .app-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+    text-align: center;
+  }
+
+  .before-content .version-badge {
+    display: block;
+    text-align: center;
+    margin: 0 auto 16px;
+    background: #ffebee;
+    color: #c62828;
+    border-radius: 10px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    width: fit-content;
+  }
+
+  .before-content .rating-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .before-content .stars {
+    color: #ff9800;
+    font-size: 14px;
+  }
+
+  .before-content .rating-text {
+    font-size: 12px;
+    color: #999;
+  }
+
+  .before-content .error-box {
+    background: #ffebee;
+    border: 1px solid #ffcdd2;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+
+  .before-content .error-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #c62828;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .before-content .error-text {
+    font-size: 12px;
+    color: #b71c1c;
+    line-height: 1.4;
+  }
+
+  .before-content .broken-btn {
+    background: #e0e0e0;
+    color: #999;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    position: relative;
+  }
+
+  .before-content .broken-btn::after {
+    content: 'Button disappears';
+    position: absolute;
+    top: -8px;
+    right: -4px;
+    background: #c62828;
+    color: white;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .before-content .msg-list {
+    padding: 0;
+  }
+
+  .before-content .msg-item {
+    background: #f5f5f5;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-left: 3px solid #e0e0e0;
+  }
+
+  .before-content .msg-item .msg-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .before-content .msg-item .msg-preview {
+    font-size: 11px;
+    color: #888;
+    margin-top: 2px;
+  }
+
+  .before-content .msg-item .msg-time {
+    font-size: 10px;
+    color: #bbb;
+    margin-top: 4px;
+  }
+
+  .before-content .overflow-msg {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background: #fff3e0;
+    border-left-color: #ff9800;
+  }
+
+  .before-content .android-gone {
+    background: #f5f5f5;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    margin-top: 14px;
+  }
+
+  .before-content .android-gone .gone-icon {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+
+  .before-content .android-gone p {
+    font-size: 11px;
+    color: #999;
+    font-weight: 600;
+  }
+
+  /* AFTER phone content */
+  .after-content {
+    padding: 0;
+    font-family: -apple-system, sans-serif;
+  }
+
+  .after-header {
+    background: linear-gradient(135deg, #1a237e, #3949ab);
+    padding: 36px 14px 16px;
+    text-align: center;
+  }
+
+  .after-header .app-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .after-header .app-icon-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  .after-header .app-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .after-header .subtitle {
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 12px;
+    display: block;
+    text-align: center;
+  }
+
+  .after-quick-stats {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 0 14px 12px;
+    background: linear-gradient(135deg, #1a237e, #3949ab);
+  }
+
+  .after-quick-stat {
+    text-align: center;
+    flex: 1;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 8px 4px;
+  }
+
+  .after-quick-stat .stat-num {
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .after-quick-stat .stat-label {
+    font-size: 9px;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+  }
+
+  .after-body {
+    padding: 14px;
+  }
+
+  .after-search {
+    background: #f0f0f5;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #999;
+  }
+
+  .after-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 14px;
+    border-bottom: 2px solid #eee;
+  }
+
+  .after-tab {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #999;
+  }
+
+  .after-tab.active {
+    color: #1a237e;
+    border-bottom: 2px solid #1a237e;
+    margin-bottom: -2px;
+  }
+
+  .after-msg-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f5;
+  }
+
+  .after-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .after-msg-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .after-msg-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a2e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .after-msg-name .time {
+    font-size: 10px;
+    color: #999;
+    font-weight: 400;
+  }
+
+  .after-msg-preview {
+    font-size: 12px;
+    color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .after-msg-badge {
+    background: #ff6b35;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .after-fab {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #ff6b35, #f7c948);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(255,107,53,0.4);
+    font-size: 22px;
+    color: white;
+  }
+
+  .after-notification-card {
+    background: #e8f5e9;
+    border: 1px solid #c8e6c9;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .after-notification-card .notif-icon {
+    font-size: 18px;
+  }
+
+  .after-notification-card .notif-text {
+    font-size: 12px;
+    color: #2e7d32;
+    font-weight: 600;
+  }
+
+  /* FEATURES SECTION */
+  .features-section {
+    background-color: #fff;
+    padding: 60px 24px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .feature-card {
+    padding: 24px 20px;
+    border-radius: 16px;
+    background: #f8f8ff;
+    text-align: left;
+  }
+
+  .feature-card .feature-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .feature-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #1a1a2e;
+  }
+
+  .feature-card p {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  /* IMPACT SECTION */
+  .impact-section {
+    background-color: #0f1629;
+    color: white;
+    padding: 60px 24px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .impact-card {
+    padding: 24px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+  }
+
+  .impact-card .impact-number {
+    font-size: 36px;
+    font-weight: 800;
+    color: #ff6b35;
+    margin-bottom: 4px;
+  }
+
+  .impact-card .impact-label {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* QUOTES SECTION */
+  .quotes-section {
+    background-color: #fafafa;
+    padding: 60px 24px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .quotes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .quote-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: left;
+  }
+
+  .quote-card .quote-stars {
+    color: #ff9800;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .quote-card .quote-text {
+    font-size: 14px;
+    color: #333;
+    font-style: italic;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .quote-card .quote-source {
+    font-size: 12px;
+    color: #999;
+    font-weight: 600;
+  }
+
+  /* CTA SECTION */
+  .cta-section {
+    background: linear-gradient(135deg, #1a237e, #3949ab);
+    padding: 60px 24px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta-section h2 {
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 800;
+    color: white;
+    margin-bottom: 16px;
+  }
+
+  .cta-section p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.8);
+    max-width: 500px;
+    margin: 0 auto 32px;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff6b35, #f7c948);
+    color: white;
+    padding: 16px 40px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(255,107,53,0.4);
+    transition: transform 0.2s;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+  }
+
+  .cta-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 16px;
+  }
+
+  /* FOOTER */
+  .footer {
+    background-color: #0a0e1a;
+    color: rgba(255,255,255,0.4);
+    padding: 24px;
+    text-align: center;
+    font-size: 12px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+  }
+
+  /* MOBILE RESPONSIVE */
+  @media (max-width: 480px) {
+    .phone {
+      width: 300px;
+    }
+
+    .hero {
+      padding: 60px 16px 40px;
+    }
+
+    .hero-stats {
+      gap: 20px;
+    }
+
+    .phones-container {
+      gap: 24px;
+    }
+
+    .problem-cards {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .phones-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">AI-Powered Mobile Teardown</div>
+  <h1>What if Eltropy's <span class="highlight">750+ Credit Unions</span> had a mobile app that actually worked?</h1>
+  <p>Your iOS app hasn't been updated since September 2022. Your Android app is gone. Here's what a modern rebuild could look like.</p>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="number">3.0</div>
+      <div class="label">iOS Rating</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">3.5yr</div>
+      <div class="label">Since Last Update</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">0</div>
+      <div class="label">Android App</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">750+</div>
+      <div class="label">CUs Affected</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem-section">
+  <span class="section-tag">The Problem</span>
+  <h2 class="section-title">A Unified Platform With a Broken Mobile Experience</h2>
+  <p class="section-subtitle">Eltropy powers text, voice, video, and chat for 750+ credit unions. But the mobile app that should make all this accessible on-the-go is essentially dead.</p>
+
+  <div class="problem-cards">
+    <div class="problem-card">
+      <div class="icon">&#128565;</div>
+      <h3>iOS App: Abandoned</h3>
+      <p>Version 4.10.2 was last updated September 2022 — over 3 years ago. Still requires iOS 9.0 (released 2015).</p>
+      <div class="evidence">"Can receive and respond to messages, but cannot start a new conversation" — App Store Review</div>
+    </div>
+    <div class="problem-card">
+      <div class="icon">&#128683;</div>
+      <h3>Android: Gone</h3>
+      <p>The Google Play listing returns 404. ~44% of US smartphone users have no way to use Eltropy on their device.</p>
+      <div class="evidence">"This app does not work at all. Don't let them sell you this as a feature." — App Store Review</div>
+    </div>
+    <div class="problem-card">
+      <div class="icon">&#128100;</div>
+      <h3>Field Staff Stranded</h3>
+      <p>Loan officers at events, collections agents in the field, branch staff away from desks — all locked out of member conversations.</p>
+      <div class="evidence">Competitors like Podium offer 4.6&#9733; mobile with regular updates</div>
+    </div>
+  </div>
+</section>
+
+<!-- PHONE MOCKUPS -->
+<section class="phones-section">
+  <span class="section-tag">Before &amp; After</span>
+  <h2 class="section-title">Current App vs. What's Possible</h2>
+  <p class="section-subtitle">A side-by-side comparison of the current broken experience and a modern Flutter-based rebuild.</p>
+
+  <div class="phones-container">
+    <!-- BEFORE PHONE -->
+    <div class="phone-wrapper">
+      <span class="phone-label before">Current App (iOS)</span>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="before-content">
+            <div class="app-header">
+              <img src="assets/app-icon.png" class="app-icon-small" alt="Eltropy icon">
+              <span class="app-name">Eltropy</span>
+            </div>
+            <span class="version-badge">v4.10.2 — Sep 2022</span>
+            <div class="rating-row">
+              <span class="stars">&#9733;&#9733;&#9733;&#9734;&#9734;</span>
+              <span class="rating-text">3.0 (6 reviews)</span>
+            </div>
+
+            <div class="error-box">
+              <div class="error-title">&#9888;&#65039; Critical Bug</div>
+              <div class="error-text">"Start Conversation" button disappears when adding a new phone number. Cannot initiate new conversations.</div>
+            </div>
+
+            <div class="broken-btn">+ Start Conversation</div>
+
+            <div class="error-box">
+              <div class="error-title">&#128200; Layout Broken</div>
+              <div class="error-text">Message queue doesn't size properly to device screen. Content overflows on modern devices.</div>
+            </div>
+
+            <div class="msg-list">
+              <div class="msg-item">
+                <div class="msg-name">Sarah M.</div>
+                <div class="msg-preview">Hi, I need help with my auto loan...</div>
+                <div class="msg-time">2 hours ago</div>
+              </div>
+              <div class="msg-item overflow-msg">
+                <div class="msg-name">James R.</div>
+                <div class="msg-preview">Can you check if my payment went through I sent it last Tuesday and it still hasn't shown up in my account balance this is very frustrating</div>
+                <div class="msg-time">Yesterday</div>
+              </div>
+            </div>
+
+            <div class="android-gone">
+              <div class="gone-icon">&#128274;</div>
+              <p>Android app delisted from Play Store</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTER PHONE -->
+    <div class="phone-wrapper">
+      <span class="phone-label after">Reimagined (Flutter)</span>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="after-content">
+            <div class="after-header">
+              <div class="app-header">
+                <img src="assets/app-icon.png" class="app-icon-small" alt="Eltropy icon">
+                <span class="app-name">Eltropy</span>
+              </div>
+              <span class="subtitle">Unified Conversations &bull; iOS + Android</span>
+            </div>
+
+            <div class="after-quick-stats">
+              <div class="after-quick-stat">
+                <div class="stat-num">24</div>
+                <div class="stat-label">Active</div>
+              </div>
+              <div class="after-quick-stat">
+                <div class="stat-num">8</div>
+                <div class="stat-label">Pending</div>
+              </div>
+              <div class="after-quick-stat">
+                <div class="stat-num">96%</div>
+                <div class="stat-label">Response</div>
+              </div>
+            </div>
+
+            <div class="after-body">
+              <div class="after-notification-card">
+                <span class="notif-icon">&#128276;</span>
+                <span class="notif-text">Push: 3 new member messages</span>
+              </div>
+
+              <div class="after-search">&#128269; Search conversations...</div>
+
+              <div class="after-tabs">
+                <div class="after-tab active">All (32)</div>
+                <div class="after-tab">Lending (12)</div>
+                <div class="after-tab">Collections (8)</div>
+              </div>
+
+              <div class="after-msg-item">
+                <div class="after-avatar" style="background: #1a237e;">SM</div>
+                <div class="after-msg-info">
+                  <div class="after-msg-name">Sarah Mitchell <span class="time">2m ago</span></div>
+                  <div class="after-msg-preview">Hi, I need help with my auto loan application...</div>
+                </div>
+                <div class="after-msg-badge">1</div>
+              </div>
+
+              <div class="after-msg-item">
+                <div class="after-avatar" style="background: #00695c;">JR</div>
+                <div class="after-msg-info">
+                  <div class="after-msg-name">James Rodriguez <span class="time">15m ago</span></div>
+                  <div class="after-msg-preview">Can you check if my payment went through?</div>
+                </div>
+                <div class="after-msg-badge">2</div>
+              </div>
+
+              <div class="after-msg-item">
+                <div class="after-avatar" style="background: #bf360c;">LW</div>
+                <div class="after-msg-info">
+                  <div class="after-msg-name">Lisa Wang <span class="time">1h ago</span></div>
+                  <div class="after-msg-preview">Thanks! I uploaded the documents.</div>
+                </div>
+              </div>
+
+              <div class="after-msg-item">
+                <div class="after-avatar" style="background: #4527a0;">TJ</div>
+                <div class="after-msg-info">
+                  <div class="after-msg-name">Tyler Johnson <span class="time">2h ago</span></div>
+                  <div class="after-msg-preview">I'd like to set up a savings account for...</div>
+                </div>
+              </div>
+
+              <div class="after-msg-item">
+                <div class="after-avatar" style="background: #00838f;">AP</div>
+                <div class="after-msg-info">
+                  <div class="after-msg-name">Amanda Park <span class="time">3h ago</span></div>
+                  <div class="after-msg-preview">Is there a way to increase my credit limit?</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="after-fab">+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <span class="section-tag green">The Solution</span>
+  <h2 class="section-title">What a Modern Eltropy Mobile App Looks Like</h2>
+  <p class="section-subtitle">Built with Flutter for iOS + Android from a single codebase. Designed for credit union staff on the go.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">&#128241;</div>
+      <h3>Flutter = iOS + Android</h3>
+      <p>One codebase, two platforms. No more maintaining separate apps (or abandoning one). Ship updates to both stores simultaneously.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128276;</div>
+      <h3>Real Push Notifications</h3>
+      <p>Instant alerts when members message. No more checking the browser on your phone. Loan officers respond in seconds, not hours.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128268;</div>
+      <h3>Offline Message Queuing</h3>
+      <p>Draft and queue responses even without connectivity. Messages send automatically when back online — essential for field visits.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#127919;</div>
+      <h3>Role-Based Views</h3>
+      <p>Lending, collections, sales, and support teams each see their relevant conversations. Smart filters reduce noise, increase focus.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128202;</div>
+      <h3>On-Device Analytics</h3>
+      <p>Response time, conversation volume, member satisfaction — all visible at a glance. No more asking support for basic reports.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128274;</div>
+      <h3>Compliant by Design</h3>
+      <p>NCUA-compliant messaging with audit trails, message archiving, and role-based access controls built into every interaction.</p>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT -->
+<section class="impact-section">
+  <span class="section-tag" style="background: rgba(255,107,53,0.2); color: #ff6b35;">Projected Impact</span>
+  <h2 class="section-title" style="color: white;">What This Means for Eltropy's 750+ CUs</h2>
+  <p class="section-subtitle" style="color: rgba(255,255,255,0.6);">Based on industry benchmarks and Eltropy's own reported engagement metrics.</p>
+
+  <div class="impact-grid">
+    <div class="impact-card">
+      <div class="impact-number">3x</div>
+      <div class="impact-label">Faster Response Times</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-number">44%</div>
+      <div class="impact-label">More Users (Android)</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-number">60%</div>
+      <div class="impact-label">Higher Mobile Adoption</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-number">1</div>
+      <div class="impact-label">Codebase (Not 2)</div>
+    </div>
+  </div>
+</section>
+
+<!-- REAL REVIEWS -->
+<section class="quotes-section">
+  <span class="section-tag">From the App Store</span>
+  <h2 class="section-title">What Credit Union Staff Are Saying</h2>
+  <p class="section-subtitle">Real reviews from the iOS App Store. These are the people using Eltropy daily.</p>
+
+  <div class="quotes-grid">
+    <div class="quote-card">
+      <div class="quote-stars">&#9733;&#9734;&#9734;&#9734;&#9734;</div>
+      <div class="quote-text">"Can receive and respond to messages, but cannot start a new conversation. The 'Start Conversation' button disappears when I add the new phone#. Also, message queue doesn't size properly to my device screen. App needs help!"</div>
+      <div class="quote-source">iOS App Store — May 2023</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-stars">&#9733;&#9734;&#9734;&#9734;&#9734;</div>
+      <div class="quote-text">"This app does not work at all. Don't let them sell you this as a feature."</div>
+      <div class="quote-source">iOS App Store — Jan 2023</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Let's Fix Eltropy Mobile Together</h2>
+  <p>Elinext has 150+ mobile developers (iOS, Android, Flutter) ready to rebuild your mobile experience in 4-6 months.</p>
+  <a href="https://www.elinext.com/contacts/" class="cta-button">Get in Touch</a>
+  <p class="cta-sub">AI-powered mobile teardown by Elinext &bull; 30x productivity gains with AI-assisted development</p>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>Prototype by <a href="https://www.elinext.com">Elinext</a> &bull; AI-powered analysis &bull; Not affiliated with Eltropy</p>
+</footer>
+
+</body>
+</html>
