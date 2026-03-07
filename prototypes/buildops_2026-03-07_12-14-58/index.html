@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BuildOps Mobile — AI Teardown</title>
+
+<!-- Ratings as of 2026-03-07: iOS 3.15 (364 reviews, source: iTunes API), Android mixed (source: Google Play web search) -->
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+
+<!-- OG Meta Tags -->
+<meta property="og:image" content="https://elinext-lab.github.io/prototypes/buildops/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:title" content="BuildOps Mobile — AI Teardown">
+<meta property="og:description" content="What if your field techs could close work orders in half the taps? A data-driven teardown of BuildOps mobile UX with a redesigned prototype.">
+<meta name="author" content="Yauheni Shauchenka, Elinext">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0e1a;
+    color: #e0e4ef;
+    line-height: 1.6;
+  }
+
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(135deg, #0f1629 0%, #1a1040 50%, #0f1629 100%);
+    padding: 80px 20px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(255,140,50,0.06) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(100,100,255,0.04) 0%, transparent 50%);
+    z-index: 0;
+  }
+  .hero > * { position: relative; z-index: 1; }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,140,50,0.15);
+    color: #ff8c32;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 16px;
+    line-height: 1.15;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 700px;
+  }
+
+  .hero p {
+    font-size: 18px;
+    color: #a0a8c0;
+    max-width: 600px;
+    margin: 0 auto 32px;
+    text-align: center;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+  }
+  .hero-stat {
+    text-align: center;
+  }
+  .hero-stat .number {
+    font-size: 36px;
+    font-weight: 800;
+    color: #ff8c32;
+    display: block;
+  }
+  .hero-stat .label {
+    font-size: 13px;
+    color: #7a8299;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Section common */
+  section {
+    padding: 80px 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-label {
+    display: inline-block;
+    background: rgba(255,140,50,0.12);
+    color: #ff8c32;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .section-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .section-subtitle {
+    font-size: 16px;
+    color: #8890a8;
+    max-width: 600px;
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+
+  /* Pain Points Section */
+  .pain-section {
+    background: #0d1220;
+  }
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .pain-card {
+    background: #141b2e;
+    border: 1px solid #1e2740;
+    border-radius: 16px;
+    padding: 28px;
+    transition: border-color 0.3s;
+  }
+  .pain-card:hover {
+    border-color: #ff8c32;
+  }
+  .pain-card .icon {
+    font-size: 28px;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .pain-card h3 {
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .pain-card p {
+    font-size: 14px;
+    color: #8890a8;
+    margin-bottom: 14px;
+  }
+  .pain-card .quote {
+    background: #0a0e1a;
+    border-left: 3px solid #ff4444;
+    padding: 12px 14px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: #b0b8d0;
+    font-style: italic;
+  }
+  .pain-card .quote-source {
+    font-size: 11px;
+    color: #5a6280;
+    margin-top: 6px;
+    font-style: normal;
+  }
+
+  /* Phone Mockup Section */
+  .mockup-section {
+    background: linear-gradient(180deg, #0a0e1a 0%, #0f1629 100%);
+    text-align: center;
+  }
+  .phones-container {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+    align-items: flex-start;
+  }
+  .phone-wrapper {
+    text-align: center;
+  }
+  .phone-label {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .phone-label.before { color: #ff4444; }
+  .phone-label.after { color: #44cc88; }
+
+  .phone {
+    width: 280px;
+    height: 580px;
+    background: #1a1a2e;
+    border-radius: 36px;
+    border: 3px solid #2a2a4a;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+  }
+  .phone-notch {
+    width: 120px;
+    height: 28px;
+    background: #0a0e1a;
+    border-radius: 0 0 16px 16px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+  .phone-screen {
+    height: calc(100% - 28px);
+    overflow-y: auto;
+    padding: 14px;
+    scrollbar-width: thin;
+    scrollbar-color: #2a2a4a transparent;
+  }
+  .phone-screen::-webkit-scrollbar { width: 4px; }
+  .phone-screen::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 2px; }
+
+  /* Before Phone Content */
+  .before-screen .app-header {
+    background: #1e3a5f;
+    margin: -14px -14px 14px;
+    padding: 14px;
+    text-align: center;
+  }
+  .before-screen .app-header h4 {
+    color: #fff;
+    font-size: 14px;
+  }
+  .before-screen .wo-card {
+    background: #0f1629;
+    border: 1px solid #1e2740;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .before-screen .wo-card h5 {
+    color: #ccc;
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  .before-screen .wo-card .field-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #6a7290;
+    padding: 4px 0;
+    border-bottom: 1px solid #1a2035;
+  }
+  .before-screen .spinner {
+    text-align: center;
+    padding: 30px 0;
+    color: #5a6280;
+    font-size: 12px;
+  }
+  .before-screen .spinner::before {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 28px;
+    border: 3px solid #1e2740;
+    border-top-color: #ff4444;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .before-screen .error-banner {
+    background: #3a1520;
+    border: 1px solid #5a2535;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 11px;
+    color: #ff6b6b;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .before-screen .tab-bar {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 10px;
+  }
+  .before-screen .tab-bar span {
+    flex: 1;
+    background: #0f1629;
+    padding: 6px 4px;
+    font-size: 9px;
+    color: #5a6280;
+    text-align: center;
+    border-radius: 6px;
+  }
+  .before-screen .tab-bar span.active {
+    background: #1e3a5f;
+    color: #88bbee;
+  }
+
+  .photo-upload-area {
+    background: #0f1629;
+    border: 2px dashed #2a3050;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .photo-upload-area .upload-icon {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+  .photo-upload-area p {
+    font-size: 11px;
+    color: #5a6280;
+  }
+  .photo-upload-area .upload-time {
+    color: #ff4444;
+    font-weight: 700;
+    font-size: 13px;
+    margin-top: 6px;
+    display: block;
+  }
+
+  /* After Phone Content */
+  .after-screen .app-header {
+    background: linear-gradient(135deg, #1a3a2a, #1e3a5f);
+    margin: -14px -14px 14px;
+    padding: 14px;
+    text-align: center;
+  }
+  .after-screen .app-header h4 {
+    color: #fff;
+    font-size: 14px;
+  }
+  .after-screen .quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .after-screen .quick-action {
+    background: linear-gradient(135deg, #142830, #1a2840);
+    border: 1px solid #1e3a4a;
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .after-screen .quick-action .qa-icon {
+    font-size: 22px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .after-screen .quick-action .qa-label {
+    font-size: 10px;
+    color: #88bbcc;
+  }
+
+  .after-screen .smart-card {
+    background: #0f1a25;
+    border: 1px solid #1e3a4a;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .after-screen .smart-card h5 {
+    color: #44cc88;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .after-screen .smart-card p {
+    font-size: 12px;
+    color: #a0b0c0;
+  }
+
+  .after-screen .instant-photo {
+    background: linear-gradient(135deg, #0f2520, #0f1a25);
+    border: 1px solid #1e4a3a;
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .after-screen .instant-photo .photo-icon {
+    font-size: 28px;
+    margin-bottom: 6px;
+  }
+  .after-screen .instant-photo .speed {
+    color: #44cc88;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .after-screen .instant-photo p {
+    font-size: 11px;
+    color: #6a8a7a;
+    margin-top: 4px;
+  }
+
+  .after-screen .wo-summary {
+    background: #0f1629;
+    border: 1px solid #1e2740;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .after-screen .wo-summary h5 {
+    color: #fff;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  .after-screen .wo-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    padding: 6px 0;
+    border-bottom: 1px solid #1a2035;
+  }
+  .after-screen .wo-row .label {
+    color: #6a7290;
+  }
+  .after-screen .wo-row .value {
+    color: #ccd;
+    font-weight: 600;
+  }
+  .after-screen .wo-row .status-done {
+    color: #44cc88;
+    font-weight: 600;
+  }
+
+  .after-screen .complete-btn {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, #44cc88, #339966);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 12px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+
+  /* Metrics Section */
+  .metrics-section {
+    background: #0d1220;
+  }
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+  }
+  .metric-card {
+    background: #141b2e;
+    border: 1px solid #1e2740;
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+  }
+  .metric-card .metric-value {
+    font-size: 40px;
+    font-weight: 800;
+    color: #ff8c32;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .metric-card .metric-label {
+    font-size: 14px;
+    color: #8890a8;
+    margin-bottom: 10px;
+  }
+  .metric-card .metric-detail {
+    font-size: 12px;
+    color: #5a6280;
+  }
+
+  /* Approach Section */
+  .approach-section {
+    background: linear-gradient(180deg, #0a0e1a 0%, #0d1220 100%);
+  }
+  .approach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .approach-card {
+    background: #141b2e;
+    border: 1px solid #1e2740;
+    border-radius: 16px;
+    padding: 28px;
+  }
+  .approach-card .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: rgba(255,140,50,0.15);
+    color: #ff8c32;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .approach-card h3 {
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .approach-card p {
+    font-size: 14px;
+    color: #8890a8;
+  }
+  .approach-card .timeline {
+    display: inline-block;
+    background: rgba(68,204,136,0.12);
+    color: #44cc88;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 12px;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    background: linear-gradient(135deg, #1a1040 0%, #0f1629 50%, #1a2040 100%);
+    text-align: center;
+    padding: 80px 20px;
+  }
+  .cta-section h2 {
+    font-size: 36px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .cta-section p {
+    font-size: 17px;
+    color: #8890a8;
+    max-width: 550px;
+    margin: 0 auto 32px;
+  }
+  .cta-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff8c32, #ff6b18);
+    color: #fff;
+    padding: 16px 40px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(255,140,50,0.3);
+  }
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(255,140,50,0.4);
+  }
+
+  /* Footer */
+  .footer {
+    background: #080b14;
+    padding: 30px 20px;
+    text-align: center;
+    font-size: 13px;
+    color: #4a5270;
+  }
+  .footer a {
+    color: #ff8c32;
+    text-decoration: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 28px; }
+    .hero-stats { gap: 20px; }
+    .hero-stat .number { font-size: 28px; }
+    .section-title { font-size: 24px; }
+    .phones-container { gap: 32px; }
+    .cta-section h2 { font-size: 26px; }
+  }
+  @media (max-width: 480px) {
+    .phone { width: 300px; }
+    .hero { padding: 60px 16px 40px; }
+    section { padding: 60px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <span class="hero-badge">AI-POWERED MOBILE TEARDOWN</span>
+  <h1>What if your techs could close jobs in half the taps?</h1>
+  <p>We analyzed BuildOps' mobile app using AI — 364 App Store reviews, technician workflows, and competitive benchmarks. Here's what we found.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="number">3.15★</span>
+      <span class="label">iOS Rating</span>
+    </div>
+    <div class="hero-stat">
+      <span class="number">40%</span>
+      <span class="label">1-Star Reviews</span>
+    </div>
+    <div class="hero-stat">
+      <span class="number">10 min</span>
+      <span class="label">Photo Upload Wait</span>
+    </div>
+  </div>
+</section>
+
+<!-- Pain Points -->
+<section class="pain-section">
+  <div class="container">
+    <div style="text-align:center">
+      <span class="section-label">The Problem</span>
+    </div>
+    <h2 class="section-title">Your field techs are fighting the app, not using it</h2>
+    <p class="section-subtitle">Real quotes from BuildOps technicians on the App Store. These are the people using the app 8 hours a day, 5 days a week.</p>
+
+    <div class="pain-grid">
+      <div class="pain-card">
+        <span class="icon">🐌</span>
+        <h3>App Loading & Crashes</h3>
+        <p>The most common complaint: the app takes too long to load, crashes mid-workflow, and freezes when typing notes.</p>
+        <div class="quote">
+          "It crashes all the time, freezes when you're trying to type notes, and half the time jobs don't even load right."
+          <div class="quote-source">— App Store, 1★, Feb 2026</div>
+        </div>
+      </div>
+
+      <div class="pain-card">
+        <span class="icon">📸</span>
+        <h3>10-Minute Photo Uploads</h3>
+        <p>Technicians report waiting 10+ minutes to upload a single photo. Photos save to the phone gallery, creating thousands of orphaned images.</p>
+        <div class="quote">
+          "Want to upload pictures? You can wait 10 minutes! Want to upload videos? Nope!"
+          <div class="quote-source">— App Store, 1★, Oct 2025</div>
+        </div>
+      </div>
+
+      <div class="pain-card">
+        <span class="icon">⏱️</span>
+        <h3>Time Tracking Bugs</h3>
+        <p>Clock-in/clock-out records don't match actual time worked, creating payroll disputes and billing inaccuracies.</p>
+        <div class="quote">
+          "I will clock into a job at 7am, clock out at 10am, and I only have 1 hour on the clock."
+          <div class="quote-source">— App Store, 1★, Oct 2025</div>
+        </div>
+      </div>
+
+      <div class="pain-card">
+        <span class="icon">👆</span>
+        <h3>Too Many Taps</h3>
+        <p>Simple tasks like closing a work order require too many steps. The UX was designed for office data collection, not field speed.</p>
+        <div class="quote">
+          "Obviously designed by an app developer that has never been in the field. This app has made an enjoyable job miserable."
+          <div class="quote-source">— App Store, 1★, Oct 2025</div>
+        </div>
+      </div>
+
+      <div class="pain-card">
+        <span class="icon">📶</span>
+        <h3>No Offline Support</h3>
+        <p>Technicians can't clock in or access job details without cellular signal — a problem on commercial job sites like basements and server rooms.</p>
+        <div class="quote">
+          "Very annoying to arrive on a job site with poor Internet service and try to find a signal so you can clock in."
+          <div class="quote-source">— App Store, 4★, Aug 2025</div>
+        </div>
+      </div>
+
+      <div class="pain-card">
+        <span class="icon">🤖</span>
+        <h3>AI Features Miss the Mark</h3>
+        <p>AI features optimize for office reporting, not field productivity. Technicians say AI additions make the app worse, not better.</p>
+        <div class="quote">
+          "They've made this app worse too by putting pointless AI things I don't need in the field."
+          <div class="quote-source">— App Store, 2★, Aug 2025</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Phone Mockups -->
+<section class="mockup-section">
+  <div class="container">
+    <div style="text-align:center">
+      <span class="section-label">The Solution</span>
+    </div>
+    <h2 class="section-title">Reimagined for field technicians</h2>
+    <p class="section-subtitle">A 3-tap workflow. Instant photo sync. Offline-first. AI that actually helps in the field.</p>
+
+    <div class="phones-container">
+      <!-- Before Phone -->
+      <div class="phone-wrapper">
+        <span class="phone-label before">Current Experience</span>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen before-screen">
+            <div class="app-header">
+              <h4>BuildOps</h4>
+            </div>
+
+            <div class="tab-bar">
+              <span class="active">Jobs</span>
+              <span>Schedule</span>
+              <span>Time</span>
+              <span>More</span>
+            </div>
+
+            <div class="error-banner">
+              ⚠️ Session expired. Please log in again.
+            </div>
+
+            <div class="wo-card">
+              <h5>WO #4821 — HVAC Repair</h5>
+              <div class="field-row"><span>Customer</span><span>Acme Corp</span></div>
+              <div class="field-row"><span>Location</span><span>Suite 401</span></div>
+              <div class="field-row"><span>Status</span><span>In Progress</span></div>
+              <div class="field-row"><span>Equipment</span><span>RTU-3</span></div>
+              <div class="field-row"><span>Priority</span><span>Normal</span></div>
+              <div class="field-row"><span>Assigned</span><span>You</span></div>
+            </div>
+
+            <div class="spinner">Loading job details...</div>
+
+            <div class="photo-upload-area">
+              <span class="upload-icon">📸</span>
+              <p>Upload site photos</p>
+              <span class="upload-time">⏳ ~10 minutes per photo</span>
+            </div>
+
+            <div class="wo-card">
+              <h5>Complete Work Order</h5>
+              <div class="field-row"><span>Step 1</span><span>Add notes ›</span></div>
+              <div class="field-row"><span>Step 2</span><span>Add photos ›</span></div>
+              <div class="field-row"><span>Step 3</span><span>Equipment log ›</span></div>
+              <div class="field-row"><span>Step 4</span><span>Parts used ›</span></div>
+              <div class="field-row"><span>Step 5</span><span>Time entry ›</span></div>
+              <div class="field-row"><span>Step 6</span><span>Get signature ›</span></div>
+              <div class="field-row"><span>Step 7</span><span>Review & close ›</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- After Phone -->
+      <div class="phone-wrapper">
+        <span class="phone-label after">Reimagined</span>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen after-screen">
+            <div class="app-header">
+              <h4>BuildOps — Field Mode</h4>
+            </div>
+
+            <div class="quick-actions">
+              <div class="quick-action">
+                <span class="qa-icon">📸</span>
+                <span class="qa-label">Quick Photo</span>
+              </div>
+              <div class="quick-action">
+                <span class="qa-icon">🎤</span>
+                <span class="qa-label">Voice Note</span>
+              </div>
+              <div class="quick-action">
+                <span class="qa-icon">⏱️</span>
+                <span class="qa-label">Clock In/Out</span>
+              </div>
+              <div class="quick-action">
+                <span class="qa-icon">✅</span>
+                <span class="qa-label">Close Job</span>
+              </div>
+            </div>
+
+            <div class="smart-card">
+              <h5>🤖 AI Job Summary</h5>
+              <p>RTU-3 at Acme Corp, Suite 401. Last serviced 45 days ago — compressor belt replaced. Tech note: "Check condenser coils, noisy fan motor."</p>
+            </div>
+
+            <div class="instant-photo">
+              <span class="photo-icon">📸</span>
+              <span class="speed">Instant Upload</span>
+              <p>Photos sync in background, work offline</p>
+            </div>
+
+            <div class="wo-summary">
+              <h5>WO #4821 — Quick Close</h5>
+              <div class="wo-row">
+                <span class="label">Photos</span>
+                <span class="status-done">4 synced ✓</span>
+              </div>
+              <div class="wo-row">
+                <span class="label">Notes</span>
+                <span class="status-done">Voice → text ✓</span>
+              </div>
+              <div class="wo-row">
+                <span class="label">Time</span>
+                <span class="value">2h 15m auto-tracked</span>
+              </div>
+              <div class="wo-row">
+                <span class="label">Parts</span>
+                <span class="value">Belt, 2x filters</span>
+              </div>
+              <div class="wo-row">
+                <span class="label">Signature</span>
+                <span class="status-done">Captured ✓</span>
+              </div>
+            </div>
+
+            <button class="complete-btn">Complete & Next Job →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Metrics -->
+<section class="metrics-section">
+  <div class="container">
+    <div style="text-align:center">
+      <span class="section-label">The Impact</span>
+    </div>
+    <h2 class="section-title">What better mobile UX means for your business</h2>
+    <p class="section-subtitle">Based on current app performance data and industry benchmarks for field service optimization.</p>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-value">60%</span>
+        <span class="metric-label">Fewer Taps to Close</span>
+        <span class="metric-detail">From 7+ screens to 3-tap workflow</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value">&lt;2s</span>
+        <span class="metric-label">Photo Upload Time</span>
+        <span class="metric-detail">Down from 10+ minutes with background sync</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value">$225K+</span>
+        <span class="metric-label">Annual Time Savings</span>
+        <span class="metric-detail">Per 50-tech team at $75/hr billing rate</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value">100%</span>
+        <span class="metric-label">Offline Capability</span>
+        <span class="metric-detail">Local-first architecture, sync when connected</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Approach -->
+<section class="approach-section">
+  <div class="container">
+    <div style="text-align:center">
+      <span class="section-label">The Approach</span>
+    </div>
+    <h2 class="section-title">How we'd make this real</h2>
+    <p class="section-subtitle">150 mobile engineers. AI-enhanced development. Dedicated team that integrates with yours.</p>
+
+    <div class="approach-grid">
+      <div class="approach-card">
+        <span class="step-num">1</span>
+        <h3>Performance Sprint</h3>
+        <p>Fix app loading, photo uploads, and crash rates. Implement background sync and image compression pipeline. Target: sub-2s photo handling.</p>
+        <span class="timeline">Weeks 1-4</span>
+      </div>
+      <div class="approach-card">
+        <span class="step-num">2</span>
+        <h3>UX Simplification</h3>
+        <p>Redesign work order close flow from 7+ screens to 3 taps. Voice-to-text notes. Smart defaults from job history. Field-first interaction patterns.</p>
+        <span class="timeline">Weeks 3-8</span>
+      </div>
+      <div class="approach-card">
+        <span class="step-num">3</span>
+        <h3>Offline-First Architecture</h3>
+        <p>Local database with background sync. Clock in/out without signal. Queue photos, notes, and signatures for auto-upload when connected.</p>
+        <span class="timeline">Weeks 6-12</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Let's talk about your mobile experience</h2>
+  <p>We built this teardown because we think BuildOps deserves a mobile app as strong as its platform. 15 minutes — we'll walk you through the analysis.</p>
+  <a href="https://www.elinext.com/contacts/" class="cta-btn">Get in Touch</a>
+</section>
+
+<!-- Footer -->
+<div class="footer">
+  AI-powered mobile teardown by <a href="https://www.elinext.com">Elinext</a> · 150+ mobile engineers · Vietnam
+</div>
+
+</body>
+</html>
