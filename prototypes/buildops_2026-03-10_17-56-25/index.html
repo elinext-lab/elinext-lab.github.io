@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuildOps Mobile - AI Teardown by Elinext</title>
+  <meta name="description" content="What if BuildOps technicians could finish a visit without crashes, lost notes, or photo-upload delays? A field-first mobile teardown by Elinext.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/buildops_2026-03-10_17-56-25/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="BuildOps Mobile - AI Teardown">
+  <meta property="og:description" content="What if BuildOps technicians could finish a visit without crashes, lost notes, or photo-upload delays? A field-first mobile teardown by Elinext.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/buildops_2026-03-10_17-56-25/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/buildops_2026-03-10_17-56-25/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+
+  <!-- Ratings as of 2026-03-10: iOS 3.15 (364 reviews, source: iTunes API US), Android 3.26 (162 reviews, source: Google Play via google-play-scraper) -->
+
+  <style>
+    :root {
+      --bg: #0b1220;
+      --bg-soft: #111a2d;
+      --panel: rgba(18, 27, 46, 0.88);
+      --line: rgba(148, 163, 184, 0.18);
+      --text: #e5edf8;
+      --muted: #8ca0bd;
+      --orange: #f97316;
+      --orange-soft: rgba(249, 115, 22, 0.16);
+      --red: #ef4444;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(249, 115, 22, 0.18), transparent 30%),
+        linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+    }
+
+    a { color: inherit; }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .hero,
+    .section,
+    .footer {
+      position: relative;
+      z-index: 2;
+      background: transparent;
+    }
+
+    .hero {
+      padding: 72px 20px 48px;
+      text-align: center;
+    }
+
+    .badge,
+    .eyebrow,
+    .hero-logo,
+    .hero h1,
+    .hero p {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .hero-logo {
+      width: 68px;
+      height: 68px;
+      border-radius: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .badge {
+      width: fit-content;
+      padding: 7px 14px;
+      border: 1px solid rgba(249, 115, 22, 0.28);
+      background: var(--orange-soft);
+      border-radius: 999px;
+      color: #ffb37b;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      max-width: 900px;
+      margin: 0 auto 16px;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p {
+      max-width: 720px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .hero-stats {
+      margin: 34px auto 0;
+      max-width: 880px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 2rem;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .section {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 42px 20px 72px;
+    }
+
+    .section-card {
+      background: rgba(10, 17, 31, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.9rem, 3vw, 2.8rem);
+      text-align: center;
+    }
+
+    .section .sub {
+      max-width: 700px;
+      margin: 0 auto 34px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .comparison {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 34px;
+      flex-wrap: wrap;
+    }
+
+    .phone-block {
+      width: 320px;
+      text-align: center;
+    }
+
+    .phone-tag {
+      margin-bottom: 14px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .before-tag { color: #fca5a5; }
+    .after-tag { color: #86efac; }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 38px;
+      background: linear-gradient(180deg, #1f2937 0%, #0f172a 100%);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 28px;
+      background: #050a14;
+      border-radius: 0 0 16px 16px;
+      z-index: 3;
+    }
+
+    .screen {
+      height: 100%;
+      overflow-y: auto;
+      border-radius: 30px;
+      background: #edf3fb;
+      color: #0f172a;
+      padding: 36px 14px 14px;
+      scrollbar-width: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    .screen::-webkit-scrollbar { display: none; }
+
+    .mobile-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #64748b;
+      margin-bottom: 12px;
+    }
+
+    .app-head {
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .before .app-head {
+      background: linear-gradient(180deg, #fb923c 0%, #f97316 100%);
+      color: white;
+    }
+
+    .after .app-head {
+      background: linear-gradient(180deg, #082f49 0%, #0f766e 100%);
+      color: white;
+    }
+
+    .app-head h3 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+    }
+
+    .app-head p {
+      margin: 0;
+      font-size: 0.76rem;
+      opacity: 0.9;
+    }
+
+    .warning,
+    .success,
+    .card,
+    .queue-item,
+    .field-list li,
+    .evidence li,
+    .pillars article,
+    .cta {
+      position: relative;
+      z-index: 1;
+    }
+
+    .warning {
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 0.76rem;
+      margin-bottom: 12px;
+    }
+
+    .success {
+      background: #dcfce7;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 0.76rem;
+      margin-bottom: 12px;
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s linear infinite;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    @keyframes shimmer {
+      from { background-position: 200% 0; }
+      to { background-position: -200% 0; }
+    }
+
+    .row-card {
+      background: white;
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    }
+
+    .muted { color: #64748b; }
+
+    .tiny {
+      font-size: 0.72rem;
+      line-height: 1.45;
+    }
+
+    .field-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .field-list li {
+      background: white;
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.07);
+    }
+
+    .field-list strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.82rem;
+    }
+
+    .queue-item {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      background: white;
+      border-radius: 14px;
+      padding: 10px;
+      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.06);
+    }
+
+    .thumb {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #fdba74, #f97316);
+    }
+
+    .bar {
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e2e8f0;
+      margin-top: 6px;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #0ea5e9, #22c55e);
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .evidence {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 14px;
+    }
+
+    .evidence li,
+    .pillars article,
+    .cta {
+      background: rgba(17, 26, 45, 0.98);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 20px;
+    }
+
+    .evidence li strong,
+    .pillars article strong {
+      display: block;
+      margin-bottom: 8px;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .evidence li p,
+    .pillars article p,
+    .cta p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .cta {
+      margin-top: 18px;
+      text-align: center;
+      background:
+        radial-gradient(circle at top, rgba(56, 189, 248, 0.12), transparent 40%),
+        rgba(17, 26, 45, 0.98);
+    }
+
+    .cta a {
+      display: inline-block;
+      margin-top: 18px;
+      background: var(--orange);
+      color: white;
+      text-decoration: none;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .footer {
+      padding: 0 20px 48px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-stats,
+      .grid-3,
+      .pillars {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .hero-stats,
+      .grid-3,
+      .pillars {
+        grid-template-columns: 1fr;
+      }
+
+      .section-card {
+        padding: 22px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone { width: 300px; }
+      .phone-block { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <img class="hero-logo" src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/02/7b/b5/027bb5e3-154a-d24f-440f-d5cde1f6ef9b/AppIcon-0-0-1x_U007epad-0-11-0-85-220.png/512x512bb.jpg" alt="BuildOps icon">
+      <span class="badge">Field Technician Reliability Teardown</span>
+      <h1>What if BuildOps fixed the field workflow before adding anything else?</h1>
+      <p>Public reviews still point to the same mobile gap: crashes, disappearing notes, and photo uploads that take minutes. This concept shows a tighter BuildOps mobile flow designed for weak signal, job-site interruptions, and technician speed.</p>
+      <div class="hero-stats">
+        <div class="stat"><strong>3.15</strong><span>iOS rating, US store</span></div>
+        <div class="stat"><strong>3.26</strong><span>Android rating</span></div>
+        <div class="stat"><strong>100</strong><span>Recent reviews analyzed</span></div>
+        <div class="stat"><strong>#1</strong><span>Pain point: reliability</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-card">
+        <h2>Current vs. Proposed Field Experience</h2>
+        <p class="sub">The highest-value fix is not another AI layer. It is a technician-safe execution core: local drafts, resilient sync, and visible background upload state.</p>
+        <div class="comparison">
+          <div class="phone-block before">
+            <div class="phone-tag before-tag">Current BuildOps feeling</div>
+            <div class="phone">
+              <div class="notch"></div>
+              <div class="screen">
+                <div class="mobile-top"><span>9:41</span><span>LTE</span></div>
+                <div class="app-head">
+                  <h3>WO-48291 · Rooftop RTU</h3>
+                  <p>Closeout in progress · 4 items waiting</p>
+                </div>
+                <div class="warning">Upload stalled. 14 photos pending. Do not leave this screen.</div>
+                <div class="row-card">
+                  <strong class="tiny">Job notes</strong>
+                  <p class="tiny muted">Trying to save...</p>
+                  <div class="skeleton" style="height: 16px;"></div>
+                  <div class="skeleton" style="height: 16px; width: 78%;"></div>
+                </div>
+                <div class="row-card">
+                  <strong class="tiny">Asset history</strong>
+                  <p class="tiny muted">Loading prior visits</p>
+                  <div class="skeleton" style="height: 58px;"></div>
+                </div>
+                <div class="warning">App restarted after switching to camera. Draft may be incomplete.</div>
+                <div class="row-card">
+                  <strong class="tiny">Closeout steps</strong>
+                  <p class="tiny muted">8 taps left before signature</p>
+                </div>
+                <div class="row-card">
+                  <strong class="tiny">Technician sentiment</strong>
+                  <p class="tiny muted">"I type reports in Gmail first so I don't lose them."</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="phone-block after">
+            <div class="phone-tag after-tag">Proposed "Instant Field Mode"</div>
+            <div class="phone">
+              <div class="notch"></div>
+              <div class="screen">
+                <div class="mobile-top"><span>9:41</span><span>Offline-safe</span></div>
+                <div class="app-head">
+                  <h3>WO-48291 · Rooftop RTU</h3>
+                  <p>Draft saved locally · Syncing quietly in background</p>
+                </div>
+                <div class="success">Safe to leave this screen. Notes and media are queued automatically.</div>
+                <ul class="field-list">
+                  <li>
+                    <strong>Work order shell loads instantly</strong>
+                    <span class="tiny muted">Core job data is prefetched before arrival.</span>
+                  </li>
+                  <li>
+                    <strong>Notes autosave every few seconds</strong>
+                    <span class="tiny muted">No lost summaries when camera or maps opens.</span>
+                  </li>
+                  <li>
+                    <strong>Photo queue runs in background</strong>
+                    <span class="tiny muted">Tech keeps moving while media uploads.</span>
+                  </li>
+                </ul>
+                <div class="row-card">
+                  <strong class="tiny">Media queue</strong>
+                  <div class="queue-item">
+                    <div class="thumb"></div>
+                    <div>
+                      <div class="tiny">Condenser plate.jpg</div>
+                      <div class="bar"><span style="width: 88%;"></span></div>
+                    </div>
+                  </div>
+                  <div class="queue-item">
+                    <div class="thumb" style="background: linear-gradient(180deg, #67e8f9, #0ea5e9);"></div>
+                    <div>
+                      <div class="tiny">Leak evidence.jpg</div>
+                      <div class="bar"><span style="width: 54%;"></span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row-card">
+                  <strong class="tiny">One-tap closeout</strong>
+                  <p class="tiny muted">Parts, labor, signature, and summary in one compressed flow.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="grid-3">
+        <div class="section-card">
+          <h2 style="font-size:1.5rem; text-align:left;">What Reviews Actually Say</h2>
+          <ul class="evidence">
+            <li>
+              <strong>Crashes and freezing</strong>
+              <p>Technicians repeatedly describe the app freezing during note entry, dropdown use, or ordinary navigation.</p>
+            </li>
+            <li>
+              <strong>Photo uploads take minutes</strong>
+              <p>Multiple recent reviews mention 9 to 10 minutes to upload a small photo set or outright media failure.</p>
+            </li>
+            <li>
+              <strong>Data loss changed user behavior</strong>
+              <p>At least one Android reviewer writes reports in Gmail first because they do not trust the app to keep the draft.</p>
+            </li>
+          </ul>
+        </div>
+        <div class="section-card">
+          <h2 style="font-size:1.5rem; text-align:left;">Why This Matters To BuildOps</h2>
+          <ul class="evidence">
+            <li>
+              <strong>The mobile app is the product in the field</strong>
+              <p>When the technician experience breaks, platform trust and retention break with it.</p>
+            </li>
+            <li>
+              <strong>AI value is being undercut</strong>
+              <p>Reviewers explicitly push back on AI features when basics like notes and uploads still feel unreliable.</p>
+            </li>
+            <li>
+              <strong>This is a CTO-level issue</strong>
+              <p>Duncan Grazier was hired to drive next-gen innovation. Reliability is the fastest route to visible product leverage.</p>
+            </li>
+          </ul>
+        </div>
+        <div class="section-card">
+          <h2 style="font-size:1.5rem; text-align:left;">Suggested Delivery Sprint</h2>
+          <ul class="evidence">
+            <li>
+              <strong>Week 1: instrumentation</strong>
+              <p>Trace crashes, stalled sync, media latency, and background resume failure.</p>
+            </li>
+            <li>
+              <strong>Week 2: draft-safe core</strong>
+              <p>Persist notes, partial forms, and closeout state locally by default.</p>
+            </li>
+            <li>
+              <strong>Week 3: queue and compression</strong>
+              <p>Background uploads, retry visibility, and fewer taps on top technician actions.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-card">
+        <h2>Three Product Changes Worth Shipping First</h2>
+        <p class="sub">These are practical mobile improvements tied directly to review language, not speculative redesign theater.</p>
+        <div class="pillars">
+          <article>
+            <strong>1. Offline-safe notes and closeout drafts</strong>
+            <p>Assume interruption is normal. Every keystroke and checklist state should survive app switches, camera launch, and low-signal pockets.</p>
+          </article>
+          <article>
+            <strong>2. Background media pipeline</strong>
+            <p>Photos should enter a visible queue instantly, upload when possible, and never block technician progress on the current visit.</p>
+          </article>
+          <article>
+            <strong>3. Context-first job history</strong>
+            <p>Let technicians reach prior asset visits, photos, and last-service notes in one tap instead of scanning layers of screens.</p>
+          </article>
+        </div>
+        <div class="cta">
+          <h2 style="margin-bottom:10px;">Elinext can help harden the mobile experience without slowing roadmap velocity.</h2>
+          <p>We built this concept for BuildOps because the public review signal is unusually specific: reliability debt is still visible in the field. A focused mobile squad can reduce that gap fast.</p>
+          <a href="https://www.elinext.com/contacts/" target="_blank" rel="noopener">Get in Touch</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      Built for Duncan Grazier and the BuildOps team · AI-powered mobile teardown by Elinext · March 10, 2026
+    </div>
+  </div>
+</body>
+</html>
