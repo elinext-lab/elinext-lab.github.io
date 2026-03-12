@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mawi Heart Mobile - Guided Activation Teardown</title>
+<meta name="description" content="What if Mawi Heart could turn the first minutes after patch placement into a guided, confidence-building mobile flow with live signal checks and faster recovery from setup issues?">
+<link rel="canonical" href="https://elinext-lab.github.io/prototypes/mawi-heart_2026-03-12_03-37-29/">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+
+<meta property="og:image" content="https://elinext-lab.github.io/prototypes/mawi-heart_2026-03-12_03-37-29/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://elinext-lab.github.io/prototypes/mawi-heart_2026-03-12_03-37-29/">
+<meta property="og:title" content="Mawi Heart Mobile - AI Teardown">
+<meta property="og:description" content="What if Mawi Heart could guide patch placement, verify signal quality in plain language, and prevent failed remote cardiac studies before support gets involved?">
+<meta property="og:type" content="website">
+<meta name="author" content="Yauheni Shauchenka, Elinext">
+
+<!-- Ratings as of 2026-03-12: iOS not found in US App Store search for Mawi Heart/Mawi Health (source: iTunes Search API, US), Android 0.00 (0 ratings, 3 recent reviews sampled, source: Google Play scraper for https://play.google.com/store/apps/details?id=band.mawi.android.cardio&hl=en&gl=us) -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #081019;
+  --bg-soft: #0e1a26;
+  --panel: rgba(11, 23, 36, 0.88);
+  --line: rgba(255, 255, 255, 0.08);
+  --text: #edf5fb;
+  --muted: #8ca2b6;
+  --accent: #ff7a3d;
+  --accent-soft: #ffb68f;
+  --ok: #58d6a1;
+  --warn: #ffd279;
+  --danger: #ff6e6e;
+  --card-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: "IBM Plex Sans", sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(255, 122, 61, 0.14), transparent 28%),
+    radial-gradient(circle at 85% 15%, rgba(88, 214, 161, 0.10), transparent 24%),
+    linear-gradient(180deg, #081019 0%, #0c1520 48%, #081019 100%);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+.shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.shell::before,
+.shell::after {
+  content: "";
+  position: fixed;
+  inset: auto;
+  width: 26rem;
+  height: 26rem;
+  border-radius: 999px;
+  filter: blur(80px);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.shell::before { top: 2rem; left: -6rem; background: rgba(255, 122, 61, 0.26); }
+.shell::after { bottom: 6rem; right: -6rem; background: rgba(88, 214, 161, 0.15); }
+
+.hero,
+.evidence,
+.prototype,
+.closing {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
+.hero {
+  padding: 72px 20px 44px;
+  text-align: center;
+}
+
+.eyebrow,
+.hero-badge,
+.section-kicker,
+.phone-tag,
+.pill {
+  display: inline-block;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.eyebrow {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: var(--accent-soft);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.brand-lockup {
+  margin: 22px auto 18px;
+  width: 92px;
+  height: 92px;
+  border-radius: 24px;
+  background: linear-gradient(160deg, rgba(255,255,255,0.16), rgba(255,255,255,0.05));
+  box-shadow: 0 10px 45px rgba(0,0,0,0.35);
+  padding: 10px;
+}
+
+.brand-lockup img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+}
+
+h1 {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(2.6rem, 4vw, 4.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  max-width: 980px;
+  margin: 0 auto 18px;
+}
+
+h1 span { color: var(--accent-soft); }
+
+.hero-copy {
+  max-width: 720px;
+  margin: 0 auto 28px;
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+.hero-grid {
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+.hero-card {
+  background: rgba(11, 23, 36, 0.78);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 20px;
+  text-align: left;
+  box-shadow: var(--card-shadow);
+}
+
+.hero-card strong {
+  display: block;
+  font-family: "Manrope", sans-serif;
+  font-size: 1.45rem;
+  margin-bottom: 8px;
+}
+
+.hero-card span {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.section-wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.evidence {
+  padding: 36px 0 26px;
+}
+
+.section-kicker {
+  margin-bottom: 16px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(88,214,161,0.08);
+  color: #8ce2be;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.evidence-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1.1fr 0.9fr;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--card-shadow);
+}
+
+.panel h2,
+.panel h3 {
+  font-family: "Manrope", sans-serif;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+}
+
+.panel p,
+.panel li {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.panel ul {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.panel li {
+  padding-left: 16px;
+  position: relative;
+}
+
+.panel li::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.metric-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.pill {
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.prototype {
+  padding: 42px 0 48px;
+}
+
+.prototype-head {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.prototype-head h2 {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(2rem, 3vw, 3.4rem);
+  letter-spacing: -0.04em;
+  margin-bottom: 10px;
+}
+
+.prototype-head p {
+  max-width: 740px;
+  margin: 0 auto;
+  color: var(--muted);
+}
+
+.phone-stage {
+  display: flex;
+  justify-content: center;
+  gap: 44px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.phone-block {
+  width: 340px;
+  text-align: center;
+}
+
+.phone-tag {
+  margin-bottom: 16px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.phone-tag.before {
+  background: rgba(255,255,255,0.05);
+  color: #a8bbcc;
+}
+
+.phone-tag.after {
+  background: rgba(255,122,61,0.12);
+  color: var(--accent-soft);
+}
+
+.phone {
+  width: 280px;
+  height: 580px;
+  margin: 0 auto;
+  border-radius: 42px;
+  border: 3px solid rgba(255,255,255,0.08);
+  background: #081019;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 22px 90px rgba(0,0,0,0.45);
+}
+
+.phone::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 124px;
+  height: 30px;
+  background: #081019;
+  border-radius: 0 0 18px 18px;
+  z-index: 3;
+}
+
+.screen {
+  height: 100%;
+  overflow-y: auto;
+  padding: 36px 14px 14px;
+  background: linear-gradient(180deg, #edf2f7 0%, #eff6fb 100%);
+  color: #10202d;
+  text-align: center;
+}
+
+.screen::-webkit-scrollbar { width: 0; }
+
+.appbar {
+  display: block;
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.appbar.before {
+  background: #dde5ec;
+}
+
+.appbar.after {
+  color: white;
+  background: linear-gradient(155deg, #11283b, #18384e);
+}
+
+.appbar small,
+.status-row small,
+.microcopy,
+.tile p,
+.tile small,
+.log,
+.timeline p {
+  display: block;
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 11px;
+  color: #5b7286;
+}
+
+.stack {
+  display: grid;
+  gap: 10px;
+}
+
+.tile {
+  border-radius: 18px;
+  padding: 14px;
+  text-align: left;
+}
+
+.tile.gray {
+  background: #dfe8ef;
+  border: 1px solid rgba(16, 32, 45, 0.08);
+}
+
+.tile.white {
+  background: white;
+  border: 1px solid rgba(16, 32, 45, 0.08);
+}
+
+.tile.orange {
+  background: linear-gradient(180deg, #fff3ea, #ffe8db);
+  border: 1px solid rgba(255, 122, 61, 0.2);
+}
+
+.score-ring {
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  margin: 10px auto 4px;
+  display: grid;
+  place-items: center;
+  font-family: "Manrope", sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.score-ring.bad {
+  border: 8px solid #ffd8c7;
+  color: #d95d25;
+}
+
+.score-ring.good {
+  border: 8px solid #bdebd6;
+  color: #0d7f54;
+}
+
+.cta,
+.mini-cta {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 16px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.cta {
+  margin-top: 10px;
+  padding: 14px;
+  background: linear-gradient(135deg, #ff7a3d, #ff9f71);
+  color: #fff;
+}
+
+.mini-cta {
+  margin-top: 8px;
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  background: #143d2a;
+  color: #ccf6e3;
+}
+
+.microcopy {
+  margin-top: 7px;
+  font-size: 0.78rem;
+  color: #668196;
+}
+
+.progress {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(16, 32, 45, 0.08);
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ff7a3d, #ffd279);
+}
+
+.preview-shot {
+  display: block;
+  width: 100%;
+  border-radius: 18px;
+  border: 1px solid rgba(16,32,45,0.08);
+  margin-top: 10px;
+}
+
+.log {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: #5f7789;
+}
+
+.timeline {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.timeline .step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.timeline .dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  margin-top: 5px;
+  flex: 0 0 auto;
+}
+
+.timeline .dot.ok { background: var(--ok); }
+.timeline .dot.warn { background: var(--warn); }
+.timeline .dot.danger { background: var(--danger); }
+
+.timeline strong {
+  display: block;
+  color: #11283b;
+  margin-bottom: 2px;
+}
+
+.closing {
+  padding: 10px 0 72px;
+}
+
+.closing-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+
+.closing-card h3 {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(1.8rem, 2.5vw, 2.6rem);
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+
+.closing-card p {
+  color: var(--muted);
+  max-width: 720px;
+}
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  padding: 16px 22px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff7a3d, #ff9f71);
+  color: white;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .evidence-grid,
+  .closing-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .phone { width: 300px; }
+  .phone-block { width: 100%; }
+  h1 { font-size: 2.3rem; }
+  .hero { padding-top: 56px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <section class="hero">
+    <div class="eyebrow">Elinext mobile teardown for Mawi Heart</div>
+    <div class="brand-lockup"><img src="assets/app-icon.png" alt="Mawi Heart app icon"></div>
+    <h1>What if <span>the first 3 minutes</span> after patch placement became Mawi’s strongest mobile moment?</h1>
+    <p class="hero-copy">The public product story is strong on hardware and provider workflow. The missing leverage is a patient flow that confirms placement, explains signal quality in plain language, and recovers bad studies before support gets pulled in.</p>
+    <div class="hero-grid">
+      <div class="hero-card">
+        <strong>100+ installs</strong>
+        <span>Public Google Play footprint is real but still narrow.</span>
+      </div>
+      <div class="hero-card">
+        <strong>0 public ratings</strong>
+        <span>There is little public proof that the patient app is earning trust on its own.</span>
+      </div>
+      <div class="hero-card">
+        <strong>Provider-first story</strong>
+        <span>Website messaging is richer on workflow speed than setup reassurance.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="evidence">
+    <div class="section-wrap">
+      <div class="section-kicker">Why this feature</div>
+      <div class="evidence-grid">
+        <div class="panel">
+          <h2>The likely hidden failure is silent setup friction</h2>
+          <p>Patch-based cardiac monitoring does not need a flashy consumer app. It needs a patient to place the patch, pair the device, trust the signal, and finish the study without panicking or calling support unnecessarily.</p>
+          <div class="metric-row">
+            <span class="pill">Companion app, not broad consumer app</span>
+            <span class="pill">Home monitoring makes setup quality critical</span>
+            <span class="pill">Low public review volume means silent issues matter more</span>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Prototype thesis</h3>
+          <ul>
+            <li>Turn patch placement into a guided mini-checklist with visual confirmation.</li>
+            <li>Translate raw signal status into human language: weak, good, or call us now.</li>
+            <li>Connect symptom logging to signal quality so the patient knows what happens next.</li>
+            <li>Reduce support load without making the experience feel clinical or cold.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="prototype">
+    <div class="section-wrap">
+      <div class="prototype-head">
+        <div class="section-kicker">Before / After</div>
+        <h2>From passive relay app to active study-confidence flow</h2>
+        <p>The left side reflects a functional but low-guidance companion experience. The right side shows a lightweight mobile upgrade built around placement confidence, signal health, and fast recovery when something goes wrong.</p>
+      </div>
+
+      <div class="phone-stage">
+        <div class="phone-block">
+          <div class="phone-tag before">Current experience</div>
+          <div class="phone">
+            <div class="screen">
+              <div class="status-row"><small>9:41</small><small>72%</small></div>
+              <div class="appbar before">
+                <strong>Mawi Heart</strong>
+                <small>Companion data relay</small>
+              </div>
+              <div class="stack">
+                <div class="tile gray">
+                  <strong>Patch connected</strong>
+                  <small>Streaming to cloud</small>
+                  <div class="score-ring bad">61%</div>
+                  <p>Signal quality is unstable.</p>
+                  <span class="microcopy">Patients may not know whether to re-seat the patch or wait.</span>
+                </div>
+                <div class="tile white">
+                  <strong>Today</strong>
+                  <small>Study active · 0 symptoms logged</small>
+                  <img class="preview-shot" src="assets/screen1.png" alt="Current Mawi Heart screen">
+                </div>
+                <div class="tile white">
+                  <strong>Issue</strong>
+                  <p>Connectivity and wear quality are visible, but next action is vague.</p>
+                  <span class="microcopy">That usually creates support calls or bad recordings.</span>
+                </div>
+                <a class="cta" href="#contact">Design feels clinically functional, not confidence-building</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-block">
+          <div class="phone-tag after">Improved flow</div>
+          <div class="phone">
+            <div class="screen">
+              <div class="status-row"><small>9:41</small><small>5G · 74%</small></div>
+              <div class="appbar after">
+                <strong>Study check-in</strong>
+                <small>Your patch is placed well and recording clearly.</small>
+              </div>
+              <div class="stack">
+                <div class="tile orange">
+                  <strong>Signal confidence</strong>
+                  <div class="score-ring good">94%</div>
+                  <p>Great signal. No action needed.</p>
+                  <div class="progress"><span style="width: 94%;"></span></div>
+                  <span class="microcopy">If quality drops, we will show exactly what to fix.</span>
+                </div>
+                <div class="tile white">
+                  <strong>Patch placement guide</strong>
+                  <small>Quick visual confirmation after application</small>
+                  <img class="preview-shot" src="assets/screen2.png" alt="Mawi Heart setup screen">
+                  <a class="mini-cta" href="#contact">Looks off? Reposition with step-by-step help</a>
+                </div>
+                <div class="tile white">
+                  <strong>Symptoms and support</strong>
+                  <small>One tap to log dizziness, palpitations, or chest discomfort</small>
+                  <div class="timeline">
+                    <div class="step"><span class="dot ok"></span><div><strong>Signal confirmed</strong><p>Recording quality is visible before the patient leaves onboarding.</p></div></div>
+                    <div class="step"><span class="dot warn"></span><div><strong>Symptom event logged</strong><p>The patient sees that the event is attached to the study and reviewed later.</p></div></div>
+                    <div class="step"><span class="dot danger"></span><div><strong>Escalate only when needed</strong><p>If signal falls below threshold, the app offers a human handoff instead of ambiguity.</p></div></div>
+                  </div>
+                  <span class="log">Result: fewer failed studies, fewer avoidable support tickets, stronger trust.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing" id="contact">
+    <div class="section-wrap">
+      <div class="panel closing-card">
+        <div>
+          <h3>A small mobile workstream with outsized clinical leverage</h3>
+          <p>This is the kind of focused product upgrade Elinext can deliver without forcing a full redesign: activation UX, signal confidence states, symptom capture, and support-safe escalation for regulated mobile products.</p>
+        </div>
+        <a class="contact-link" href="https://www.elinext.com/contacts/">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>
