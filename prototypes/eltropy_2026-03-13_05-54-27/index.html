@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eltropy Mobile — AI Teardown by Elinext</title>
+  <meta name="description" content="What if Eltropy’s mobile workspace could launch secure member conversations in seconds, preserve drafts offline, and carry AI context across SMS, RCS, voice, and video?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/eltropy_2026-03-13_05-54-27/">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/eltropy_2026-03-13_05-54-27/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/eltropy_2026-03-13_05-54-27/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Eltropy Mobile — AI Teardown">
+  <meta property="og:description" content="What if Eltropy’s mobile workspace could launch secure member conversations in seconds, preserve drafts offline, and carry AI context across SMS, RCS, voice, and video?">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+
+  <!-- Ratings as of 2026-03-13: iOS 3.00 (6 reviews, source: iTunes API US), Android n/a (no public Google Play listing found; source: google-play-scraper search + direct Play URL checks) -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #eef0eb;
+      --ink: #15202b;
+      --muted: #667384;
+      --panel: #ffffff;
+      --line: rgba(21, 32, 43, 0.08);
+      --brand-blue: #4d82d7;
+      --brand-red: #e85452;
+      --brand-green: #42b366;
+      --brand-dark: #21283a;
+      --accent: #f3a84b;
+      --shadow: 0 24px 80px rgba(27, 34, 48, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Manrope", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(77, 130, 215, 0.14), transparent 32%),
+        radial-gradient(circle at top right, rgba(232, 84, 82, 0.12), transparent 28%),
+        linear-gradient(180deg, #f4f5f1 0%, #ece9e2 50%, #f6f4ee 100%);
+      color: var(--ink);
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: fixed;
+      width: 34rem;
+      height: 34rem;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .page::before {
+      top: -10rem;
+      left: -10rem;
+      background: rgba(77, 130, 215, 0.28);
+    }
+
+    .page::after {
+      top: 12rem;
+      right: -10rem;
+      background: rgba(232, 84, 82, 0.24);
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .eyebrow,
+    .section-kicker,
+    .phone-label,
+    .mini-pill {
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero,
+    .evidence,
+    .solution,
+    .systems,
+    .cta {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.76);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: var(--shadow);
+      border-radius: 36px;
+    }
+
+    .hero {
+      margin: 24px auto 28px;
+      padding: 32px 32px 38px;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(77, 130, 215, 0.12), transparent 40%),
+        linear-gradient(315deg, rgba(232, 84, 82, 0.1), transparent 34%);
+      z-index: -1;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(21, 32, 43, 0.06);
+      color: var(--brand-dark);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-red));
+      box-shadow: 0 0 0 6px rgba(77, 130, 215, 0.08);
+    }
+
+    .meta-note {
+      font-size: 0.95rem;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, 430px);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .hero-copy {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 720px;
+      animation: rise 650ms ease both;
+    }
+
+    .hero-copy img {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 18px;
+      border-radius: 20px;
+      box-shadow: 0 16px 32px rgba(33, 40, 58, 0.14);
+    }
+
+    .hero-copy h1 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2.5rem, 4vw, 4.6rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      margin-bottom: 18px;
+    }
+
+    .hero-copy h1 span {
+      color: var(--brand-red);
+    }
+
+    .hero-copy p {
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      max-width: 640px;
+      margin: 0 auto 22px;
+    }
+
+    .hero-summary {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .mini-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--brand-dark);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .mini-pill strong {
+      color: var(--ink);
+      font-size: 0.92rem;
+      letter-spacing: normal;
+      text-transform: none;
+      font-family: "Manrope", sans-serif;
+    }
+
+    .hero-quote {
+      display: inline-block;
+      max-width: 580px;
+      padding: 16px 18px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(247, 243, 236, 0.92));
+      border: 1px solid rgba(21, 32, 43, 0.06);
+      color: var(--brand-dark);
+      font-size: 0.98rem;
+      box-shadow: 0 18px 36px rgba(27, 34, 48, 0.08);
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .fact-card,
+    .evidence-card,
+    .system-card,
+    .benchmark-card,
+    .cta-panel {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: 0 18px 48px rgba(27, 34, 48, 0.08);
+    }
+
+    .fact-card {
+      padding: 22px;
+    }
+
+    .fact-card h2,
+    .section-title,
+    .cta-title {
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: -0.04em;
+    }
+
+    .fact-card h2 {
+      font-size: 1.32rem;
+      margin-bottom: 8px;
+    }
+
+    .fact-card p {
+      color: var(--muted);
+      font-size: 0.97rem;
+      margin-bottom: 18px;
+    }
+
+    .score-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .score {
+      padding: 14px 14px 16px;
+      border-radius: 22px;
+      background: #f4f6f8;
+      border: 1px solid rgba(21, 32, 43, 0.06);
+    }
+
+    .score-label {
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-bottom: 6px;
+    }
+
+    .score-value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .score-note {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: 4px;
+    }
+
+    .section {
+      padding: 18px 0;
+    }
+
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      color: var(--brand-red);
+      font-weight: 700;
+      font-size: 0.82rem;
+    }
+
+    .section-kicker::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: currentColor;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 3vw, 3rem);
+      margin-bottom: 14px;
+    }
+
+    .section-copy {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 1.03rem;
+    }
+
+    .evidence {
+      padding: 34px 28px;
+      margin-bottom: 28px;
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      margin-top: 26px;
+    }
+
+    .evidence-card {
+      padding: 22px;
+    }
+
+    .quote-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .quote-bubble {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(246, 248, 250, 0.9), rgba(245, 238, 234, 0.94));
+      border: 1px solid rgba(21, 32, 43, 0.06);
+    }
+
+    .quote-bubble p {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+
+    .quote-bubble span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .proof-shot {
+      padding: 10px;
+      border-radius: 22px;
+      background: #f2f3f4;
+      border: 1px solid rgba(21, 32, 43, 0.08);
+    }
+
+    .proof-shot img {
+      width: 100%;
+      border-radius: 16px;
+      height: 220px;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .proof-shot small {
+      display: block;
+      padding-top: 10px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    .evidence-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .evidence-item {
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: #f4f6f8;
+      border: 1px solid rgba(21, 32, 43, 0.06);
+    }
+
+    .evidence-item strong {
+      display: block;
+      font-size: 1.28rem;
+      margin-bottom: 4px;
+    }
+
+    .evidence-item span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .solution {
+      padding: 34px 28px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+
+    .solution-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .solution-note {
+      max-width: 360px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .phone-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      align-items: start;
+      margin-top: 26px;
+    }
+
+    .phone-col {
+      text-align: center;
+    }
+
+    .phone-label {
+      display: inline-flex;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(21, 32, 43, 0.06);
+      color: var(--brand-dark);
+      font-size: 0.76rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      margin: 0 auto 12px;
+      padding: 14px;
+      border-radius: 38px;
+      background:
+        linear-gradient(160deg, #353f53, #111828 70%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+        0 28px 54px rgba(17, 24, 40, 0.28);
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      width: 102px;
+      height: 24px;
+      transform: translateX(-50%);
+      border-radius: 0 0 14px 14px;
+      background: rgba(5, 9, 18, 0.82);
+      z-index: 3;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 28px;
+      overflow: auto;
+      padding: 36px 14px 14px;
+      background: linear-gradient(180deg, #f4f5f8 0%, #eef1f4 100%);
+      position: relative;
+      text-align: left;
+      scrollbar-width: none;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .status-row,
+    .screen-head,
+    .member-card,
+    .channel-row,
+    .composer,
+    .action-bar,
+    .alert-card,
+    .analytics-card,
+    .template-card,
+    .timeline-card {
+      display: block;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #6a7380;
+      margin-bottom: 16px;
+    }
+
+    .screen-head {
+      margin-bottom: 16px;
+    }
+
+    .screen-head h3 {
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .screen-head p {
+      color: #6d7684;
+      font-size: 0.88rem;
+    }
+
+    .member-card,
+    .composer,
+    .alert-card,
+    .analytics-card,
+    .template-card,
+    .timeline-card {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(21, 32, 43, 0.06);
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: 0 12px 28px rgba(17, 24, 40, 0.06);
+      margin-bottom: 12px;
+    }
+
+    .member-card strong,
+    .analytics-card strong,
+    .template-card strong,
+    .timeline-card strong {
+      display: block;
+      font-size: 0.98rem;
+      margin-bottom: 4px;
+    }
+
+    .muted-line,
+    .member-card span,
+    .analytics-card span,
+    .template-card span,
+    .timeline-card span {
+      color: #6d7684;
+      font-size: 0.84rem;
+    }
+
+    .field {
+      padding: 12px 12px;
+      border-radius: 14px;
+      background: #f6f7f9;
+      border: 1px solid rgba(21, 32, 43, 0.08);
+      margin-bottom: 10px;
+      font-size: 0.88rem;
+      color: #414b5a;
+    }
+
+    .field.error {
+      border-color: rgba(232, 84, 82, 0.44);
+      background: rgba(232, 84, 82, 0.08);
+      color: #8a2f3a;
+    }
+
+    .channel-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .chip {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #edf0f4;
+      color: #516072;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .chip.active {
+      background: rgba(77, 130, 215, 0.18);
+      color: var(--brand-blue);
+    }
+
+    .chip.safe {
+      background: rgba(66, 179, 102, 0.14);
+      color: var(--brand-green);
+    }
+
+    .button,
+    .ghost-button {
+      width: 100%;
+      border: 0;
+      border-radius: 16px;
+      padding: 13px 14px;
+      font-weight: 800;
+      font-family: "Manrope", sans-serif;
+      letter-spacing: -0.01em;
+      cursor: default;
+      text-align: center;
+    }
+
+    .button {
+      background: linear-gradient(135deg, var(--brand-red), #ff7a55);
+      color: #fff;
+    }
+
+    .button.disabled {
+      background: #d7dce2;
+      color: #8a96a5;
+    }
+
+    .ghost-button {
+      background: rgba(77, 130, 215, 0.12);
+      color: var(--brand-blue);
+    }
+
+    .action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .action-bar span {
+      color: #6d7684;
+      font-size: 0.8rem;
+    }
+
+    .screen-caption {
+      color: var(--muted);
+      font-size: 0.94rem;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    .systems {
+      padding: 34px 28px;
+      margin-bottom: 28px;
+    }
+
+    .systems-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .system-card {
+      padding: 22px;
+    }
+
+    .system-card h3 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.26rem;
+      margin-bottom: 10px;
+      letter-spacing: -0.03em;
+    }
+
+    .system-card p {
+      color: var(--muted);
+      margin-bottom: 14px;
+      font-size: 0.95rem;
+    }
+
+    .system-card ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      color: var(--brand-dark);
+      font-size: 0.92rem;
+    }
+
+    .system-card li {
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .system-card li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.54rem;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-green));
+    }
+
+    .benchmarks {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+    }
+
+    .benchmark-card {
+      padding: 22px;
+    }
+
+    .benchmark-card table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    .benchmark-card td {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(21, 32, 43, 0.08);
+      font-size: 0.94rem;
+    }
+
+    .benchmark-card td:last-child {
+      text-align: right;
+      font-weight: 800;
+    }
+
+    .cta {
+      padding: 30px 28px;
+      margin-bottom: 32px;
+    }
+
+    .cta-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 24px;
+    }
+
+    .cta-title {
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      margin-bottom: 10px;
+    }
+
+    .cta-copy {
+      color: var(--muted);
+      max-width: 640px;
+      font-size: 0.98rem;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-width: 180px;
+      padding: 16px 22px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--brand-dark), #34425c);
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 18px 40px rgba(17, 24, 40, 0.18);
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1120px) {
+      .hero-grid,
+      .evidence-grid,
+      .benchmarks {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-side {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .phone-row,
+      .systems-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-panel {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hero,
+      .evidence,
+      .solution,
+      .systems,
+      .cta {
+        padding: 24px 18px;
+        border-radius: 28px;
+      }
+
+      .hero-side {
+        grid-template-columns: 1fr;
+      }
+
+      .score-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .proof-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .meta-note {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: min(100% - 18px, 100%);
+      }
+
+      .phone {
+        width: 300px;
+      }
+
+      .hero-copy h1 {
+        font-size: 2.45rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main class="container">
+      <section class="hero">
+        <div class="hero-top">
+          <div class="eyebrow">Prepared for Arun Rao, CTO at Eltropy</div>
+          <div class="meta-note">March 13, 2026 · Public mobile teardown by Elinext</div>
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <img src="./assets/app-icon.jpg" alt="Eltropy app icon">
+            <h1>What if <span>Eltropy mobile</span> finally matched the rest of the platform?</h1>
+            <p>
+              Eltropy is selling one unified AI-powered conversation stack across text, voice, video, payments, and collections.
+              The public mobile signal still says something narrower: stale release cadence, brittle conversation start, and too much workflow friction for a real-time compliance product.
+            </p>
+
+            <div class="hero-summary">
+              <div class="mini-pill">iOS <strong>3.00 / 5</strong></div>
+              <div class="mini-pill">Updated <strong>Sep 26, 2022</strong></div>
+              <div class="mini-pill">Android <strong>No public core app found</strong></div>
+            </div>
+
+            <div class="hero-quote">
+              We rebuilt the sharpest gap: a mobile conversation launchpad that starts secure member outreach in seconds, carries AI context across channels, and never drops the draft.
+            </div>
+          </div>
+
+          <aside class="hero-side">
+            <div class="fact-card">
+              <h2>Why this is the right problem</h2>
+              <p>Arun Rao’s profile emphasizes real-time precision, compliance at scale, and AI in fintech. The mobile experience should reinforce that credibility, not erode it.</p>
+              <div class="score-strip">
+                <div class="score">
+                  <div class="score-label">Customers</div>
+                  <div class="score-value">750+</div>
+                  <div class="score-note">CFIs across North America</div>
+                </div>
+                <div class="score">
+                  <div class="score-label">Platform deals</div>
+                  <div class="score-value">43%</div>
+                  <div class="score-note">of new 2025 customers</div>
+                </div>
+                <div class="score">
+                  <div class="score-label">Conversations powered</div>
+                  <div class="score-value">100M</div>
+                  <div class="score-note">official about-page signal</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="fact-card">
+              <h2>Prototype promise</h2>
+              <p>The concept below fixes the broken “start conversation” flow and adds the systems Arun will actually care about: trusted channel choice, CRM context, local draft persistence, and clean retry analytics.</p>
+              <div class="score-strip">
+                <div class="score">
+                  <div class="score-label">Source 1</div>
+                  <div class="score-value">App Store</div>
+                  <div class="score-note">broken conversation start</div>
+                </div>
+                <div class="score">
+                  <div class="score-label">Source 2</div>
+                  <div class="score-value">G2</div>
+                  <div class="score-note">mobile + integration friction</div>
+                </div>
+                <div class="score">
+                  <div class="score-label">Source 3</div>
+                  <div class="score-value">Software Advice</div>
+                  <div class="score-note">reporting + template admin gaps</div>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="evidence section">
+        <div class="section-kicker">Evidence</div>
+        <h2 class="section-title">The public product story breaks at the mobile layer</h2>
+        <p class="section-copy">
+          Eltropy’s business narrative is getting broader every quarter. Public user feedback still points to a much simpler failure: the mobile workflow does not feel dependable enough for secure, time-sensitive customer conversations.
+        </p>
+
+        <div class="evidence-grid">
+          <div class="evidence-card">
+            <div class="quote-stack">
+              <div class="quote-bubble">
+                <p>“cannot start a new conversation”</p>
+                <span>App Store review · May 25, 2023</span>
+              </div>
+              <div class="quote-bubble">
+                <p>“This app does not work at all.”</p>
+                <span>App Store review · January 17, 2023</span>
+              </div>
+              <div class="quote-bubble">
+                <p>“The mobile app experience could be improved”</p>
+                <span>G2 review snippet · 2025</span>
+              </div>
+            </div>
+
+            <div class="proof-grid">
+              <div class="proof-shot">
+                <img src="./assets/current-screen.png" alt="Eltropy App Store screenshot showing search-first flow">
+                <small>Public App Store screenshot</small>
+              </div>
+              <div class="proof-shot">
+                <img src="./assets/current-screen-2.png" alt="Eltropy App Store screenshot showing sign-in view">
+                <small>Another public mobile screen</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="evidence-card">
+            <div class="evidence-list">
+              <div class="evidence-item">
+                <strong>3.00 / 5.00</strong>
+                <span>US App Store rating from iTunes API</span>
+              </div>
+              <div class="evidence-item">
+                <strong>September 26, 2022</strong>
+                <span>Last public iOS app update</span>
+              </div>
+              <div class="evidence-item">
+                <strong>4.4 / 5 on G2</strong>
+                <span>Strong platform sentiment, but mobile still called out</span>
+              </div>
+              <div class="evidence-item">
+                <strong>4.9 / 5 on Software Advice</strong>
+                <span>Reporting visibility and template administration still flagged</span>
+              </div>
+              <div class="evidence-item">
+                <strong>No public Play listing</strong>
+                <span>No discoverable Google Play page for the core Eltropy app on March 13, 2026</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="solution section">
+        <div class="solution-top">
+          <div>
+            <div class="section-kicker">Prototype</div>
+            <h2 class="section-title">Member Launchpad: fix the first 30 seconds of the conversation</h2>
+            <p class="section-copy">
+              The concept focuses on the highest-leverage mobile moment: start the right conversation, on the right channel, with the right context, and never lose work while switching apps or connectivity.
+            </p>
+          </div>
+          <div class="solution-note">
+            Built for a CTO who cares about real-time precision and compliance. This is AI applied to reliability, not AI added on top of friction.
+          </div>
+        </div>
+
+        <div class="phone-row">
+          <div class="phone-col">
+            <div class="phone-label">Current State</div>
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="status-row">
+                  <span>9:41</span>
+                  <span>LTE · 72%</span>
+                </div>
+                <div class="screen-head">
+                  <h3>Start conversation</h3>
+                  <p>Member outreach</p>
+                </div>
+                <div class="field">Search member, phone, or loan</div>
+                <div class="field">+1 (408) 555-0192</div>
+                <div class="field error">Layout issue detected. Action unavailable on this device size.</div>
+                <div class="channel-row">
+                  <div class="chip">SMS</div>
+                  <div class="chip">Voice</div>
+                  <div class="chip">Video</div>
+                </div>
+                <div class="composer">
+                  <strong class="muted-line">Draft</strong>
+                  <p class="muted-line">Typing starts here, but the next step is unclear and nothing indicates whether the draft is safe.</p>
+                </div>
+                <button class="button disabled">Start conversation unavailable</button>
+                <div class="action-bar">
+                  <span>No offline save</span>
+                  <span>Needs support follow-up</span>
+                </div>
+              </div>
+            </div>
+            <p class="screen-caption">The current problem is basic and expensive: staff cannot trust the first action in a regulated workflow.</p>
+          </div>
+
+          <div class="phone-col">
+            <div class="phone-label">Improved Flow</div>
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="status-row">
+                  <span>9:41</span>
+                  <span>5G · 72%</span>
+                </div>
+                <div class="screen-head">
+                  <h3>Member Launchpad</h3>
+                  <p>Verified outreach with live context</p>
+                </div>
+                <div class="member-card">
+                  <strong>Maria Chen · Loan servicing</strong>
+                  <span>Auto-matched from CRM · 2 open cases · OTP available</span>
+                </div>
+                <div class="channel-row">
+                  <div class="chip active">SMS</div>
+                  <div class="chip safe">RCS Verified</div>
+                  <div class="chip">Voice</div>
+                  <div class="chip">Video</div>
+                </div>
+                <div class="composer">
+                  <strong>AI-composed starter</strong>
+                  <p class="muted-line">“Hi Maria, I’m reaching out from Valley Community CU about your loan-document follow-up. I can walk you through next steps here or switch you to a secure call.”</p>
+                </div>
+                <div class="template-card">
+                  <strong>Compliance guardrails</strong>
+                  <span>RCS badge shown · sensitive terms flagged · callback fallback ready</span>
+                </div>
+                <button class="button">Send verified message</button>
+                <div class="action-bar">
+                  <span>Draft auto-saved locally</span>
+                  <span>Retry queue armed</span>
+                </div>
+              </div>
+            </div>
+            <p class="screen-caption">One surface for member identity, safest channel, AI starter text, and reliable send.</p>
+          </div>
+
+          <div class="phone-col">
+            <div class="phone-label">Ops Visibility</div>
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="status-row">
+                  <span>9:41</span>
+                  <span>Wi-Fi · 72%</span>
+                </div>
+                <div class="screen-head">
+                  <h3>Mobile health</h3>
+                  <p>What leaders and admins need</p>
+                </div>
+                <div class="analytics-card">
+                  <strong>Today’s member outreach</strong>
+                  <span>182 sent · 11 queued · 3 failed · 2 retrying</span>
+                </div>
+                <div class="alert-card">
+                  <strong>Template action required</strong>
+                  <p class="muted-line">Collections follow-up template updated once and pushed to 42 users without support involvement.</p>
+                </div>
+                <div class="timeline-card">
+                  <strong>Retry log</strong>
+                  <span>9:14 AM · SMS failed → switched to verified RCS</span>
+                </div>
+                <div class="timeline-card">
+                  <strong>Reporting hook</strong>
+                  <span>Sent / received counts roll up automatically to usage dashboards.</span>
+                </div>
+                <button class="ghost-button">Open platform analytics</button>
+              </div>
+            </div>
+            <p class="screen-caption">This closes the loop on the public review gaps around reporting, admin friction, and support-heavy template management.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="systems section">
+        <div class="section-kicker">Why this fits Eltropy</div>
+        <h2 class="section-title">The product is already broad. Mobile should reduce complexity, not expose it.</h2>
+        <p class="section-copy">
+          Eltropy now spans messaging, voice, video, AI, payments, collections, and 50+ integrations. The mobile layer has to act like a confident operating system for staff, not a thin companion app.
+        </p>
+
+        <div class="systems-grid">
+          <article class="system-card">
+            <h3>Reliable conversation kickoff</h3>
+            <p>Fix the first-click failure that surfaced in the App Store and replace it with a deterministic, channel-aware launch experience.</p>
+            <ul>
+              <li>Member lookup tied to CRM and core-banking context</li>
+              <li>Safe defaults for SMS, RCS, voice, and video</li>
+              <li>Draft persistence that survives app switches and poor network</li>
+            </ul>
+          </article>
+
+          <article class="system-card">
+            <h3>AI with compliance guardrails</h3>
+            <p>Use AI where it compounds trust and speed instead of adding more surface area for staff to manage.</p>
+            <ul>
+              <li>AI-generated first reply based on live account context</li>
+              <li>Sensitive language checks before send</li>
+              <li>Escalation path into secure callback or video banking</li>
+            </ul>
+          </article>
+
+          <article class="system-card">
+            <h3>Operational visibility for admins</h3>
+            <p>Public SaaS reviews already hint at reporting and template friction. Mobile should feed the system of record, not create side-work.</p>
+            <ul>
+              <li>Sent / failed / retried counts exposed automatically</li>
+              <li>Template distribution without support intervention</li>
+              <li>Retry queue diagnostics for branch and collections teams</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="benchmarks">
+          <article class="benchmark-card">
+            <h3>Benchmark context</h3>
+            <p class="section-copy">
+              Eltropy’s homepage performance is actually stronger than some competitors. The bigger opportunity is not the marketing site. It is the credibility gap between the platform story and the mobile surface.
+            </p>
+            <table>
+              <tr>
+                <td>Eltropy site</td>
+                <td>76</td>
+              </tr>
+              <tr>
+                <td>Glia site</td>
+                <td>20</td>
+              </tr>
+              <tr>
+                <td>interface.ai site</td>
+                <td>25</td>
+              </tr>
+            </table>
+          </article>
+
+          <article class="benchmark-card">
+            <h3>Platform sprawl signal</h3>
+            <p class="section-copy">
+              BuiltWith shows a broad public surface across `ai.eltropy.com`, `gpt.eltropy.com`, `demo.eltropy.com`, `omni.eltropy.com`, `auth.eltropy.com`, and more, plus roughly $10.7k+/month in detected tech spend. Mobile should feel like a trustworthy entry point into that ecosystem.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="cta section">
+        <div class="cta-panel">
+          <div>
+            <h2 class="cta-title">This is the 90-day mobile conversation reset.</h2>
+            <p class="cta-copy">
+              Elinext can help Eltropy rebuild the mobile initiation layer without disrupting the broader platform roadmap: reliable compose, verified channel handoff, draft recovery, and operational telemetry wired into the rest of the stack.
+            </p>
+          </div>
+          <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
