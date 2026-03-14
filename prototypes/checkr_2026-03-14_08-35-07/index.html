@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkr Candidate Portal - AI Teardown</title>
+  <meta name="description" content="What if Checkr's candidate portal replaced vague suspended states with an exact blocker, ETA, saved progress, and one-tap escalation for mobile candidates?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/checkr_2026-03-14_08-35-07/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/checkr_2026-03-14_08-35-07/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/checkr_2026-03-14_08-35-07/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Checkr Mobile - AI Teardown">
+  <meta property="og:description" content="What if Checkr's candidate portal stopped telling candidates a check was suspended and instead showed the exact blocker, ETA after action, and a mobile-safe recovery path?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Ratings as of 2026-03-14: iOS N/A (no official US App Store listing found via iTunes Search API), Android N/A (no official Google Play listing found via google-play-scraper search); Trustpilot 1.1 (360 reviews, source: Trustpilot) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #08122f;
+      --ink-2: #0f214d;
+      --panel: #112751;
+      --panel-2: #173468;
+      --panel-3: #eff7ff;
+      --bg: #f3f8ff;
+      --text: #eef6ff;
+      --text-dark: #0e2143;
+      --muted: #9cb4d4;
+      --muted-dark: #5d7597;
+      --line: rgba(181, 212, 255, 0.18);
+      --mint: #2ed1c1;
+      --mint-soft: #c3faf4;
+      --gold: #ffc45a;
+      --rose: #ff7d91;
+      --shadow: 0 30px 90px rgba(5, 18, 47, 0.26);
+      --radius: 30px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(46, 209, 193, 0.17), transparent 26%),
+        radial-gradient(circle at 100% 8%, rgba(255, 196, 90, 0.15), transparent 22%),
+        linear-gradient(180deg, #061026 0%, #102149 38%, #f3f8ff 38%, #f3f8ff 100%);
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 34px 20px;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding-top: 34px;
+      padding-bottom: 42px;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 36px;
+      background:
+        radial-gradient(circle at top right, rgba(46, 209, 193, 0.14), transparent 28%),
+        linear-gradient(145deg, rgba(10, 24, 58, 0.96), rgba(18, 39, 81, 0.96));
+      border: 1px solid rgba(166, 206, 255, 0.14);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -120px auto;
+      width: 320px;
+      height: 320px;
+      border-radius: 999px;
+      background: rgba(255, 196, 90, 0.1);
+      filter: blur(10px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 auto 16px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 12px;
+      color: var(--mint-soft);
+      background: rgba(46, 209, 193, 0.12);
+      border: 1px solid rgba(46, 209, 193, 0.24);
+    }
+
+    .eyebrow img {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 860px;
+      margin: 0 auto 28px;
+    }
+
+    .hero-copy h1 {
+      margin: 0 auto 18px;
+      max-width: 900px;
+      font-family: "Space Grotesk", "Avenir Next", sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: 0.94;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-copy p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 1.07rem;
+      line-height: 1.72;
+      color: var(--muted);
+    }
+
+    .hero-metrics {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 860px;
+      margin: 0 auto 26px;
+    }
+
+    .metric {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(198, 222, 255, 0.1);
+      border-radius: 24px;
+      padding: 18px;
+    }
+
+    .metric span {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.77rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.45rem;
+      line-height: 1.08;
+    }
+
+    .hero-layout {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .evidence-card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+      border: 1px solid rgba(196, 220, 255, 0.12);
+      border-radius: 30px;
+      padding: 24px;
+      min-height: 100%;
+    }
+
+    .evidence-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 125, 145, 0.14);
+      color: #ffe3e8;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .evidence-card blockquote {
+      margin: 18px 0;
+      font-size: 1.08rem;
+      line-height: 1.7;
+      color: #f8fbff;
+    }
+
+    .evidence-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .phone-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .phone-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .phone-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--mint-soft);
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .phone-title.warn {
+      color: #ffe4b1;
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      flex: 0 0 280px;
+      border-radius: 38px;
+      padding: 10px;
+      background: linear-gradient(180deg, #0e2145, #071227);
+      box-shadow: 0 26px 60px rgba(3, 11, 29, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      width: 132px;
+      height: 26px;
+      transform: translateX(-50%);
+      border-radius: 0 0 18px 18px;
+      background: #051022;
+      z-index: 3;
+    }
+
+    .phone-screen {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 30px;
+      background: linear-gradient(180deg, #f7fbff 0%, #ebf5ff 100%);
+    }
+
+    .phone-scroll {
+      height: 100%;
+      overflow: auto;
+      padding: 36px 14px 14px;
+      color: var(--text-dark);
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .phone-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screen-header {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .screen-header img {
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 10px;
+      border-radius: 10px;
+      display: block;
+    }
+
+    .screen-header .label {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: #dff7f2;
+      color: #11776c;
+      margin-bottom: 10px;
+    }
+
+    .screen-header h3 {
+      margin: 0 auto 6px;
+      font-size: 1.32rem;
+      line-height: 1.08;
+      max-width: 220px;
+      font-family: "Space Grotesk", sans-serif;
+      display: block;
+    }
+
+    .screen-header p {
+      margin: 0 auto 16px;
+      max-width: 220px;
+      line-height: 1.55;
+      color: var(--muted-dark);
+      font-size: 0.92rem;
+      display: block;
+    }
+
+    .ui-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: 0 16px 30px rgba(14, 33, 67, 0.08);
+      border: 1px solid rgba(27, 69, 128, 0.08);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .ui-card h4 {
+      margin: 0 0 8px;
+      font-size: 0.98rem;
+      line-height: 1.35;
+    }
+
+    .ui-card p {
+      margin: 0;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: var(--muted-dark);
+    }
+
+    .status-row,
+    .micro-list,
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: #ffe8db;
+      color: #a85317;
+    }
+
+    .status-chip.good {
+      background: #dff7f2;
+      color: #11776c;
+    }
+
+    .split {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      font-size: 0.84rem;
+      color: var(--muted-dark);
+    }
+
+    .split strong {
+      color: var(--text-dark);
+      font-size: 0.95rem;
+    }
+
+    .banner-bad,
+    .banner-good {
+      border-radius: 18px;
+      padding: 12px 14px;
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .banner-bad {
+      background: #fff1f3;
+      color: #9b4457;
+      border: 1px solid #ffd2db;
+    }
+
+    .banner-good {
+      background: #e8fbf7;
+      color: #0f7268;
+      border: 1px solid #c4efe7;
+    }
+
+    .timeline-step {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      margin-top: 2px;
+      background: #d9e8f9;
+      border: 4px solid #eef5ff;
+      box-shadow: 0 0 0 1px rgba(21, 58, 112, 0.12);
+    }
+
+    .dot.done {
+      background: var(--mint);
+    }
+
+    .dot.warn {
+      background: var(--gold);
+    }
+
+    .timeline-step strong,
+    .micro-list strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 0.88rem;
+    }
+
+    .timeline-step span,
+    .micro-list span {
+      display: block;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      color: var(--muted-dark);
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, #0f214d, #1d4d8d);
+      color: #f7fbff;
+    }
+
+    .btn.secondary {
+      border: 1px solid rgba(16, 45, 95, 0.14);
+      color: var(--text-dark);
+      background: #f8fbff;
+    }
+
+    .signals,
+    .impact {
+      background: var(--bg);
+      color: var(--text-dark);
+    }
+
+    .signals .container,
+    .impact .container {
+      background: transparent;
+    }
+
+    .section-head {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 24px;
+    }
+
+    .section-head span {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.75rem;
+      color: #146a60;
+      background: #dff7f2;
+    }
+
+    .section-head h2 {
+      margin: 0 0 12px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p {
+      margin: 0;
+      line-height: 1.72;
+      color: var(--muted-dark);
+    }
+
+    .evidence-grid,
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .evidence-item,
+    .impact-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 22px;
+      border: 1px solid rgba(17, 39, 81, 0.08);
+      box-shadow: 0 16px 30px rgba(11, 29, 61, 0.06);
+    }
+
+    .evidence-item strong,
+    .impact-card strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .evidence-item p,
+    .impact-card p {
+      margin: 0;
+      color: var(--muted-dark);
+      line-height: 1.65;
+    }
+
+    .solution {
+      background: linear-gradient(180deg, #0f214d 0%, #122a57 100%);
+    }
+
+    .solution-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .solution-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(196, 220, 255, 0.12);
+      border-radius: 26px;
+      padding: 22px;
+    }
+
+    .solution-card .count {
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      background: rgba(46, 209, 193, 0.14);
+      color: var(--mint-soft);
+      font-weight: 800;
+    }
+
+    .solution-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+    }
+
+    .solution-card p {
+      margin: 0;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .closing {
+      background: linear-gradient(180deg, #f3f8ff 0%, #dfefff 100%);
+      color: var(--text-dark);
+      padding-bottom: 48px;
+    }
+
+    .closing-card {
+      background: linear-gradient(145deg, #ffffff, #eef6ff);
+      border-radius: 34px;
+      border: 1px solid rgba(17, 39, 81, 0.08);
+      box-shadow: 0 24px 50px rgba(11, 29, 61, 0.08);
+      padding: 30px;
+      text-align: center;
+    }
+
+    .closing-card h2 {
+      margin: 0 0 12px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
+
+    .closing-card p {
+      max-width: 700px;
+      margin: 0 auto 20px;
+      line-height: 1.75;
+      color: var(--muted-dark);
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 24px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #10295a, #1e5aa1);
+      color: #f7fbff;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      box-shadow: 0 20px 35px rgba(17, 45, 97, 0.22);
+    }
+
+    @media (max-width: 1080px) {
+      .hero-layout,
+      .solution-grid,
+      .evidence-grid,
+      .impact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-metrics,
+      .phone-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .evidence-card {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hero-card,
+      .closing-card {
+        padding: 22px;
+      }
+
+      .hero-metrics {
+        max-width: 360px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .button-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <section class="section hero">
+      <div class="container">
+        <div class="hero-card">
+          <div class="hero-copy">
+            <div class="eyebrow">
+              <img src="assets/icon.png" alt="Checkr icon">
+              candidate portal teardown / mobile recovery flow
+            </div>
+            <h1>What if "Suspended" was the start of recovery instead of the end of trust?</h1>
+            <p>
+              Checkr already promises candidates better status visibility and lower support load. Public complaints still show the same failure mode: a vague state, an expired link, or a chatbot loop with no exact next step. We mocked up a tighter mobile recovery flow for the candidate portal.
+            </p>
+          </div>
+
+          <div class="hero-metrics">
+            <div class="metric">
+              <span>Public friction</span>
+              <strong>1.1 / 5 on Trustpilot</strong>
+            </div>
+            <div class="metric">
+              <span>Official claim</span>
+              <strong>Mobile-first candidate access</strong>
+            </div>
+            <div class="metric">
+              <span>Page audit</span>
+              <strong>39 / 100 mobile perf</strong>
+            </div>
+          </div>
+
+          <div class="hero-layout">
+            <aside class="evidence-card">
+              <div class="evidence-tag">public signal</div>
+              <blockquote>
+                "The link didn't ask for more info... Now my account is suspended due to not re-verifying my SSN."
+              </blockquote>
+              <p>
+                That surfaced from a public Reddit result snippet on 2026-03-14. Trustpilot shows the same pattern: repeated automation, weak state explanation, and support loops. The prototype below fixes the exact moment where candidate certainty collapses.
+              </p>
+            </aside>
+
+            <div class="phone-grid">
+              <div class="phone-wrap">
+                <div class="phone-title warn">before / generic suspended state</div>
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="phone-scroll">
+                      <div class="screen-header">
+                        <img src="assets/icon.png" alt="Checkr icon">
+                        <span class="label">candidate portal</span>
+                        <h3>Background check</h3>
+                        <p>Your report needs attention.</p>
+                      </div>
+
+                      <div class="ui-card">
+                        <div class="status-row">
+                          <span class="status-chip">suspended</span>
+                          <h4>We could not complete your report.</h4>
+                          <p>Check your email for more information.</p>
+                        </div>
+                      </div>
+
+                      <div class="banner-bad">The previous verification link has expired. No new action is available here.</div>
+
+                      <div class="ui-card">
+                        <div class="split">
+                          <span>Status</span>
+                          <strong>Suspended</strong>
+                        </div>
+                        <div class="split">
+                          <span>Updated</span>
+                          <strong>2 days ago</strong>
+                        </div>
+                        <div class="split">
+                          <span>Support</span>
+                          <strong>Chatbot only</strong>
+                        </div>
+                      </div>
+
+                      <div class="ui-card">
+                        <h4>Timeline</h4>
+                        <div class="timeline">
+                          <div class="timeline-step">
+                            <div class="dot done"></div>
+                            <div>
+                              <strong>Identity submitted</strong>
+                              <span>Completed on Mar 10</span>
+                            </div>
+                          </div>
+                          <div class="timeline-step">
+                            <div class="dot warn"></div>
+                            <div>
+                              <strong>Verification issue</strong>
+                              <span>See email for details</span>
+                            </div>
+                          </div>
+                          <div class="timeline-step">
+                            <div class="dot"></div>
+                            <div>
+                              <strong>Employer review</strong>
+                              <span>No ETA available</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="ui-card">
+                        <h4>Need help?</h4>
+                        <p>Use chat support or contact your employer for more information.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="phone-wrap">
+                <div class="phone-title">after / exact blocker + recovery path</div>
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="phone-scroll">
+                      <div class="screen-header">
+                        <img src="assets/icon.png" alt="Checkr icon">
+                        <span class="label">candidate portal</span>
+                        <h3>Finish verification</h3>
+                        <p>One missing item. Your report resumes as soon as this is uploaded.</p>
+                      </div>
+
+                      <div class="ui-card">
+                        <div class="status-row">
+                          <span class="status-chip good">needs 1 action</span>
+                          <h4>Upload your SSN confirmation</h4>
+                          <p>We could not verify the last document. Submit a clearer image by Mar 16 to keep your report moving.</p>
+                        </div>
+                        <div class="button-row">
+                          <a class="btn primary" href="https://www.elinext.com/contacts/">Upload document</a>
+                          <div class="btn secondary">See example</div>
+                        </div>
+                      </div>
+
+                      <div class="banner-good">Expected turnaround after upload: 8 to 24 hours. Your previous answers are already saved.</div>
+
+                      <div class="ui-card">
+                        <h4>Why you are seeing this</h4>
+                        <div class="micro-list">
+                          <div>
+                            <strong>Document quality issue</strong>
+                            <span>The last file was too dark to confirm the number safely.</span>
+                          </div>
+                          <div>
+                            <strong>No need to restart</strong>
+                            <span>Only this step is missing. Your identity form and consent are still valid.</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="ui-card">
+                        <h4>Progress</h4>
+                        <div class="timeline">
+                          <div class="timeline-step">
+                            <div class="dot done"></div>
+                            <div>
+                              <strong>Identity submitted</strong>
+                              <span>Completed on Mar 10</span>
+                            </div>
+                          </div>
+                          <div class="timeline-step">
+                            <div class="dot warn"></div>
+                            <div>
+                              <strong>Upload replacement image</strong>
+                              <span>Estimated 2 minutes on mobile</span>
+                            </div>
+                          </div>
+                          <div class="timeline-step">
+                            <div class="dot"></div>
+                            <div>
+                              <strong>Verification resumes automatically</strong>
+                              <span>ETA 8 to 24 hours after upload</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="ui-card">
+                        <h4>Escalate with context</h4>
+                        <p>Need help now? Start a live thread with the failed-check reason, prior attempts, and your saved document attached automatically.</p>
+                        <div class="button-row">
+                          <div class="btn secondary">Open live support</div>
+                          <div class="btn secondary">Regenerate secure link</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section signals">
+      <div class="container">
+        <div class="section-head">
+          <span>where the gap is visible</span>
+          <h2>The public story already tells Checkr where to focus.</h2>
+          <p>
+            The strongest signals all point to the same design problem: candidates do not just need status, they need explainable recovery. That is the moment where a mobile portal earns trust or burns it.
+          </p>
+        </div>
+
+        <div class="evidence-grid">
+          <div class="evidence-item">
+            <strong>Official product copy</strong>
+            <p>
+              Checkr says candidates drop when they feel left in the dark and that status visibility should reduce support requests. The portal is explicitly sold on clarity.
+            </p>
+          </div>
+          <div class="evidence-item">
+            <strong>Recent complaint pattern</strong>
+            <p>
+              Trustpilot reviews describe automated loops, blank or vague outcomes, and chat-only support when a report gets stuck or data is missing.
+            </p>
+          </div>
+          <div class="evidence-item">
+            <strong>Discussion snippets</strong>
+            <p>
+              Public Reddit search snippets surfaced suspended checks, expired links, and candidates searching for workaround advice outside Checkr's normal flow.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section solution">
+      <div class="container">
+        <div class="section-head">
+          <span>prototype direction</span>
+          <h2>Three product changes fix the moment that matters.</h2>
+          <p>
+            This is not a big redesign. It is a tighter mobile state machine for high-anxiety cases: tell the candidate what broke, preserve their progress, and make recovery visible.
+          </p>
+        </div>
+
+        <div class="solution-grid">
+          <div class="solution-card">
+            <div class="count">1</div>
+            <h3>Translate the blocker</h3>
+            <p>
+              Replace generic statuses with human-readable reason cards, due dates, and a visible ETA once the candidate acts.
+            </p>
+          </div>
+          <div class="solution-card">
+            <div class="count">2</div>
+            <h3>Preserve every prior step</h3>
+            <p>
+              Keep completed forms, consent, and uploads intact so a failed verification does not feel like restarting the process from zero.
+            </p>
+          </div>
+          <div class="solution-card">
+            <div class="count">3</div>
+            <h3>Escalate with context</h3>
+            <p>
+              When automation breaks, open a human handoff that already contains the candidate's issue, uploads, and attempted actions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section impact">
+      <div class="container">
+        <div class="section-head">
+          <span>why this is worth shipping</span>
+          <h2>A clearer state model helps both sides of the portal.</h2>
+          <p>
+            Candidates get certainty. Recruiters get fewer support escalations. Engineering gets a smaller, more legible recovery path instead of a long tail of invisible edge cases.
+          </p>
+        </div>
+
+        <div class="impact-grid">
+          <div class="impact-card">
+            <strong>Lower candidate drop-off</strong>
+            <p>
+              Clear blockers and ETA bands keep people moving instead of abandoning a report because "Suspended" feels terminal.
+            </p>
+          </div>
+          <div class="impact-card">
+            <strong>Less support volume</strong>
+            <p>
+              Exact next steps cut duplicate tickets and reduce the need to explain the same issue across email, chat, and employer channels.
+            </p>
+          </div>
+          <div class="impact-card">
+            <strong>Stronger trust in automation</strong>
+            <p>
+              The system feels more credible when it explains why it needs something and what happens after the candidate provides it.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section closing">
+      <div class="container">
+        <div class="closing-card">
+          <h2>Built for Ashik's lane: mobile clarity on top of operational complexity.</h2>
+          <p>
+            This concept does not fight Checkr's AI story. It makes the candidate portal trustworthy when the automated path fails. That is the kind of systems-meets-product problem an engineering leader can actually sponsor.
+          </p>
+          <a class="cta" href="https://www.elinext.com/contacts/">Get in Touch</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
