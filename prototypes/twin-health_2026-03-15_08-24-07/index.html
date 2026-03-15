@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twin Health Mobile - Explainable Meal Capture</title>
+  <meta name="description" content="What if Twin Health turned meal logging into a faster, explainable mobile flow that groups ingredients, saves recipes, and gives its digital twin cleaner inputs?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/twin-health_2026-03-15_08-24-07/">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/twin-health_2026-03-15_08-24-07/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/twin-health_2026-03-15_08-24-07/">
+  <meta property="og:title" content="Twin Health Mobile — AI Teardown">
+  <meta property="og:description" content="What if Twin Health made meal capture feel like a 10-second conversation, with auto-grouped ingredients, visible food logic, and cleaner digital-twin inputs?">
+  <meta property="og:type" content="website">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+
+  <!-- Ratings as of 2026-03-15: iOS 4.78 (2889 reviews, source: iTunes API, US), Android 4.76 (1940 reviews, source: https://play.google.com/store/apps/details?id=com.twinsdigital.v2&hl=en&gl=us via google-play-scraper) -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #08111a;
+      --bg-deep: #050b12;
+      --surface: #0f1a26;
+      --surface-2: #132232;
+      --surface-3: #16283c;
+      --line: rgba(255, 255, 255, 0.09);
+      --text: #edf6f7;
+      --muted: #96aab1;
+      --mint: #82e39c;
+      --teal: #43d4c7;
+      --amber: #ffbf68;
+      --orange: #ff8f4a;
+      --red: #ff5d5d;
+      --white: #ffffff;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.38);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Manrope", sans-serif;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(67, 212, 199, 0.14), transparent 24%),
+        radial-gradient(circle at 82% 12%, rgba(255, 191, 104, 0.12), transparent 20%),
+        radial-gradient(circle at 72% 88%, rgba(130, 227, 156, 0.10), transparent 26%),
+        linear-gradient(180deg, #07111a 0%, #08131d 36%, #071019 100%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.7;
+    }
+
+    .page::before {
+      width: 16rem;
+      height: 16rem;
+      top: 2rem;
+      left: -5rem;
+      background: rgba(67, 212, 199, 0.18);
+    }
+
+    .page::after {
+      width: 20rem;
+      height: 20rem;
+      right: -7rem;
+      bottom: 3rem;
+      background: rgba(255, 143, 74, 0.14);
+    }
+
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 0 20px;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding-top: 76px;
+      padding-bottom: 46px;
+      text-align: center;
+    }
+
+    .eyebrow,
+    .meta-pill,
+    .kicker,
+    .label,
+    .mini-badge {
+      display: block;
+      width: fit-content;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      border-radius: 999px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .eyebrow {
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: #dce7e9;
+    }
+
+    .brand-lockup {
+      display: block;
+      width: 108px;
+      height: 108px;
+      margin: 20px auto 18px;
+      padding: 10px;
+      border-radius: 30px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06));
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
+    }
+
+    .brand-lockup img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 22px;
+    }
+
+    .meta-pill {
+      padding: 8px 12px;
+      margin-bottom: 18px;
+      color: #c9ffe0;
+      background: rgba(130, 227, 156, 0.10);
+      border: 1px solid rgba(130, 227, 156, 0.18);
+    }
+
+    h1,
+    h2,
+    h3,
+    .phone-title,
+    .stat-value {
+      font-family: "Syne", sans-serif;
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 0 auto 18px;
+      font-size: clamp(2.8rem, 5.4vw, 5.8rem);
+      line-height: 0.94;
+      letter-spacing: -0.06em;
+      text-align: center;
+    }
+
+    h1 .accent {
+      color: #fff0b4;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      margin: 0 auto 16px;
+      color: var(--muted);
+      font-size: 1.12rem;
+      line-height: 1.72;
+      text-align: center;
+    }
+
+    .hero-note {
+      max-width: 760px;
+      margin: 0 auto 30px;
+      color: #d9e5e8;
+      font-size: 0.98rem;
+      line-height: 1.65;
+      text-align: center;
+    }
+
+    .hero-grid,
+    .insight-grid,
+    .impact-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .stat-card,
+    .insight-card,
+    .impact-card,
+    .cta-panel {
+      background: rgba(15, 26, 38, 0.92);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card,
+    .insight-card,
+    .impact-card {
+      border-radius: var(--radius-lg);
+      padding: 22px 20px;
+    }
+
+    .stat-card {
+      text-align: left;
+      min-height: 154px;
+    }
+
+    .stat-value {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.55rem;
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+    }
+
+    .stat-card p,
+    .insight-card p,
+    .impact-card p {
+      color: var(--muted);
+      line-height: 1.62;
+    }
+
+    .label {
+      margin: 0 0 12px;
+      padding: 7px 10px;
+      color: #d8e7e7;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .intro,
+    .prototype,
+    .impact,
+    .closing {
+      padding-top: 26px;
+      padding-bottom: 26px;
+    }
+
+    .kicker {
+      margin-bottom: 14px;
+      padding: 9px 13px;
+      color: #b9f7f0;
+      background: rgba(67, 212, 199, 0.10);
+      border: 1px solid rgba(67, 212, 199, 0.18);
+    }
+
+    .section-title {
+      max-width: 780px;
+      margin: 0 auto 12px;
+      font-size: clamp(2rem, 3.6vw, 3.3rem);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+      text-align: center;
+    }
+
+    .section-copy {
+      max-width: 760px;
+      margin: 0 auto 28px;
+      color: var(--muted);
+      line-height: 1.72;
+      text-align: center;
+    }
+
+    .insight-grid {
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .insight-card strong,
+    .impact-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1.18rem;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+
+    .prototype-shell {
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      background:
+        linear-gradient(180deg, rgba(13, 24, 35, 0.98), rgba(10, 18, 28, 0.98)),
+        #0b141d;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .prototype-topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .prototype-topline p {
+      color: var(--muted);
+      max-width: 640px;
+      line-height: 1.65;
+    }
+
+    .phone-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+      gap: 28px;
+      align-items: start;
+    }
+
+    .phone-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .mini-badge {
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #d7e6ea;
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      padding: 12px;
+      border-radius: 40px;
+      background:
+        linear-gradient(180deg, #1b2b3c 0%, #08111a 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 22px 44px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 112px;
+      height: 24px;
+      border-radius: 0 0 18px 18px;
+      background: #04090e;
+      z-index: 3;
+    }
+
+    .phone::after {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .phone-screen {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      padding: 36px 14px 14px;
+      border-radius: 30px;
+      overflow: auto;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(67, 212, 199, 0.14), transparent 32%),
+        linear-gradient(180deg, #f6fbfc 0%, #edf4f6 100%);
+      color: #10202d;
+      scrollbar-width: none;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .status-icons span {
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #10202d;
+      opacity: 0.7;
+    }
+
+    .app-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(16, 32, 45, 0.08);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .app-chip .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--teal);
+    }
+
+    .phone-title {
+      display: block;
+      margin-top: 14px;
+      margin-bottom: 8px;
+      font-size: 1.7rem;
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .phone-copy {
+      color: #4e6472;
+      font-size: 0.93rem;
+      line-height: 1.48;
+      margin-bottom: 14px;
+    }
+
+    .ui-card {
+      display: block;
+      padding: 14px;
+      margin-bottom: 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(16, 32, 45, 0.08);
+      box-shadow: 0 12px 26px rgba(16, 32, 45, 0.08);
+    }
+
+    .ui-card.dark {
+      background: #10202d;
+      color: #eff6f7;
+    }
+
+    .ui-card h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+
+    .ui-card p {
+      font-size: 0.88rem;
+      line-height: 1.45;
+      color: inherit;
+    }
+
+    .ui-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 10px;
+    }
+
+    .ui-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(16, 32, 45, 0.05);
+      font-size: 0.86rem;
+      line-height: 1.25;
+    }
+
+    .ui-row strong {
+      font-weight: 800;
+    }
+
+    .tag {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 66px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .tag.green {
+      background: rgba(130, 227, 156, 0.18);
+      color: #0d7045;
+    }
+
+    .tag.orange {
+      background: rgba(255, 191, 104, 0.24);
+      color: #9d4b0d;
+    }
+
+    .tag.red {
+      background: rgba(255, 93, 93, 0.18);
+      color: #8c2030;
+    }
+
+    .tag.info {
+      background: rgba(67, 212, 199, 0.16);
+      color: #0e6b68;
+    }
+
+    .progress {
+      margin-top: 12px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(16, 32, 45, 0.10);
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 72%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--teal), var(--mint));
+    }
+
+    .bubble {
+      display: block;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px 14px 14px 4px;
+      background: rgba(255, 93, 93, 0.10);
+      color: #7a3131;
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .explain-bar {
+      display: grid;
+      gap: 9px;
+      margin-top: 10px;
+    }
+
+    .explain-bar div {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(16, 32, 45, 0.05);
+      font-size: 0.83rem;
+      line-height: 1.4;
+      color: #354c58;
+    }
+
+    .cta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #10202d, #173348);
+      color: #f2fbfc;
+      font-size: 0.83rem;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    .cta-chip em {
+      font-style: normal;
+      color: #9be7db;
+    }
+
+    .impact-grid {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .impact-card strong {
+      font-size: 1.2rem;
+    }
+
+    .closing {
+      padding-bottom: 82px;
+    }
+
+    .cta-panel {
+      border-radius: var(--radius-xl);
+      padding: 30px;
+      text-align: center;
+      background:
+        linear-gradient(135deg, rgba(18, 34, 50, 0.98), rgba(11, 20, 29, 0.98)),
+        #0d1823;
+    }
+
+    .cta-panel h2 {
+      margin-bottom: 12px;
+      font-size: clamp(2rem, 3.4vw, 3.1rem);
+      line-height: 1.04;
+      letter-spacing: -0.05em;
+    }
+
+    .cta-panel p {
+      max-width: 700px;
+      margin: 0 auto 22px;
+      color: var(--muted);
+      line-height: 1.72;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 190px;
+      padding: 16px 24px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ffe08b, #ff9b5f);
+      color: #13202d;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      box-shadow: 0 18px 36px rgba(255, 155, 95, 0.28);
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      color: #8ea2ab;
+      font-size: 0.84rem;
+      line-height: 1.55;
+    }
+
+    .fade-up {
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .delay-1 { animation-delay: 0.08s; }
+    .delay-2 { animation-delay: 0.16s; }
+    .delay-3 { animation-delay: 0.24s; }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .phone-row {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+
+      .prototype-topline {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding-top: 54px;
+      }
+
+      .prototype-shell,
+      .cta-panel {
+        padding: 22px;
+      }
+
+      .section-title {
+        max-width: 92%;
+      }
+
+      .hero-grid,
+      .insight-grid,
+      .impact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="section hero">
+      <div class="wrap">
+        <span class="eyebrow fade-up">Elinext mobile teardown for Abdul Rahuman M</span>
+        <span class="brand-lockup fade-up delay-1"><img src="assets/app-icon.jpg" alt="Twin Health app icon"></span>
+        <span class="meta-pill fade-up delay-1">Twin Health app review: 34 of the latest 100 reviews were 3 stars or below</span>
+        <h1 class="fade-up delay-2">Twin already wins on <span class="accent">outcomes.</span><br>The next lift is making food input feel effortless.</h1>
+        <p class="hero-copy fade-up delay-2">Public reviews do not suggest a broken program. They suggest a high-value metabolic app that still asks members to do too much manual work before the digital twin and care team can help.</p>
+        <p class="hero-note fade-up delay-3">That is a sharp fit for Abdul's remit: he has led Twin's mobile and sensor experience before, and now owns AI platform quality. Cleaner meal inputs improve both sides.</p>
+
+        <div class="hero-grid fade-up delay-3">
+          <article class="stat-card">
+            <span class="label">Review signal</span>
+            <strong class="stat-value">17 iOS + 17 Android</strong>
+            <p>Recent low-rated reviews cluster around meal logging, recipe handling, explainability, onboarding, and care visibility rather than the program's clinical value.</p>
+          </article>
+          <article class="stat-card">
+            <span class="label">Scale Abdul knows</span>
+            <strong class="stat-value">30K members, 100K+ sensors</strong>
+            <p>That is the mobile and IoT footprint Abdul says he managed in his prior Twin role, which makes quality-of-input work especially relevant to him.</p>
+          </article>
+          <article class="stat-card">
+            <span class="label">Store footprint</span>
+            <strong class="stat-value">4.78 iOS / 4.76 Android</strong>
+            <p>Twin has strong aggregate ratings and 100,000+ Android installs. The opportunity is not rescue. It is tightening the member-input loop at scale.</p>
+          </article>
+          <article class="stat-card">
+            <span class="label">Public web context</span>
+            <strong class="stat-value">28/100 mobile score</strong>
+            <p>The US marketing site carries heavy frontend weight. It is a useful proxy that Twin's digital surface area is already complex and worth simplifying where possible.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section intro">
+      <div class="wrap">
+        <span class="kicker">Why this opportunity is real</span>
+        <h2 class="section-title">Members already trust the outcomes. They do not always trust the work required to get there.</h2>
+        <p class="section-copy">The review language repeats the same pattern: "I like the program, but logging meals is tedious, custom recipes are clunky, and I don't always know why something is green, orange, or red." That is exactly the kind of friction a focused mobile build can remove.</p>
+
+        <div class="insight-grid">
+          <article class="insight-card">
+            <strong>Manual input is fighting the AI story</strong>
+            <p>Twin's digital twin gets better when food data is structured. But today's public feedback still sounds like a manual calorie tracker in the moments that matter most.</p>
+          </article>
+          <article class="insight-card">
+            <strong>Opaque food colors erode trust fast</strong>
+            <p>Several users call out inconsistent or confusing color assignments. A simpler explainability layer can turn "random" into "I understand why."</p>
+          </article>
+          <article class="insight-card">
+            <strong>Coach time should be for nuance, not cleanup</strong>
+            <p>Low-confidence meals can flow directly into the care thread with context attached, instead of forcing users to relog, restate, or wait on generic support.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section prototype">
+      <div class="wrap">
+        <div class="prototype-shell">
+          <div class="prototype-topline">
+            <div>
+              <span class="kicker">Prototype concept</span>
+              <h2 class="section-title" style="text-align:left;max-width:none;margin:0 0 10px;">Current friction vs. an explainable meal-capture flow</h2>
+            </div>
+            <p>This is not a new chatbot concept. It is a better mobile surface for the product Twin already has: one capture moment, one structured meal, one visible explanation layer, and a cleaner handoff to care when confidence is low.</p>
+          </div>
+
+          <div class="phone-row">
+            <div class="phone-block">
+              <span class="mini-badge">Current flow</span>
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="status">
+                    <span>9:41</span>
+                    <div class="status-icons"><span></span><span></span><span></span></div>
+                  </div>
+                  <span class="app-chip"><span class="dot"></span> Twin today</span>
+                  <strong class="phone-title">Log lunch the hard way</strong>
+                  <p class="phone-copy">The member already knows what they ate. The app still asks them to reconstruct it item by item.</p>
+
+                  <div class="ui-card">
+                    <h3>Find every ingredient manually</h3>
+                    <div class="ui-list">
+                      <div class="ui-row"><span>Search grilled salmon</span><span class="tag info">tap 1</span></div>
+                      <div class="ui-row"><span>Search brown rice</span><span class="tag info">tap 2</span></div>
+                      <div class="ui-row"><span>Add vegetables</span><span class="tag info">tap 3</span></div>
+                      <div class="ui-row"><span>Fix wrong meal slot</span><span class="tag info">tap 4</span></div>
+                    </div>
+                  </div>
+
+                  <div class="ui-card">
+                    <h3>Custom recipe?</h3>
+                    <p>The member cooked at home, but reusable household recipes still feel clunky and serving logic is unclear.</p>
+                  </div>
+
+                  <div class="ui-card dark">
+                    <h3>Color result lands without enough context</h3>
+                    <div class="ui-list">
+                      <div class="ui-row" style="background:rgba(255,255,255,0.08);"><span>Salmon bowl</span><span class="tag orange">orange</span></div>
+                      <div class="ui-row" style="background:rgba(255,255,255,0.08);"><span>Sauce</span><span class="tag red">red</span></div>
+                      <div class="ui-row" style="background:rgba(255,255,255,0.08);"><span>Vegetables</span><span class="tag green">green</span></div>
+                    </div>
+                    <span class="bubble">"I still don't know why this changed from green last week."</span>
+                  </div>
+
+                  <div class="ui-card">
+                    <h3>When something looks wrong</h3>
+                    <p>The user now has to message support or a coach, restate the meal, and wait for clarification.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phone-block">
+              <span class="mini-badge">Proposed flow</span>
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="status">
+                    <span>9:41</span>
+                    <div class="status-icons"><span></span><span></span><span></span></div>
+                  </div>
+                  <span class="app-chip"><span class="dot"></span> Smart meal capture</span>
+                  <strong class="phone-title">Capture once. Explain once.</strong>
+                  <p class="phone-copy">Turn food logging into a fast conversational moment without losing structure or trust.</p>
+
+                  <div class="ui-card dark">
+                    <h3>What did you eat?</h3>
+                    <p>Snap the plate, dictate the meal, or paste a saved recipe. Twin groups ingredients before the member starts editing.</p>
+                    <div class="cta-chip">Camera + voice parsed in <em>8 seconds</em></div>
+                  </div>
+
+                  <div class="ui-card">
+                    <h3>Structured meal, not loose items</h3>
+                    <div class="ui-list">
+                      <div class="ui-row"><span>Salmon, 5 oz</span><span class="tag green">green</span></div>
+                      <div class="ui-row"><span>Brown rice, 1/2 cup</span><span class="tag orange">orange</span></div>
+                      <div class="ui-row"><span>Teriyaki glaze, 2 tbsp</span><span class="tag red">red</span></div>
+                    </div>
+                    <div class="progress"><span></span></div>
+                  </div>
+
+                  <div class="ui-card">
+                    <h3>Why these colors?</h3>
+                    <div class="explain-bar">
+                      <div>Salmon is green because protein is high and glucose response has stayed stable on similar meals.</div>
+                      <div>Rice is orange because portion size is safe today, but larger servings have previously raised post-meal glucose.</div>
+                      <div>Glaze is red because the sugar load is high relative to your current target range.</div>
+                    </div>
+                  </div>
+
+                  <div class="ui-card">
+                    <h3>Save once, reuse forever</h3>
+                    <p>"Weeknight salmon bowl" becomes a reusable recipe with portion memory and one-tap relogging.</p>
+                  </div>
+
+                  <div class="ui-card dark">
+                    <h3>Low confidence goes straight to care</h3>
+                    <p>Twin can flag uncertain items, attach the meal context, and route it into the coach thread instead of making the member start over.</p>
+                    <div class="cta-chip">Coach sees the meal, ingredients, and confidence notes</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section impact">
+      <div class="wrap">
+        <span class="kicker">Why this matters to Twin</span>
+        <h2 class="section-title">A simpler input loop improves the app, the AI platform, and the care workflow at the same time.</h2>
+        <p class="section-copy">This is why the concept is a strong outreach angle for Abdul specifically. It ties his past mobile and IoT scope to his current AI-platform scope instead of forcing him to care about a disconnected feature idea.</p>
+
+        <div class="impact-grid">
+          <article class="impact-card">
+            <strong>Cleaner data for the digital twin</strong>
+            <p>Fewer manual steps means more complete meals, fewer approximate substitutions, and less garbage flowing into personalization logic.</p>
+          </article>
+          <article class="impact-card">
+            <strong>Higher trust in the food system</strong>
+            <p>Visible explanations turn green, orange, and red from opaque labels into understandable tradeoffs the member can act on.</p>
+          </article>
+          <article class="impact-card">
+            <strong>Less support and coach cleanup</strong>
+            <p>Routing low-confidence meals with full context reduces the back-and-forth currently triggered by confusing classifications and broken logging flows.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section closing">
+      <div class="wrap">
+        <div class="cta-panel">
+          <span class="kicker">Elinext angle</span>
+          <h2>Build the highest-leverage mobile fix first.</h2>
+          <p>For Twin, that likely is not more AI messaging. It is a tighter meal-capture surface that helps members log faster, understand recommendations faster, and get help faster when the app is unsure.</p>
+          <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Get in Touch</a>
+          <p class="footer-note">Prepared for Abdul Rahuman M at Twin Health. Public signals used: App Store + Google Play reviews, Twin's public site, BuiltWith, and Reddit search fallback after MCP access restrictions.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
