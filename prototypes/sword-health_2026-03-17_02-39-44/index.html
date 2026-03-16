@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sword Health Mobile - Quiet Start for AI Care</title>
+  <meta name="description" content="What if Sword Health turned its first-session experience into a calmer trust layer, with one preferred contact channel, pre-session device readiness, and a therapist thread that works when members actually need it?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/sword-health_2026-03-17_02-39-44/">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/sword-health_2026-03-17_02-39-44/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/sword-health_2026-03-17_02-39-44/">
+  <meta property="og:title" content="Sword Health Mobile - AI Teardown">
+  <meta property="og:description" content="What if Sword Health gave every new member one quiet setup path with channel control, device readiness, and a therapist thread that works before the first reminder storm starts?">
+  <meta property="og:type" content="website">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+
+  <!-- Ratings as of 2026-03-17: iOS 4.74 (41415 reviews, source: iTunes Search API, US), Android 4.59 (7892 reviews, source: https://play.google.com/store/apps/details?id=com.swordhealth.guarda&hl=en&gl=us via Google Play scraper) -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f5f0ea;
+      --bg-deep: #ecf2fb;
+      --panel: rgba(255, 255, 255, 0.88);
+      --panel-strong: #ffffff;
+      --panel-soft: #eef2fb;
+      --ink: #162336;
+      --muted: #607186;
+      --line: rgba(22, 35, 54, 0.12);
+      --lavender: #9b85d7;
+      --lavender-deep: #7c68ba;
+      --sky: #7fa7e8;
+      --mint: #a6d7c4;
+      --peach: #ff926d;
+      --danger: #ff6d6d;
+      --success: #3bb273;
+      --shadow: 0 24px 70px rgba(35, 49, 74, 0.14);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(155, 133, 215, 0.22), transparent 28%),
+        radial-gradient(circle at 88% 12%, rgba(127, 167, 232, 0.18), transparent 28%),
+        linear-gradient(180deg, #fbf6f2 0%, #f3f6fb 44%, #edf0f6 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(90px);
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    body::before {
+      width: 20rem;
+      height: 20rem;
+      top: -4rem;
+      left: -5rem;
+      background: rgba(255, 146, 109, 0.18);
+    }
+
+    body::after {
+      width: 24rem;
+      height: 24rem;
+      right: -7rem;
+      bottom: -4rem;
+      background: rgba(127, 167, 232, 0.18);
+    }
+
+    .page-shell {
+      position: relative;
+      z-index: 1;
+    }
+
+    section {
+      position: relative;
+      z-index: 1;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .hero {
+      padding-top: 80px;
+      padding-bottom: 42px;
+      text-align: center;
+    }
+
+    .signal,
+    .prototype,
+    .build,
+    .closing {
+      padding-top: 26px;
+      padding-bottom: 26px;
+    }
+
+    .eyebrow,
+    .section-kicker,
+    .metric-chip,
+    .phone-tag,
+    .tag {
+      display: block;
+      width: fit-content;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      border-radius: 999px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .eyebrow,
+    .section-kicker {
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(22, 35, 54, 0.08);
+      color: var(--lavender-deep);
+      box-shadow: 0 12px 30px rgba(117, 128, 156, 0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-lockup {
+      width: 96px;
+      height: 96px;
+      margin: 24px auto 18px;
+      padding: 10px;
+      border-radius: 28px;
+      background: linear-gradient(160deg, rgba(255,255,255,0.92), rgba(238,242,251,0.92));
+      box-shadow: var(--shadow);
+    }
+
+    .brand-lockup img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 22px;
+      object-fit: cover;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: -0.05em;
+      color: var(--ink);
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 0 auto 18px;
+      font-size: clamp(3rem, 5.6vw, 5.7rem);
+      line-height: 0.92;
+      text-align: center;
+    }
+
+    h1 span,
+    h2 span {
+      color: var(--lavender-deep);
+    }
+
+    .hero-subtitle {
+      max-width: 760px;
+      margin: 0 auto 16px;
+      font-size: 1.12rem;
+      line-height: 1.75;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .hero-personal {
+      max-width: 700px;
+      margin: 0 auto 34px;
+      color: #475a71;
+      font-size: 0.98rem;
+      line-height: 1.68;
+      text-align: center;
+    }
+
+    .hero-grid,
+    .signal-grid,
+    .prototype-grid,
+    .build-grid {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .signal-grid {
+      grid-template-columns: 1.15fr 1fr 1fr;
+      align-items: stretch;
+    }
+
+    .prototype-grid {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      align-items: start;
+    }
+
+    .build-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .hero-card,
+    .signal-card,
+    .build-card,
+    .closing-card {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.68);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .hero-card,
+    .build-card {
+      padding: 22px 22px 20px;
+    }
+
+    .hero-card {
+      min-height: 168px;
+      text-align: left;
+    }
+
+    .hero-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      color: var(--lavender-deep);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .hero-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.45rem;
+      line-height: 1.05;
+    }
+
+    .hero-card p,
+    .build-card p,
+    .signal-card p,
+    .phone-note,
+    .closing-card p {
+      color: var(--muted);
+      line-height: 1.68;
+      font-size: 0.95rem;
+    }
+
+    .metric-chip {
+      margin: 18px 0 12px;
+      padding: 6px 10px;
+      background: rgba(155, 133, 215, 0.12);
+      color: var(--lavender-deep);
+    }
+
+    .metric-number {
+      display: block;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 2rem;
+      line-height: 1;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .section-head {
+      max-width: 780px;
+      margin: 0 auto 24px;
+      text-align: center;
+    }
+
+    .section-head h2 {
+      margin-top: 18px;
+      margin-bottom: 12px;
+      font-size: clamp(2rem, 4.2vw, 3.6rem);
+      line-height: 0.98;
+      text-align: center;
+    }
+
+    .section-head p {
+      font-size: 1.02rem;
+      line-height: 1.72;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .signal-card {
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.92);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .signal-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -40px -60px auto;
+      width: 180px;
+      height: 180px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(155, 133, 215, 0.16), transparent 68%);
+      z-index: 0;
+    }
+
+    .signal-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .signal-card img {
+      display: block;
+      width: 100%;
+      border-radius: 22px;
+      border: 1px solid rgba(22, 35, 54, 0.08);
+      box-shadow: 0 18px 34px rgba(30, 40, 66, 0.08);
+      background: #fff;
+    }
+
+    .quote {
+      padding: 16px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .quote:first-of-type {
+      border-top: none;
+      padding-top: 6px;
+    }
+
+    .quote mark {
+      background: rgba(255, 146, 109, 0.16);
+      color: inherit;
+      padding: 0 0.15em;
+      border-radius: 4px;
+    }
+
+    .tag {
+      width: fit-content;
+      margin: 0 0 12px;
+      padding: 6px 10px;
+      background: rgba(127, 167, 232, 0.12);
+      color: #345b9c;
+      letter-spacing: 0.08em;
+    }
+
+    .prototype {
+      margin-top: 6px;
+    }
+
+    .phone-wrap {
+      text-align: center;
+    }
+
+    .phone-tag {
+      margin-bottom: 12px;
+      padding: 7px 12px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(22, 35, 54, 0.08);
+      color: var(--lavender-deep);
+    }
+
+    .phone-title {
+      margin-bottom: 8px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.55rem;
+      line-height: 1.04;
+    }
+
+    .phone-note {
+      max-width: 320px;
+      margin: 0 auto 16px;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 42px;
+      background: linear-gradient(180deg, #172232 0%, #0e1624 100%);
+      box-shadow: 0 26px 64px rgba(16, 24, 40, 0.28);
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 108px;
+      height: 24px;
+      border-radius: 999px;
+      background: #0a1019;
+      z-index: 2;
+    }
+
+    .phone-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 32px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 85% 16%, rgba(155,133,215,0.22), transparent 26%),
+        linear-gradient(180deg, #fbf8f5 0%, #eef3fb 100%);
+    }
+
+    .phone-scroll {
+      height: 100%;
+      overflow-y: auto;
+      padding: 36px 14px 14px;
+      scrollbar-width: none;
+    }
+
+    .phone-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .status-row,
+    .screen-head,
+    .sub-head,
+    .line-item,
+    .toggle-row,
+    .therapist-row,
+    .support-row,
+    .bullet-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .status-row {
+      font-size: 12px;
+      color: #5c6b7c;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .mini-chip,
+    .risk-badge,
+    .small-pill,
+    .state-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 6px 10px;
+    }
+
+    .mini-chip {
+      background: rgba(155, 133, 215, 0.14);
+      color: var(--lavender-deep);
+    }
+
+    .risk-badge {
+      background: rgba(255, 109, 109, 0.12);
+      color: #c54545;
+    }
+
+    .small-pill {
+      background: rgba(59, 178, 115, 0.14);
+      color: #20824f;
+    }
+
+    .state-pill {
+      background: rgba(127, 167, 232, 0.14);
+      color: #355b99;
+    }
+
+    .screen-card {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(22, 35, 54, 0.08);
+      border-radius: 22px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 16px 30px rgba(53, 74, 114, 0.08);
+    }
+
+    .screen-card h4 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1rem;
+      line-height: 1.1;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .screen-card p,
+    .screen-card li,
+    .line-item small,
+    .toggle-row small,
+    .support-row small {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .screen-card ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .line-item strong,
+    .therapist-row strong,
+    .support-row strong,
+    .bullet-row strong {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--ink);
+    }
+
+    .progress-bar,
+    .tone-bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(127, 167, 232, 0.15);
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-bar span,
+    .tone-bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--lavender) 0%, var(--sky) 100%);
+    }
+
+    .tone-bar span {
+      background: linear-gradient(90deg, var(--mint) 0%, var(--sky) 100%);
+    }
+
+    .toggle-row {
+      padding: 10px 0;
+      border-top: 1px solid rgba(22, 35, 54, 0.08);
+    }
+
+    .toggle-row:first-of-type {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .toggle {
+      width: 44px;
+      height: 24px;
+      border-radius: 999px;
+      background: #d9e0eb;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .toggle::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 4px 10px rgba(17, 23, 38, 0.18);
+    }
+
+    .toggle.on {
+      background: linear-gradient(90deg, var(--lavender) 0%, var(--sky) 100%);
+    }
+
+    .toggle.on::after {
+      left: 23px;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-top: 6px;
+      padding: 13px 16px;
+      border-radius: 18px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.92rem;
+      border: 1px solid transparent;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .cta.primary {
+      background: linear-gradient(135deg, var(--lavender-deep), var(--sky));
+      color: #fff;
+      box-shadow: 0 16px 28px rgba(124, 104, 186, 0.26);
+    }
+
+    .cta.ghost {
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--ink);
+      border-color: rgba(22, 35, 54, 0.1);
+    }
+
+    .cta:hover {
+      transform: translateY(-1px);
+    }
+
+    .therapy-shot {
+      width: 100%;
+      border-radius: 18px;
+      display: block;
+      margin-bottom: 10px;
+      border: 1px solid rgba(22, 35, 54, 0.08);
+    }
+
+    .build-card h3 {
+      font-size: 1.35rem;
+      line-height: 1.02;
+      margin-bottom: 10px;
+    }
+
+    .closing-card {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px;
+      text-align: center;
+      background:
+        radial-gradient(circle at 18% 15%, rgba(255,146,109,0.14), transparent 32%),
+        linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(239,243,250,0.96) 100%);
+    }
+
+    .closing-card h2 {
+      margin: 18px auto 12px;
+      font-size: clamp(2rem, 4vw, 3.35rem);
+      line-height: 0.98;
+      max-width: 760px;
+    }
+
+    .cta-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .fade-rise {
+      animation: fade-rise 700ms ease both;
+    }
+
+    @keyframes fade-rise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .signal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      section {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .hero {
+        padding-top: 64px;
+      }
+
+      .hero-card,
+      .signal-card,
+      .build-card,
+      .closing-card {
+        border-radius: 24px;
+      }
+
+      h1 {
+        font-size: clamp(2.5rem, 10vw, 4rem);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .cta-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <section class="hero">
+      <span class="eyebrow fade-rise">AI teardown for Brittanie Kraft</span>
+      <div class="brand-lockup fade-rise" style="animation-delay: 70ms;">
+        <img src="./assets/icon.jpg" alt="Sword Health app icon">
+      </div>
+      <h1 class="fade-rise" style="animation-delay: 120ms;">Make Sword’s <span>first session</span> feel calm, trusted, and ready.</h1>
+      <p class="hero-subtitle fade-rise" style="animation-delay: 190ms;">Public reviews say the therapy itself works. The trust layer around setup, reminders, and therapist communication is where members start doubting the experience before they get the benefit.</p>
+      <p class="hero-personal fade-rise" style="animation-delay: 260ms;">Brittanie, this is squarely in your lane: member experience, implementation, care operations, and now the Kaia-to-Sword handoff. The opportunity is not more features. It is a cleaner activation system that protects the care model you are scaling.</p>
+
+      <div class="hero-grid fade-rise" style="animation-delay: 330ms;">
+        <article class="hero-card">
+          <strong>Public Review Signal</strong>
+          <span class="metric-chip">Recent low-score cluster</span>
+          <span class="metric-number">43 / 100</span>
+          <p>Recent iOS and Android reviews at three stars or below. The issue is concentrated, not random: communication noise, thread failures, setup friction, and device readiness.</p>
+        </article>
+        <article class="hero-card">
+          <strong>Operational Risk</strong>
+          <span class="metric-chip">Most common complaint class</span>
+          <span class="metric-number">12 reviews</span>
+          <p>Low-score reviews explicitly mentioning texts, calls, emails, or notifications feeling excessive or poorly controlled. The member relationship can feel louder than the care itself.</p>
+        </article>
+        <article class="hero-card">
+          <strong>Why Now</strong>
+          <span class="metric-chip">Transition pressure</span>
+          <span class="metric-number">Kaia + Sword</span>
+          <p>Your current role already sits on migrations, workflows, and partner continuity. The cleaner the activation layer, the easier it is to carry trust through program change.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="signal">
+      <div class="section-head">
+        <span class="section-kicker">Signal</span>
+        <h2>Members like the therapy. <span>The wrapper around it</span> is what keeps breaking confidence.</h2>
+        <p>The strongest public opportunity is not new clinical content. It is a quieter, more reliable start: one contact lane, better readiness checks, and a therapist thread that behaves like care instead of support debt.</p>
+      </div>
+
+      <div class="signal-grid">
+        <article class="signal-card">
+          <span class="tag">What already works</span>
+          <img src="./assets/app-store-session.jpg" alt="Official App Store session detail screen from Sword Health">
+          <p style="margin-top: 14px;">Official App Store session UI shows the core therapy product is already credible once members get inside. That is why the best wedge is activation trust, not a wholesale redesign.</p>
+        </article>
+
+        <article class="signal-card">
+          <span class="tag">Review pattern</span>
+          <div class="quote">
+            <p><mark>“bombarded with messages and calls”</mark></p>
+            <p>iOS 1-star review, 2026-03-04. Reminder pressure is showing up as annoyance and distrust.</p>
+          </div>
+          <div class="quote">
+            <p><mark>“Aggressive Notification Tactics”</mark></p>
+            <p>iOS 1-star review, 2026-01-26. Public feedback says channel volume feels invasive, not supportive.</p>
+          </div>
+          <div class="quote">
+            <p><mark>“keeps emailing”</mark></p>
+            <p>Android 2-star review, 2026-03-10. Even after disengagement, the product keeps chasing attention.</p>
+          </div>
+        </article>
+
+        <article class="signal-card">
+          <span class="tag">Care continuity</span>
+          <div class="quote">
+            <p><mark>“crashes consistently when reading or trying to write messages”</mark></p>
+            <p>Android 1-star review, 2026-02-28. The moment users actually need care-thread reliability, it can fail.</p>
+          </div>
+          <div class="quote">
+            <p><mark>“wouldn’t let me login despite several password changes”</mark></p>
+            <p>iOS 1-star review, 2026-03-12. The promise of immediate access breaks early in the journey.</p>
+          </div>
+          <div class="quote">
+            <p><mark>“spinning wheel”</mark></p>
+            <p>Android 3-star review, 2026-03-13. Members are still hitting start-up and loading friction after carving out session time.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="prototype">
+      <div class="section-head">
+        <span class="section-kicker">Prototype</span>
+        <h2>A <span>Quiet Start</span> flow for Sword Health</h2>
+        <p>The idea is simple: reduce channel overload, confirm readiness before exercise begins, and make the therapist thread feel dependable. Same care model. Less friction around entering it.</p>
+      </div>
+
+      <div class="prototype-grid">
+        <article class="phone-wrap">
+          <span class="phone-tag">Current state</span>
+          <h3 class="phone-title">Busy before care</h3>
+          <p class="phone-note">The member is asked to manage reminders, setup issues, and thread uncertainty before the session feels ready.</p>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="phone-scroll">
+                <div class="status-row">
+                  <span>9:41</span>
+                  <span>5G 87%</span>
+                </div>
+                <div class="screen-card">
+                  <div class="screen-head">
+                    <div>
+                      <h4>Get back to care</h4>
+                      <p>Today’s next session is ready, but 3 blockers need attention first.</p>
+                    </div>
+                    <span class="risk-badge">3 alerts</span>
+                  </div>
+                  <div class="progress-bar"><span style="width: 54%;"></span></div>
+                </div>
+
+                <div class="screen-card">
+                  <div class="sub-head">
+                    <h4>Contact channels</h4>
+                    <span class="mini-chip">All active</span>
+                  </div>
+                  <div class="toggle-row">
+                    <div>
+                      <strong>Push notifications</strong>
+                      <small>Daily reminders + inactivity prompts</small>
+                    </div>
+                    <div class="toggle on"></div>
+                  </div>
+                  <div class="toggle-row">
+                    <div>
+                      <strong>SMS reminders</strong>
+                      <small>Missed-session nudges</small>
+                    </div>
+                    <div class="toggle on"></div>
+                  </div>
+                  <div class="toggle-row">
+                    <div>
+                      <strong>Phone calls</strong>
+                      <small>Care check-ins</small>
+                    </div>
+                    <div class="toggle on"></div>
+                  </div>
+                </div>
+
+                <div class="screen-card">
+                  <ul>
+                    <li class="line-item">
+                      <div>
+                        <strong>Tablet sync delayed</strong>
+                        <small>Last seen 17 minutes ago</small>
+                      </div>
+                      <span class="risk-badge">Check</span>
+                    </li>
+                    <li class="line-item">
+                      <div>
+                        <strong>Therapist thread unstable</strong>
+                        <small>Last reply failed to load</small>
+                      </div>
+                      <span class="risk-badge">Retry</span>
+                    </li>
+                    <li class="line-item">
+                      <div>
+                        <strong>Password reset requested</strong>
+                        <small>Still waiting for confirmation</small>
+                      </div>
+                      <span class="risk-badge">Pending</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <a class="cta ghost" href="#contact">Still try to start session</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="phone-wrap">
+          <span class="phone-tag">Improved start</span>
+          <h3 class="phone-title">Quiet Start</h3>
+          <p class="phone-note">The product picks one primary channel, clears readiness up front, and explains what will happen next before care begins.</p>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="phone-scroll">
+                <div class="status-row">
+                  <span>9:41</span>
+                  <span>5G 87%</span>
+                </div>
+
+                <div class="screen-card">
+                  <div class="screen-head">
+                    <div>
+                      <h4>Quiet Start</h4>
+                      <p>2-minute trust check before Session 8</p>
+                    </div>
+                    <span class="small-pill">Ready</span>
+                  </div>
+                  <div class="progress-bar"><span style="width: 100%;"></span></div>
+                </div>
+
+                <div class="screen-card">
+                  <div class="sub-head">
+                    <h4>Preferred contact lane</h4>
+                    <span class="state-pill">1 lane active</span>
+                  </div>
+                  <div class="toggle-row">
+                    <div>
+                      <strong>Secure SMS</strong>
+                      <small>Primary channel for reminders and therapist replies</small>
+                    </div>
+                    <div class="toggle on"></div>
+                  </div>
+                  <div class="toggle-row">
+                    <div>
+                      <strong>Email digest</strong>
+                      <small>Weekly recap only</small>
+                    </div>
+                    <div class="toggle"></div>
+                  </div>
+                  <div class="toggle-row">
+                    <div>
+                      <strong>Phone calls</strong>
+                      <small>Only when care risk changes</small>
+                    </div>
+                    <div class="toggle"></div>
+                  </div>
+                </div>
+
+                <div class="screen-card">
+                  <ul>
+                    <li class="line-item">
+                      <div>
+                        <strong>Tablet + band connected</strong>
+                        <small>Last sync 9:38 AM</small>
+                      </div>
+                      <span class="small-pill">Pass</span>
+                    </li>
+                    <li class="line-item">
+                      <div>
+                        <strong>Therapist thread healthy</strong>
+                        <small>Replies within 1 business day</small>
+                      </div>
+                      <span class="small-pill">Pass</span>
+                    </li>
+                    <li class="line-item">
+                      <div>
+                        <strong>Login state valid</strong>
+                        <small>No extra password step needed today</small>
+                      </div>
+                      <span class="small-pill">Pass</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <a class="cta primary" href="#contact">Start 8-minute session</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="phone-wrap">
+          <span class="phone-tag">Care continuity</span>
+          <h3 class="phone-title">Thread that reassures</h3>
+          <p class="phone-note">When something changes, the member sees therapist status, support fallback, and reminder controls in one calm place.</p>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="phone-scroll">
+                <div class="status-row">
+                  <span>9:41</span>
+                  <span>5G 87%</span>
+                </div>
+
+                <div class="screen-card">
+                  <div class="therapist-row">
+                    <div>
+                      <h4>Dr. Maya Chen</h4>
+                      <p>Your clinician for Thrive</p>
+                    </div>
+                    <span class="small-pill">Online</span>
+                  </div>
+                  <div class="tone-bar"><span style="width: 82%;"></span></div>
+                  <p style="margin-top: 10px;">If the in-app thread degrades, Sword automatically falls back to your chosen secure SMS lane with the same context attached.</p>
+                </div>
+
+                <div class="screen-card">
+                  <img class="therapy-shot" src="./assets/play-shot.png" alt="Sword Health Google Play screenshot showing exercise guidance">
+                  <p>Care stays anchored to the therapy moment, not to a separate support system the member has to interpret alone.</p>
+                </div>
+
+                <div class="screen-card">
+                  <ul>
+                    <li class="support-row">
+                      <div>
+                        <strong>Pause reminders</strong>
+                        <small>Quiet notifications for 72 hours without losing the plan</small>
+                      </div>
+                      <span class="state-pill">72h</span>
+                    </li>
+                    <li class="support-row">
+                      <div>
+                        <strong>Need a modification?</strong>
+                        <small>Message includes last sync, pain score, and session context</small>
+                      </div>
+                      <span class="state-pill">Send</span>
+                    </li>
+                    <li class="support-row">
+                      <div>
+                        <strong>Recovery path</strong>
+                        <small>One-tap fallback if thread or device health changes</small>
+                      </div>
+                      <span class="state-pill">Open</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <a class="cta ghost" href="#contact">See implementation notes</a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="build">
+      <div class="section-head">
+        <span class="section-kicker">Build Scope</span>
+        <h2>What Elinext would actually need to ship</h2>
+        <p>This is a practical mobile-delivery project, not a slideware idea. The work lives in orchestration, preferences, status visibility, thread reliability, and support-safe fallbacks.</p>
+      </div>
+
+      <div class="build-grid">
+        <article class="build-card">
+          <h3>Unified preference model</h3>
+          <p>One source of truth for reminder channels, escalation rules, quiet hours, and opt-down behavior across push, SMS, email, and calls.</p>
+        </article>
+        <article class="build-card">
+          <h3>Pre-session readiness service</h3>
+          <p>A lightweight check that validates device, sync, thread status, and auth freshness before the member starts therapy.</p>
+        </article>
+        <article class="build-card">
+          <h3>Thread fallback and observability</h3>
+          <p>Graceful degradation when messaging fails, plus clear instrumentation so ops teams can see where continuity breaks.</p>
+        </article>
+        <article class="build-card">
+          <h3>Migration-safe rollout</h3>
+          <p>The concept works well during Kaia-to-Sword harmonization because it standardizes member-facing trust signals without changing the therapy model itself.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="closing" id="contact">
+      <div class="closing-card">
+        <span class="section-kicker">Next Step</span>
+        <h2>Worth a 15-minute walkthrough if Sword wants the first session to feel calmer.</h2>
+        <p>This prototype focuses on one narrow improvement: make the member trust layer feel deliberate before the care experience asks for time, attention, and health data. That is the kind of operational-mobile wedge Elinext can build quickly with a product team, not against it.</p>
+        <div class="cta-row">
+          <a class="cta primary" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Get in Touch</a>
+          <a class="cta ghost" href="https://apps.apple.com/us/app/sword-health-ai-care/id1468523447?uo=4" target="_blank" rel="noopener noreferrer">Open App Listing</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
