@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kranus Edera Mobile - Trusted Resume Layer</title>
+  <meta name="description" content="What if Kranus Edera could keep its high-assurance therapy sign-in while letting patients reopen the app, resume where they left off, and fix a missed entry without another login loop?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/kranus-health_2026-03-17_02-10-33/">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/kranus-health_2026-03-17_02-10-33/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/kranus-health_2026-03-17_02-10-33/">
+  <meta property="og:title" content="Kranus Health Mobile - AI Teardown">
+  <meta property="og:description" content="What if Kranus Edera kept its security bar high while letting patients resume therapy in one tap, recover trusted-device access themselves, and fix mistaken entries without dropping out?">
+  <meta property="og:type" content="website">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+
+  <!-- Ratings as of 2026-03-17: iOS 4.15 (527 ratings, source: iTunes Lookup API, Germany), Android 3.65 (470 ratings, source: Google Play scraper for https://play.google.com/store/apps/details?id=dev.kranus.ed&hl=de&gl=de) -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #08111d;
+      --bg-soft: #0f1927;
+      --panel: #111c2d;
+      --panel-2: #162337;
+      --ink: #eff5fb;
+      --muted: #9fb3c8;
+      --line: rgba(255, 255, 255, 0.08);
+      --accent: #ff8451;
+      --accent-soft: #ffd6c7;
+      --mint: #6dd5bc;
+      --gold: #f0bc57;
+      --danger: #ff6d78;
+      --shadow: 0 28px 90px rgba(0, 0, 0, 0.32);
+      --radius: 28px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "IBM Plex Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(255, 132, 81, 0.18), transparent 28%),
+        radial-gradient(circle at 88% 18%, rgba(109, 213, 188, 0.14), transparent 24%),
+        linear-gradient(180deg, #08111d 0%, #0a1321 45%, #09111b 100%);
+      overflow-x: hidden;
+    }
+
+    .shell {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .shell::before,
+    .shell::after {
+      content: "";
+      position: fixed;
+      z-index: -1;
+      border-radius: 999px;
+      filter: blur(90px);
+      pointer-events: none;
+      opacity: 0.34;
+    }
+
+    .shell::before {
+      width: 22rem;
+      height: 22rem;
+      top: 2rem;
+      left: -7rem;
+      background: rgba(255, 132, 81, 0.28);
+    }
+
+    .shell::after {
+      width: 24rem;
+      height: 24rem;
+      right: -7rem;
+      bottom: 2rem;
+      background: rgba(109, 213, 188, 0.18);
+    }
+
+    .hero,
+    .evidence,
+    .prototype,
+    .roadmap,
+    .closing {
+      position: relative;
+      z-index: 1;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .hero {
+      padding-top: 78px;
+      padding-bottom: 40px;
+      text-align: center;
+    }
+
+    .eyebrow,
+    .section-kicker,
+    .phone-tag,
+    .metric-chip,
+    .cta-note {
+      display: block;
+      width: fit-content;
+      max-width: 100%;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .eyebrow,
+    .section-kicker,
+    .phone-tag,
+    .metric-chip,
+    .cta-note {
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 12px;
+    }
+
+    .eyebrow {
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--accent-soft);
+    }
+
+    .brand-lockup {
+      width: 96px;
+      height: 96px;
+      margin: 22px auto 18px;
+      padding: 10px;
+      border-radius: 30px;
+      background: linear-gradient(160deg, rgba(255,255,255,0.16), rgba(255,255,255,0.04));
+      box-shadow: 0 14px 48px rgba(0,0,0,0.34);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand-lockup img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 22px;
+      object-fit: cover;
+    }
+
+    h1 {
+      font-family: "Sora", sans-serif;
+      font-size: clamp(2.7rem, 5.1vw, 5.4rem);
+      line-height: 0.94;
+      letter-spacing: -0.05em;
+      max-width: 1020px;
+      margin: 0 auto 18px;
+      text-align: center;
+    }
+
+    h1 span { color: var(--accent-soft); }
+
+    .hero-subtitle {
+      max-width: 820px;
+      margin: 0 auto 16px;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .hero-personal {
+      max-width: 660px;
+      margin: 0 auto 30px;
+      color: #c8d4e0;
+      font-size: 0.97rem;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .hero-grid,
+    .evidence-grid,
+    .roadmap-grid {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .hero-card,
+    .evidence-card,
+    .roadmap-card,
+    .closing-card {
+      background: rgba(13, 22, 35, 0.88);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card,
+    .evidence-card,
+    .roadmap-card {
+      padding: 22px 22px 20px;
+    }
+
+    .hero-card {
+      text-align: left;
+      min-height: 154px;
+    }
+
+    .hero-card strong {
+      display: block;
+      font-family: "Sora", sans-serif;
+      font-size: 1.5rem;
+      line-height: 1.12;
+      margin-bottom: 9px;
+    }
+
+    .hero-card p,
+    .evidence-card p,
+    .roadmap-card p,
+    .closing-copy {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .metric-chip {
+      margin: 0 0 12px;
+      padding: 7px 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #d6dfeb;
+    }
+
+    .section-wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .evidence,
+    .prototype,
+    .roadmap,
+    .closing {
+      padding-top: 30px;
+      padding-bottom: 26px;
+    }
+
+    .section-kicker {
+      margin-bottom: 16px;
+      padding: 7px 12px;
+      background: rgba(109,213,188,0.08);
+      border: 1px solid rgba(109,213,188,0.18);
+      color: #a8efdb;
+    }
+
+    .section-heading {
+      max-width: 800px;
+      margin: 0 auto 16px;
+      font-family: "Sora", sans-serif;
+      font-size: clamp(2rem, 3.6vw, 3.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+      text-align: center;
+    }
+
+    .section-copy {
+      max-width: 760px;
+      margin: 0 auto 24px;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .evidence-card h3,
+    .roadmap-card h3 {
+      font-family: "Sora", sans-serif;
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+    }
+
+    .evidence-list,
+    .roadmap-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .evidence-list li,
+    .roadmap-list li {
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: #d9e4ef;
+      line-height: 1.5;
+    }
+
+    .prototype-grid {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+      gap: 28px;
+      align-items: start;
+      justify-items: center;
+    }
+
+    .phone-column {
+      width: 100%;
+      display: grid;
+      justify-items: center;
+      gap: 14px;
+    }
+
+    .phone-tag {
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: #d7e3ef;
+    }
+
+    .phone-title {
+      font-family: "Sora", sans-serif;
+      font-size: 1.3rem;
+      text-align: center;
+      line-height: 1.15;
+    }
+
+    .phone-caption {
+      max-width: 340px;
+      font-size: 0.96rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      border-radius: 38px;
+      padding: 12px;
+      background: linear-gradient(180deg, #25354b 0%, #121d2c 100%);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 34px 110px rgba(0, 0, 0, 0.38);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      border-radius: 0 0 18px 18px;
+      background: #0a111b;
+      z-index: 3;
+    }
+
+    .phone-inner {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 30px;
+      background: #f2f5f8;
+      color: #102131;
+      display: block;
+      position: relative;
+    }
+
+    .phone-scroll {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      padding: 36px 14px 14px;
+      display: block;
+    }
+
+    .status-row,
+    .app-bar,
+    .card,
+    .mini-row,
+    .bullet,
+    .cta {
+      display: block;
+    }
+
+    .status-row {
+      font-size: 11px;
+      color: #66788a;
+      margin-bottom: 12px;
+    }
+
+    .status-row span:last-child {
+      float: right;
+    }
+
+    .app-bar {
+      border-radius: 22px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .app-bar.current {
+      background: linear-gradient(180deg, #fff4ef 0%, #ffe8df 100%);
+      border: 1px solid #ffd3c3;
+    }
+
+    .app-bar.future {
+      background: linear-gradient(180deg, #ebfff8 0%, #dcf9f0 100%);
+      border: 1px solid #c7f1e4;
+    }
+
+    .app-kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      color: #6a7a89;
+    }
+
+    .app-title {
+      font-family: "Sora", sans-serif;
+      font-size: 1.15rem;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+
+    .app-copy {
+      font-size: 0.89rem;
+      line-height: 1.45;
+      color: #496070;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 22px;
+      padding: 14px;
+      background: #ffffff;
+      border: 1px solid #dbe4eb;
+      box-shadow: 0 10px 24px rgba(11, 26, 43, 0.08);
+    }
+
+    .card.warn {
+      background: #fff5ef;
+      border-color: #ffd2bf;
+    }
+
+    .card.good {
+      background: #f1fdf7;
+      border-color: #cbf2e3;
+    }
+
+    .card h4 {
+      font-size: 0.95rem;
+      margin-bottom: 7px;
+      font-family: "Sora", sans-serif;
+    }
+
+    .card p {
+      font-size: 0.87rem;
+      line-height: 1.5;
+      color: #4d6475;
+    }
+
+    .mini-row {
+      margin-top: 10px;
+      padding: 10px 11px;
+      border-radius: 16px;
+      background: rgba(16, 33, 49, 0.04);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .mini-row strong {
+      display: block;
+      margin-bottom: 2px;
+      color: #0c1b2c;
+    }
+
+    .inline-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .pill.danger {
+      background: #ffe3e6;
+      color: #a92034;
+    }
+
+    .pill.neutral {
+      background: #e9f0f5;
+      color: #52687a;
+    }
+
+    .pill.good {
+      background: #dbf7eb;
+      color: #137256;
+    }
+
+    .pill.gold {
+      background: #fff0ce;
+      color: #8f6510;
+    }
+
+    .progress {
+      margin-top: 12px;
+      height: 10px;
+      border-radius: 999px;
+      background: #e5edf4;
+      overflow: hidden;
+    }
+
+    .progress > span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ff8451 0%, #f0bc57 100%);
+    }
+
+    .cta {
+      margin-top: 12px;
+      padding: 12px 13px;
+      border-radius: 18px;
+      font-size: 0.86rem;
+      line-height: 1.45;
+      color: #f6fbff;
+      background: linear-gradient(135deg, #10263c 0%, #1d4253 100%);
+    }
+
+    .cta strong {
+      display: block;
+      margin-bottom: 4px;
+      font-family: "Sora", sans-serif;
+    }
+
+    .roadmap-card .step {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: rgba(255, 132, 81, 0.12);
+      color: var(--accent-soft);
+      font-family: "Sora", sans-serif;
+      margin-bottom: 12px;
+    }
+
+    .closing-card {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 28px;
+      text-align: center;
+      background: rgba(13, 22, 35, 0.92);
+    }
+
+    .closing-card h2 {
+      font-family: "Sora", sans-serif;
+      font-size: clamp(1.9rem, 3vw, 3rem);
+      line-height: 1.05;
+      margin-bottom: 14px;
+    }
+
+    .cta-note {
+      margin-top: 0;
+      margin-bottom: 10px;
+      padding: 7px 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: #dbe5ef;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ff8451 0%, #f0bc57 100%);
+      color: #08111d;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 0 18px 42px rgba(240, 188, 87, 0.28);
+    }
+
+    .button:hover { filter: brightness(1.03); }
+
+    @media (max-width: 920px) {
+      .prototype-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero {
+        padding-top: 64px;
+      }
+
+      .phone {
+        width: 300px;
+      }
+
+      .closing-card {
+        padding: 24px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <span class="eyebrow">AI teardown for Nikolay Kopylov</span>
+      <div class="brand-lockup">
+        <img src="assets/kranus-edera-icon.jpg" alt="Kranus Edera app icon">
+      </div>
+      <h1>Keep the security bar. <span>Lose the login loop.</span></h1>
+      <p class="hero-subtitle">
+        Public reviews for <strong>Kranus Edera</strong> point to a clear failure mode: patients accept the therapy,
+        but too many of them get interrupted by repeat sign-ins, broken biometrics, device lockouts, and no clean way back into treatment.
+      </p>
+      <p class="hero-personal">
+        Nikolay, this is aimed at your current lane: regulated mobile delivery, trusted authentication, and platform-level improvements that can scale across the Kranus therapy portfolio.
+      </p>
+
+      <div class="hero-grid">
+        <article class="hero-card">
+          <span class="metric-chip">Review Signal</span>
+          <strong>58 of 150 recent store reviews are 3 stars or below</strong>
+          <p>The pain is concentrated around sign-in friction, forced recovery, and rigid task continuation rather than around clinical value.</p>
+        </article>
+        <article class="hero-card">
+          <span class="metric-chip">Patient Scale</span>
+          <strong>10,000+ installs for Edera, 30,000+ patients across Kranus</strong>
+          <p>Continuity issues are no longer edge-case bugs. They compound into adherence loss and support cost at scale.</p>
+        </article>
+        <article class="hero-card">
+          <span class="metric-chip">Platform Angle</span>
+          <strong>The same auth and editability complaints show up in Lutera</strong>
+          <p>That makes this look reusable across Kranus mobile products, not a single-screen cleanup inside one app.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="evidence">
+      <div class="section-wrap">
+        <span class="section-kicker">Why This Matters</span>
+        <h2 class="section-heading">Security is doing the right job technically, but the wrong job experientially.</h2>
+        <p class="section-copy">
+          The opportunity is not to weaken controls. It is to make trusted return-to-therapy feel instant until risk actually changes.
+        </p>
+
+        <div class="evidence-grid">
+          <article class="evidence-card">
+            <h3>What patients are telling Kranus publicly</h3>
+            <p>Recent App Store and Play reviews repeatedly mention the same moments of failure.</p>
+            <ul class="evidence-list">
+              <li>“Why am I at sign in again?” after reopening the app</li>
+              <li>Biometrics or remembered-device logic not sticking</li>
+              <li>“Unknown device” lockout despite no actual device change</li>
+              <li>No safe way to fix a mistaken therapy entry later</li>
+            </ul>
+          </article>
+
+          <article class="evidence-card">
+            <h3>Why this is expensive for Kranus</h3>
+            <p>Edera is a prescribed therapy app, so every interruption is more than a UX annoyance.</p>
+            <ul class="evidence-list">
+              <li>treatment adherence drops at the exact moment the habit should resume</li>
+              <li>support gets pulled into identity recovery work that should be self-serve</li>
+              <li>medical trust gets judged through interface stability, not only clinical evidence</li>
+              <li>the same pattern can repeat in newly launched products</li>
+            </ul>
+          </article>
+
+          <article class="evidence-card">
+            <h3>Why this is a strong fit for Nikolay</h3>
+            <p>Your CRM profile makes this unusually relevant.</p>
+            <ul class="evidence-list">
+              <li>current scope includes security, compliance, and platform stability</li>
+              <li>you explicitly mention authentication with biometrics and passkeys</li>
+              <li>you are hands-on enough to evaluate a concrete prototype quickly</li>
+              <li>AI-native delivery means a focused, fast improvement path is credible</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="prototype">
+      <div class="section-wrap">
+        <span class="section-kicker">Before / After</span>
+        <h2 class="section-heading">A trusted resume layer for Kranus Edera</h2>
+        <p class="section-copy">
+          The concept keeps high-assurance identity, but only asks for heavier recovery when the device or risk posture actually changes.
+        </p>
+
+        <div class="prototype-grid">
+          <div class="phone-column">
+            <span class="phone-tag">Current Experience</span>
+            <div class="phone-title">High-assurance sign-in, low-continuity therapy</div>
+            <p class="phone-caption">Patients re-enter auth too often and cannot recover cleanly when a simple therapy resume is what they wanted.</p>
+            <div class="phone">
+              <div class="phone-inner">
+                <div class="phone-scroll">
+                  <div class="status-row"><span>9:41</span><span>5G 87%</span></div>
+                  <div class="app-bar current">
+                    <div class="app-kicker">Kranus Edera</div>
+                    <div class="app-title">Choose how to continue</div>
+                    <div class="app-copy">The app knows the user was here before, but still restarts the session as if nothing was trusted.</div>
+                  </div>
+
+                  <div class="card warn">
+                    <h4>Sign in again</h4>
+                    <p>Email and password are requested even though the patient opened the same device minutes earlier.</p>
+                    <div class="inline-meta">
+                      <span class="pill danger">Biometrics off</span>
+                      <span class="pill neutral">Session lost</span>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <h4>Unknown device warning</h4>
+                    <p>The patient sees a higher-friction security state but does not understand what changed or how long recovery will take.</p>
+                    <div class="mini-row">
+                      <strong>Support fallback</strong>
+                      Unlock only via email or office-hours support.
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <h4>Therapy continuity breaks</h4>
+                    <p>Today’s unfinished module is no longer visible, so the patient must manually reconstruct where they left off.</p>
+                    <div class="progress"><span style="width: 34%;"></span></div>
+                  </div>
+
+                  <div class="card">
+                    <h4>Wrong entry stays wrong</h4>
+                    <p>A mis-logged activity cannot be corrected easily later, which makes the progress layer feel unreliable.</p>
+                    <div class="inline-meta">
+                      <span class="pill gold">No edit trail</span>
+                      <span class="pill neutral">Manual support ask</span>
+                    </div>
+                  </div>
+
+                  <div class="cta">
+                    <strong>Outcome</strong>
+                    Security is visible, but trust in the therapy experience keeps leaking.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="phone-column">
+            <span class="phone-tag">Improved Flow</span>
+            <div class="phone-title">Trusted resume first, step-up auth only when needed</div>
+            <p class="phone-caption">A patient reopens the app, resumes instantly, and only sees heavier security when posture actually changes.</p>
+            <div class="phone">
+              <div class="phone-inner">
+                <div class="phone-scroll">
+                  <div class="status-row"><span>9:41</span><span>5G 87%</span></div>
+                  <div class="app-bar future">
+                    <div class="app-kicker">Kranus Edera</div>
+                    <div class="app-title">Welcome back, Martin</div>
+                    <div class="app-copy">Trusted device confirmed. Resume today’s therapy with Face ID and continue exactly where you stopped.</div>
+                  </div>
+
+                  <div class="card good">
+                    <h4>Trusted resume</h4>
+                    <p>Biometric unlock restores the exact unfinished therapy step instead of dumping the patient back into generic auth.</p>
+                    <div class="inline-meta">
+                      <span class="pill good">Trusted device</span>
+                      <span class="pill good">Biometric ready</span>
+                    </div>
+                  </div>
+
+                  <div class="card good">
+                    <h4>Risk-based step-up</h4>
+                    <p>If the device, SIM, or posture changes, ask for stronger proof. If not, stay out of the way.</p>
+                    <div class="mini-row">
+                      <strong>Security center</strong>
+                      Last verified device, last step-up time, and clear reason if extra verification is required.
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <h4>Resume with context</h4>
+                    <p>Drop the user back into the next task: pelvic-floor block, cardio choice, or education segment.</p>
+                    <div class="mini-row">
+                      <strong>Continue session</strong>
+                      Week 4 · Cardio check-in · 6 minutes remaining
+                    </div>
+                    <div class="progress"><span style="width: 72%; background: linear-gradient(90deg, #6dd5bc 0%, #2ba889 100%);"></span></div>
+                  </div>
+
+                  <div class="card good">
+                    <h4>Safe edit window</h4>
+                    <p>Let the patient fix today’s wrong activity entry without hiding the change from the audit trail.</p>
+                    <div class="inline-meta">
+                      <span class="pill good">24h edit</span>
+                      <span class="pill neutral">Audit logged</span>
+                    </div>
+                  </div>
+
+                  <div class="cta">
+                    <strong>Outcome</strong>
+                    Same security intent, fewer therapy interruptions, and less support-dependent recovery.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="roadmap">
+      <div class="section-wrap">
+        <span class="section-kicker">Implementation Shape</span>
+        <h2 class="section-heading">Three practical moves, not a re-platform.</h2>
+        <p class="section-copy">
+          This is narrow enough to ship incrementally and broad enough to improve Edera now and future Kranus therapy apps after that.
+        </p>
+
+        <div class="roadmap-grid">
+          <article class="roadmap-card">
+            <div class="step">1</div>
+            <h3>Trusted Device State</h3>
+            <p>Persist a clear device-trust state with biometric-first resume, plus better messaging when the session is still trusted.</p>
+            <ul class="roadmap-list">
+              <li>device posture check</li>
+              <li>resume token lifecycle</li>
+              <li>reason-coded step-up auth</li>
+            </ul>
+          </article>
+
+          <article class="roadmap-card">
+            <div class="step">2</div>
+            <h3>Recovery Without Dead Ends</h3>
+            <p>Replace opaque lockouts with self-serve recovery and a transparent security center that explains what happened.</p>
+            <ul class="roadmap-list">
+              <li>device handoff flow</li>
+              <li>in-app secure unlock path</li>
+              <li>office-hours support as fallback, not first resort</li>
+            </ul>
+          </article>
+
+          <article class="roadmap-card">
+            <div class="step">3</div>
+            <h3>Editable Therapy Entries</h3>
+            <p>Let users fix fresh mistakes with guardrails instead of forcing support or living with bad data in the progress layer.</p>
+            <ul class="roadmap-list">
+              <li>short edit window</li>
+              <li>audit log preserved</li>
+              <li>better history visibility</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div class="section-wrap">
+        <div class="closing-card">
+          <span class="cta-note">Built from public reviews, current company signals, and a Kranus-specific mobile teardown</span>
+          <h2>High-trust therapy should feel resumable, not suspicious.</h2>
+          <p class="closing-copy">
+            Elinext can help product teams implement secure mobile flows like this without lowering the assurance bar.
+            The wedge here is small and practical: improve trusted-device continuity, reduce support-heavy auth recovery, and keep more patients inside the therapy loop.
+          </p>
+          <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
