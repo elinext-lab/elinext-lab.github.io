@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DigiSign Mobile - Assurance Ready Signing</title>
+  <meta name="description" content="What if DigiSign could preserve biometric assurance while showing signers exactly what will be checked, cutting mobile drop-off, and packaging the final audit evidence for ops in one place?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/digisign_2026-03-18_03-13-27/">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/digisign_2026-03-18_03-13-27/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/digisign_2026-03-18_03-13-27/">
+  <meta property="og:title" content="DigiSign Mobile - AI Teardown">
+  <meta property="og:description" content="What if DigiSign could keep its biometric, BVN/NIN, and audit controls intact while turning mobile signer readiness and final evidence packaging into one predictable enterprise-grade flow?">
+  <meta property="og:type" content="website">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+
+  <!-- Ratings as of 2026-03-18: iOS N/A (no first-party App Store listing found via iTunes Search API queries for DigiSign and usedigisign, source: iTunes Search API, US), Android N/A (no first-party Google Play listing found via google-play-scraper searches for DigiSign and usedigisign, source: Google Play scraper, US and NG) -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #08111e;
+      --bg-2: #0b1625;
+      --panel: rgba(12, 23, 37, 0.92);
+      --panel-strong: #0f1d30;
+      --line: rgba(255, 255, 255, 0.08);
+      --ink: #eef5fb;
+      --muted: #9fb3c6;
+      --muted-2: #c7d4e3;
+      --accent: #2fd06d;
+      --accent-2: #49f6a4;
+      --gold: #f5b544;
+      --danger: #ff6d7b;
+      --shadow: 0 26px 70px rgba(0, 0, 0, 0.34);
+      --radius: 28px;
+      --radius-sm: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(73, 246, 164, 0.12), transparent 26%),
+        radial-gradient(circle at 90% 12%, rgba(245, 181, 68, 0.14), transparent 20%),
+        linear-gradient(180deg, #08111e 0%, #09131f 48%, #07111a 100%);
+      overflow-x: hidden;
+    }
+
+    .page {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      width: 24rem;
+      height: 24rem;
+      border-radius: 999px;
+      filter: blur(96px);
+      pointer-events: none;
+      opacity: 0.28;
+      z-index: -1;
+    }
+
+    .page::before {
+      top: 1rem;
+      left: -10rem;
+      background: rgba(73, 246, 164, 0.2);
+    }
+
+    .page::after {
+      right: -9rem;
+      bottom: 4rem;
+      background: rgba(245, 181, 68, 0.2);
+    }
+
+    section {
+      position: relative;
+      z-index: 1;
+      background: transparent;
+      padding: 28px 20px;
+    }
+
+    .hero {
+      padding-top: 78px;
+      padding-bottom: 34px;
+      text-align: center;
+    }
+
+    .hero > *,
+    .hero .hero-quickfacts > *,
+    .hero .hero-cards > * {
+      display: block;
+    }
+
+    .eyebrow,
+    .kicker,
+    .phone-label,
+    .chip,
+    .cta-note {
+      display: block;
+      width: fit-content;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 12px;
+      border-radius: 999px;
+    }
+
+    .eyebrow {
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      color: #d7ffe8;
+    }
+
+    .brand-lockup {
+      width: 96px;
+      height: 96px;
+      margin: 24px auto 18px;
+      padding: 12px;
+      border-radius: 30px;
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.03));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand-lockup img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 22px;
+      object-fit: cover;
+      background: #fff;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 0 auto 18px;
+      font-size: clamp(2.8rem, 5vw, 5.5rem);
+      line-height: 0.94;
+      letter-spacing: -0.055em;
+      text-align: center;
+    }
+
+    h1 .tint { color: #d9ffeb; }
+
+    .hero-subtitle,
+    .hero-personal {
+      max-width: 860px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .hero-subtitle {
+      font-size: 1.08rem;
+      line-height: 1.72;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .hero-personal {
+      max-width: 700px;
+      font-size: 0.98rem;
+      line-height: 1.62;
+      color: var(--muted-2);
+      margin-bottom: 28px;
+    }
+
+    .hero-quickfacts,
+    .evidence-grid,
+    .delivery-grid {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .hero-cards {
+      max-width: 1120px;
+      margin: 18px auto 0;
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .card,
+    .signal,
+    .delivery-card,
+    .audit-panel,
+    .closing-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card,
+    .signal,
+    .delivery-card,
+    .closing-card {
+      padding: 22px;
+    }
+
+    .card strong,
+    .signal strong,
+    .delivery-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.25rem;
+      line-height: 1.15;
+    }
+
+    .card p,
+    .signal p,
+    .delivery-card p,
+    .audit-copy,
+    .closing-copy,
+    li {
+      color: var(--muted);
+      line-height: 1.62;
+    }
+
+    .chip {
+      margin-bottom: 12px;
+      padding: 7px 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted-2);
+    }
+
+    .section-wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .section-head {
+      max-width: 900px;
+      margin: 0 auto 20px;
+      text-align: center;
+    }
+
+    .kicker {
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      background: rgba(73, 246, 164, 0.08);
+      border: 1px solid rgba(73, 246, 164, 0.16);
+      color: #bdfbd7;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      line-height: 1.72;
+      text-align: center;
+    }
+
+    .evidence,
+    .prototype,
+    .delivery,
+    .closing {
+      background: linear-gradient(180deg, rgba(11, 22, 37, 0.9), rgba(8, 17, 30, 0.9));
+    }
+
+    .evidence-grid,
+    .delivery-grid {
+      margin-top: 20px;
+    }
+
+    .prototype-grid {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      gap: 24px;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .phone-stage {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+
+    .phone-column {
+      width: 100%;
+      text-align: center;
+    }
+
+    .phone-label {
+      margin-bottom: 10px;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #d8e7f6;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .phone-label.before { color: #ffd6db; }
+    .phone-label.after { color: #d7ffe8; }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 38px;
+      background: linear-gradient(180deg, #1b2638 0%, #0e1727 100%);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 124px;
+      height: 28px;
+      border-radius: 16px;
+      background: #07111a;
+      border: 1px solid rgba(255,255,255,0.05);
+      z-index: 4;
+    }
+
+    .phone-screen {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      border-radius: 28px;
+      background: #f4f8fc;
+      overflow: hidden;
+    }
+
+    .phone-scroll {
+      height: 100%;
+      padding: 36px 14px 14px;
+      overflow-y: auto;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .phone-scroll::-webkit-scrollbar { display: none; }
+    .phone-scroll > * { display: block; }
+
+    .statusbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #56718e;
+    }
+
+    .screen-card,
+    .info-card,
+    .timeline-card,
+    .vault-card,
+    .mini-list,
+    .field-chip {
+      border-radius: 22px;
+      border: 1px solid rgba(15, 29, 48, 0.08);
+      background: #ffffff;
+      box-shadow: 0 12px 24px rgba(13, 26, 44, 0.08);
+    }
+
+    .screen-card,
+    .vault-card {
+      padding: 16px;
+    }
+
+    .auth-shell {
+      padding: 18px 16px 16px;
+      background:
+        linear-gradient(180deg, #0f1d30 0%, #132641 58%, #0f1d30 100%);
+      color: #f1f7fd;
+    }
+
+    .auth-shell .appmark,
+    .ready-header .appmark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .appmark img {
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+      display: block;
+    }
+
+    .appmark strong,
+    .ready-header strong {
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+      color: inherit;
+      margin: 0;
+    }
+
+    .auth-shell h3,
+    .ready-header h3 {
+      font-size: 1.3rem;
+      line-height: 1.05;
+      margin-bottom: 10px;
+      color: inherit;
+    }
+
+    .auth-shell p,
+    .ready-header p,
+    .help-row small,
+    .timeline-row span,
+    .timeline-row small,
+    .metric-row small,
+    .vault-card p,
+    .legend small {
+      color: inherit;
+      line-height: 1.5;
+    }
+
+    .auth-shell p {
+      color: rgba(241, 247, 253, 0.72);
+      margin-bottom: 14px;
+    }
+
+    .ghost-panel {
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .ghost-panel strong {
+      display: block;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 7px;
+    }
+
+    .field-chip {
+      padding: 11px 12px;
+      margin-bottom: 10px;
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.9);
+      box-shadow: none;
+      text-align: left;
+    }
+
+    .field-chip span {
+      display: block;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 4px;
+    }
+
+    .cta-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-radius: 18px;
+      padding: 12px;
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.74);
+      margin-bottom: 10px;
+    }
+
+    .cta-button,
+    .inline-button,
+    .evidence-pill {
+      display: block;
+      width: 100%;
+      border: none;
+      border-radius: 18px;
+      padding: 13px 14px;
+      font: inherit;
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .cta-button {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+      color: #092013;
+      margin-top: 8px;
+    }
+
+    .inline-button {
+      background: #0f1d30;
+      color: #eef5fb;
+      margin-top: 10px;
+    }
+
+    .ready-top {
+      margin-bottom: 14px;
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(145deg, #0f1d30 0%, #153053 100%);
+      color: #f1f7fd;
+      box-shadow: 0 18px 32px rgba(8, 17, 30, 0.22);
+    }
+
+    .ready-header {
+      margin-bottom: 12px;
+    }
+
+    .ready-header p {
+      color: rgba(241, 247, 253, 0.74);
+      margin-bottom: 0;
+    }
+
+    .evidence-pill {
+      margin-top: 10px;
+      background: rgba(73, 246, 164, 0.14);
+      color: #cfffe1;
+      border: 1px solid rgba(73, 246, 164, 0.24);
+    }
+
+    .mini-stepper {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .mini-step {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .mini-step b,
+    .timeline-row b,
+    .metric-row b,
+    .legend b {
+      color: inherit;
+      font-size: 0.88rem;
+    }
+
+    .step-bullet {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: rgba(73, 246, 164, 0.18);
+      color: #d3ffdf;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .mini-step small {
+      color: rgba(241, 247, 253, 0.68);
+    }
+
+    .mini-step em {
+      font-style: normal;
+      font-size: 0.75rem;
+      color: #d7ffe8;
+    }
+
+    .timeline-card,
+    .info-card,
+    .mini-list {
+      padding: 14px;
+      margin-top: 12px;
+      background: #ffffff;
+    }
+
+    .timeline-card strong,
+    .info-card strong,
+    .vault-card strong,
+    .mini-list strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #0f1d30;
+      font-size: 0.96rem;
+    }
+
+    .timeline-row,
+    .metric-row,
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0;
+      border-top: 1px solid rgba(15, 29, 48, 0.08);
+      color: #3b556f;
+    }
+
+    .timeline-row:first-of-type,
+    .metric-row:first-of-type,
+    .legend:first-of-type {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .timeline-row:last-of-type,
+    .metric-row:last-of-type,
+    .legend:last-of-type {
+      padding-bottom: 0;
+    }
+
+    .timeline-row small,
+    .metric-row small,
+    .legend small {
+      color: #67829b;
+    }
+
+    .info-card {
+      background: #f8fbfd;
+    }
+
+    .info-card ul,
+    .mini-list ul,
+    .delivery-card ul,
+    .closing-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .info-card li,
+    .mini-list li,
+    .delivery-card li,
+    .closing-card li {
+      padding-left: 18px;
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .info-card li::before,
+    .mini-list li::before,
+    .delivery-card li::before,
+    .closing-card li::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .audit-panel {
+      padding: 24px;
+      background:
+        linear-gradient(180deg, rgba(12, 23, 37, 0.96), rgba(9, 17, 29, 0.96));
+    }
+
+    .audit-panel h3 {
+      font-size: 1.7rem;
+      line-height: 1.05;
+      margin-bottom: 12px;
+    }
+
+    .audit-copy {
+      margin-bottom: 16px;
+    }
+
+    .audit-slab {
+      border-radius: 22px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .audit-head,
+    .metric-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .audit-head strong,
+    .metric-head strong {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      color: #d7ffe8;
+      background: rgba(73, 246, 164, 0.12);
+      border: 1px solid rgba(73, 246, 164, 0.16);
+    }
+
+    .tag.warn {
+      color: #ffe4ae;
+      background: rgba(245, 181, 68, 0.12);
+      border-color: rgba(245, 181, 68, 0.16);
+    }
+
+    .audit-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .vault-card {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.08);
+      box-shadow: none;
+    }
+
+    .vault-card strong,
+    .vault-card p,
+    .vault-card li {
+      color: #edf5fb;
+    }
+
+    .vault-card p {
+      margin-bottom: 10px;
+      color: #c0cfde;
+    }
+
+    .vault-card ul {
+      list-style: none;
+    }
+
+    .vault-card li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 8px;
+      color: #c0cfde;
+    }
+
+    .vault-card li::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent-2);
+    }
+
+    .metric-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .metric-row {
+      border-top-color: rgba(255,255,255,0.08);
+      color: #eef5fb;
+    }
+
+    .metric-row small {
+      color: #a7bdd2;
+    }
+
+    .delivery-card strong {
+      color: var(--ink);
+    }
+
+    .delivery-card ul {
+      margin-top: 10px;
+    }
+
+    .closing {
+      padding-bottom: 80px;
+    }
+
+    .closing-card {
+      max-width: 940px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 28px;
+    }
+
+    .closing-card h3 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      line-height: 1.03;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .closing-copy {
+      max-width: 680px;
+      margin: 0 auto 18px;
+      text-align: center;
+    }
+
+    .cta-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .cta-link {
+      display: inline-block;
+      padding: 14px 22px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+      color: #072012;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 18px 36px rgba(47, 208, 109, 0.24);
+    }
+
+    .cta-note {
+      padding: 7px 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted-2);
+    }
+
+    @media (max-width: 1080px) {
+      .prototype-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .audit-panel {
+        order: 2;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .phone-stage,
+      .audit-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .phone-column + .phone-column {
+        margin-top: 4px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      section {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .phone {
+        width: 300px;
+      }
+
+      .audit-panel,
+      .closing-card,
+      .card,
+      .signal,
+      .delivery-card {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <span class="eyebrow">Elinext mobile concept for DigiSign</span>
+      <div class="brand-lockup">
+        <img src="assets/app-icon.png" alt="DigiSign icon">
+      </div>
+      <h1>What if DigiSign made <span class="tint">assurance feel predictable</span> on mobile?</h1>
+      <p class="hero-subtitle">
+        The opportunity is not to weaken biometric signing. It is to tell users exactly what will be checked before they start, keep each verification step legible on a phone, and package the final proof for ops the moment the document closes.
+      </p>
+      <p class="hero-personal">
+        Simeon, your public remit points to enterprise reliability, compliance, and platform scale. This concept is aimed at the overlap between user drop-off and buyer-owned operational drag in a BVN/NIN + liveness environment.
+      </p>
+
+      <div class="hero-quickfacts">
+        <div class="card">
+          <span class="chip">Public app finding</span>
+          <strong>No verified native app listing</strong>
+          <p>DigiSign appears to ship as a mobile web product today, with sign-in and sign-up at <code>app.usedigisign.com</code>.</p>
+        </div>
+        <div class="card">
+          <span class="chip">Mobile risk</span>
+          <strong>16/100 sign-in performance</strong>
+          <p>The public auth surface is too heavy for a trust workflow that asks signers to complete identity checks on a phone.</p>
+        </div>
+        <div class="card">
+          <span class="chip">Regulated signal</span>
+          <strong>Biometric + BVN/NIN + audit</strong>
+          <p>Official copy and public routes point to a high-assurance flow, not a lightweight PDF tool. The UX has to show that clearly.</p>
+        </div>
+      </div>
+
+      <div class="hero-cards">
+        <div class="signal">
+          <strong>Public evidence says the hard part is readiness</strong>
+          <p>DigiSign's FAQ explains liveness and BVN/NIN checks, but the public sign-up entry point stays generic. That gap creates surprise exactly where trust needs to be highest.</p>
+        </div>
+        <div class="signal">
+          <strong>Ops also need a cleaner finish state</strong>
+          <p>The same public messaging promises lifecycle tracking and activity reports while also saying documents are emailed out and not managed in a repository. That is an enterprise handoff problem.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="evidence">
+      <div class="section-wrap">
+        <div class="section-head">
+          <span class="kicker">Why this concept</span>
+          <h2>The buyer-relevant opportunity sits between signer trust and audit proof</h2>
+          <p>
+            Recent mobile-signing reviews in the category complain about confusing steps, broken uploads, and poor visibility during completion. DigiSign adds more assurance controls than the category baseline, so clarity and evidence packaging matter even more.
+          </p>
+        </div>
+
+        <div class="evidence-grid">
+          <div class="signal">
+            <span class="chip">Official FAQ</span>
+            <strong>Signers may need BVN/NIN + liveness</strong>
+            <p>The product already asks for high-sensitivity inputs. The mobile experience should prepare users for that instead of revealing it late.</p>
+          </div>
+          <div class="signal">
+            <span class="chip">Public routes</span>
+            <strong>Faceproof, documents, templates, metrics</strong>
+            <p>The app bundle references a fuller platform: <code>/faceproof</code>, <code>/documents</code>, <code>/requests/envelope</code>, <code>/metrics/team/dashboard</code>, and WebAuthn verification.</p>
+          </div>
+          <div class="signal">
+            <span class="chip">Category reviews</span>
+            <strong>Users hate ambiguity while signing</strong>
+            <p>Proxy review themes from DocuSign: field friction, upload failure, verification issues, and not being able to tell what is happening in the flow.</p>
+          </div>
+          <div class="signal">
+            <span class="chip">Operational gap</span>
+            <strong>Email handoff is not enough in regulated workflows</strong>
+            <p>When enterprise accounts need proof, they need a compact evidence pack, not only a final document file and a support follow-up thread.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="prototype">
+      <div class="section-wrap">
+        <div class="section-head">
+          <span class="kicker">Prototype</span>
+          <h2>From generic auth shell to assurance-ready signing</h2>
+          <p>
+            The mobile concept stays within the compliance environment. It does not remove verification. It adds readiness, visible progress, and a usable evidence finish state.
+          </p>
+        </div>
+
+        <div class="prototype-grid">
+          <div class="phone-stage">
+            <div class="phone-column">
+              <span class="phone-label before">Current public front door</span>
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="phone-scroll">
+                    <div class="statusbar"><span>09:41</span><span>5G secure</span></div>
+                    <div class="auth-shell">
+                      <div class="appmark">
+                        <img src="assets/app-icon.png" alt="DigiSign icon">
+                        <strong>DigiSign</strong>
+                      </div>
+                      <h3>Create account</h3>
+                      <p>Choose Google, Microsoft, or email. The trust requirements appear later in the journey.</p>
+                      <div class="ghost-panel">
+                        <strong>What the user sees</strong>
+                        <div class="field-chip"><span>Method</span>Sign up with Google</div>
+                        <div class="field-chip"><span>Method</span>Sign in with Microsoft</div>
+                        <div class="field-chip"><span>Field</span>Email</div>
+                        <div class="field-chip"><span>Field</span>Password</div>
+                      </div>
+                      <div class="cta-strip">
+                        <span>Unknown next steps</span>
+                        <span>...</span>
+                      </div>
+                      <div class="cta-strip">
+                        <span>Identity checks appear later</span>
+                        <span>...</span>
+                      </div>
+                      <a class="cta-button" href="#contact">Continue</a>
+                    </div>
+
+                    <div class="info-card">
+                      <strong>Likely support-causing questions</strong>
+                      <ul>
+                        <li>Do I need BVN or NIN for this request?</li>
+                        <li>Will I have to do a liveness capture?</li>
+                        <li>What happens if my verification fails?</li>
+                        <li>Where can my company see the evidence afterward?</li>
+                      </ul>
+                    </div>
+
+                    <div class="timeline-card">
+                      <strong>Observed risk pattern</strong>
+                      <div class="timeline-row">
+                        <div>
+                          <b>Heavy entry page</b>
+                          <small>Public sign-in LCP 46.1s</small>
+                        </div>
+                        <small>mobile friction</small>
+                      </div>
+                      <div class="timeline-row">
+                        <div>
+                          <b>Identity surprise</b>
+                          <small>Requirements introduced after account start</small>
+                        </div>
+                        <small>abandonment</small>
+                      </div>
+                      <div class="timeline-row">
+                        <div>
+                          <b>Ops follow-up</b>
+                          <small>Evidence discovery becomes support work</small>
+                        </div>
+                        <small>manual drag</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phone-column">
+              <span class="phone-label after">Improved signer readiness</span>
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="phone-scroll">
+                    <div class="statusbar"><span>09:41</span><span>assurance mode</span></div>
+
+                    <div class="ready-top">
+                      <div class="ready-header">
+                        <div class="appmark">
+                          <img src="assets/app-icon.png" alt="DigiSign icon">
+                          <strong>DigiSign request</strong>
+                        </div>
+                        <h3>Before you sign</h3>
+                        <p>This document needs identity proof, liveness, and an evidence pack for the requesting institution. Expected time: 2 minutes.</p>
+                      </div>
+                      <div class="mini-stepper">
+                        <div class="mini-step">
+                          <span class="step-bullet">1</span>
+                          <div>
+                            <b>Identity ready</b>
+                            <small>Choose BVN or NIN for this request</small>
+                          </div>
+                          <em>required</em>
+                        </div>
+                        <div class="mini-step">
+                          <span class="step-bullet">2</span>
+                          <div>
+                            <b>Liveness capture</b>
+                            <small>12-second guided faceproof</small>
+                          </div>
+                          <em>next</em>
+                        </div>
+                        <div class="mini-step">
+                          <span class="step-bullet">3</span>
+                          <div>
+                            <b>Review and sign</b>
+                            <small>Audit timestamps and IP added automatically</small>
+                          </div>
+                          <em>final</em>
+                        </div>
+                      </div>
+                      <div class="evidence-pill">Assurance preserved. No extra support step needed.</div>
+                    </div>
+
+                    <div class="timeline-card">
+                      <strong>Readiness checks</strong>
+                      <div class="timeline-row">
+                        <div>
+                          <b>Document owner</b>
+                          <small>Acme Lending PLC</small>
+                        </div>
+                        <small>verified</small>
+                      </div>
+                      <div class="timeline-row">
+                        <div>
+                          <b>Accepted ID inputs</b>
+                          <small>BVN or NIN</small>
+                        </div>
+                        <small>clear</small>
+                      </div>
+                      <div class="timeline-row">
+                        <div>
+                          <b>Resume rule</b>
+                          <small>Return without repeating passed steps</small>
+                        </div>
+                        <small>enabled</small>
+                      </div>
+                    </div>
+
+                    <div class="vault-card">
+                      <strong>Evidence pack preview</strong>
+                      <p>The signer sees what will be retained before submitting, which builds trust instead of surprise.</p>
+                      <ul>
+                        <li>Faceproof result + timestamp</li>
+                        <li>Chosen identity source</li>
+                        <li>Document hash + signer action log</li>
+                        <li>Downloadable completion receipt</li>
+                      </ul>
+                      <a class="inline-button" href="#contact">Proceed to secure capture</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="audit-panel">
+            <h3>Ops sees the same assurance story in one place</h3>
+            <p class="audit-copy">
+              The supporting admin layer is where this becomes buyer-relevant. Instead of sending support into email threads and manual checks, the completed request exposes one auditable finish state.
+            </p>
+
+            <div class="audit-slab">
+              <div class="audit-head">
+                <strong>Request #R-24018 / Loan acceptance</strong>
+                <span class="tag">Risk clear</span>
+              </div>
+              <div class="audit-grid">
+                <div class="vault-card">
+                  <strong>Signer readiness trail</strong>
+                  <p>All preflight acknowledgements are visible before support gets involved.</p>
+                  <ul>
+                    <li>Readiness checklist accepted at 09:41</li>
+                    <li>Identity method chosen before capture</li>
+                    <li>Expected duration shown to signer</li>
+                    <li>Resume state saved after each passed step</li>
+                  </ul>
+                </div>
+                <div class="vault-card">
+                  <strong>Evidence vault</strong>
+                  <p>One exportable package instead of scattered proof.</p>
+                  <ul>
+                    <li>Faceproof confidence result</li>
+                    <li>BVN/NIN validation status</li>
+                    <li>Signature event timeline</li>
+                    <li>Document hash + completion receipt</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="audit-slab">
+              <div class="metric-head">
+                <strong>Expected business effect</strong>
+                <span class="tag warn">Enterprise impact</span>
+              </div>
+              <div class="metric-stack">
+                <div class="metric-row">
+                  <div>
+                    <b>Lower signer abandonment</b>
+                    <small>Requirements are explicit before the sensitive steps begin</small>
+                  </div>
+                  <small>conversion</small>
+                </div>
+                <div class="metric-row">
+                  <div>
+                    <b>Lower support load</b>
+                    <small>Failed or paused requests are easier to diagnose immediately</small>
+                  </div>
+                  <small>operations</small>
+                </div>
+                <div class="metric-row">
+                  <div>
+                    <b>Stronger enterprise trust</b>
+                    <small>Customers see a reusable proof package, not a fragile workflow</small>
+                  </div>
+                  <small>sales</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="audit-slab">
+              <div class="metric-head">
+                <strong>Why this fits Simeon's remit</strong>
+                <span class="tag">CTO owned</span>
+              </div>
+              <div class="metric-stack">
+                <div class="metric-row">
+                  <div>
+                    <b>Security is preserved</b>
+                    <small>No removal of biometric or audit controls</small>
+                  </div>
+                  <small>compliance</small>
+                </div>
+                <div class="metric-row">
+                  <div>
+                    <b>Platform surfaces are reused</b>
+                    <small>Requests, documents, metrics, and auth stay in one coherent system</small>
+                  </div>
+                  <small>architecture</small>
+                </div>
+                <div class="metric-row">
+                  <div>
+                    <b>Mobile work is credible to outsource</b>
+                    <small>UX, flow orchestration, frontend performance, and evidence UI are clear Elinext slices</small>
+                  </div>
+                  <small>delivery</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="delivery">
+      <div class="section-wrap">
+        <div class="section-head">
+          <span class="kicker">Delivery wedge</span>
+          <h2>A practical mobile-platform slice Elinext could own</h2>
+          <p>
+            This does not need a platform rewrite. It is a focused mobile and workflow package that sharpens the highest-friction part of the journey while staying inside DigiSign's assurance model.
+          </p>
+        </div>
+
+        <div class="delivery-grid">
+          <div class="delivery-card">
+            <span class="chip">Workstream 1</span>
+            <strong>Readiness and resume UX</strong>
+            <ul>
+              <li>identity preflight copy for BVN/NIN and liveness</li>
+              <li>step visibility before capture</li>
+              <li>resume-safe state handling on mobile</li>
+            </ul>
+          </div>
+          <div class="delivery-card">
+            <span class="chip">Workstream 2</span>
+            <strong>Evidence vault and admin handoff</strong>
+            <ul>
+              <li>single completion view for support and enterprise users</li>
+              <li>proof pack export pattern</li>
+              <li>clear status states around failed or paused checks</li>
+            </ul>
+          </div>
+          <div class="delivery-card">
+            <span class="chip">Workstream 3</span>
+            <strong>Front-door performance cleanup</strong>
+            <ul>
+              <li>lighter auth shell</li>
+              <li>reduced decorative payload on mobile</li>
+              <li>faster first useful state before verification begins</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing" id="contact">
+      <div class="closing-card">
+        <span class="kicker">Next step</span>
+        <h3>If this problem is on your roadmap, the prototype is ready to walk through</h3>
+        <p class="closing-copy">
+          The concept is aimed at a simple outcome: keep DigiSign's assurance bar high while making the mobile journey easier to finish and easier to defend operationally.
+        </p>
+        <div class="cta-row">
+          <a class="cta-link" href="https://www.elinext.com/contacts/">Get in Touch</a>
+          <span class="cta-note">AI-powered mobile teardown by Elinext</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
