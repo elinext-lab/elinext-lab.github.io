@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sword Health Mobile - Governed Activation Teardown</title>
+  <meta name="description" content="What if Sword Health turned its first-session experience into one calm, governed path with channel controls, readiness checks, resilient clinician messaging, and audit-ready handoffs across AI Care?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/sword-health_2026-03-18_03-29-32/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/sword-health_2026-03-18_03-29-32/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/sword-health_2026-03-18_03-29-32/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Sword Health Mobile - AI Teardown">
+  <meta property="og:description" content="What if Sword Health made its one-conversation promise real with a governed activation layer that quiets outreach, verifies readiness, and keeps clinician handoffs reliable without weakening auditability?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Ratings as of 2026-03-18: iOS 4.74355 (41415 reviews, source: iTunes Search API, US), Android 4.5966496 (7896 reviews, source: https://play.google.com/store/apps/details?id=com.swordhealth.guarda&hl=en&gl=us via google-play-scraper, US) -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f6f1ea;
+      --ink: #102137;
+      --ink-soft: #42556e;
+      --panel: #fffdf9;
+      --panel-2: #ffffff;
+      --panel-3: #f4f8ff;
+      --hero: #0d1730;
+      --hero-2: #122547;
+      --line: rgba(16, 33, 55, 0.1);
+      --line-dark: rgba(203, 221, 255, 0.16);
+      --mint: #8ad5c0;
+      --mint-deep: #0f7668;
+      --sky: #7eb1f7;
+      --amber: #f4aa4d;
+      --rose: #ef7a72;
+      --pearl: #dde8fb;
+      --shadow: 0 28px 80px rgba(16, 33, 55, 0.12);
+      --shadow-dark: 0 32px 90px rgba(4, 11, 24, 0.38);
+      --radius-xl: 34px;
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 8%, rgba(244, 170, 77, 0.2), transparent 22%),
+        radial-gradient(circle at 86% 6%, rgba(126, 177, 247, 0.18), transparent 22%),
+        linear-gradient(180deg, #fbf7f1 0%, #eef4fb 52%, #edf0f5 100%);
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 26px 20px;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding-top: 34px;
+      padding-bottom: 30px;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 40px;
+      background:
+        radial-gradient(circle at top right, rgba(138, 213, 192, 0.14), transparent 26%),
+        linear-gradient(145deg, rgba(11, 22, 44, 0.98), rgba(18, 37, 71, 0.97));
+      border: 1px solid rgba(199, 222, 255, 0.14);
+      box-shadow: var(--shadow-dark);
+      padding: 30px;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      width: 24rem;
+      height: 24rem;
+      right: -6rem;
+      top: -8rem;
+      background: rgba(244, 170, 77, 0.14);
+      border-radius: 999px;
+      filter: blur(20px);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 auto 18px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(138, 213, 192, 0.12);
+      border: 1px solid rgba(138, 213, 192, 0.24);
+      color: #d7fff0;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .eyebrow img {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto 28px;
+      text-align: center;
+    }
+
+    h1,
+    h2,
+    h3,
+    .stat strong,
+    .build-card strong,
+    .signal-card strong {
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: -0.05em;
+    }
+
+    h1 {
+      margin: 0 auto 18px;
+      max-width: 920px;
+      font-size: clamp(2.9rem, 6.2vw, 5.6rem);
+      line-height: 0.92;
+      color: #f8fbff;
+    }
+
+    h1 span,
+    h2 span {
+      color: #8ad5c0;
+    }
+
+    .hero-copy p {
+      margin: 0 auto;
+      max-width: 760px;
+      color: #c2d2ef;
+      font-size: 1.08rem;
+      line-height: 1.78;
+    }
+
+    .hero-personal {
+      margin-top: 14px;
+      color: #e7eefb;
+      font-size: 0.96rem;
+      line-height: 1.72;
+    }
+
+    .hero-metrics {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 920px;
+      margin: 0 auto 24px;
+    }
+
+    .stat {
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(208, 224, 255, 0.12);
+      padding: 18px;
+      text-align: left;
+    }
+
+    .stat span {
+      display: block;
+      color: #9fb6db;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stat strong {
+      display: block;
+      color: #ffffff;
+      font-size: 1.5rem;
+      line-height: 1.05;
+      margin-bottom: 8px;
+    }
+
+    .stat p {
+      margin: 0;
+      color: #c9d7ef;
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    .hero-bottom {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 16px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .insight-card,
+    .buyer-card,
+    .signal-card,
+    .build-card,
+    .closing-card {
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .insight-card,
+    .buyer-card {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(208, 224, 255, 0.12);
+      padding: 22px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 auto 16px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(208, 224, 255, 0.12);
+      color: #d7fff0;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .hero-bottom h3 {
+      margin: 0 0 12px;
+      color: #ffffff;
+      font-size: 1.55rem;
+      line-height: 1.05;
+    }
+
+    .hero-bottom p,
+    .hero-bottom li {
+      color: #ccdaef;
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+
+    .hero-bottom ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .hero-bottom li + li {
+      margin-top: 8px;
+    }
+
+    .light-section {
+      padding-top: 18px;
+      padding-bottom: 18px;
+    }
+
+    .section-head {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto 20px;
+    }
+
+    .section-head .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--line);
+      color: var(--mint-deep);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .section-head h2 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 4vw, 3.35rem);
+      line-height: 0.98;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 1rem;
+      line-height: 1.72;
+    }
+
+    .prototype-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .phone-column,
+    .platform-column {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 34px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .column-label {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eff5ff;
+      color: #20426e;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 800;
+    }
+
+    .column-label.after {
+      background: #e7fbf4;
+      color: #0d705f;
+    }
+
+    .column-label.platform {
+      background: #fff0dc;
+      color: #965315;
+    }
+
+    .phone-column h3,
+    .platform-column h3 {
+      margin: 0 0 10px;
+      font-size: 1.65rem;
+      line-height: 1.03;
+    }
+
+    .phone-column > p,
+    .platform-column > p {
+      margin: 0 0 16px;
+      color: var(--ink-soft);
+      font-size: 0.97rem;
+      line-height: 1.65;
+    }
+
+    .phone-shell {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      margin: 0 auto 16px;
+      padding: 12px;
+      border-radius: 38px;
+      background: linear-gradient(180deg, #10151d, #1b232f);
+      box-shadow: 0 28px 60px rgba(12, 20, 35, 0.28);
+    }
+
+    .phone-shell::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92px;
+      height: 18px;
+      border-radius: 0 0 14px 14px;
+      background: #05080e;
+      z-index: 2;
+    }
+
+    .phone-screen {
+      height: 100%;
+      overflow-y: auto;
+      border-radius: 28px;
+      padding: 36px 14px 14px;
+      background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+      scrollbar-width: none;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .phone-screen.after {
+      background: linear-gradient(180deg, #f4fffb 0%, #ecf8ff 100%);
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      font-size: 0.78rem;
+      color: #64768f;
+    }
+
+    .app-lockup {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .app-lockup img {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+    }
+
+    .app-lockup strong {
+      display: block;
+      font-size: 0.98rem;
+      color: #0f2137;
+    }
+
+    .app-lockup span {
+      display: block;
+      color: #667891;
+      font-size: 0.78rem;
+    }
+
+    .phone-title {
+      margin: 0 0 14px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.4rem;
+      line-height: 1.03;
+      color: #0f2137;
+    }
+
+    .mini-card {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(16, 33, 55, 0.08);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 10px 30px rgba(17, 35, 58, 0.06);
+    }
+
+    .mini-card.warn {
+      background: #fff5eb;
+      border-color: rgba(244, 170, 77, 0.28);
+    }
+
+    .mini-card.good {
+      background: #f1fff8;
+      border-color: rgba(40, 166, 131, 0.2);
+    }
+
+    .mini-card h4 {
+      margin: 0 0 10px;
+      font-size: 0.86rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #52657d;
+    }
+
+    .mini-card p {
+      margin: 0;
+      color: #233950;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .chip-row,
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .chip,
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .chip {
+      background: #fde4e1;
+      color: #9b3d39;
+    }
+
+    .chip.good {
+      background: #def7ee;
+      color: #0f7c64;
+    }
+
+    .chip.neutral {
+      background: #e8f1ff;
+      color: #315d95;
+    }
+
+    .pill {
+      background: #f3f7ff;
+      color: #304b73;
+      border: 1px solid rgba(16, 33, 55, 0.08);
+    }
+
+    .thread {
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .bubble {
+      border-radius: 16px;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .bubble.member {
+      background: #ebf3ff;
+      color: #24456d;
+    }
+
+    .bubble.staff {
+      background: #f2fff7;
+      color: #155a4d;
+    }
+
+    .bubble.alert {
+      background: #fff3ea;
+      color: #7f4f24;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(16, 33, 55, 0.08);
+      color: #22384e;
+      font-size: 0.89rem;
+      line-height: 1.45;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 4px;
+      border-radius: 999px;
+      background: var(--amber);
+      flex: 0 0 auto;
+    }
+
+    .dot.good {
+      background: #1e9f78;
+    }
+
+    .platform-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(243,248,255,0.98));
+      border: 1px solid rgba(16, 33, 55, 0.08);
+      border-radius: 24px;
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+
+    .platform-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+      color: #122547;
+    }
+
+    .platform-card p,
+    .platform-card li {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.93rem;
+      line-height: 1.62;
+    }
+
+    .platform-card ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+
+    .platform-card li + li {
+      margin-top: 8px;
+    }
+
+    .audit-log {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .audit-row {
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1px solid rgba(16, 33, 55, 0.08);
+      font-size: 0.86rem;
+      color: #27415f;
+    }
+
+    .audit-row span {
+      color: #6d819b;
+      font-weight: 700;
+    }
+
+    .signal-grid,
+    .build-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .signal-card,
+    .build-card,
+    .closing-card {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      padding: 22px;
+    }
+
+    .signal-card span,
+    .build-card span {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #eff5ff;
+      color: #2a568d;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .signal-card strong,
+    .build-card strong {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 1.32rem;
+      line-height: 1.05;
+    }
+
+    .signal-card p,
+    .build-card p,
+    .closing-card p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.96rem;
+      line-height: 1.68;
+    }
+
+    .closing-card {
+      max-width: 920px;
+      margin: 0 auto 10px;
+      text-align: center;
+    }
+
+    .closing-card h2 {
+      margin: 0 0 14px;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 0.98;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      padding: 16px 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #13284d, #1f467d);
+      color: #ffffff;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      box-shadow: 0 18px 40px rgba(20, 43, 79, 0.22);
+    }
+
+    .footnote {
+      margin-top: 16px;
+      color: #61748d;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 1080px) {
+      .hero-bottom,
+      .prototype-grid,
+      .signal-grid,
+      .build-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-metrics {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-card,
+      .phone-column,
+      .platform-column,
+      .signal-card,
+      .build-card,
+      .closing-card {
+        padding: 18px;
+      }
+
+      .phone-shell {
+        width: 300px;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <section class="section hero">
+      <div class="container">
+        <div class="hero-card">
+          <div style="text-align:center;">
+            <div class="eyebrow">
+              <img src="assets/icon.png" alt="Sword Health app icon">
+              Built for Jorge Meireles, CTO
+            </div>
+          </div>
+
+          <div class="hero-copy">
+            <h1>What if Sword's <span>one conversation</span> started quietly, safely, and actually worked?</h1>
+            <p>
+              Sword already has the therapy value. The avoidable trust leak is in the first-session path:
+              message overload, readiness friction, and clinician-thread failures right where a regulated
+              AI care product should feel most coordinated.
+            </p>
+            <p class="hero-personal">
+              This concept reframes the problem as a platform concern Jorge owns: a governed activation layer
+              that keeps communication, device state, and clinician handoffs consistent across AI Care.
+            </p>
+          </div>
+
+          <div class="hero-metrics">
+            <div class="stat">
+              <span>Recent review risk</span>
+              <strong>43 / 100</strong>
+              <p>Recent iOS + Android reviews were 3 stars or below when pulled on 2026-03-18.</p>
+            </div>
+            <div class="stat">
+              <span>Trust-layer failures</span>
+              <strong>20 mentions</strong>
+              <p>Low-score reviews repeatedly call out broken therapist messaging and fragmented communication.</p>
+            </div>
+            <div class="stat">
+              <span>Regulated reality</span>
+              <strong>HIPAA + HITRUST</strong>
+              <p>Trust Center also lists SOC 2 Type 2, ISO 13485, GDPR, and other healthcare controls.</p>
+            </div>
+          </div>
+
+          <div class="hero-bottom">
+            <div class="insight-card">
+              <div class="kicker">Selected opportunity</div>
+              <h3>Governed activation control plane</h3>
+              <p>
+                Instead of letting SMS, email, push, device status, and clinician messaging behave like separate
+                products, give the member one explicit setup path and give ops one auditable source of truth.
+              </p>
+              <ul>
+                <li>Member-set channel preference and reminder intensity</li>
+                <li>Pre-session device readiness and recovery guidance</li>
+                <li>Resilient clinician thread with visible response expectations</li>
+                <li>Audit-ready events for consent, escalation, and handoff</li>
+              </ul>
+            </div>
+
+            <div class="buyer-card">
+              <div class="kicker">Why this is a CTO problem</div>
+              <h3>Platform promise vs. member reality</h3>
+              <p>
+                Sword's AI Care site promises one conversation, one clinical memory, and one system across programs.
+                The store reviews suggest the member often feels several systems instead. That gap is architectural,
+                operational, and compliance-relevant, not just cosmetic.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section light-section">
+      <div class="container">
+        <div class="section-head">
+          <div class="tag">Prototype</div>
+          <h2>Show the member one path, and show the platform <span>why it is safe</span></h2>
+          <p>
+            The mobile concept below solves the review evidence, but it also shows the missing admin logic:
+            contact policy, readiness state, and governed clinician handoffs that can scale across Sword programs.
+          </p>
+        </div>
+
+        <div class="prototype-grid">
+          <div class="phone-column">
+            <div class="column-label">Current state</div>
+            <h3>Noisy start, brittle trust</h3>
+            <p>The first-session experience can feel like several systems competing for the member's attention.</p>
+
+            <div class="phone-shell">
+              <div class="phone-screen">
+                <div class="status-row">
+                  <span>9:41</span>
+                  <span>5G 88%</span>
+                </div>
+
+                <div class="app-lockup">
+                  <img src="assets/icon.png" alt="Sword Health icon">
+                  <div>
+                    <strong>Sword Health</strong>
+                    <span>AI Care</span>
+                  </div>
+                </div>
+
+                <div class="phone-title">Today's start feels fragmented</div>
+
+                <div class="mini-card warn">
+                  <h4>Channel stack</h4>
+                  <p>Four reminders landed before the member finished setup.</p>
+                  <div class="chip-row">
+                    <div class="chip">SMS 8:05</div>
+                    <div class="chip">Email 8:06</div>
+                    <div class="chip">Push 8:07</div>
+                    <div class="chip">Call 8:09</div>
+                  </div>
+                </div>
+
+                <div class="mini-card">
+                  <h4>Program + setup mismatch</h4>
+                  <p>The member asked for two short sessions per week, but the flow still pushes full activation before devices and message routing are ready.</p>
+                </div>
+
+                <div class="mini-card">
+                  <h4>Device readiness</h4>
+                  <div class="list">
+                    <div class="list-item"><div class="dot"></div><div>Apple Watch disconnected again</div></div>
+                    <div class="list-item"><div class="dot"></div><div>Motion tracker battery not detected</div></div>
+                    <div class="list-item"><div class="dot"></div><div>Session cannot validate posture data</div></div>
+                  </div>
+                </div>
+
+                <div class="mini-card warn">
+                  <h4>Clinician thread</h4>
+                  <div class="thread">
+                    <div class="bubble member">I need a modification before tonight's session.</div>
+                    <div class="bubble alert">Messages failed to load. Try again later.</div>
+                  </div>
+                </div>
+
+                <div class="mini-card">
+                  <h4>Trust cost</h4>
+                  <p>The care model now feels more like setup work and reminder pressure than coordinated care.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="phone-column">
+            <div class="column-label after">Improved state</div>
+            <h3>Quiet start, visible control</h3>
+            <p>The member sees one setup path, one contact policy, and one reliable path to clinician support.</p>
+
+            <div class="phone-shell">
+              <div class="phone-screen after">
+                <div class="status-row">
+                  <span>9:41</span>
+                  <span>5G 88%</span>
+                </div>
+
+                <div class="app-lockup">
+                  <img src="assets/icon.png" alt="Sword Health icon">
+                  <div>
+                    <strong>Sword Health</strong>
+                    <span>Guided Start</span>
+                  </div>
+                </div>
+
+                <div class="phone-title">Choose how Sword should reach you</div>
+
+                <div class="mini-card good">
+                  <h4>Contact policy</h4>
+                  <p>One clear preference set before outreach begins.</p>
+                  <div class="pill-row">
+                    <div class="pill">Primary: Push</div>
+                    <div class="pill">Critical SMS only</div>
+                    <div class="pill">2 reminders / week</div>
+                    <div class="pill">Quiet hours: 8 pm - 7 am</div>
+                  </div>
+                </div>
+
+                <div class="mini-card good">
+                  <h4>Readiness check</h4>
+                  <div class="list">
+                    <div class="list-item"><div class="dot good"></div><div>Wearable connected and transmitting</div></div>
+                    <div class="list-item"><div class="dot good"></div><div>Motion test passed before session one</div></div>
+                    <div class="list-item"><div class="dot good"></div><div>Fallback self-check available if hardware fails</div></div>
+                  </div>
+                </div>
+
+                <div class="mini-card good">
+                  <h4>Clinician thread health</h4>
+                  <div class="thread">
+                    <div class="bubble member">Need a lower-impact variation for shoulder pain.</div>
+                    <div class="bubble staff">Dr. Maya has your note. Expected reply within 2 business hours.</div>
+                  </div>
+                  <div class="chip-row">
+                    <div class="chip good">Clinician in loop</div>
+                    <div class="chip neutral">Escalate if SLA misses</div>
+                  </div>
+                </div>
+
+                <div class="mini-card">
+                  <h4>Audit-ready event</h4>
+                  <p>Preference change, readiness result, and clinician handoff are written once and reused across programs.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="platform-column">
+            <div class="column-label platform">Platform view</div>
+            <h3>The missing layer behind the mobile fix</h3>
+            <p>This is not just a prettier onboarding flow. It is a policy and reliability surface that keeps outreach, ops, and compliance aligned.</p>
+
+            <div class="platform-card">
+              <strong>Channel budget engine</strong>
+              <p>Set member-safe contact caps by program, risk level, and support state instead of letting each channel act alone.</p>
+            </div>
+
+            <div class="platform-card">
+              <strong>Cross-program state</strong>
+              <ul>
+                <li>Shared identity across Thrive, Bloom, Pulse, and Mind</li>
+                <li>One member preference record instead of duplicated settings</li>
+                <li>Program-aware routing when a care need changes</li>
+              </ul>
+            </div>
+
+            <div class="platform-card">
+              <strong>Assurance constraints</strong>
+              <div class="pill-row">
+                <div class="pill">HIPAA</div>
+                <div class="pill">HITRUST</div>
+                <div class="pill">SOC 2 Type 2</div>
+                <div class="pill">ISO 13485</div>
+              </div>
+              <p style="margin-top:10px;">Controls stay visible while the member experience gets calmer.</p>
+            </div>
+
+            <div class="platform-card">
+              <strong>Audit event log</strong>
+              <div class="audit-log">
+                <div class="audit-row"><span>09:04</span><div>Member selected push as primary channel; SMS limited to critical care alerts.</div></div>
+                <div class="audit-row"><span>09:07</span><div>Readiness test failed on wearable sync; fallback path offered and event attached to support queue.</div></div>
+                <div class="audit-row"><span>09:11</span><div>Clinician thread health degraded; escalation rule armed if response ETA is breached.</div></div>
+                <div class="audit-row"><span>09:14</span><div>Preference reused for Mind intake so the member does not repeat setup later.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section light-section">
+      <div class="container">
+        <div class="section-head">
+          <div class="tag">Why it matters</div>
+          <h2>High-leverage because it improves member trust <span>and</span> platform control</h2>
+        </div>
+
+        <div class="signal-grid">
+          <div class="signal-card">
+            <span>Activation</span>
+            <strong>Lower first-session drop-off</strong>
+            <p>
+              Members start with a clear, quiet path instead of four channels and a surprise hardware debugging exercise.
+            </p>
+          </div>
+
+          <div class="signal-card">
+            <span>Operations</span>
+            <strong>Support sees the real blocker</strong>
+            <p>
+              Device state, thread health, and contact policy become visible system facts rather than support guesswork.
+            </p>
+          </div>
+
+          <div class="signal-card">
+            <span>Platform</span>
+            <strong>Reusable across AI Care</strong>
+            <p>
+              The same governed start can be reused as Sword expands Phoenix and shared care flows across more programs.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section light-section">
+      <div class="container">
+        <div class="section-head">
+          <div class="tag">Elinext scope</div>
+          <h2>What Elinext could actually build</h2>
+          <p>
+            This is a realistic outsourced wedge: member-facing mobile work, reliability hardening, and admin surfaces
+            around an existing care platform without touching Sword's core clinical IP.
+          </p>
+        </div>
+
+        <div class="build-grid">
+          <div class="build-card">
+            <span>Mobile</span>
+            <strong>Guided Start flow</strong>
+            <p>
+              Contact preferences, quiet hours, device-readiness checks, and resilient thread states built directly into the app.
+            </p>
+          </div>
+
+          <div class="build-card">
+            <span>Platform</span>
+            <strong>Policy + event services</strong>
+            <p>
+              A shared service for channel rules, escalation states, and cross-program preference reuse that reduces orchestration drift.
+            </p>
+          </div>
+
+          <div class="build-card">
+            <span>Ops</span>
+            <strong>Audit and rollout tooling</strong>
+            <p>
+              Event logs, clinician SLA visibility, and experiment-safe rollout controls for a regulated healthcare environment.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section light-section">
+      <div class="container">
+        <div class="closing-card">
+          <h2>Calmer for members. Safer for ops. More real as a platform promise.</h2>
+          <p>
+            The best Sword pitch to a CTO is not "users hate notifications." It is that Sword's one-conversation promise
+            deserves one governed activation layer beneath the mobile experience.
+          </p>
+          <a class="cta" href="https://www.elinext.com/contacts/">Get in Touch</a>
+          <div class="footnote">
+            Based on public Sword Health product pages, Trust Center disclosures, careers signals, a public Reddit thread,
+            and local App Store / Google Play review pulls retrieved on 2026-03-18.
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
