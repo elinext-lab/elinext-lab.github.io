@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teladoc Health Mobile - Journey Assurance</title>
+  <meta name="description" content="What if Teladoc Health could catch cohort-specific mobile regressions before they hid chronic-care modules, broke auth, or let visit callbacks fail inside a HIPAA-governed care journey?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/teladoc-health_2026-03-19_03-36-14/">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/teladoc-health_2026-03-19_03-36-14/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/teladoc-health_2026-03-19_03-36-14/">
+  <meta property="og:title" content="Teladoc Health Mobile - AI Teardown">
+  <meta property="og:description" content="What if Teladoc Health added cohort-safe release controls and member fallback flows so broken auth, missing chronic-care modules, and callback failures were caught before they spread?">
+  <meta property="og:type" content="website">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+
+  <!-- Ratings as of 2026-03-19: iOS 4.79 (700126 reviews, source: iTunes Lookup API, US), Android 4.40 (78072 reviews, source: https://play.google.com/store/apps/details?id=com.teladoc.members&hl=en&gl=us via google-play-scraper) -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f5f1e9;
+      --ink: #10243d;
+      --muted: #5c6f86;
+      --panel: #ffffff;
+      --panel-soft: #eef7f8;
+      --line: rgba(16, 36, 61, 0.12);
+      --navy: #11325a;
+      --navy-deep: #0b1b34;
+      --teal: #1d9e9b;
+      --teal-soft: #d9f1ef;
+      --coral: #f0644b;
+      --coral-soft: #ffe7e0;
+      --gold: #f0b74d;
+      --gold-soft: #fff0cf;
+      --shadow: 0 24px 70px rgba(15, 30, 55, 0.12);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Public Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(29, 158, 155, 0.16), transparent 24%),
+        radial-gradient(circle at 88% 12%, rgba(240, 183, 77, 0.14), transparent 22%),
+        linear-gradient(180deg, #faf6ef 0%, #f4f7f6 52%, #eef2f5 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .page-shell {
+      position: relative;
+      z-index: 1;
+    }
+
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 28px 20px;
+    }
+
+    .hero {
+      padding-top: 82px;
+      padding-bottom: 36px;
+      text-align: center;
+    }
+
+    .signal,
+    .prototype,
+    .build,
+    .closing {
+      padding-top: 28px;
+      padding-bottom: 28px;
+    }
+
+    .eyebrow,
+    .section-kicker,
+    .phone-tag,
+    .tag {
+      display: block;
+      width: fit-content;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 999px;
+    }
+
+    .eyebrow,
+    .section-kicker {
+      padding: 9px 15px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(16, 36, 61, 0.08);
+      color: var(--teal);
+      box-shadow: 0 14px 40px rgba(16, 36, 61, 0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-lockup {
+      width: 104px;
+      height: 104px;
+      margin: 24px auto 18px;
+      padding: 10px;
+      border-radius: 30px;
+      background: linear-gradient(160deg, rgba(255,255,255,0.98), rgba(232,243,244,0.95));
+      box-shadow: var(--shadow);
+    }
+
+    .brand-lockup img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 24px;
+      object-fit: cover;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: -0.05em;
+      color: var(--ink);
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 0 auto 18px;
+      font-size: clamp(3rem, 5.5vw, 5.8rem);
+      line-height: 0.92;
+      text-align: center;
+    }
+
+    h1 span,
+    h2 span {
+      color: var(--coral);
+    }
+
+    .hero-subtitle {
+      max-width: 760px;
+      margin: 0 auto 16px;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .hero-personal {
+      max-width: 760px;
+      margin: 0 auto 34px;
+      color: #465973;
+      font-size: 0.98rem;
+      line-height: 1.75;
+      text-align: center;
+    }
+
+    .hero-grid,
+    .signal-grid,
+    .prototype-grid,
+    .build-grid {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .signal-grid {
+      grid-template-columns: 1.2fr 0.8fr 0.8fr;
+      align-items: stretch;
+    }
+
+    .prototype-grid {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      align-items: start;
+    }
+
+    .build-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .hero-card,
+    .signal-card,
+    .control-card,
+    .build-card,
+    .closing-card {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.68);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card,
+    .build-card,
+    .closing-card {
+      padding: 22px;
+    }
+
+    .hero-card {
+      min-height: 174px;
+      text-align: left;
+    }
+
+    .hero-card strong {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--teal);
+    }
+
+    .hero-card p,
+    .signal-card p,
+    .build-card p,
+    .closing-card p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.96rem;
+    }
+
+    .hero-metric {
+      display: block;
+      margin-bottom: 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 2.4rem;
+      line-height: 1;
+      color: var(--navy);
+    }
+
+    .signal-card {
+      padding: 26px;
+      background: rgba(255, 255, 255, 0.94);
+    }
+
+    .signal-card h2 {
+      margin-bottom: 14px;
+      font-size: clamp(2rem, 3vw, 3.1rem);
+      line-height: 1.02;
+    }
+
+    .signal-card h3,
+    .build-card h3,
+    .closing-card h3 {
+      margin-bottom: 14px;
+      font-size: 1.4rem;
+    }
+
+    .bullet-list,
+    .mini-list,
+    .audit-list,
+    .timeline-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .bullet-item,
+    .mini-item,
+    .audit-item,
+    .timeline-item {
+      display: grid;
+      gap: 8px;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .bullet-item strong,
+    .mini-item strong,
+    .audit-item strong,
+    .timeline-item strong {
+      font-size: 0.95rem;
+      color: var(--navy);
+    }
+
+    .mini-list {
+      margin-top: 0;
+    }
+
+    .mini-item {
+      background: linear-gradient(180deg, #f8fbfd 0%, #ffffff 100%);
+    }
+
+    .mini-chip {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mini-chip.teal {
+      color: #087474;
+      background: var(--teal-soft);
+    }
+
+    .mini-chip.coral {
+      color: #a23d27;
+      background: var(--coral-soft);
+    }
+
+    .mini-chip.gold {
+      color: #7d5811;
+      background: var(--gold-soft);
+    }
+
+    .prototype-copy {
+      max-width: 980px;
+      margin: 0 auto 26px;
+      text-align: center;
+    }
+
+    .prototype-copy h2 {
+      margin-top: 12px;
+      margin-bottom: 14px;
+      font-size: clamp(2.2rem, 4.2vw, 4rem);
+      line-height: 0.95;
+    }
+
+    .prototype-copy p {
+      max-width: 820px;
+      margin: 0 auto;
+      font-size: 1.03rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .phone-wrap {
+      display: grid;
+      justify-items: center;
+      gap: 14px;
+    }
+
+    .phone-tag {
+      padding: 8px 14px;
+      color: var(--navy);
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(16, 36, 61, 0.08);
+      box-shadow: 0 12px 30px rgba(16, 36, 61, 0.08);
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      padding: 12px;
+      border-radius: 36px;
+      background: linear-gradient(180deg, #1a2943 0%, #0e1628 100%);
+      box-shadow: 0 32px 70px rgba(11, 27, 52, 0.34);
+      overflow: hidden;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      width: 118px;
+      height: 28px;
+      transform: translateX(-50%);
+      border-radius: 20px;
+      background: rgba(8, 14, 24, 0.92);
+      z-index: 3;
+    }
+
+    .phone-screen {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      padding: 36px 14px 14px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, #f8fbfd 0%, #ffffff 100%);
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #748398;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .status-row .pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #eef2f7;
+    }
+
+    .phone-brand,
+    .phone-title,
+    .phone-subtitle,
+    .phone-label {
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .phone-brand {
+      width: 62px;
+      height: 62px;
+      margin-bottom: 14px;
+      border-radius: 20px;
+      padding: 6px;
+      background: linear-gradient(155deg, #ffffff 0%, #edf6f8 100%);
+      box-shadow: 0 14px 34px rgba(12, 35, 65, 0.12);
+    }
+
+    .phone-brand img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      object-fit: cover;
+    }
+
+    .phone-label {
+      margin-bottom: 8px;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--teal);
+    }
+
+    .phone-title {
+      margin-bottom: 8px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.55rem;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .phone-subtitle {
+      margin-bottom: 18px;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .alert-card,
+    .module-card,
+    .visit-card,
+    .journey-card,
+    .helper-card {
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    .alert-card {
+      background: linear-gradient(180deg, #fff3ef 0%, #fff8f5 100%);
+      border-color: rgba(240, 100, 75, 0.18);
+    }
+
+    .journey-card.safe {
+      background: linear-gradient(180deg, #eef9f8 0%, #ffffff 100%);
+      border-color: rgba(29, 158, 155, 0.18);
+    }
+
+    .module-card.soft {
+      background: linear-gradient(180deg, #f7fafc 0%, #ffffff 100%);
+    }
+
+    .card-topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .card-badge.danger {
+      color: #a23d27;
+      background: var(--coral-soft);
+    }
+
+    .card-badge.safe {
+      color: #0a6d6b;
+      background: var(--teal-soft);
+    }
+
+    .card-badge.warn {
+      color: #7d5811;
+      background: var(--gold-soft);
+    }
+
+    .card-copy {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.6;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .metric-box {
+      padding: 12px;
+      border-radius: 16px;
+      background: #f7fafc;
+      border: 1px solid rgba(16, 36, 61, 0.08);
+    }
+
+    .metric-box strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--navy);
+      font-size: 0.82rem;
+    }
+
+    .metric-box span {
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .list-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .list-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 12px;
+      border-radius: 14px;
+      background: #f7fafc;
+      border: 1px solid rgba(16, 36, 61, 0.08);
+      color: var(--ink);
+      font-size: 0.82rem;
+    }
+
+    .list-row span:last-child {
+      color: var(--muted);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .control-card {
+      max-width: 1160px;
+      margin: 20px auto 0;
+      padding: 28px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(244,248,250,0.98) 100%);
+      overflow: hidden;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .control-panel,
+    .audit-panel {
+      padding: 20px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      min-height: 100%;
+    }
+
+    .control-panel h3,
+    .audit-panel h3 {
+      margin-bottom: 12px;
+    }
+
+    .lane-list,
+    .audit-list,
+    .timeline-list {
+      margin-top: 16px;
+    }
+
+    .lane-item {
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: #f9fbfd;
+      margin-bottom: 12px;
+    }
+
+    .lane-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lane-top strong {
+      font-size: 0.95rem;
+      color: var(--navy);
+    }
+
+    .lane-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .lane-metric {
+      padding: 12px;
+      border-radius: 16px;
+      background: #ffffff;
+      border: 1px solid rgba(16, 36, 61, 0.08);
+    }
+
+    .lane-metric span {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #7b8ba0;
+      margin-bottom: 6px;
+    }
+
+    .lane-metric strong {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.1rem;
+      color: var(--navy-deep);
+    }
+
+    .audit-item,
+    .timeline-item {
+      background: #f9fbfd;
+    }
+
+    .audit-item p,
+    .timeline-item p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .build-card {
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .build-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+    }
+
+    .closing-card {
+      max-width: 880px;
+      margin: 0 auto;
+      text-align: center;
+      background:
+        radial-gradient(circle at top, rgba(29, 158, 155, 0.14), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(240,247,248,0.98) 100%);
+    }
+
+    .closing-card h2 {
+      margin-bottom: 16px;
+      font-size: clamp(2.1rem, 4vw, 3.8rem);
+      line-height: 0.96;
+    }
+
+    .cta-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 26px;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 24px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--coral) 0%, #ed7b32 100%);
+      box-shadow: 0 18px 40px rgba(240, 100, 75, 0.28);
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 0.86rem;
+      line-height: 1.7;
+      color: #607186;
+    }
+
+    .reveal {
+      animation: liftIn 0.8s ease both;
+    }
+
+    .delay-1 { animation-delay: 0.08s; }
+    .delay-2 { animation-delay: 0.16s; }
+    .delay-3 { animation-delay: 0.24s; }
+    .delay-4 { animation-delay: 0.32s; }
+
+    @keyframes liftIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 960px) {
+      .signal-grid,
+      .control-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .metric-row,
+      .lane-metrics {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <section class="hero">
+      <span class="eyebrow reveal">Prepared For John Dittmar, PhD</span>
+      <div class="brand-lockup reveal delay-1">
+        <img src="assets/app-icon.jpg" alt="Teladoc Health app icon">
+      </div>
+      <h1 class="reveal delay-2">Catch broken care journeys <span>before members do</span>.</h1>
+      <p class="hero-subtitle reveal delay-2">
+        A buyer-fit concept for Teladoc Health: pair member-safe fallback flows with cohort-aware rollout controls so auth loops,
+        missing chronic-care modules, and callback failures stop spreading across a HIPAA-governed mobile platform.
+      </p>
+      <p class="hero-personal reveal delay-3">
+        John, your CRM scope points to platform maturity, rollout modernization, AI-enabled engineering, responsible AI, and
+        componentized personalization. Recent review evidence says the next leverage point is not another isolated screen refresh.
+        It is a safer way to ship and recover across different member cohorts.
+      </p>
+
+      <div class="hero-grid">
+        <article class="hero-card reveal delay-1">
+          <strong>Why This Fits Your Role</strong>
+          <p>Rollout controls, consumer-platform telemetry, device and eligibility complexity, and AI-assisted operational response all sit inside your stated remit.</p>
+        </article>
+        <article class="hero-card reveal delay-2">
+          <strong>Review Signal</strong>
+          <span class="hero-metric">42 / 100</span>
+          <p>Recent store reviews were 3 stars or below, with the loudest pattern around callback failures, missing modules, auth loops, and brittle navigation.</p>
+        </article>
+        <article class="hero-card reveal delay-3">
+          <strong>Platform Cost</strong>
+          <span class="hero-metric">23</span>
+          <p>Low-score reviews explicitly mention care handoff or routing failure. That is trust loss, support load, and avoidable operational noise in one metric cluster.</p>
+        </article>
+        <article class="hero-card reveal delay-4">
+          <strong>Regulated Context</strong>
+          <p>Teladoc’s public privacy notice spells out HIPAA ACE / OHCA structure, HIE participation, and AI-enabled operational tooling. Any fix has to preserve assurance, not bypass it.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="signal">
+      <div class="signal-grid">
+        <article class="signal-card reveal">
+          <span class="section-kicker">Selected Opportunity</span>
+          <h2>Journey assurance for a <span>unified care app</span>.</h2>
+          <p>
+            Teladoc’s app is trying to be one front door for urgent care, chronic care, devices, therapy, family, insurance, and referrals.
+            The public friction pattern says the app is not failing uniformly. It is failing by journey and member context.
+          </p>
+          <div class="bullet-list">
+            <div class="bullet-item">
+              <strong>Review-led user pain</strong>
+              <p>Missed callbacks, auth loops, and invisible chronic-care tools make the member experience feel unreliable at the exact moment people need reassurance.</p>
+            </div>
+            <div class="bullet-item">
+              <strong>Buyer-owned platform pain</strong>
+              <p>Once multiple care lines, device states, and entitlement rules are composited into one shell, releases can break differently by cohort without obvious global alarms.</p>
+            </div>
+            <div class="bullet-item">
+              <strong>Intersection opportunity</strong>
+              <p>Add a cohort-safe release layer that catches those failures early, creates rollback evidence, and gives members a recovery path instead of a dead end.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="signal-card reveal delay-1">
+          <h3>Proof Stack</h3>
+          <div class="mini-list">
+            <div class="mini-item">
+              <span class="mini-chip coral">Review Pull</span>
+              <p>23 low-score review hits on handoff or routing, 15 on stability, 13 on missing data or modules.</p>
+            </div>
+            <div class="mini-item">
+              <span class="mini-chip gold">Official Product</span>
+              <p>Store listings and the main site both market connected diabetes, weight, blood pressure, and device-enabled care inside one app.</p>
+            </div>
+            <div class="mini-item">
+              <span class="mini-chip teal">Investor Context</span>
+              <p>2025 revenue was $2.53B, with $1.58B from Integrated Care. This is a large, high-leverage platform, not a side app.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="signal-card reveal delay-2">
+          <h3>Constraint Fit</h3>
+          <div class="mini-list">
+            <div class="mini-item">
+              <span class="mini-chip teal">HIPAA</span>
+              <p>PHI-safe event capture, role-based access, and formal privacy workflows must remain intact.</p>
+            </div>
+            <div class="mini-item">
+              <span class="mini-chip gold">Responsible AI</span>
+              <p>AI can suggest anomalous cohorts and likely causes, but humans approve rollbacks and care-impacting actions.</p>
+            </div>
+            <div class="mini-item">
+              <span class="mini-chip coral">Support Load</span>
+              <p>Every missed callback or missing program card becomes a support problem. The fix must reduce that operational drag.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="prototype">
+      <div class="prototype-copy reveal">
+        <span class="section-kicker">Prototype</span>
+        <h2>What changes when the app can <span>detect, recover, and prove</span>?</h2>
+        <p>
+          The member view becomes calmer and more recoverable. The platform view becomes specific enough to stop bad releases at the cohort level.
+          This concept shows both surfaces because John’s problem is not purely inside the phone.
+        </p>
+      </div>
+
+      <div class="prototype-grid">
+        <div class="phone-wrap reveal delay-1">
+          <span class="phone-tag">Before / Broken Journey</span>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="status-row">
+                <span>9:41 AM</span>
+                <span class="pill">5G + Face ID</span>
+              </div>
+              <div class="phone-brand">
+                <img src="assets/app-icon.jpg" alt="Teladoc Health">
+              </div>
+              <span class="phone-label">Member Experience</span>
+              <span class="phone-title">Today feels brittle</span>
+              <span class="phone-subtitle">One release changed too much at once for this member cohort.</span>
+
+              <div class="alert-card">
+                <div class="card-topline">
+                  <strong>Visit callback failed</strong>
+                  <span class="card-badge danger">Canceled</span>
+                </div>
+                <p class="card-copy">No missed call. No secure fallback. The member is pushed into support without context.</p>
+              </div>
+
+              <div class="module-card soft">
+                <div class="card-topline">
+                  <strong>Home modules</strong>
+                  <span class="card-badge warn">Mismatch</span>
+                </div>
+                <div class="list-grid">
+                  <div class="list-row"><span>24/7 Care</span><span>Visible</span></div>
+                  <div class="list-row"><span>Diabetes + BP</span><span>Missing card</span></div>
+                  <div class="list-row"><span>Weight tracking</span><span>Hidden after update</span></div>
+                </div>
+              </div>
+
+              <div class="visit-card">
+                <div class="card-topline">
+                  <strong>Access friction</strong>
+                  <span class="card-badge danger">Looping</span>
+                </div>
+                <p class="card-copy">Face ID turned back off. Password flow reset. The member is repeating identity steps before care even starts.</p>
+              </div>
+
+              <div class="metric-row">
+                <div class="metric-box">
+                  <strong>Support next</strong>
+                  <span>Phone or email escalation with no useful journey context.</span>
+                </div>
+                <div class="metric-box">
+                  <strong>Trust impact</strong>
+                  <span>Care promise remains strong, but confidence in the app drops fast.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-wrap reveal delay-2">
+          <span class="phone-tag">After / Stable Member View</span>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="status-row">
+                <span>9:41 AM</span>
+                <span class="pill">Verified Session</span>
+              </div>
+              <div class="phone-brand">
+                <img src="assets/app-icon.jpg" alt="Teladoc Health">
+              </div>
+              <span class="phone-label">Member Experience</span>
+              <span class="phone-title">Your care is intact</span>
+              <span class="phone-subtitle">Eligibility-aware modules stay visible, and recovery starts before support has to step in.</span>
+
+              <div class="journey-card safe">
+                <div class="card-topline">
+                  <strong>Safe fallback active</strong>
+                  <span class="card-badge safe">Protected</span>
+                </div>
+                <p class="card-copy">A flagged release cohort now gets stable navigation, known-good modules, and a guided recovery lane while engineering validates the issue.</p>
+              </div>
+
+              <div class="module-card">
+                <div class="card-topline">
+                  <strong>Eligible today</strong>
+                  <span class="card-badge safe">Synced</span>
+                </div>
+                <div class="list-grid">
+                  <div class="list-row"><span>24/7 Care</span><span>Ready now</span></div>
+                  <div class="list-row"><span>Diabetes + BP</span><span>2 devices connected</span></div>
+                  <div class="list-row"><span>Weight tracking</span><span>Last sync 8 min ago</span></div>
+                </div>
+              </div>
+
+              <div class="helper-card">
+                <div class="card-topline">
+                  <strong>Visit recovery</strong>
+                  <span class="card-badge safe">2-step</span>
+                </div>
+                <div class="list-grid">
+                  <div class="list-row"><span>Preferred callback</span><span>SMS + in-app confirm</span></div>
+                  <div class="list-row"><span>Fallback channel</span><span>Secure chat thread</span></div>
+                  <div class="list-row"><span>If still blocked</span><span>Escalate with context</span></div>
+                </div>
+              </div>
+
+              <div class="metric-row">
+                <div class="metric-box">
+                  <strong>Member benefit</strong>
+                  <span>No mystery disappearance of programs, data, or next steps.</span>
+                </div>
+                <div class="metric-box">
+                  <strong>Support benefit</strong>
+                  <span>The fallback path already carries device, release, and journey context.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-wrap reveal delay-3">
+          <span class="phone-tag">After / Recovery & Audit</span>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="status-row">
+                <span>9:41 AM</span>
+                <span class="pill">Audit Ready</span>
+              </div>
+              <div class="phone-brand">
+                <img src="assets/app-icon.jpg" alt="Teladoc Health">
+              </div>
+              <span class="phone-label">Member Recovery</span>
+              <span class="phone-title">Help without dead ends</span>
+              <span class="phone-subtitle">The app explains what is happening and offers next-best actions without exposing internal complexity.</span>
+
+              <div class="helper-card">
+                <div class="card-topline">
+                  <strong>Known issue detected</strong>
+                  <span class="card-badge warn">Scoped</span>
+                </div>
+                <p class="card-copy">We restored your last stable care view while we verify a recent update. Your data and visit history are still available.</p>
+              </div>
+
+              <div class="module-card soft">
+                <div class="card-topline">
+                  <strong>One-tap recovery</strong>
+                  <span class="card-badge safe">Available</span>
+                </div>
+                <div class="list-grid">
+                  <div class="list-row"><span>Re-verify Face ID</span><span>30 sec</span></div>
+                  <div class="list-row"><span>Confirm callback route</span><span>SMS / voice / chat</span></div>
+                  <div class="list-row"><span>Export records</span><span>Member portal ready</span></div>
+                </div>
+              </div>
+
+              <div class="visit-card">
+                <div class="card-topline">
+                  <strong>Privacy & assurance</strong>
+                  <span class="card-badge safe">HIPAA-safe</span>
+                </div>
+                <p class="card-copy">Only the minimum journey state is shown here. Full incident evidence, approvals, and PHI-safe diagnostics remain in the platform console.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <article class="control-card reveal delay-4">
+        <div class="control-grid">
+          <div class="control-panel">
+            <span class="section-kicker">Platform Surface</span>
+            <h3>Consumer experience control tower</h3>
+            <p>
+              The core idea is a cohort-aware release layer that connects feature rollouts, support signals, and care-journey failures before the issue looks “random” from the outside.
+            </p>
+
+            <div class="lane-list">
+              <div class="lane-item">
+                <div class="lane-top">
+                  <strong>home-persona-nav-v2 / diabetes + Livongo migration cohort</strong>
+                  <span class="card-badge danger">Auto-paused</span>
+                </div>
+                <div class="lane-metrics">
+                  <div class="lane-metric">
+                    <span>Missing card events</span>
+                    <strong>+312%</strong>
+                  </div>
+                  <div class="lane-metric">
+                    <span>Support contacts</span>
+                    <strong>+18%</strong>
+                  </div>
+                  <div class="lane-metric">
+                    <span>Fallback recovery</span>
+                    <strong>76%</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lane-item">
+                <div class="lane-top">
+                  <strong>callback-routing-refresh / urgent care evening queue</strong>
+                  <span class="card-badge warn">Watchlist</span>
+                </div>
+                <div class="lane-metrics">
+                  <div class="lane-metric">
+                    <span>No-answer events</span>
+                    <strong>+21%</strong>
+                  </div>
+                  <div class="lane-metric">
+                    <span>Secure chat fallback</span>
+                    <strong>61%</strong>
+                  </div>
+                  <div class="lane-metric">
+                    <span>Queue trust score</span>
+                    <strong>82</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lane-item">
+                <div class="lane-top">
+                  <strong>face-id-persistence-fix / new-member registration path</strong>
+                  <span class="card-badge safe">Healthy</span>
+                </div>
+                <div class="lane-metrics">
+                  <div class="lane-metric">
+                    <span>Login success</span>
+                    <strong>+9%</strong>
+                  </div>
+                  <div class="lane-metric">
+                    <span>Password retries</span>
+                    <strong>-27%</strong>
+                  </div>
+                  <div class="lane-metric">
+                    <span>Approval state</span>
+                    <strong>Verified</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="audit-panel">
+            <span class="section-kicker">Audit Trail</span>
+            <h3>Explainable, human-reviewed response</h3>
+            <div class="audit-list">
+              <div class="audit-item">
+                <strong>AI suggestion</strong>
+                <p>Detect anomaly in members with device-sync state plus eligibility cache mismatch. Suggest rollback to stable composition layer.</p>
+              </div>
+              <div class="audit-item">
+                <strong>Human approval</strong>
+                <p>Release manager approves scoped rollback for one cohort only. Clinical and privacy owners are notified, not bypassed.</p>
+              </div>
+              <div class="audit-item">
+                <strong>Support packet</strong>
+                <p>Support sees issue label, affected journey, fallback path, and safe explanation. No raw PHI spillover into general ops views.</p>
+              </div>
+              <div class="audit-item">
+                <strong>Evidence export</strong>
+                <p>Every rollout change, alert, response action, and reviewer is versioned for incident review, RAI governance, and compliance documentation.</p>
+              </div>
+            </div>
+
+            <div class="timeline-list">
+              <div class="timeline-item">
+                <strong>09:12</strong>
+                <p>Anomaly crosses threshold in one chronic-care cohort.</p>
+              </div>
+              <div class="timeline-item">
+                <strong>09:16</strong>
+                <p>Scoped rollback restores stable home modules and callback fallback.</p>
+              </div>
+              <div class="timeline-item">
+                <strong>09:21</strong>
+                <p>Member-safe banner and support macro go live automatically.</p>
+              </div>
+              <div class="timeline-item">
+                <strong>09:44</strong>
+                <p>Incident packet is ready for platform, privacy, and product review.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="build">
+      <div class="build-grid">
+        <article class="build-card reveal">
+          <strong>Workstream 01</strong>
+          <h3>Cohort-safe mobile release controls</h3>
+          <p>Wire rollout state to member entitlements, device status, and journey health so platform changes can be paused with precision instead of broad rollback panic.</p>
+        </article>
+        <article class="build-card reveal delay-1">
+          <strong>Workstream 02</strong>
+          <h3>Member fallback UX</h3>
+          <p>Replace silent failure with guided recovery for callback routing, auth persistence, and missing module states, keeping the member inside a trusted care path.</p>
+        </article>
+        <article class="build-card reveal delay-2">
+          <strong>Workstream 03</strong>
+          <h3>Support-ready context</h3>
+          <p>Give support and operations the journey metadata they need without widening PHI exposure, reducing escalations that begin with “we can’t reproduce it.”</p>
+        </article>
+        <article class="build-card reveal delay-3">
+          <strong>Workstream 04</strong>
+          <h3>RAI and compliance evidence</h3>
+          <p>Keep anomaly detection explainable, human-reviewed, and exportable so the platform becomes safer without creating new governance debt.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="closing">
+      <article class="closing-card reveal">
+        <span class="section-kicker">Why It Matters</span>
+        <h2>Safer releases protect <span>member trust</span> and <span>operational calm</span>.</h2>
+        <p>
+          The idea here is simple: keep Teladoc’s unified care promise intact even when one cohort, one device path, or one rollout starts behaving badly.
+          That is the kind of platform work an SVP of Consumer Experience Engineering can actually sponsor.
+        </p>
+        <div class="cta-row">
+          <a class="cta-button" href="https://www.elinext.com/contacts/">Get in Touch</a>
+        </div>
+        <p class="footer-note">
+          AI-powered mobile teardown by Elinext for John Dittmar, PhD and the Teladoc Health consumer experience engineering team.
+        </p>
+      </article>
+    </section>
+  </div>
+</body>
+</html>
