@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teladoc Health Mobile — AI Teardown</title>
+  <meta name="description" content="What if every Teladoc Health release proved secure re-entry, intake recovery, and care-start readiness before a member tried to book a visit?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/teladoc-health_2026-03-20_06-56-04/">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/teladoc-health_2026-03-20_06-56-04/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/teladoc-health_2026-03-20_06-56-04/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Teladoc Health Mobile — AI Teardown">
+  <meta property="og:description" content="What if Teladoc could prevent failed care starts by preserving secure sign-in, saved intake, and eligibility checks before members ever fall into support?">
+  <meta property="og:type" content="website">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <!-- Ratings as of 2026-03-20: iOS 4.79 (700481 ratings, source: iTunes API, US), Android 4.40 (78094 ratings, source: Google Play scraper / https://play.google.com/store/apps/details?id=com.teladoc.members&hl=en_US&gl=US, global) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d1726;
+      --bg-soft: #122038;
+      --panel: rgba(15, 28, 48, 0.84);
+      --panel-strong: #13243a;
+      --panel-light: #edf6ff;
+      --line: rgba(156, 195, 255, 0.18);
+      --text: #eef6ff;
+      --muted: #9eb5cb;
+      --brand: #27c0a8;
+      --brand-deep: #0f8f7d;
+      --accent: #f98c45;
+      --danger: #ff6d7e;
+      --success: #79f0af;
+      --paper: #f4f8fc;
+      --shadow: 0 32px 70px rgba(0, 0, 0, 0.28);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 18%, rgba(39, 192, 168, 0.18), transparent 26%),
+        radial-gradient(circle at 84% 12%, rgba(249, 140, 69, 0.14), transparent 22%),
+        linear-gradient(180deg, #0b1422 0%, #101b2d 48%, #0b1524 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .page-shell {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-shell::before,
+    .page-shell::after {
+      content: "";
+      position: absolute;
+      inset: auto;
+      width: 26rem;
+      height: 26rem;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.3;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .page-shell::before {
+      top: 6rem;
+      right: -8rem;
+      background: rgba(39, 192, 168, 0.32);
+    }
+
+    .page-shell::after {
+      top: 36rem;
+      left: -10rem;
+      background: rgba(249, 140, 69, 0.24);
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      padding: 42px 0 30px;
+    }
+
+    .hero-card {
+      background: linear-gradient(180deg, rgba(17, 32, 54, 0.94), rgba(14, 26, 42, 0.96));
+      border: 1px solid var(--line);
+      border-radius: 36px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #d9edf8;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow img {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    h1, h2, h3 {
+      font-family: "Space Grotesk", sans-serif;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 4.3rem);
+      line-height: 0.96;
+      max-width: 12ch;
+      margin-bottom: 18px;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-copy p {
+      max-width: 62ch;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.65;
+      margin: 0 0 22px;
+    }
+
+    .signal-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 26px 0 0;
+    }
+
+    .signal {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 16px;
+      min-height: 120px;
+    }
+
+    .signal-label {
+      color: #8cb6cf;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 11px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .signal strong {
+      display: block;
+      font-size: 1.45rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .signal p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .console {
+      background: linear-gradient(180deg, rgba(9, 20, 35, 0.98), rgba(8, 16, 29, 0.98));
+      border: 1px solid rgba(146, 193, 255, 0.16);
+      border-radius: 30px;
+      padding: 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+    }
+
+    .console-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .console-top strong {
+      font-size: 1.1rem;
+    }
+
+    .console-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(121, 240, 175, 0.12);
+      color: var(--success);
+      border: 1px solid rgba(121, 240, 175, 0.18);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .console-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .console-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 20px;
+      padding: 14px;
+      min-height: 130px;
+    }
+
+    .console-card h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .mini-list,
+    .audit-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .mini-list li,
+    .audit-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      color: #dce9f6;
+      font-size: 0.9rem;
+    }
+
+    .status-good,
+    .status-watch,
+    .status-bad {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .status-good {
+      background: rgba(121, 240, 175, 0.12);
+      color: var(--success);
+    }
+
+    .status-watch {
+      background: rgba(249, 140, 69, 0.12);
+      color: #ffb37d;
+    }
+
+    .status-bad {
+      background: rgba(255, 109, 126, 0.12);
+      color: var(--danger);
+    }
+
+    .console-note {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(39, 192, 168, 0.08);
+      border: 1px solid rgba(39, 192, 168, 0.16);
+      color: #d8fbf1;
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .showcase {
+      padding: 14px 0 34px;
+    }
+
+    .showcase-card {
+      background: linear-gradient(180deg, rgba(246, 250, 255, 0.98), rgba(231, 240, 250, 0.98));
+      color: #102236;
+      border-radius: 36px;
+      padding: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      box-shadow: var(--shadow);
+    }
+
+    .section-kicker {
+      color: #50718b;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .showcase-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .showcase-head h2 {
+      font-size: clamp(1.9rem, 3vw, 3rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      max-width: 12ch;
+    }
+
+    .showcase-head p {
+      margin: 0;
+      max-width: 52ch;
+      color: #476176;
+      line-height: 1.6;
+    }
+
+    .device-stage {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(260px, 0.85fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .phone-card {
+      background: #dfe9f4;
+      border: 1px solid rgba(16, 34, 54, 0.08);
+      border-radius: 28px;
+      padding: 18px;
+    }
+
+    .phone-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(16, 34, 54, 0.08);
+      color: #3c5a73;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 38px;
+      background:
+        linear-gradient(180deg, #0f1826 0%, #121d2e 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 18px 44px rgba(16, 34, 54, 0.24);
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 9px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 22px;
+      border-radius: 0 0 16px 16px;
+      background: #09111d;
+      z-index: 3;
+    }
+
+    .phone-screen {
+      height: 100%;
+      border-radius: 28px;
+      overflow-y: auto;
+      background:
+        radial-gradient(circle at top right, rgba(39, 192, 168, 0.16), transparent 22%),
+        linear-gradient(180deg, #f7fbff 0%, #eef4fa 100%);
+      padding: 36px 14px 14px;
+      scrollbar-width: none;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screen-logo,
+    .screen-kicker,
+    .screen-title,
+    .screen-copy {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .screen-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .screen-kicker {
+      color: #5d7e93;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+    }
+
+    .screen-title {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.42rem;
+      color: #16304b;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      max-width: 11ch;
+      margin-bottom: 8px;
+    }
+
+    .screen-copy {
+      color: #58758d;
+      font-size: 0.89rem;
+      line-height: 1.55;
+      max-width: 22ch;
+      margin-bottom: 16px;
+    }
+
+    .screen-banner,
+    .screen-banner-good {
+      border-radius: 18px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-size: 0.87rem;
+      line-height: 1.45;
+    }
+
+    .screen-banner {
+      background: rgba(255, 109, 126, 0.1);
+      border: 1px solid rgba(255, 109, 126, 0.18);
+      color: #7e1f32;
+    }
+
+    .screen-banner-good {
+      background: rgba(39, 192, 168, 0.1);
+      border: 1px solid rgba(39, 192, 168, 0.16);
+      color: #0d6559;
+    }
+
+    .surface-grid {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .surface-card,
+    .surface-card-missing,
+    .surface-card-good {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 12px;
+      border: 1px solid rgba(16, 34, 54, 0.08);
+      box-shadow: 0 10px 18px rgba(16, 34, 54, 0.05);
+    }
+
+    .surface-card-missing {
+      background: linear-gradient(180deg, #f8dfe3, #f5e5e8);
+      border: 1px dashed rgba(126, 31, 50, 0.28);
+      color: #742337;
+    }
+
+    .surface-card-good {
+      background: linear-gradient(180deg, #e7fff7, #effbf7);
+      border: 1px solid rgba(39, 192, 168, 0.2);
+    }
+
+    .surface-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .surface-top strong {
+      font-size: 0.98rem;
+      color: #12304d;
+    }
+
+    .surface-top span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #5d7e93;
+      font-weight: 700;
+    }
+
+    .surface-body {
+      color: #5e7687;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .metric-chip {
+      border-radius: 14px;
+      background: rgba(16, 34, 54, 0.05);
+      padding: 10px;
+    }
+
+    .metric-chip strong {
+      display: block;
+      font-size: 0.9rem;
+      color: #0f3a58;
+      margin-bottom: 4px;
+    }
+
+    .metric-chip span {
+      display: block;
+      color: #64839b;
+      font-size: 0.78rem;
+    }
+
+    .journey-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .journey-list li {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: #466278;
+      font-size: 0.86rem;
+      line-height: 1.5;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(16, 34, 54, 0.06);
+    }
+
+    .journey-list li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      margin-top: 2px;
+    }
+
+    .dot.bad {
+      background: linear-gradient(180deg, #ff8290, #ff5e74);
+    }
+
+    .dot.good {
+      background: linear-gradient(180deg, #3adbbf, #16ad93);
+    }
+
+    .support-panel {
+      background: linear-gradient(180deg, #142842, #112338);
+      color: var(--text);
+      border-radius: 28px;
+      padding: 18px;
+      min-height: 100%;
+      box-shadow: 0 18px 34px rgba(16, 34, 54, 0.16);
+    }
+
+    .support-panel h3 {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      letter-spacing: -0.03em;
+    }
+
+    .support-panel p {
+      margin: 0 0 14px;
+      color: #b2c7d8;
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    .support-panel .mini-list li {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .section {
+      padding: 16px 0 34px;
+    }
+
+    .section-card {
+      background: rgba(15, 28, 48, 0.9);
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .three-up {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .insight {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 24px;
+      padding: 18px;
+      min-height: 220px;
+    }
+
+    .insight h3 {
+      font-size: 1.18rem;
+      margin-bottom: 10px;
+      letter-spacing: -0.03em;
+    }
+
+    .insight p,
+    .insight ul {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .insight ul {
+      padding-left: 18px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .step {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .step-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: rgba(39, 192, 168, 0.12);
+      color: #a9f3e6;
+      border: 1px solid rgba(39, 192, 168, 0.2);
+    }
+
+    .step h3 {
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.9rem;
+    }
+
+    .cta {
+      padding: 14px 0 56px;
+    }
+
+    .cta-card {
+      background:
+        radial-gradient(circle at top right, rgba(39, 192, 168, 0.2), transparent 28%),
+        linear-gradient(180deg, #f68c44, #eb7143);
+      border-radius: 34px;
+      padding: 30px;
+      color: #1d150f;
+      box-shadow: 0 24px 52px rgba(235, 113, 67, 0.28);
+    }
+
+    .cta-card h2 {
+      font-size: clamp(2rem, 3vw, 3rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+      max-width: 11ch;
+    }
+
+    .cta-card p {
+      max-width: 58ch;
+      margin: 0 0 22px;
+      line-height: 1.6;
+      color: rgba(30, 21, 15, 0.82);
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: #102236;
+      color: #fefbf7;
+      font-weight: 700;
+      min-width: 160px;
+      box-shadow: 0 12px 24px rgba(16, 34, 54, 0.24);
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      font-size: 0.84rem;
+      color: rgba(30, 21, 15, 0.75);
+    }
+
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .device-stage,
+      .three-up,
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .showcase-head {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .phone {
+        width: 300px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-card,
+      .showcase-card,
+      .section-card,
+      .cta-card {
+        padding: 22px;
+        border-radius: 26px;
+      }
+
+      .signal-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .container {
+        width: min(100% - 20px, 1180px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="container">
+        <div class="hero-card">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <span class="eyebrow">
+                <img src="assets/app-icon.jpg" alt="Teladoc Health app icon">
+                Teladoc Health x Elinext
+              </span>
+              <h1>What if every Teladoc visit started ready?</h1>
+              <p>
+                Teladoc's public app signal points to a deeper platform issue than "bad UX":
+                members are getting stuck between secure sign-in, demographics, insurance state,
+                missing program surfaces, and unclear callback readiness before care even starts.
+              </p>
+              <p>
+                For Aveesha Sharma's remit, the wedge is an assured-visit-start layer: mobile
+                release evidence plus runtime preflight checks that preserve secure session state,
+                saved intake, and the next required action before the request reaches support.
+              </p>
+              <div class="signal-row">
+                <article class="signal">
+                  <span class="signal-label">Review signal</span>
+                  <strong>74 / 150 recent reviews ≤ 3 stars</strong>
+                  <p>Recent iOS and Android feedback clusters around auth loops, intake dead ends, server errors, and disappearing chronic-care surfaces.</p>
+                </article>
+                <article class="signal">
+                  <span class="signal-label">Buyer ownership</span>
+                  <strong>Manager-level execution zone</strong>
+                  <p>Aveesha moved from senior engineer team lead to software engineering manager at Teladoc, after Cerner, which makes member-flow reliability a credible ownership surface.</p>
+                </article>
+                <article class="signal">
+                  <span class="signal-label">Healthcare constraint</span>
+                  <strong>HIPAA-safe proof</strong>
+                  <p>Any fix has to preserve step-up auth, PHI-aware telemetry, and audit-ready evidence rather than weakening the controls members already notice.</p>
+                </article>
+              </div>
+            </div>
+            <aside class="console" aria-label="Visit start assurance console">
+              <div class="console-top">
+                <div>
+                  <strong>Visit Start Assurance Console</strong><br>
+                  <span style="color: var(--muted); font-size: 0.88rem;">Care-start contract for the unified Teladoc app</span>
+                </div>
+                <span class="console-pill">Preflight green</span>
+              </div>
+              <div class="console-grid">
+                <section class="console-card">
+                  <h3>Cohort checks</h3>
+                  <ul class="mini-list">
+                    <li><span>24/7 care + insurance</span><span class="status-good">Pass</span></li>
+                    <li><span>Weight management</span><span class="status-good">Pass</span></li>
+                    <li><span>Mental health only</span><span class="status-good">Pass</span></li>
+                    <li><span>Family account</span><span class="status-watch">Review</span></li>
+                  </ul>
+                </section>
+                <section class="console-card">
+                  <h3>Journey contracts</h3>
+                  <ul class="mini-list">
+                    <li><span>Biometric resume flow</span><span class="status-good">Pass</span></li>
+                    <li><span>Intake draft restore</span><span class="status-good">Pass</span></li>
+                    <li><span>Eligibility snapshot</span><span class="status-watch">1 risk</span></li>
+                    <li><span>Callback channel verified</span><span class="status-good">Pass</span></li>
+                  </ul>
+                </section>
+                <section class="console-card">
+                  <h3>AI-generated test notes</h3>
+                  <ul class="audit-list">
+                    <li><span>Generated 16 care-start journeys</span><span class="status-good">Done</span></li>
+                    <li><span>PHI replaced with synthetic fixtures</span><span class="status-good">Safe</span></li>
+                    <li><span>Human approval required for release</span><span class="status-good">Signed</span></li>
+                  </ul>
+                </section>
+                <section class="console-card">
+                  <h3>Audit trail</h3>
+                  <ul class="audit-list">
+                    <li><span>Flag set: visit-start-v4</span><span>09:14</span></li>
+                    <li><span>Owner approved: member eng</span><span>09:19</span></li>
+                    <li><span>Post-release watch enabled</span><span>09:22</span></li>
+                  </ul>
+                </section>
+              </div>
+              <div class="console-note">
+                Goal: catch the exact failure users are describing before it becomes a missed visit
+                or support ticket, without weakening HIPAA, audit, or responsible-AI controls.
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="showcase">
+        <div class="container">
+          <div class="showcase-card">
+            <div class="showcase-head">
+              <div>
+                <span class="section-kicker">Prototype focus</span>
+                <h2>Assured visit start for regulated care journeys</h2>
+              </div>
+              <p>
+                The strongest wedge is not a cosmetic redesign. It is a care-start contract for a
+                regulated, persona-driven mobile platform: preserve secure access, carry intake
+                state forward, and verify eligibility before rollout or runtime failure.
+              </p>
+            </div>
+            <div class="device-stage">
+              <article class="phone-card">
+                <div class="phone-label">Before the preflight layer</div>
+                <div class="phone">
+                  <div class="phone-screen">
+                    <img class="screen-logo" src="assets/app-icon.jpg" alt="Teladoc Health app icon">
+                    <span class="screen-kicker">Current failure mode</span>
+                    <strong class="screen-title">Member gets stuck before the visit</strong>
+                    <span class="screen-copy">A member falls into a broken chain between secure sign-in, demographics, insurance state, and callback readiness.</span>
+
+                    <div class="screen-banner">
+                      <strong style="display:block; margin-bottom: 4px;">Sign-in loop</strong>
+                      Face ID does not persist. Returning from password manager restarts the flow.
+                    </div>
+
+                    <div class="surface-grid">
+                      <div class="surface-card-missing">
+                        <div class="surface-top">
+                          <strong>Secure resume</strong>
+                          <span>Stuck</span>
+                        </div>
+                        <div class="surface-body">Password entry is repeated, device trust is lost, and the member cannot tell whether the session is still valid.</div>
+                      </div>
+
+                      <div class="surface-card-missing">
+                        <div class="surface-top">
+                          <strong>Intake history</strong>
+                          <span>Error</span>
+                        </div>
+                        <div class="surface-body">Demographics, family history, or medications block progress with a server error or repeated questions.</div>
+                      </div>
+
+                      <div class="surface-card">
+                        <div class="surface-top">
+                          <strong>Coverage + callback</strong>
+                          <span>Unclear</span>
+                        </div>
+                        <div class="surface-body">The member reaches the visit request without confidence that insurance, pharmacy, or the callback route are actually ready.</div>
+                      </div>
+                    </div>
+
+                    <ul class="journey-list">
+                      <li>
+                        <span class="dot bad"></span>
+                        <span>Generic QA passes, but real cohorts still hit login loops, missing cards, and dead-end demographics.</span>
+                      </li>
+                      <li>
+                        <span class="dot bad"></span>
+                        <span>Members only discover eligibility or callback issues after they have already invested time and trust in the flow.</span>
+                      </li>
+                      <li>
+                        <span class="dot bad"></span>
+                        <span>Engineering only sees the issue after reviews, Reddit, or support tickets spike.</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </article>
+
+              <article class="phone-card">
+                <div class="phone-label">After assured visit start</div>
+                <div class="phone">
+                  <div class="phone-screen">
+                    <img class="screen-logo" src="assets/app-icon.jpg" alt="Teladoc Health app icon">
+                    <span class="screen-kicker">Safer release state</span>
+                    <strong class="screen-title">Member is ready before requesting care</strong>
+                    <span class="screen-copy">Secure re-entry, saved intake, eligibility, and callback readiness are verified before the request reaches production or support.</span>
+
+                    <div class="screen-banner-good">
+                      <strong style="display:block; margin-bottom: 4px;">Preflight passed</strong>
+                      The member can resume with biometrics, recover saved intake, and see exactly what is ready before tapping request visit.
+                    </div>
+
+                    <div class="surface-grid">
+                      <div class="surface-card-good">
+                        <div class="surface-top">
+                          <strong>Secure resume</strong>
+                          <span>Safe</span>
+                        </div>
+                        <div class="surface-body">Device-bound trust persists across Face ID, password manager handoff, and return-from-background.</div>
+                        <div class="metric-row">
+                          <div class="metric-chip">
+                            <strong>Biometric</strong>
+                            <span>Resume ready</span>
+                          </div>
+                          <div class="metric-chip">
+                            <strong>Session</strong>
+                            <span>Step-up only if needed</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="surface-card">
+                        <div class="surface-top">
+                          <strong>Intake draft</strong>
+                          <span>Pass</span>
+                        </div>
+                        <div class="surface-body">Demographics, medication edits, and family history recover from the last good state with an audit trail.</div>
+                      </div>
+
+                      <div class="surface-card">
+                        <div class="surface-top">
+                          <strong>Visit readiness</strong>
+                          <span>Ready</span>
+                        </div>
+                        <div class="surface-body">Eligibility, visit type, pharmacy state, and callback channel are confirmed before the member enters the queue.</div>
+                      </div>
+                    </div>
+
+                    <ul class="journey-list">
+                      <li>
+                        <span class="dot good"></span>
+                        <span>Release checks validate care-start contracts, not just generic navigation or happy-path sign-in.</span>
+                      </li>
+                      <li>
+                        <span class="dot good"></span>
+                        <span>Post-release watch alerts when demographic loops, auth retries, or missing-card events spike.</span>
+                      </li>
+                      <li>
+                        <span class="dot good"></span>
+                        <span>AI generates regression stories, but humans approve the evidence in a responsible-AI workflow.</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </article>
+
+              <aside class="support-panel">
+                <span class="section-kicker" style="color:#89b7cf;">Why this is Aveesha's problem</span>
+                <h3>Buyer-owned leverage</h3>
+                <p>
+                  This opportunity sits inside software engineering management for member entry and
+                  mobile reliability: secure re-entry, intake state, coverage verification, family
+                  account edge cases, and support-reducing recovery in one HIPAA-sensitive surface.
+                </p>
+                <ul class="mini-list">
+                  <li><span>Buyer ownership</span><span class="status-good">High</span></li>
+                  <li><span>Business leverage</span><span class="status-good">High</span></li>
+                  <li><span>Outsource fit</span><span class="status-good">High</span></li>
+                  <li><span>Evidence strength</span><span class="status-watch">Strong</span></li>
+                  <li><span>Prototype demoability</span><span class="status-good">High</span></li>
+                </ul>
+                <p style="margin-top: 14px;">
+                  The visible complaint is "the app made me log in again" or "it got stuck on
+                  demographics." The actual manager problem is: "How do I keep care-start state
+                  coherent across cohorts and releases?"
+                </p>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-card">
+            <span class="section-kicker">Evidence stack</span>
+            <h2 style="font-size: clamp(1.8rem, 3vw, 2.8rem); line-height: 1; letter-spacing: -0.04em; margin-bottom: 24px;">Three angles, one buyer-relevant story</h2>
+            <div class="three-up">
+              <article class="insight">
+                <h3>1. Review-led pain</h3>
+                <p>
+                  Recent store reviews mention Face ID loops, server errors, broken registration,
+                  missing chronic-care cards, and incorrect appointment or queue state. These are
+                  not fringe complaints. They strike the exact point where care should begin.
+                </p>
+              </article>
+              <article class="insight">
+                <h3>2. Buyer-owned pain</h3>
+                <p>
+                  Aveesha's role history points to healthcare-software delivery at Cerner and then
+                  team-lead-to-manager progression inside Teladoc. That makes member-flow
+                  reliability, release confidence, and support-reducing recovery a direct
+                  execution problem, not a stretch.
+                </p>
+              </article>
+              <article class="insight">
+                <h3>3. Regulated intersection</h3>
+                <ul>
+                  <li>HIPAA and PHI-sensitive telemetry</li>
+                  <li>Step-up auth instead of weaker controls</li>
+                  <li>Audit-ready release evidence</li>
+                  <li>Cross-program blast radius in one app shell</li>
+                </ul>
+              </article>
+            </div>
+
+            <div class="steps">
+              <article class="step">
+                <span class="step-num">1</span>
+                <h3>Define visit-start contracts</h3>
+                <p>Each cohort gets a minimal promise: which sign-in state must resume, which intake fields must persist, and which visit actions must remain reachable.</p>
+              </article>
+              <article class="step">
+                <span class="step-num">2</span>
+                <h3>Persist and restore state</h3>
+                <p>Care-start drafts survive password-manager jumps, biometric prompts, app backgrounding, and family-account handoffs.</p>
+              </article>
+              <article class="step">
+                <span class="step-num">3</span>
+                <h3>Gate rollout by proof</h3>
+                <p>Feature flags do not advance until secure re-entry, eligibility state, and care-path access are green for the affected population.</p>
+              </article>
+              <article class="step">
+                <span class="step-num">4</span>
+                <h3>Watch production safely</h3>
+                <p>PHI-minimized telemetry spots missing cards, demographic loops, auth retries, or support-triggering failures early, with an audit log attached to the release.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="container">
+          <div class="cta-card">
+            <span class="section-kicker" style="color: rgba(30, 21, 15, 0.72);">Elinext angle</span>
+            <h2>Prototype a safer care-start system, not just a prettier screen.</h2>
+            <p>
+              This concept is designed to show how Elinext could help a consumer-health team reduce
+              failed care starts and support-triggering regressions across iOS and Android while
+              preserving compliance, observability, and responsible-AI controls.
+            </p>
+            <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+            <div class="footer-note">
+              Built as a buyer-specific concept for Teladoc Health's mobile and member engineering team.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
