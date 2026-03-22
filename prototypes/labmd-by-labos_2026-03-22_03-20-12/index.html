@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LabOS Mobile - AI Teardown</title>
+  <meta name="description" content="What if LabMD could turn critical-result follow-up and workflow changes into configurable, audit-safe releases instead of slow custom tickets across a regulated lab platform?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/labmd-by-labos_2026-03-22_03-20-12/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/labmd-by-labos_2026-03-22_03-20-12/">
+  <meta property="og:title" content="LabOS Mobile - AI Teardown">
+  <meta property="og:description" content="What if LabMD could turn critical-result follow-up and workflow changes into configurable, audit-safe releases instead of slow custom tickets across a regulated lab platform?">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/labmd-by-labos_2026-03-22_03-20-12/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <!-- Ratings as of 2026-03-22: iOS 5.00 (3 ratings, source: iTunes API US), Android 0.00 (0 ratings, source: Google Play scraper / com.labx.labmd) -->
+  <style>
+    :root {
+      --ink: #0f1930;
+      --ink-soft: #39516f;
+      --paper: #f4f7fb;
+      --card: rgba(255, 255, 255, 0.9);
+      --line: rgba(20, 38, 63, 0.12);
+      --navy: #0d1630;
+      --navy-2: #132245;
+      --teal: #2cc6b2;
+      --orange: #ff8248;
+      --lime: #7dd468;
+      --warn: #f7c85c;
+      --danger: #ff616d;
+      --shadow: 0 28px 80px rgba(6, 20, 48, 0.22);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      font-family: "Space Grotesk", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(58, 201, 183, 0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(255, 130, 72, 0.2), transparent 28%),
+        linear-gradient(180deg, #eef4fb 0%, #dfe9f4 46%, #edf4f9 100%);
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-shell::before,
+    .page-shell::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      z-index: -1;
+      width: 36rem;
+      height: 36rem;
+      border-radius: 999px;
+      filter: blur(42px);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .page-shell::before {
+      top: -10rem;
+      left: -8rem;
+      background: rgba(44, 198, 178, 0.18);
+    }
+
+    .page-shell::after {
+      right: -10rem;
+      bottom: 6rem;
+      background: rgba(255, 130, 72, 0.16);
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .section {
+      position: relative;
+      z-index: 1;
+      margin: 24px auto;
+      padding: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      border-radius: 34px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(244, 248, 252, 0.96));
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      margin-top: 28px;
+      padding: 40px;
+      background:
+        linear-gradient(135deg, rgba(12, 22, 48, 0.96), rgba(22, 35, 67, 0.92)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+      color: #eef6ff;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: auto auto -6rem -6rem;
+      width: 18rem;
+      height: 18rem;
+      border-radius: 50%;
+      background: rgba(44, 198, 178, 0.18);
+      filter: blur(16px);
+      z-index: 0;
+    }
+
+    .hero-grid,
+    .comparison-grid,
+    .console-grid,
+    .evidence-grid,
+    .leadership-grid,
+    .footer-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 24px;
+    }
+
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.9fr);
+      align-items: center;
+    }
+
+    .eyebrow,
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .eyebrow {
+      color: #d7f8f2;
+      background: rgba(44, 198, 178, 0.14);
+      border: 1px solid rgba(44, 198, 178, 0.32);
+      margin: 0 auto 18px;
+    }
+
+    .hero-copy {
+      text-align: center;
+    }
+
+    .hero-copy h1 {
+      margin: 0 auto 18px;
+      max-width: 11ch;
+      font-family: "Fraunces", serif;
+      font-size: clamp(2.9rem, 6vw, 5.1rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-copy p {
+      max-width: 54rem;
+      margin: 0 auto 22px;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: rgba(238, 246, 255, 0.82);
+    }
+
+    .hero-proof {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .proof-pill {
+      padding: 12px 15px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      font-size: 0.92rem;
+      color: rgba(238, 246, 255, 0.9);
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 164px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, var(--orange), #ff9e57);
+      color: #1e1208;
+      box-shadow: 0 14px 34px rgba(255, 130, 72, 0.35);
+    }
+
+    .button-secondary {
+      border-color: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.04);
+      color: #eef6ff;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-card {
+      padding: 22px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .app-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .app-meta img {
+      width: 76px;
+      height: 76px;
+      border-radius: 20px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+    }
+
+    .app-meta h2 {
+      margin: 0 0 4px;
+      font-size: 1.3rem;
+    }
+
+    .app-meta p,
+    .hero-card p,
+    .hero-card li {
+      margin: 0;
+      color: rgba(238, 246, 255, 0.82);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .mini-stat {
+      padding: 14px;
+      border-radius: 20px;
+      background: rgba(10, 19, 39, 0.52);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .mini-stat span {
+      font-size: 0.8rem;
+      color: rgba(238, 246, 255, 0.7);
+    }
+
+    .hero-list {
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .hero-list li + li {
+      margin-top: 10px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .section-head h2,
+    .section-head h3 {
+      margin: 10px 0 0;
+      font-family: "Fraunces", serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      max-width: 42rem;
+      margin: 8px 0 0;
+      color: var(--ink-soft);
+      line-height: 1.7;
+    }
+
+    .section-kicker {
+      color: var(--navy);
+      background: rgba(44, 198, 178, 0.12);
+      border: 1px solid rgba(44, 198, 178, 0.22);
+    }
+
+    .comparison-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+
+    .phone-card,
+    .panel {
+      padding: 24px;
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(243, 247, 251, 0.98));
+      box-shadow: 0 18px 40px rgba(15, 25, 48, 0.08);
+    }
+
+    .phone-card h3 {
+      margin: 8px 0 18px;
+      font-size: 1.32rem;
+      line-height: 1.2;
+    }
+
+    .phone-card p {
+      margin: 0 0 18px;
+      color: var(--ink-soft);
+      line-height: 1.65;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .tag-before {
+      color: #74410d;
+      background: rgba(247, 200, 92, 0.22);
+    }
+
+    .tag-after {
+      color: #0d534b;
+      background: rgba(44, 198, 178, 0.18);
+    }
+
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+      padding-top: 8px;
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      padding: 10px;
+      border-radius: 42px;
+      background: linear-gradient(180deg, #17233f, #091224);
+      box-shadow: 0 22px 46px rgba(6, 20, 48, 0.3);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      width: 94px;
+      height: 18px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      z-index: 3;
+    }
+
+    .phone__viewport {
+      position: relative;
+      height: 100%;
+      border-radius: 34px;
+      overflow: auto;
+      background: linear-gradient(180deg, #f7fafc, #edf3f7);
+      padding: 36px 14px 14px;
+      scrollbar-width: none;
+    }
+
+    .phone__viewport::-webkit-scrollbar {
+      display: none;
+    }
+
+    .mobile-hero {
+      display: block;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 12px 12px 14px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #234067, #1a3052);
+      color: #f4f8fb;
+      margin-bottom: 12px;
+    }
+
+    .mobile-hero strong {
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+
+    .mobile-hero span {
+      display: block;
+      font-size: 0.8rem;
+      color: rgba(244, 248, 251, 0.82);
+    }
+
+    .status-row,
+    .toolbar,
+    .evidence-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .status-row {
+      justify-content: space-between;
+      margin: 0 0 12px;
+      font-size: 0.72rem;
+      color: #71849f;
+    }
+
+    .mobile-card {
+      padding: 12px;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 1px solid rgba(16, 32, 54, 0.08);
+      box-shadow: 0 12px 24px rgba(12, 22, 48, 0.06);
+      margin-bottom: 10px;
+    }
+
+    .mobile-card h4 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+    }
+
+    .mobile-card p {
+      margin: 0;
+      color: #60758e;
+      font-size: 0.78rem;
+      line-height: 1.55;
+    }
+
+    .alert-card {
+      background: linear-gradient(180deg, rgba(255, 97, 109, 0.08), rgba(255, 244, 246, 1));
+      border-color: rgba(255, 97, 109, 0.18);
+    }
+
+    .warning-card {
+      background: linear-gradient(180deg, rgba(247, 200, 92, 0.14), rgba(255, 250, 236, 1));
+      border-color: rgba(247, 200, 92, 0.24);
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .mini-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: #edf3f8;
+      color: #4b6582;
+    }
+
+    .mini-pill.good {
+      background: rgba(125, 212, 104, 0.18);
+      color: #2a6d22;
+    }
+
+    .mini-pill.bad {
+      background: rgba(255, 97, 109, 0.14);
+      color: #b2293f;
+    }
+
+    .toolbar button,
+    .toolbar span,
+    .evidence-item {
+      flex: 1;
+      min-width: 0;
+      padding: 10px 8px;
+      border-radius: 14px;
+      border: none;
+      background: #edf4fb;
+      color: #31506f;
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .toolbar .ghost {
+      background: rgba(255, 130, 72, 0.12);
+      color: #8f4518;
+    }
+
+    .toolbar .solid {
+      background: linear-gradient(135deg, var(--teal), #5ed6c8);
+      color: #082520;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      font-size: 0.76rem;
+      color: #46627e;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      margin-top: 4px;
+      border-radius: 999px;
+      background: #c4d2de;
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.9);
+    }
+
+    .dot.good {
+      background: var(--lime);
+    }
+
+    .dot.bad {
+      background: var(--danger);
+    }
+
+    .queue-strip {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .queue-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: #f6f9fc;
+      border: 1px solid rgba(17, 33, 57, 0.08);
+      font-size: 0.78rem;
+    }
+
+    .queue-row strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 0.84rem;
+    }
+
+    .queue-row small {
+      color: #6e8099;
+    }
+
+    .queue-score {
+      padding: 7px 9px;
+      border-radius: 12px;
+      background: rgba(125, 212, 104, 0.14);
+      color: #2a6d22;
+      font-weight: 700;
+      font-size: 0.7rem;
+    }
+
+    .queue-score.warn {
+      background: rgba(247, 200, 92, 0.2);
+      color: #8a5800;
+    }
+
+    .queue-score.bad {
+      background: rgba(255, 97, 109, 0.16);
+      color: #b2293f;
+    }
+
+    .console-grid {
+      grid-template-columns: minmax(0, 1.25fr) repeat(2, minmax(0, 0.9fr));
+      align-items: start;
+    }
+
+    .panel h3,
+    .panel h4 {
+      margin: 0 0 10px;
+    }
+
+    .panel p,
+    .panel li,
+    .panel small {
+      color: var(--ink-soft);
+      line-height: 1.65;
+    }
+
+    .panel .small-top {
+      margin-bottom: 14px;
+      color: #56718f;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .rule-list,
+    .release-steps,
+    .audit-list,
+    .leader-list {
+      display: grid;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .rule-list li,
+    .audit-list li,
+    .leader-list li {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: #f5f8fb;
+      border: 1px solid rgba(17, 33, 57, 0.08);
+    }
+
+    .rule-list strong,
+    .audit-list strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .release-steps li {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      padding: 12px 0;
+      border-bottom: 1px dashed rgba(17, 33, 57, 0.12);
+    }
+
+    .release-steps li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .step-no {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-2));
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .meter-card {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(13, 22, 48, 0.96), rgba(19, 34, 69, 0.96));
+      color: #eff7ff;
+    }
+
+    .meter {
+      display: grid;
+      gap: 8px;
+    }
+
+    .meter strong {
+      font-size: 0.86rem;
+      letter-spacing: 0.02em;
+    }
+
+    .meter-track {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--teal), var(--lime));
+    }
+
+    .meter-fill.orange {
+      background: linear-gradient(90deg, var(--orange), #ffbd6d);
+    }
+
+    .meter-fill.red {
+      background: linear-gradient(90deg, var(--danger), #ff9b80);
+    }
+
+    .evidence-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .evidence-card {
+      padding: 22px;
+      border-radius: 26px;
+      background: #ffffff;
+      border: 1px solid rgba(17, 33, 57, 0.08);
+      box-shadow: 0 18px 36px rgba(15, 25, 48, 0.08);
+    }
+
+    .evidence-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.08rem;
+    }
+
+    .evidence-card p {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.65;
+    }
+
+    .evidence-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 1px solid rgba(17, 33, 57, 0.08);
+      margin-bottom: 16px;
+    }
+
+    blockquote {
+      margin: 12px 0 0;
+      padding: 0 0 0 14px;
+      border-left: 3px solid rgba(255, 130, 72, 0.6);
+      color: #25415d;
+      font-weight: 500;
+    }
+
+    .leadership-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .leader-card {
+      padding: 20px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 252, 1));
+      border: 1px solid rgba(17, 33, 57, 0.08);
+      box-shadow: 0 18px 36px rgba(15, 25, 48, 0.07);
+    }
+
+    .leader-card strong {
+      display: block;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      color: var(--navy);
+    }
+
+    .leader-card h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+
+    .leader-card p {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.65;
+    }
+
+    .footer-grid {
+      grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+      align-items: center;
+    }
+
+    .footer-copy h2 {
+      margin: 0 0 12px;
+      font-family: "Fraunces", serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .footer-copy p {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      max-width: 40rem;
+    }
+
+    .footer-note {
+      font-size: 0.82rem;
+      color: #678099;
+      margin-top: 16px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 500ms ease, transform 500ms ease;
+    }
+
+    .loaded .reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .loaded .reveal:nth-child(2) { transition-delay: 80ms; }
+    .loaded .reveal:nth-child(3) { transition-delay: 160ms; }
+    .loaded .reveal:nth-child(4) { transition-delay: 240ms; }
+
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .comparison-grid,
+      .console-grid,
+      .evidence-grid,
+      .leadership-grid,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-copy h1 {
+        max-width: 13ch;
+      }
+
+      .mini-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .section,
+      .hero {
+        padding: 22px;
+      }
+
+      .hero-copy h1 {
+        font-size: clamp(2.4rem, 12vw, 3.4rem);
+      }
+
+      .mini-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .section-head {
+        margin-bottom: 20px;
+      }
+
+      .hero-actions,
+      .hero-proof {
+        justify-content: center;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <main class="container">
+      <section class="section hero reveal">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">LabMD by LabOS / For Moshe Marciano / Regulated mobile teardown</div>
+            <h1>What if LabMD shipped urgent-result workflows without a compliance drag?</h1>
+            <p>
+              Public signals point to a buyer-owned problem: LabOS sells flexibility, customization, and cloud scale,
+              while current operators still describe data friction and slow changes. In a regulated lab environment,
+              the right fix is not fewer controls. It is a faster way to ship change with stronger evidence.
+            </p>
+            <div class="hero-proof">
+              <div class="proof-pill">App signal: iOS 5.0 / 3 ratings, Android 100+ installs / 0 public ratings</div>
+              <div class="proof-pill">Current operator signal: "good data" issues and slow requested changes</div>
+              <div class="proof-pill">Constraint map: audit trails, approvals, role-based controls, downtime risk</div>
+            </div>
+            <div class="hero-actions">
+              <a class="button button-primary" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+              <a class="button button-secondary" href="#evidence">View the evidence</a>
+            </div>
+          </div>
+
+          <div class="hero-side">
+            <div class="hero-card">
+              <div class="app-meta">
+                <img src="assets/app-icon.jpg" alt="LabMD app icon">
+                <div>
+                  <h2>LabMD by LabOS</h2>
+                  <p>Physician portal synced to the LabOS LIS for results, alerts, orders, sample collection, and follow-up workflows.</p>
+                </div>
+              </div>
+              <div class="mini-stats">
+                <div class="mini-stat">
+                  <strong>2021</strong>
+                  <span>last iOS release</span>
+                </div>
+                <div class="mini-stat">
+                  <strong>2025</strong>
+                  <span>last Android release</span>
+                </div>
+                <div class="mini-stat">
+                  <strong>54</strong>
+                  <span>LabOS mobile web performance score</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-card">
+              <p><strong>Why this is a VP Engineering problem:</strong></p>
+              <ul class="hero-list">
+                <li>Slow workflow changes burn support hours and erode operator trust.</li>
+                <li>Critical-result follow-up needs stronger mobile structure and cleaner evidence.</li>
+                <li>Every release touches regulated data, not just UI polish.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Selected opportunity</div>
+            <h2>Move from custom tickets to governed workflow packs.</h2>
+          </div>
+          <p>
+            The prototype focuses on the intersection opportunity: configurable, audit-safe urgent-result
+            and specimen-exception workflows across LabMD mobile plus a release console for engineering and operations.
+          </p>
+        </div>
+
+        <div class="comparison-grid">
+          <article class="phone-card">
+            <span class="tag tag-before">Current reality</span>
+            <h3>Results are visible. Follow-up logic still depends on fragmented actions and slow change requests.</h3>
+            <p>
+              The public product already exposes lists, alerts, and quick actions. The gap is orchestration:
+              who owns the next step, which site rule applies, and how the evidence gets captured cleanly.
+            </p>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="phone__viewport">
+                  <div class="status-row">
+                    <span>09:27</span>
+                    <span>Site 02 / On-call</span>
+                  </div>
+                  <div class="mobile-hero">
+                    <strong>LabMD results queue</strong>
+                    <span>Current pattern: visible data, scattered follow-up</span>
+                  </div>
+                  <div class="mobile-card">
+                    <div class="pill-row">
+                      <span class="mini-pill">Current listing</span>
+                      <span class="mini-pill">Swipe actions</span>
+                    </div>
+                    <h4>James Williams / Potassium 6.4 mmol/L</h4>
+                    <p>Viewed by lab. No shared acknowledgement state yet. RN routing still handled by local process.</p>
+                    <div class="toolbar" style="margin-top:10px;">
+                      <span>Call</span>
+                      <span>Message</span>
+                      <span>Email</span>
+                    </div>
+                  </div>
+                  <div class="mobile-card warning-card">
+                    <div class="pill-row">
+                      <span class="mini-pill bad">Escalation risk</span>
+                      <span class="mini-pill">12 days open</span>
+                    </div>
+                    <h4>Change request: after-hours critical routing</h4>
+                    <p>Requested by pathology ops. Waiting on system update and customer-specific configuration review.</p>
+                  </div>
+                  <div class="mobile-card">
+                    <h4>Sample recollect / barcode mismatch</h4>
+                    <p>Courier note added, physician contacted, recollect ordered. Evidence sits across notes, calls, and support tickets.</p>
+                    <div class="timeline">
+                      <div class="timeline-item"><span class="dot good"></span><span>09:06 / Lab flagged specimen mismatch</span></div>
+                      <div class="timeline-item"><span class="dot"></span><span>09:12 / Voicemail left for clinic</span></div>
+                      <div class="timeline-item"><span class="dot bad"></span><span>09:23 / No shared disposition logged yet</span></div>
+                    </div>
+                  </div>
+                  <div class="queue-strip">
+                    <div class="queue-row">
+                      <div>
+                        <strong>Robert Greene</strong>
+                        <small>Hematology / Chemistry / waiting on callback</small>
+                      </div>
+                      <span class="queue-score warn">Pending</span>
+                    </div>
+                    <div class="queue-row">
+                      <div>
+                        <strong>Janice Thomas</strong>
+                        <small>Microbiology / amended report needs confirmation</small>
+                      </div>
+                      <span class="queue-score">Stable</span>
+                    </div>
+                    <div class="queue-row">
+                      <div>
+                        <strong>Joanne Brogdon</strong>
+                        <small>Specimen exception / external clinic follow-up</small>
+                      </div>
+                      <span class="queue-score bad">Escalate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="phone-card">
+            <span class="tag tag-after">Prototype</span>
+            <h3>Urgent-result follow-up becomes a reusable workflow pack with evidence capture built into the mobile action flow.</h3>
+            <p>
+              Clinicians still get a clean mobile experience, but the real upgrade is beneath the surface:
+              governed rules, site-scoped rollout, role-aware approvals, and inspection-ready export.
+            </p>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="phone__viewport">
+                  <div class="status-row">
+                    <span>09:27</span>
+                    <span>Canary / Site 02</span>
+                  </div>
+                  <div class="mobile-hero">
+                    <strong>Critical follow-up pack</strong>
+                    <span>Workflow v3.2 / audit-safe release</span>
+                  </div>
+                  <div class="mobile-card alert-card">
+                    <div class="pill-row">
+                      <span class="mini-pill bad">Critical potassium</span>
+                      <span class="mini-pill">Delta +1.7</span>
+                      <span class="mini-pill">Timer 08:42</span>
+                    </div>
+                    <h4>James Williams / route RN before MD after-hours</h4>
+                    <p>LabMD applies the site rule automatically, starts the clock, and shows the required path without hiding the data.</p>
+                    <div class="toolbar" style="margin-top:10px;">
+                      <button class="solid">Acknowledge</button>
+                      <button class="ghost">Route to RN</button>
+                      <button>Create audit note</button>
+                    </div>
+                  </div>
+                  <div class="mobile-card">
+                    <div class="pill-row">
+                      <span class="mini-pill good">Checklist live</span>
+                      <span class="mini-pill">Policy attached</span>
+                    </div>
+                    <h4>Required steps</h4>
+                    <div class="timeline">
+                      <div class="timeline-item"><span class="dot good"></span><span>RN acknowledged alert and confirmed callback ownership</span></div>
+                      <div class="timeline-item"><span class="dot good"></span><span>Read-back field captured with clinician name and timestamp</span></div>
+                      <div class="timeline-item"><span class="dot"></span><span>Repeat test order suggested because delta threshold crossed</span></div>
+                    </div>
+                  </div>
+                  <div class="mobile-card">
+                    <div class="pill-row">
+                      <span class="mini-pill">Step-up control</span>
+                      <span class="mini-pill good">Role verified</span>
+                    </div>
+                    <h4>Specimen exception policy</h4>
+                    <p>Barcode mismatch triggers a guided recollect flow, site-specific messaging, and a final disposition that lands in one audit trail.</p>
+                    <div class="evidence-row" style="margin-top:10px;">
+                      <span class="evidence-item">Caller ID logged</span>
+                      <span class="evidence-item">Specimen photo hash</span>
+                      <span class="evidence-item">Reason code locked</span>
+                    </div>
+                  </div>
+                  <div class="mobile-card" style="background:linear-gradient(180deg, #10213f, #162b51); color:#eef6ff;">
+                    <div class="pill-row">
+                      <span class="mini-pill" style="background:rgba(255,255,255,0.12); color:#eef6ff;">Rollout pack</span>
+                      <span class="mini-pill" style="background:rgba(44,198,178,0.22); color:#d8fff8;">Rollback armed</span>
+                    </div>
+                    <h4 style="color:#ffffff;">Change ship path</h4>
+                    <p style="color:rgba(238,246,255,0.8);">Canary: Site 02 / 14 users / shadow mode complete / audit export ready for inspection and support handoff.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Control plane</div>
+            <h2>Show the release logic, not just the screen.</h2>
+          </div>
+          <p>
+            This is what makes the prototype buyer-relevant. Engineering and operations get a governed path
+            for rolling out new mobile workflows by site, policy, and role without pretending compliance does not exist.
+          </p>
+        </div>
+
+        <div class="console-grid">
+          <article class="panel">
+            <div class="small-top">Rule pack builder</div>
+            <h3>Urgent result / specimen exception pack</h3>
+            <ul class="rule-list">
+              <li>
+                <strong>Trigger logic</strong>
+                Potassium > 6.0 or delta > 1.5, amended report, or barcode mismatch from collection flow.
+              </li>
+              <li>
+                <strong>Scoped routing</strong>
+                After-hours routes to RN queue first for Site 02 and Site 04; daytime routes directly to physician group.
+              </li>
+              <li>
+                <strong>Evidence policy</strong>
+                Require read-back capture, locked reason code, acknowledgement timer, and final disposition before close.
+              </li>
+              <li>
+                <strong>Surface parity</strong>
+                One rule pack deployed to LabMD iOS, Android, and web so policy drift does not reappear by device.
+              </li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <div class="small-top">Release path</div>
+            <h3>Safe change delivery</h3>
+            <ol class="release-steps">
+              <li>
+                <span class="step-no">1</span>
+                <div>
+                  <strong>Draft and simulate</strong>
+                  Run the workflow in shadow mode against historical critical-result events and specimen exceptions.
+                </div>
+              </li>
+              <li>
+                <span class="step-no">2</span>
+                <div>
+                  <strong>Policy review</strong>
+                  Ops, compliance, and engineering approve the scoped behavior with the same version ID.
+                </div>
+              </li>
+              <li>
+                <span class="step-no">3</span>
+                <div>
+                  <strong>Canary release</strong>
+                  Limited users, limited sites, rollback ready, support watchlist enabled.
+                </div>
+              </li>
+              <li>
+                <span class="step-no">4</span>
+                <div>
+                  <strong>Wider rollout</strong>
+                  Promote once acknowledgement timing, support noise, and exception-handling quality stay inside guardrails.
+                </div>
+              </li>
+            </ol>
+          </article>
+
+          <article class="panel">
+            <div class="small-top">Inspection export</div>
+            <h3>Evidence bundle</h3>
+            <ul class="audit-list">
+              <li>
+                <strong>Approvals</strong>
+                Product ops, compliance, and platform owner tied to workflow pack v3.2.
+              </li>
+              <li>
+                <strong>Traceability</strong>
+                Trigger, actor, action, device, site, timestamp, and final disposition in one timeline.
+              </li>
+              <li>
+                <strong>Support handoff</strong>
+                Canary health, rollback state, impacted users, and open exceptions visible without hunting across systems.
+              </li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="console-grid" style="margin-top:24px;">
+          <article class="panel">
+            <div class="small-top">Modelled operational effect</div>
+            <div class="meter-card">
+              <div class="meter">
+                <strong>Support effort per workflow change</strong>
+                <div class="meter-track"><div class="meter-fill orange" style="width: 38%;"></div></div>
+              </div>
+              <div class="meter">
+                <strong>Inspection-readiness confidence</strong>
+                <div class="meter-track"><div class="meter-fill" style="width: 86%;"></div></div>
+              </div>
+              <div class="meter">
+                <strong>Risk of hidden policy drift by device</strong>
+                <div class="meter-track"><div class="meter-fill red" style="width: 24%;"></div></div>
+              </div>
+              <small>Illustrative prototype model. Not customer-reported performance.</small>
+            </div>
+          </article>
+          <article class="panel">
+            <div class="small-top">Constraint map</div>
+            <ul class="leader-list">
+              <li>PHI / remote access means role-aware actions and step-up controls stay mandatory.</li>
+              <li>New York-style inspection expectations make audit export and trace history core product behavior.</li>
+              <li>High-volume lab operations make canary rollout and rollback more credible than big-bang releases.</li>
+              <li>Official multi-device promise means parity matters across mobile and web, not just one client.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section reveal" id="evidence">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Evidence stack</div>
+            <h2>Why this is the right problem to solve.</h2>
+          </div>
+          <p>
+            Reviews were required evidence, but they were not enough on their own. The selected angle combines
+            store metadata, verified product reviews, official case studies, Reddit operator sentiment, and platform constraints.
+          </p>
+        </div>
+
+        <div class="evidence-grid">
+          <article class="evidence-card">
+            <img src="assets/screen-3.jpg" alt="LabMD App Store screenshot showing current trend display">
+            <h3>Public product promise</h3>
+            <p>
+              Official LabMD pages position the app around abnormal-result alerts, guided sample collection,
+              direct patient communication, and secure access anywhere. The current store screenshots still show
+              a dense, older mobile shell.
+            </p>
+          </article>
+
+          <article class="evidence-card">
+            <h3>Verified review contrast</h3>
+            <p>
+              Software Advice reviews praise flexibility and agile upgrades, but one verified user also notes
+              that the product can feel like a web app with slight lag. That suggests the right answer is workflow
+              acceleration, not just more visual polish.
+            </p>
+            <blockquote>"it behaves like a webapp"</blockquote>
+          </article>
+
+          <article class="evidence-card">
+            <h3>Current operator pain</h3>
+            <p>
+              The March 2026 r/pathology thread is the sharpest public warning signal. It shifts the conversation
+              from cosmetic UX to buyer-owned concerns: cloud trust, data quality, and slow requested changes.
+            </p>
+            <blockquote>"crippling our ability to have good data"</blockquote>
+            <blockquote>"taking obscenely long"</blockquote>
+          </article>
+
+          <article class="evidence-card">
+            <h3>Regulated ops reality</h3>
+            <p>
+              Official case studies talk about detailed audit trails, double approvals, trace query histories,
+              downtime risk, 24/7 support, and high-volume operations. That is why the prototype includes rollout,
+              approval, and export surfaces outside the phones.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Why Moshe would care</div>
+            <h2>It matches his documented remit better than a simple redesign.</h2>
+          </div>
+          <p>
+            The CRM profile is heavy on velocity, architecture, security posture, and AI-driven workflow improvement.
+            That is why this prototype centers on change economics, not cosmetic UI criticism.
+          </p>
+        </div>
+
+        <div class="leadership-grid">
+          <article class="leader-card">
+            <strong>01</strong>
+            <h3>Reduce support cost per change</h3>
+            <p>Move routine workflow updates from bespoke customer tickets into governed packs with scoped rollout and rollback.</p>
+          </article>
+          <article class="leader-card">
+            <strong>02</strong>
+            <h3>Protect data confidence</h3>
+            <p>Structured acknowledgement, reason codes, and shared dispositions reduce the risk of fragmented follow-up records.</p>
+          </article>
+          <article class="leader-card">
+            <strong>03</strong>
+            <h3>Keep auditability intact</h3>
+            <p>Approvals, traceability, and exportable evidence are built into the workflow layer rather than bolted on later.</p>
+          </article>
+          <article class="leader-card">
+            <strong>04</strong>
+            <h3>Unify mobile and platform work</h3>
+            <p>The prototype shows a clean mobile surface while still demonstrating the admin and release machinery a CTO actually owns.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="footer-grid">
+          <div class="footer-copy">
+            <div class="section-kicker">Closing thought</div>
+            <h2>Healthtech mobile velocity gets expensive when every change carries audit weight.</h2>
+            <p>
+              That is the conversation this prototype is designed to start: how to ship LabMD changes faster,
+              with less support drag and stronger inspection readiness, while still respecting the realities of a cloud LIS.
+            </p>
+            <p class="footer-note">Built from public signals: official LabOS pages, case studies, App Store / Google Play metadata, verified product reviews, Reddit operator feedback, and Lighthouse measurements.</p>
+          </div>
+          <div class="panel">
+            <div class="small-top">Next step</div>
+            <h3>Walk through the prototype with Elinext</h3>
+            <p>
+              We can turn this concept into a real mobile + platform workstream: workflow configuration, mobile surfaces,
+              release governance, and parity across iOS, Android, and web.
+            </p>
+            <div class="hero-actions" style="justify-content:flex-start; margin-top:18px;">
+              <a class="button button-primary" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    window.addEventListener('load', function () {
+      document.body.classList.add('loaded');
+    });
+  </script>
+</body>
+</html>
