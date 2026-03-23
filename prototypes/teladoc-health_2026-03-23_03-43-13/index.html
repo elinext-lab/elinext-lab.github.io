@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teladoc Health Mobile — AI Teardown</title>
+  <meta name="description" content="What if Teladoc could preserve verified member context across sign-in, intake, queueing, callbacks, and cardiometabolic tracking without weakening HIPAA-safe controls or support evidence?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/teladoc-health_2026-03-23_03-43-13/">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/teladoc-health_2026-03-23_03-43-13/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/teladoc-health_2026-03-23_03-43-13/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Teladoc Health Mobile — AI Teardown">
+  <meta property="og:description" content="What if Teladoc could preserve verified member context across sign-in, intake, queueing, callbacks, and cardiometabolic tracking without weakening HIPAA-safe controls or support evidence?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="theme-color" content="#10203c">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-23: iOS 4.79 (701041 reviews, source: iTunes API), Android 4.40 (78152 reviews, source: https://play.google.com/store/apps/details?id=com.teladoc.members&hl=en&gl=us via local scraper) -->
+  <style>
+    :root {
+      --ink: #12223d;
+      --ink-soft: #556680;
+      --sky: #e8f0ff;
+      --mist: #f6f9ff;
+      --paper: #ffffff;
+      --panel: #10203c;
+      --panel-soft: #1c2f53;
+      --line: rgba(18, 34, 61, 0.12);
+      --line-strong: rgba(255, 255, 255, 0.14);
+      --coral: #ff7b65;
+      --coral-soft: rgba(255, 123, 101, 0.14);
+      --mint: #72d0bb;
+      --amber: #ffc56a;
+      --danger: #f36e6e;
+      --ok: #62c59b;
+      --max: 1220px;
+      --shadow: 0 24px 64px rgba(18, 34, 61, 0.16);
+      --radius-xl: 36px;
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(114, 208, 187, 0.22), transparent 24%),
+        radial-gradient(circle at 90% 8%, rgba(255, 123, 101, 0.18), transparent 28%),
+        linear-gradient(180deg, #eef5ff 0%, #edf3fb 50%, #e8eef8 100%);
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+    }
+
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(6px);
+    }
+
+    .page::before {
+      width: 440px;
+      height: 440px;
+      left: -110px;
+      top: 180px;
+      background: radial-gradient(circle, rgba(114, 208, 187, 0.28) 0%, rgba(114, 208, 187, 0) 70%);
+    }
+
+    .page::after {
+      width: 520px;
+      height: 520px;
+      right: -160px;
+      top: 660px;
+      background: radial-gradient(circle, rgba(255, 123, 101, 0.22) 0%, rgba(255, 123, 101, 0) 72%);
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      padding: 36px 0 34px;
+    }
+
+    .hero-shell,
+    .surface {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(18, 34, 61, 0.08);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-shell {
+      padding: 22px;
+      backdrop-filter: blur(16px);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 2px 4px 22px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--ink-soft);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-badge,
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 999px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      background: rgba(18, 34, 61, 0.05);
+    }
+
+    .brand-badge img {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.06fr 0.94fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .headline {
+      padding: 12px 8px 18px 6px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 15px;
+      border-radius: 999px;
+      background: var(--coral-soft);
+      color: #d65942;
+      border: 1px solid rgba(214, 89, 66, 0.16);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      letter-spacing: -0.03em;
+    }
+
+    .headline h1 {
+      font-size: clamp(2.7rem, 5vw, 4.8rem);
+      line-height: 0.93;
+      max-width: 10ch;
+      margin-bottom: 16px;
+    }
+
+    .headline p {
+      margin: 0;
+      max-width: 62ch;
+      color: var(--ink-soft);
+      font-size: 1.06rem;
+      line-height: 1.6;
+    }
+
+    .evidence-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .evidence-card {
+      background: var(--paper);
+      border-radius: 22px;
+      border: 1px solid rgba(18, 34, 61, 0.08);
+      box-shadow: 0 12px 28px rgba(18, 34, 61, 0.08);
+      padding: 18px;
+    }
+
+    .evidence-card strong {
+      display: block;
+      font-size: 1.9rem;
+      line-height: 1;
+      color: #d65942;
+      margin-bottom: 8px;
+    }
+
+    .evidence-card span {
+      display: block;
+      color: var(--ink-soft);
+      font-size: 0.93rem;
+      line-height: 1.45;
+    }
+
+    .hero-panel {
+      background: linear-gradient(180deg, var(--panel) 0%, var(--panel-soft) 100%);
+      color: #eef4ff;
+      border-radius: 30px;
+      padding: 24px;
+      display: grid;
+      gap: 16px;
+      min-height: 100%;
+    }
+
+    .hero-panel p {
+      margin: 0;
+      color: rgba(238, 244, 255, 0.78);
+      line-height: 1.55;
+      font-size: 0.97rem;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .mini-card,
+    .log-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--line-strong);
+      border-radius: 20px;
+      padding: 16px;
+    }
+
+    .mini-card strong,
+    .log-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.98rem;
+    }
+
+    .mini-list,
+    .plain-list,
+    .timeline {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .mini-list li,
+    .plain-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: rgba(238, 244, 255, 0.84);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .mini-list li::before,
+    .plain-list li::before,
+    .timeline li::before,
+    .ops-item::before {
+      content: "";
+      flex: 0 0 10px;
+      width: 10px;
+      height: 10px;
+      margin-top: 6px;
+      border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 0 5px rgba(114, 208, 187, 0.16);
+    }
+
+    .timeline li {
+      display: flex;
+      gap: 10px;
+      color: rgba(238, 244, 255, 0.86);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .section {
+      padding: 18px 0 0;
+    }
+
+    .surface {
+      padding: 28px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .section-head p,
+    .section-copy {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      max-width: 70ch;
+    }
+
+    .phones {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      align-items: start;
+    }
+
+    .phone-wrap {
+      display: grid;
+      gap: 14px;
+      justify-items: center;
+    }
+
+    .phone-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      background: rgba(18, 34, 61, 0.05);
+      border: 1px solid var(--line);
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      border-radius: 34px;
+      padding: 10px;
+      background: linear-gradient(180deg, #0e1526 0%, #131d33 100%);
+      box-shadow: 0 26px 56px rgba(18, 34, 61, 0.24);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 10px;
+      transform: translateX(-50%);
+      width: 116px;
+      height: 24px;
+      background: #0a1020;
+      border-radius: 0 0 16px 16px;
+      z-index: 2;
+    }
+
+    .screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 26px;
+      background: linear-gradient(180deg, #fefefe 0%, #f3f7ff 100%);
+      overflow: auto;
+      padding: 36px 14px 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .screen-content {
+      display: block;
+      min-height: 100%;
+    }
+
+    .phone-hero,
+    .phone-card,
+    .phone-stack,
+    .module-grid,
+    .trust-panel,
+    .phone-footer {
+      display: block;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--ink-soft);
+      margin-bottom: 12px;
+    }
+
+    .phone-hero {
+      margin-bottom: 14px;
+    }
+
+    .phone-hero h3 {
+      font-size: 1.28rem;
+      line-height: 1.04;
+      margin-bottom: 8px;
+    }
+
+    .phone-hero p {
+      margin: 0;
+      font-size: 0.86rem;
+      line-height: 1.45;
+      color: var(--ink-soft);
+    }
+
+    .phone-card {
+      background: #ffffff;
+      border: 1px solid rgba(18, 34, 61, 0.08);
+      border-radius: 20px;
+      box-shadow: 0 12px 28px rgba(18, 34, 61, 0.08);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .phone-card.alert {
+      background: linear-gradient(180deg, #fff6f4 0%, #fff0ed 100%);
+      border-color: rgba(243, 110, 110, 0.22);
+    }
+
+    .phone-card.success {
+      background: linear-gradient(180deg, #f5fffb 0%, #eefbf6 100%);
+      border-color: rgba(98, 197, 155, 0.28);
+    }
+
+    .phone-card h4 {
+      margin: 0 0 8px;
+      font-size: 0.96rem;
+      line-height: 1.2;
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+      letter-spacing: -0.01em;
+    }
+
+    .phone-card p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.82rem;
+      line-height: 1.45;
+      text-align: left;
+    }
+
+    .metric-strip,
+    .ready-list,
+    .module-grid {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .metric-strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .metric {
+      border-radius: 14px;
+      background: #f2f6ff;
+      padding: 10px;
+      text-align: left;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      margin-bottom: 4px;
+    }
+
+    .metric span {
+      display: block;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .ready-list {
+      grid-template-columns: 1fr;
+    }
+
+    .ready-item,
+    .module,
+    .trust-row,
+    .ops-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(18, 34, 61, 0.04);
+      border: 1px solid rgba(18, 34, 61, 0.06);
+      text-align: left;
+    }
+
+    .ready-item::before,
+    .module::before,
+    .trust-row::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex: 0 0 10px;
+      margin-top: 5px;
+      background: var(--ok);
+      box-shadow: 0 0 0 5px rgba(98, 197, 155, 0.15);
+    }
+
+    .module.warn::before,
+    .trust-row.warn::before {
+      background: var(--amber);
+      box-shadow: 0 0 0 5px rgba(255, 197, 106, 0.16);
+    }
+
+    .module.alert::before {
+      background: var(--danger);
+      box-shadow: 0 0 0 5px rgba(243, 110, 110, 0.16);
+    }
+
+    .ready-item strong,
+    .module strong,
+    .trust-row strong,
+    .ops-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.82rem;
+    }
+
+    .ready-item span,
+    .module span,
+    .trust-row span,
+    .ops-item span {
+      display: block;
+      font-size: 0.76rem;
+      line-height: 1.4;
+      color: var(--ink-soft);
+    }
+
+    .module-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px auto 0;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--panel);
+      color: #f3f7ff;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 22px;
+      align-items: start;
+      margin-top: 24px;
+    }
+
+    .ops-panel {
+      background: linear-gradient(180deg, #0f1d37 0%, #17284a 100%);
+      color: #edf4ff;
+      border-radius: 30px;
+      padding: 22px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ops-panel p,
+    .ops-panel li,
+    .ops-panel span {
+      color: rgba(237, 244, 255, 0.8);
+    }
+
+    .ops-stack {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .ops-item {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--line-strong);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .ops-item::before {
+      background: var(--mint);
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .score-card {
+      background: #ffffff;
+      border: 1px solid rgba(18, 34, 61, 0.08);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 12px 28px rgba(18, 34, 61, 0.06);
+    }
+
+    .score-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    .score-card p {
+      margin: 0 0 12px;
+      color: var(--ink-soft);
+      line-height: 1.45;
+      font-size: 0.88rem;
+    }
+
+    .score {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.83rem;
+      color: var(--ink-soft);
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .constraint-grid,
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .constraint-card,
+    .value-card {
+      background: #ffffff;
+      border: 1px solid rgba(18, 34, 61, 0.08);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 12px 28px rgba(18, 34, 61, 0.06);
+    }
+
+    .constraint-card p,
+    .value-card p {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.5;
+      font-size: 0.92rem;
+    }
+
+    .constraint-card strong,
+    .value-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+
+    .footer-card {
+      margin: 26px 0 40px;
+      padding: 24px 26px;
+      text-align: center;
+    }
+
+    .footer-card h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 12px;
+    }
+
+    .footer-card p {
+      margin: 0 auto 20px;
+      max-width: 60ch;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 24px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--coral) 0%, #ff946e 100%);
+      color: #ffffff;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      box-shadow: 0 14px 30px rgba(255, 123, 101, 0.28);
+    }
+
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .grid-2,
+      .phones,
+      .score-grid,
+      .constraint-grid,
+      .value-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 780px) {
+      .headline h1 {
+        max-width: none;
+      }
+
+      .evidence-row,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: min(var(--max), calc(100% - 20px));
+      }
+
+      .hero-shell,
+      .surface {
+        padding: 18px;
+        border-radius: 28px;
+      }
+
+      .phone {
+        width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="container hero-shell">
+        <div class="topbar">
+          <div class="brand">
+            <span class="brand-badge">
+              <img src="assets/app-icon.jpg" alt="Teladoc Health app icon">
+              Teladoc Health
+            </span>
+            Continuity teardown for engineering leadership
+          </div>
+          <div class="pill">Principal Software Engineer fit: continuity, observability, shared-state reliability</div>
+        </div>
+
+        <div class="hero-grid">
+          <div class="headline">
+            <div class="eyebrow">AI-powered mobile teardown by Elinext</div>
+            <h1>What if Teladoc never lost member context?</h1>
+            <p>
+              Teladoc’s member app now spans urgent care, primary care, therapy, nutrition, chronic-care programs,
+              connected devices, and coverage-driven feature gating. Recent reviews suggest the same failure pattern
+              keeps surfacing across those journeys: identity, intake, queue state, and program modules do not survive
+              handoffs cleanly. This concept shows a continuity control layer that keeps the experience auditable,
+              resumable, and HIPAA-safe.
+            </p>
+
+            <div class="evidence-row">
+              <div class="evidence-card">
+                <strong>43 / 100</strong>
+                <span>recent sampled reviews on iOS and Android were 3 stars or below</span>
+              </div>
+              <div class="evidence-card">
+                <strong>21</strong>
+                <span>sampled reviews pointed to wait-state, callback, queue, or visit-access failures</span>
+              </div>
+              <div class="evidence-card">
+                <strong>17</strong>
+                <span>sampled reviews pointed to logging, device, or condition-management instability</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-panel">
+            <div>
+              <h2>Why this matters to a principal engineer</h2>
+              <p>
+                These reviews are describing one systems problem through different symptoms. A member thinks the food
+                logger vanished or the visit never called back. Engineering sees session persistence, callback routing,
+                feature entitlements, device compatibility, and queue orchestration breaking across one super-app shell.
+              </p>
+            </div>
+
+            <div class="mini-grid">
+              <div class="mini-card">
+                <strong>Buyer-owned pain</strong>
+                <ul class="mini-list">
+                  <li>shared mobile state across urgent care and cardiometabolic workflows</li>
+                  <li>resumable identity without weakening consent or audit controls</li>
+                  <li>support evidence when visits fail mid-journey</li>
+                </ul>
+              </div>
+              <div class="mini-card">
+                <strong>Why now</strong>
+                <ul class="mini-list">
+                  <li>April 2025 cardiometabolic expansion increased daily-touch workflow complexity</li>
+                  <li>Android rating is materially lower than iOS despite the same broad product promise</li>
+                  <li>members now expect both episodic care and longitudinal tracking to work in one place</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="log-card">
+              <strong>Continuity control layer</strong>
+              <ul class="timeline">
+                <li>verify callback route, device readiness, consent, coverage, and geofence before queue entry</li>
+                <li>persist intake, queue state, and program visibility when the app backgrounds or channel changes</li>
+                <li>emit an audit-safe event pack for support and engineering when the journey fails</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container surface">
+        <div class="section-head">
+          <div>
+            <h2>Current pain vs. continuity-led fix</h2>
+            <p>
+              The selected prototype focus is the intersection opportunity: preserve verified member context across
+              sign-in, intake, queueing, callbacks, and chronic-care modules while producing the evidence trail that a
+              healthcare support team actually needs.
+            </p>
+          </div>
+          <div class="pill">Selected opportunity score: 24 / 25</div>
+        </div>
+
+        <div class="phones">
+          <div class="phone-wrap">
+            <div class="phone-label">Current state</div>
+            <div class="phone">
+              <div class="screen">
+                <div class="screen-content">
+                  <div class="status-row"><span>9:41</span><span>Queue unstable</span></div>
+                  <div class="phone-hero">
+                    <h3>Visit request loses continuity</h3>
+                    <p>Users describe a mix of resets, dead-end wait states, and missing care modules.</p>
+                  </div>
+
+                  <div class="phone-card alert">
+                    <h4>Visit queue</h4>
+                    <p>Estimated 10–15 min. Actual elapsed: 54 min. Member opened another app to copy a password, then the session lost its place.</p>
+                    <div class="metric-strip">
+                      <div class="metric">
+                        <strong>Callback</strong>
+                        <span>Unverified</span>
+                      </div>
+                      <div class="metric">
+                        <strong>Status</strong>
+                        <span>Initializing…</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="phone-card alert">
+                    <h4>What the member sees</h4>
+                    <div class="module-grid">
+                      <div class="module alert">
+                        <div>
+                          <strong>Identity friction</strong>
+                          <span>Face ID prompts again. Registration restarts if the app backgrounds.</span>
+                        </div>
+                      </div>
+                      <div class="module alert">
+                        <div>
+                          <strong>Visit handoff failure</strong>
+                          <span>Call not received, video echo, or demographic form ends in server error.</span>
+                        </div>
+                      </div>
+                      <div class="module warn">
+                        <div>
+                          <strong>Program cards disappear</strong>
+                          <span>Glucose, BP, weight, and food logging panels appear inconsistent across updates.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="phone-card">
+                    <h4>Support outcome</h4>
+                    <p>Member tells the story from memory. Support sees fragments and cannot quickly prove what broke.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="phone-wrap">
+            <div class="phone-label">After: readiness gate</div>
+            <div class="phone">
+              <div class="screen">
+                <div class="screen-content">
+                  <div class="status-row"><span>9:41</span><span>Continuity verified</span></div>
+                  <div class="phone-hero">
+                    <h3>Pre-visit continuity check</h3>
+                    <p>Confirm the route before the member enters the queue, then hold that state safely.</p>
+                  </div>
+
+                  <div class="phone-card success">
+                    <h4>24/7 care readiness</h4>
+                    <p>Member identity, consent version, callback route, device support, and coverage state are verified before queue entry.</p>
+                    <div class="ready-list">
+                      <div class="ready-item">
+                        <div>
+                          <strong>Secure return path</strong>
+                          <span>Session can background and resume without forcing re-registration.</span>
+                        </div>
+                      </div>
+                      <div class="ready-item">
+                        <div>
+                          <strong>Callback + video fallback</strong>
+                          <span>Phone, in-app video, and web fallback are ranked and tested before wait begins.</span>
+                        </div>
+                      </div>
+                      <div class="ready-item">
+                        <div>
+                          <strong>Policy-aware queue entry</strong>
+                          <span>Coverage, region, and program eligibility are made explicit up front.</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cta-chip">Enter verified queue • 11–14 min band</div>
+                  </div>
+
+                  <div class="phone-card">
+                    <h4>Event pack generated in real time</h4>
+                    <p>Every handoff writes a support-safe continuity record: identity verified, device test passed, callback confirmed, queue entered, provider connected.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="phone-wrap">
+            <div class="phone-label">After: resumed care</div>
+            <div class="phone">
+              <div class="screen">
+                <div class="screen-content">
+                  <div class="status-row"><span>9:58</span><span>Member state restored</span></div>
+                  <div class="phone-hero">
+                    <h3>One stable member context</h3>
+                    <p>Urgent care and chronic-care modules share the same continuity layer instead of hiding silently.</p>
+                  </div>
+
+                  <div class="phone-card success">
+                    <h4>Today’s care state</h4>
+                    <div class="module-grid">
+                      <div class="module">
+                        <div>
+                          <strong>Visit summary locked</strong>
+                          <span>Provider call completed. Notes, prescription status, and next step saved in one thread.</span>
+                        </div>
+                      </div>
+                      <div class="module">
+                        <div>
+                          <strong>Condition cards restored</strong>
+                          <span>Weight, BP, glucose, meds, and meal logging show last sync state and recovery path.</span>
+                        </div>
+                      </div>
+                      <div class="module warn">
+                        <div>
+                          <strong>Eligibility is explicit</strong>
+                          <span>If a module is unavailable, the app shows why: coverage, rollout, device, or policy.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="phone-card">
+                    <h4>Condition-management continuity</h4>
+                    <div class="metric-strip">
+                      <div class="metric">
+                        <strong>Meals</strong>
+                        <span>Queued + synced</span>
+                      </div>
+                      <div class="metric">
+                        <strong>Vitals</strong>
+                        <span>Last sync 9:52</span>
+                      </div>
+                    </div>
+                    <div class="module-grid">
+                      <div class="module">
+                        <div>
+                          <strong>Food logging fallback</strong>
+                          <span>Barcode miss becomes “save and review,” not silent failure.</span>
+                        </div>
+                      </div>
+                      <div class="module">
+                        <div>
+                          <strong>Goal recovery</strong>
+                          <span>Members return to the exact interrupted step instead of starting over.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <div class="section-head" style="margin-top: 26px;">
+              <div>
+                <h2>Why this wins in Teladoc’s environment</h2>
+                <p class="section-copy">
+                  The fix is intentionally platform-shaped. It does not assume security can be relaxed, providers can be
+                  blamed, or feature entitlement can be hidden. It makes secure flows resumable and supportable.
+                </p>
+              </div>
+            </div>
+
+            <div class="score-grid">
+              <div class="score-card">
+                <strong>Review-led pain</strong>
+                <p>Visit access is too brittle across wait states, callbacks, and initialization errors.</p>
+                <div class="score"><span>Total</span><strong>21 / 25</strong></div>
+              </div>
+              <div class="score-card">
+                <strong>Buyer-owned pain</strong>
+                <p>Shared session and entitlement logic likely lives in engineering scope, not in isolated UX polish.</p>
+                <div class="score"><span>Total</span><strong>21 / 25</strong></div>
+              </div>
+              <div class="score-card">
+                <strong>Intersection</strong>
+                <p>Continuity control ties the reviews to platform ownership, revenue-critical programs, and support cost.</p>
+                <div class="score"><span>Total</span><strong>24 / 25</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="ops-panel">
+            <h2>Audit-safe continuity log</h2>
+            <p>
+              This is the buyer-facing support surface outside the phone. In a regulated care flow, “we think the app
+              glitched” is not enough. A principal engineering team needs machine-readable evidence.
+            </p>
+
+            <div class="ops-stack">
+              <div class="ops-item">
+                <div>
+                  <strong>Session trace</strong>
+                  <span>Identity verified, consent version locked, callback target confirmed, device test passed, queue entered, provider connected.</span>
+                </div>
+              </div>
+              <div class="ops-item">
+                <div>
+                  <strong>Feature-state snapshot</strong>
+                  <span>Urgent care, glucose, BP, meds, meals, and program cards each carry explicit availability and sync state.</span>
+                </div>
+              </div>
+              <div class="ops-item">
+                <div>
+                  <strong>Support pack</strong>
+                  <span>When a member says “the visit vanished,” support gets evidence instead of relying on screenshots and memory.</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container surface">
+        <div class="section-head">
+          <div>
+            <h2>Constraint map</h2>
+            <p>
+              A realistic Teladoc concept has to preserve assurance while reducing user and support cost. The constraints
+              are part of the design, not an afterthought.
+            </p>
+          </div>
+          <div class="pill">Healthcare constraint-first design</div>
+        </div>
+
+        <div class="constraint-grid">
+          <div class="constraint-card">
+            <strong>HIPAA and PHI handling</strong>
+            <p>Identity state, intake answers, medication data, device readings, and care-program activity all need secure persistence and narrow operational visibility.</p>
+          </div>
+          <div class="constraint-card">
+            <strong>Audit and dispute resolution</strong>
+            <p>Missed callbacks, canceled visits, and incomplete consults require factual evidence: consent, queue events, connection attempts, and policy state.</p>
+          </div>
+          <div class="constraint-card">
+            <strong>Coverage and entitlement logic</strong>
+            <p>One app spans employer plans, insurance pathways, virtual programs, and connected-device support. Hidden entitlements look like broken software.</p>
+          </div>
+          <div class="constraint-card">
+            <strong>Cross-product continuity</strong>
+            <p>Urgent care and cardiometabolic tracking may feel unrelated to users, but trust erodes across both when one shared app shell loses context.</p>
+          </div>
+        </div>
+
+        <div class="section-head" style="margin-top: 28px;">
+          <div>
+            <h2>Where Elinext fits</h2>
+            <p>
+              This concept is intentionally buildable by an outsourced mobile/product engineering team working alongside
+              an internal platform group.
+            </p>
+          </div>
+        </div>
+
+        <div class="value-grid">
+          <div class="value-card">
+            <strong>Mobile execution</strong>
+            <p>Resumable intake, reliable background recovery, callback-ready journeys, feature-state rendering, and condition-management continuity in the app shell.</p>
+          </div>
+          <div class="value-card">
+            <strong>Platform integration</strong>
+            <p>Session snapshots, entitlement APIs, continuity events, and support evidence payloads that fit existing internal systems instead of replacing them.</p>
+          </div>
+          <div class="value-card">
+            <strong>Operational telemetry</strong>
+            <p>Continuity-focused eventing for missed connection, fallback path selection, state loss, and module invisibility so engineering sees the pattern early.</p>
+          </div>
+          <div class="value-card">
+            <strong>Rollout safety</strong>
+            <p>Feature-flagged activation by program or member cohort so Teladoc can harden high-friction journeys without destabilizing the broader super-app.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container surface footer-card">
+        <h2>Built for Teladoc’s current reality</h2>
+        <p>
+          The strongest opportunity was not the loudest complaint in isolation. It was the systems problem underneath the
+          complaints: secure member context breaking across journeys that now carry real clinical, operational, and
+          revenue weight.
+        </p>
+        <a class="cta" href="https://www.elinext.com/contacts/">Get in Touch</a>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
