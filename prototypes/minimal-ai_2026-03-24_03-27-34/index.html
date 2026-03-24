@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minimal AI Mobile — AI Teardown</title>
+  <meta name="description" content="What if Minimal’s AI Manager gave support leads a mobile control loop for approvals, policy drift, and reasoning review, so self-serve AI stayed trustworthy long after onboarding?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/minimal-ai_2026-03-24_03-27-34/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/minimal-ai_2026-03-24_03-27-34/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/minimal-ai_2026-03-24_03-27-34/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Minimal AI Mobile — AI Teardown">
+  <meta property="og:description" content="What if Minimal’s AI Manager could handle approvals, policy drift, and reasoning review from a phone so support leaders stayed in control across evenings, weekends, and fragmented merchant stacks?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Ratings as of 2026-03-24: no first-party iOS App Store listing found via iTunes Search API (US), and no first-party Android listing found via google-play-scraper search (US). Public web product entry: https://gominimal.ai/sign-in. Category review evidence used: Gorgias 4.3/5 (627 Shopify App Store reviews) and Richpanel 4.7/5 (128 Shopify App Store reviews), both collected from search snippets on 2026-03-24. -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0a1122;
+      --ink-2: #111d36;
+      --ink-3: #18284b;
+      --paper: #f7f3ea;
+      --paper-2: #fffaf1;
+      --panel: #fffdf9;
+      --panel-strong: #f2eadd;
+      --line: rgba(17, 29, 54, 0.1);
+      --text: #f7f5ef;
+      --text-dark: #10203f;
+      --muted: #a9b6cc;
+      --muted-dark: #5f6f8f;
+      --mint: #63dfcf;
+      --mint-deep: #1f9c95;
+      --orange: #ff8a3d;
+      --gold: #efbd68;
+      --rose: #ff7b86;
+      --blue: #2e6dff;
+      --shadow: 0 28px 80px rgba(9, 17, 34, 0.18);
+      --radius: 30px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+      color: var(--text-dark);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(99, 223, 207, 0.15), transparent 24%),
+        radial-gradient(circle at 100% 2%, rgba(255, 138, 61, 0.18), transparent 20%),
+        linear-gradient(180deg, #08111f 0%, #142443 34%, #f7f3ea 34%, #f7f3ea 100%);
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-shell::before,
+    .page-shell::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(18px);
+    }
+
+    .page-shell::before {
+      width: 380px;
+      height: 380px;
+      top: 140px;
+      left: -180px;
+      background: rgba(99, 223, 207, 0.12);
+    }
+
+    .page-shell::after {
+      width: 460px;
+      height: 460px;
+      top: 420px;
+      right: -180px;
+      background: rgba(255, 138, 61, 0.12);
+    }
+
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 30px 20px;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding-top: 34px;
+      padding-bottom: 38px;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at top right, rgba(99, 223, 207, 0.12), transparent 24%),
+        linear-gradient(145deg, rgba(10, 17, 34, 0.97), rgba(24, 40, 75, 0.96));
+      border-radius: 38px;
+      border: 1px solid rgba(218, 236, 255, 0.12);
+      box-shadow: 0 34px 90px rgba(6, 12, 28, 0.32);
+      padding: 28px;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      border-radius: 999px;
+      right: -120px;
+      bottom: -110px;
+      background: rgba(255, 138, 61, 0.08);
+      z-index: 0;
+    }
+
+    .eyebrow,
+    .hero-copy,
+    .hero-strap,
+    .hero-metrics {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(99, 223, 207, 0.12);
+      border: 1px solid rgba(99, 223, 207, 0.28);
+      color: #d7fffa;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .brand-mark::before,
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      border: 2px solid var(--mint);
+    }
+
+    .brand-mark::before {
+      inset: 1px 7px 7px 1px;
+    }
+
+    .brand-mark::after {
+      inset: 7px 1px 1px 7px;
+    }
+
+    .hero-copy {
+      max-width: 860px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-copy h1 {
+      margin: 0 auto 18px;
+      max-width: 940px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2.45rem, 6vw, 5.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      color: var(--text);
+    }
+
+    .hero-copy p {
+      margin: 0 auto;
+      max-width: 700px;
+      font-size: 1.08rem;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    .hero-strap {
+      max-width: 820px;
+      margin-top: 22px;
+      margin-bottom: 24px;
+      color: #fbe9d0;
+      font-size: 0.98rem;
+    }
+
+    .hero-strap strong {
+      color: #fff6e5;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 980px;
+      margin-bottom: 28px;
+    }
+
+    .metric {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(220, 236, 255, 0.12);
+      border-radius: 24px;
+      padding: 18px;
+    }
+
+    .metric span {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.77rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.4rem;
+      line-height: 1.1;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.02fr 1.28fr;
+      gap: 18px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+      border: 1px solid rgba(220, 236, 255, 0.12);
+      border-radius: 28px;
+      padding: 22px;
+      color: var(--text);
+    }
+
+    .card h2,
+    .card h3 {
+      margin: 0 0 12px;
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: -0.03em;
+      color: #fffaf0;
+    }
+
+    .card p {
+      margin: 0;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .evidence-list,
+    .timeline-list,
+    .surface-list,
+    .proof-list,
+    .build-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .evidence-item,
+    .timeline-item,
+    .surface-item,
+    .proof-item,
+    .build-item {
+      display: grid;
+      gap: 6px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(220, 236, 255, 0.1);
+    }
+
+    .evidence-item strong,
+    .timeline-item strong,
+    .surface-item strong,
+    .proof-item strong,
+    .build-item strong {
+      color: var(--text);
+      font-size: 0.98rem;
+    }
+
+    .evidence-item span,
+    .timeline-item span,
+    .surface-item span,
+    .proof-item span,
+    .build-item span {
+      color: var(--muted);
+      font-size: 0.93rem;
+      line-height: 1.55;
+    }
+
+    .shift-board {
+      background: linear-gradient(180deg, rgba(255, 248, 236, 0.96), rgba(243, 234, 221, 0.92));
+      color: var(--text-dark);
+      border-radius: 28px;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    }
+
+    .shift-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: flex-start;
+    }
+
+    .shift-header h3 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: -0.04em;
+      color: #122443;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 138, 61, 0.12);
+      color: #9f4d17;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .shift-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .shift-stat {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(17, 29, 54, 0.08);
+    }
+
+    .shift-stat span {
+      display: block;
+      font-size: 0.76rem;
+      color: var(--muted-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 7px;
+    }
+
+    .shift-stat strong {
+      display: block;
+      font-size: 1.25rem;
+      color: #132546;
+    }
+
+    .stage {
+      padding-top: 18px;
+      padding-bottom: 8px;
+    }
+
+    .stage-shell {
+      background: var(--panel);
+      border-radius: 34px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(17, 29, 54, 0.08);
+    }
+
+    .section-head {
+      max-width: 780px;
+      margin: 0 auto 24px;
+      text-align: center;
+      display: block;
+    }
+
+    .section-head .kicker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 14px;
+      margin: 0 auto 14px;
+      border-radius: 999px;
+      background: rgba(17, 29, 54, 0.05);
+      color: var(--muted-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 12px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 12px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2rem, 4vw, 3.3rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      color: #112341;
+    }
+
+    .section-head p {
+      margin: 0 auto;
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--muted-dark);
+      max-width: 720px;
+    }
+
+    .phones-row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 28px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      margin-bottom: 24px;
+    }
+
+    .phone-wrap {
+      width: 320px;
+    }
+
+    .phone-label {
+      margin-bottom: 12px;
+      text-align: center;
+      color: var(--muted-dark);
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 36px;
+      background:
+        linear-gradient(180deg, #132445, #0b1530);
+      border: 1px solid rgba(17, 29, 54, 0.16);
+      box-shadow: 0 24px 60px rgba(10, 17, 34, 0.18);
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      width: 110px;
+      height: 20px;
+      border-radius: 0 0 18px 18px;
+      background: #091121;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 28px;
+      overflow: auto;
+      padding: 36px 14px 14px;
+      background:
+        linear-gradient(180deg, #fcfaf5, #f4eee5);
+      color: var(--text-dark);
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .mobile-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 0.82rem;
+      color: var(--muted-dark);
+    }
+
+    .mobile-card {
+      display: block;
+      padding: 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(17, 29, 54, 0.08);
+      margin-bottom: 12px;
+      box-shadow: 0 10px 24px rgba(17, 29, 54, 0.05);
+    }
+
+    .mobile-card h3,
+    .mobile-card h4 {
+      margin: 0 0 8px;
+      color: #122443;
+      font-size: 1rem;
+    }
+
+    .mobile-card p {
+      margin: 0;
+      color: var(--muted-dark);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .mobile-kpis {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .mobile-kpi {
+      display: block;
+      padding: 12px;
+      border-radius: 16px;
+      background: #112341;
+      color: #fff9ed;
+    }
+
+    .mobile-kpi span {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #b6c7e4;
+    }
+
+    .mobile-kpi strong {
+      display: block;
+      font-size: 1.18rem;
+    }
+
+    .alert-row,
+    .queue-row,
+    .step-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .alert-dot,
+    .queue-dot,
+    .step-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+      margin-top: 5px;
+    }
+
+    .alert-dot {
+      background: var(--orange);
+      box-shadow: 0 0 0 4px rgba(255, 138, 61, 0.14);
+    }
+
+    .queue-dot {
+      background: var(--mint-deep);
+      box-shadow: 0 0 0 4px rgba(99, 223, 207, 0.16);
+    }
+
+    .step-dot {
+      background: var(--blue);
+      box-shadow: 0 0 0 4px rgba(46, 109, 255, 0.12);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(17, 29, 54, 0.06);
+      color: #19335e;
+      font-size: 0.78rem;
+    }
+
+    .action-bar {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 16px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.88rem;
+      border: 0;
+      background: #112341;
+      color: #fffaf0;
+    }
+
+    .btn-secondary {
+      background: rgba(17, 29, 54, 0.08);
+      color: #132546;
+    }
+
+    .phone-note {
+      margin-top: 10px;
+      text-align: center;
+      color: var(--muted-dark);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .surface-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .surface-panel {
+      background: linear-gradient(180deg, #fffef9, #f3ecdf);
+      border: 1px solid rgba(17, 29, 54, 0.08);
+      border-radius: 28px;
+      padding: 22px;
+      box-shadow: 0 16px 38px rgba(17, 29, 54, 0.08);
+    }
+
+    .surface-panel h3 {
+      margin: 0 0 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.5rem;
+      color: #122443;
+      letter-spacing: -0.04em;
+    }
+
+    .surface-panel p {
+      margin: 0;
+      color: var(--muted-dark);
+      line-height: 1.7;
+    }
+
+    .surface-kpis {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+      margin-bottom: 18px;
+    }
+
+    .surface-kpi {
+      display: block;
+      padding: 14px;
+      border-radius: 18px;
+      background: #112341;
+      color: #fff8ec;
+    }
+
+    .surface-kpi span {
+      display: block;
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #b7c7e3;
+      margin-bottom: 7px;
+    }
+
+    .surface-kpi strong {
+      display: block;
+      font-size: 1.22rem;
+    }
+
+    .protocol-box,
+    .queue-box,
+    .why-grid,
+    .proof-grid,
+    .build-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .protocol-row,
+    .queue-box .mini-card,
+    .why-card,
+    .proof-card,
+    .build-card {
+      display: block;
+      padding: 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(17, 29, 54, 0.08);
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    .protocol-row strong,
+    .queue-box .mini-card strong,
+    .why-card strong,
+    .proof-card strong,
+    .build-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #112341;
+    }
+
+    .protocol-row span,
+    .queue-box .mini-card span,
+    .why-card span,
+    .proof-card span,
+    .build-card span {
+      color: var(--muted-dark);
+      line-height: 1.55;
+      font-size: 0.92rem;
+    }
+
+    .difference {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 10px;
+      margin-top: 10px;
+      border-radius: 999px;
+      background: rgba(99, 223, 207, 0.14);
+      color: #136a63;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .proof {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .proof-shell {
+      background: #fffaf1;
+      border-radius: 34px;
+      padding: 28px;
+      border: 1px solid rgba(17, 29, 54, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .proof-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .build {
+      padding-top: 10px;
+      padding-bottom: 48px;
+    }
+
+    .build-shell {
+      background: linear-gradient(180deg, #10203f, #17294d);
+      border-radius: 34px;
+      padding: 28px;
+      box-shadow: 0 24px 80px rgba(7, 13, 29, 0.3);
+      border: 1px solid rgba(220, 236, 255, 0.12);
+      color: var(--text);
+    }
+
+    .build-shell .section-head h2,
+    .build-shell .section-head p {
+      color: var(--text);
+    }
+
+    .build-shell .section-head p {
+      color: var(--muted);
+    }
+
+    .build-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-bottom: 18px;
+    }
+
+    .build-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(220, 236, 255, 0.12);
+    }
+
+    .build-card strong {
+      color: #fff8ec;
+    }
+
+    .build-card span {
+      color: var(--muted);
+    }
+
+    .cta-box {
+      margin-top: 22px;
+      padding: 20px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(220, 236, 255, 0.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .cta-box p {
+      margin: 0;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 190px;
+      padding: 15px 20px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--orange), #ffb164);
+      color: #1d1509;
+      font-weight: 800;
+      box-shadow: 0 14px 26px rgba(255, 138, 61, 0.22);
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .hero-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero-grid,
+      .surface-grid,
+      .proof-grid,
+      .build-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .shift-meta,
+      .surface-kpis {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-box {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-card,
+      .stage-shell,
+      .proof-shell,
+      .build-shell {
+        padding: 22px;
+      }
+
+      .hero-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .metric,
+      .card,
+      .surface-panel {
+        padding: 18px;
+      }
+
+      .phones-row {
+        gap: 22px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .hero-copy h1 {
+        font-size: 2.6rem;
+      }
+
+      .cta-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <section class="section hero">
+      <div class="container">
+        <div class="hero-card">
+          <div class="eyebrow"><span class="brand-mark"></span> Minimal AI · AI Manager Pocket Ops</div>
+          <div class="hero-copy">
+            <h1>What if Minimal’s self-serve AI still felt trustworthy when the support lead left the desk?</h1>
+            <p>
+              Minimal already wins on conversational setup and deep commerce integrations. The next product moat is the
+              mobile control loop: approvals, protocol drift, and reasoning review for support leaders who need to manage
+              the AI in real time, not only from a laptop.
+            </p>
+          </div>
+          <div class="hero-strap">
+            Built for <strong>Niek Hogenboom</strong> around the public signals that matter most: weekly policy changes,
+            fragmented merchant stacks, and case-study proof that buyers love training the AI Manager themselves.
+          </div>
+          <div class="hero-metrics">
+            <div class="metric">
+              <span>Buyer promise</span>
+              <strong>90%+ ticket automation</strong>
+            </div>
+            <div class="metric">
+              <span>Case-study proof</span>
+              <strong>71% to 85% direct resolution</strong>
+            </div>
+            <div class="metric">
+              <span>YC signal</span>
+              <strong>Policies change weekly</strong>
+            </div>
+            <div class="metric">
+              <span>Why now</span>
+              <strong>On-call trust decides retention</strong>
+            </div>
+          </div>
+          <div class="hero-grid">
+            <div class="card">
+              <h2>Why this angle is real</h2>
+              <p>
+                Minimal’s own site and YC page already frame the problem: e-commerce support is messy, edge cases are
+                constant, and the system has to adapt without vendor hand-holding.
+              </p>
+              <div class="evidence-list">
+                <div class="evidence-item">
+                  <strong>Cloudpillo: “weeks to minutes” training</strong>
+                  <span>The support lead says they can train the AI Manager conversationally, and the system now handles evenings and weekends.</span>
+                </div>
+                <div class="evidence-item">
+                  <strong>Proforto: 85% direct resolution</strong>
+                  <span>Leadership and support ops both manage the platform without technical skills, which raises the bar for mobile-safe control.</span>
+                </div>
+                <div class="evidence-item">
+                  <strong>Category reviews still complain about setup and change friction</strong>
+                  <span>Gorgias and Richpanel reviews praise consolidation, but lower-end reviews still mention brittle automations, integration issues, and underpowered AI add-ons.</span>
+                </div>
+              </div>
+            </div>
+            <div class="shift-board">
+              <div class="shift-header">
+                <div>
+                  <h3>Friday 19:42 · what the product should handle better</h3>
+                  <p style="margin: 8px 0 0; color: var(--muted-dark); line-height: 1.7;">
+                    A merchant updates a return rule, risky refunds pile up, and a WhatsApp escalation rate spikes. If the
+                    only safe workflow is “open the desktop AI Manager later,” Minimal’s self-serve promise weakens exactly
+                    when trust matters most.
+                  </p>
+                </div>
+                <div class="status-pill">High leverage</div>
+              </div>
+              <div class="shift-meta">
+                <div class="shift-stat">
+                  <span>Merchant reality</span>
+                  <strong>Policy drift</strong>
+                </div>
+                <div class="shift-stat">
+                  <span>Platform risk</span>
+                  <strong>Refund / cancel approvals</strong>
+                </div>
+                <div class="shift-stat">
+                  <span>Retention lever</span>
+                  <strong>Founder-safe control</strong>
+                </div>
+              </div>
+              <div class="timeline-list">
+                <div class="timeline-item">
+                  <strong>Current state</strong>
+                  <span>Approvals, reasoning review, and protocol edits are still easiest from desktop, which slows response outside business hours.</span>
+                </div>
+                <div class="timeline-item">
+                  <strong>Proposed shift</strong>
+                  <span>A mobile AI Manager companion keeps support leaders in the loop with push alerts, action queues, and natural-language updates.</span>
+                </div>
+                <div class="timeline-item">
+                  <strong>Business payoff</strong>
+                  <span>Stronger merchant trust, less vendor dependency, faster edge-case handling, and a sharper product moat against helpdesk-native AI.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section stage">
+      <div class="container">
+        <div class="stage-shell">
+          <div class="section-head">
+            <div class="kicker">Before / After</div>
+            <h2>Turn AI Manager into an on-call product, not just an onboarding tool</h2>
+            <p>
+              The prototype below reframes the opportunity as a mobile workflow for trust, speed, and control. The phone
+              surfaces the merchant-facing moment; the ops panel shows how Minimal keeps approvals, protocol diffs, and
+              reasoning visible at the platform level.
+            </p>
+          </div>
+
+          <div class="phones-row">
+            <div class="phone-wrap">
+              <div class="phone-label">Current gap</div>
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="mobile-topbar">
+                    <span>19:42</span>
+                    <span>AI Manager desktop needed</span>
+                  </div>
+                  <div class="mobile-card">
+                    <h3>Support shift pulse</h3>
+                    <p>Friday evening traffic is healthy, but return-policy changes are creating approval backlog and channel drift.</p>
+                  </div>
+                  <div class="mobile-kpis">
+                    <div class="mobile-kpi">
+                      <span>Pending approvals</span>
+                      <strong>18</strong>
+                    </div>
+                    <div class="mobile-kpi">
+                      <span>Escalation spike</span>
+                      <strong>+27%</strong>
+                    </div>
+                  </div>
+                  <div class="mobile-card">
+                    <h4>What’s missing on mobile</h4>
+                    <div class="alert-row">
+                      <span class="alert-dot"></span>
+                      <div>
+                        <strong style="display:block; color:#132546;">Return window changed</strong>
+                        <p>Ops updated the policy from 30 days to 14, but the AI protocol has not been approved yet.</p>
+                      </div>
+                    </div>
+                    <div class="alert-row">
+                      <span class="alert-dot"></span>
+                      <div>
+                        <strong style="display:block; color:#132546;">Refunds above €150 held</strong>
+                        <p>High-risk actions require human review, but the decision path is buried in the desktop manager.</p>
+                      </div>
+                    </div>
+                    <div class="alert-row">
+                      <span class="alert-dot"></span>
+                      <div>
+                        <strong style="display:block; color:#132546;">WhatsApp wording drift</strong>
+                        <p>Escalation rate rose after a promo launch, and the support lead cannot patch the protocol fast enough from the phone.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mobile-card">
+                    <h4>Typical fallback</h4>
+                    <p>Wait for Monday, switch to manual support, or ping the vendor. All three weaken Minimal’s self-serve story.</p>
+                    <div class="chip-row">
+                      <div class="chip">Slow approvals</div>
+                      <div class="chip">Desktop dependency</div>
+                      <div class="chip">Trust risk</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="phone-note">Today, the trust loop breaks when high-risk actions and policy changes hit after hours.</div>
+            </div>
+
+            <div class="phone-wrap">
+              <div class="phone-label">Proposed mobile product</div>
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="mobile-topbar">
+                    <span>19:42</span>
+                    <span>AI Manager Pocket Ops</span>
+                  </div>
+                  <div class="mobile-card" style="background: linear-gradient(180deg, #112341, #173157); color: #fffaf0;">
+                    <h3 style="color:#fffaf0;">Shift under control</h3>
+                    <p style="color:#d3def1;">Approve risky actions, update the protocol in plain language, and inspect reasoning before churn starts.</p>
+                    <div class="chip-row">
+                      <div class="chip" style="background: rgba(255,255,255,0.12); color:#fff7ea;">Push alerts</div>
+                      <div class="chip" style="background: rgba(255,255,255,0.12); color:#fff7ea;">Live approvals</div>
+                      <div class="chip" style="background: rgba(255,255,255,0.12); color:#fff7ea;">Reasoning trace</div>
+                    </div>
+                  </div>
+                  <div class="mobile-kpis">
+                    <div class="mobile-kpi" style="background:#17365f;">
+                      <span>Safe to auto-resolve</span>
+                      <strong>76%</strong>
+                    </div>
+                    <div class="mobile-kpi" style="background:#17365f;">
+                      <span>Need approval</span>
+                      <strong>5 now</strong>
+                    </div>
+                  </div>
+                  <div class="mobile-card">
+                    <h4>Approval queue</h4>
+                    <div class="queue-row">
+                      <span class="queue-dot"></span>
+                      <div>
+                        <strong style="display:block; color:#132546;">Refund €186 · approve with note</strong>
+                        <p>Reasoning shows damaged-item evidence, shipping status, and return-policy match.</p>
+                      </div>
+                    </div>
+                    <div class="queue-row">
+                      <span class="queue-dot"></span>
+                      <div>
+                        <strong style="display:block; color:#132546;">Order cancel blocked</strong>
+                        <p>Label already created. Suggested fallback: partial refund plus warehouse note.</p>
+                      </div>
+                    </div>
+                    <div class="action-bar">
+                      <button class="btn">Approve 5 items</button>
+                      <button class="btn btn-secondary">Review reasoning</button>
+                    </div>
+                  </div>
+                  <div class="mobile-card">
+                    <h4>Protocol update by plain language</h4>
+                    <div class="step-row">
+                      <span class="step-dot"></span>
+                      <div>
+                        <strong style="display:block; color:#132546;">“Return window is 14 days for sale items”</strong>
+                        <p>The AI Manager converts the change into a protocol diff, flags impacted channels, and asks one clarifying question.</p>
+                      </div>
+                    </div>
+                    <div class="chip-row">
+                      <div class="chip">Email updated</div>
+                      <div class="chip">WhatsApp updated</div>
+                      <div class="chip">Refund rule synced</div>
+                    </div>
+                  </div>
+                  <div class="mobile-card">
+                    <h4>Explain any answer</h4>
+                    <p>Support leads can open a reasoning trace, see which system the AI used, and roll back a protocol if the action feels too aggressive.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="phone-note">The phone becomes the trust-preserving surface that keeps self-serve AI credible outside the desktop workflow.</div>
+            </div>
+          </div>
+
+          <div class="surface-grid">
+            <div class="surface-panel">
+              <h3>Ops command strip for the desktop AI Manager</h3>
+              <p>
+                Mobile should not replace the core platform. It should extend it. The companion app creates a shared control
+                model: the phone handles speed and trust during the shift, while the desktop AI Manager keeps the deep system view.
+              </p>
+              <div class="surface-kpis">
+                <div class="surface-kpi">
+                  <span>Policy changes today</span>
+                  <strong>4 synced</strong>
+                </div>
+                <div class="surface-kpi">
+                  <span>Reasoning disputes</span>
+                  <strong>2 open</strong>
+                </div>
+                <div class="surface-kpi">
+                  <span>After-hours saves</span>
+                  <strong>11 tickets</strong>
+                </div>
+              </div>
+              <div class="protocol-box">
+                <div class="protocol-row">
+                  <strong>Protocol diff with rollout confidence</strong>
+                  <span>The system previews how a new return rule impacts email, WhatsApp, refund thresholds, and carrier-specific flows before publishing.</span>
+                  <div class="difference">Merchant-safe rollout</div>
+                </div>
+                <div class="protocol-row">
+                  <strong>Approval policies by action class</strong>
+                  <span>Auto-resolve safe order lookups. Hold high-value refunds. Escalate any action that conflicts with shipment state or subscription rules.</span>
+                  <div class="difference">Control without friction</div>
+                </div>
+                <div class="protocol-row">
+                  <strong>Reasoning trace built for support leads</strong>
+                  <span>Not raw model output. Show the merchant-friendly explanation: source systems used, rule matched, confidence, and why the action was chosen.</span>
+                  <div class="difference">Audit without noise</div>
+                </div>
+              </div>
+            </div>
+            <div class="surface-panel">
+              <h3>Why this is the right product bet</h3>
+              <p>
+                It directly compounds Minimal’s positioning instead of forcing a new motion. The phone layer helps buyers feel in
+                control while the AI handles more volume and more real actions.
+              </p>
+              <div class="queue-box" style="margin-top: 16px;">
+                <div class="mini-card">
+                  <strong>Buyer-owned pain</strong>
+                  <span>Policies change weekly, stacks are fragmented, and risky actions still need human trust.</span>
+                </div>
+                <div class="mini-card">
+                  <strong>User evidence</strong>
+                  <span>Competitive reviews and merchant threads still complain about brittle setup, underpowered AI, and admin friction.</span>
+                </div>
+                <div class="mini-card">
+                  <strong>Outsource fit</strong>
+                  <span>Mobile approvals, notifications, auth, and shared API surfaces are a concrete Elinext delivery package.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proof">
+      <div class="container">
+        <div class="proof-shell">
+          <div class="section-head">
+            <div class="kicker">Evidence stack</div>
+            <h2>This concept is anchored in public proof, not generic AI mockup logic</h2>
+            <p>
+              The selected opportunity scores highest because it combines merchant pain, founder ownership, evidence strength,
+              and a clean mobile delivery story.
+            </p>
+          </div>
+          <div class="proof-grid">
+            <div class="proof-card">
+              <strong>Review-led pain</strong>
+              <span>Gorgias and Richpanel review snippets still surface setup friction, integration issues, and AI that does not fully justify the overhead.</span>
+            </div>
+            <div class="proof-card">
+              <strong>Buyer-owned pain</strong>
+              <span>Minimal’s public materials repeatedly center self-serve control, fragmented merchant stacks, and policy changes that break generic automation.</span>
+            </div>
+            <div class="proof-card">
+              <strong>Intersection win</strong>
+              <span>A mobile AI Manager companion makes Minimal’s self-serve promise feel stronger after launch, especially during evenings and weekends.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section build">
+      <div class="container">
+        <div class="build-shell">
+          <div class="section-head">
+            <div class="kicker" style="background: rgba(255,255,255,0.08); color: #d7e3f6;">Delivery fit</div>
+            <h2>What Elinext could realistically ship</h2>
+            <p>
+              This is a mobile product extension with direct engineering value: approval UX, notification flows, secure sessions,
+              shared APIs, and a role-aware interface for high-risk support actions.
+            </p>
+          </div>
+          <div class="build-grid">
+            <div class="build-card">
+              <strong>Phase 1 · Mobile ops foundation</strong>
+              <span>Read-only shift health, push alerts, reasoning summaries, and secure sign-in for support leads and founders.</span>
+            </div>
+            <div class="build-card">
+              <strong>Phase 2 · Approval and protocol loop</strong>
+              <span>Approve / reject risky actions, publish policy diffs, and sync natural-language updates back to the AI Manager.</span>
+            </div>
+            <div class="build-card">
+              <strong>Phase 3 · Deep platform hooks</strong>
+              <span>Escalation routing, channel-specific controls, offline-safe notifications, and role-based audit history.</span>
+            </div>
+          </div>
+          <div class="cta-box">
+            <p>
+              This is the kind of mobile surface that helps a category-defining AI product feel safer, faster, and more founder-proof.
+              If useful, Elinext can turn the concept into a production mobile roadmap and delivery estimate.
+            </p>
+            <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Get in Touch</a>
+          </div>
+          <div class="footer-note">Prepared for Minimal AI / Niek Hogenboom · Web product analysis captured on 2026-03-24</div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
