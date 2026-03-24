@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apple Music Mobile Teardown</title>
+  <meta name="description" content="A focused Apple Music teardown showing how predictable queue logic, transparent shuffle, and editable recommendations could reduce frustration across iPhone, Android, and in-car playback.">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/apple_2026-03-24_16-35-55/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/apple_2026-03-24_16-35-55/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/apple_2026-03-24_16-35-55/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Apple Mobile - AI Teardown">
+  <meta property="og:description" content="What if Apple Music explained every queue decision, fixed repetitive shuffle, and let listeners repair recommendations before they churn to Spotify or YouTube Music?">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-24: iOS 4.86 (2569458 reviews, source: iTunes Search API), Android 4.62 (713475 reviews, source: Google Play listing via scraper) -->
+  <style>
+    :root {
+      --bg: #08101f;
+      --bg-deep: #050910;
+      --panel: rgba(11, 18, 32, 0.92);
+      --panel-solid: #0d1526;
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #f5f7fb;
+      --muted: #aeb8ca;
+      --muted-strong: #d4d9e5;
+      --accent: #ff7a35;
+      --accent-soft: rgba(255, 122, 53, 0.16);
+      --lime: #8fe68f;
+      --rose: #ff8f9c;
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+      --radius: 28px;
+      --font-sans: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+      --font-display: "Trebuchet MS", "Avenir Next Condensed", "Gill Sans", sans-serif;
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      background:
+        radial-gradient(circle at top left, rgba(255, 122, 53, 0.18), transparent 34%),
+        radial-gradient(circle at top right, rgba(143, 230, 143, 0.12), transparent 28%),
+        linear-gradient(180deg, #09101d 0%, #060b14 48%, #04070e 100%);
+      color: var(--text);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(18px);
+    }
+
+    .page::before {
+      top: 120px;
+      left: -140px;
+      width: 320px;
+      height: 320px;
+      background: rgba(255, 122, 53, 0.12);
+    }
+
+    .page::after {
+      top: 540px;
+      right: -140px;
+      width: 320px;
+      height: 320px;
+      background: rgba(143, 230, 143, 0.1);
+    }
+
+    .site-header,
+    .hero,
+    .section,
+    .site-footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    .site-header {
+      padding: 28px 24px 0;
+    }
+
+    .header-row {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand img {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: block;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+    }
+
+    .brand-copy {
+      display: grid;
+      gap: 1px;
+    }
+
+    .brand-copy strong {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .brand-copy span {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .header-note {
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .hero {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 56px 24px 28px;
+    }
+
+    .hero-shell {
+      background: linear-gradient(180deg, rgba(13, 21, 38, 0.96), rgba(7, 12, 22, 0.98));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 40px;
+      box-shadow: var(--shadow);
+      padding: 40px 38px;
+      overflow: hidden;
+    }
+
+    .eyebrow {
+      width: max-content;
+      max-width: 100%;
+      margin: 0 auto 18px;
+      text-align: center;
+      display: block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+      background: var(--accent-soft);
+      color: #ffd1bd;
+      border: 1px solid rgba(255, 122, 53, 0.24);
+    }
+
+    h1 {
+      margin: 0 auto;
+      max-width: 880px;
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: clamp(2.9rem, 7vw, 5.6rem);
+      line-height: 0.94;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-subhead {
+      max-width: 760px;
+      margin: 20px auto 0;
+      text-align: center;
+      color: var(--muted-strong);
+      font-size: 1.08rem;
+      line-height: 1.65;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 26px auto 34px;
+      max-width: 860px;
+    }
+
+    .chip {
+      padding: 11px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line);
+      color: var(--muted-strong);
+      font-size: 0.88rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .narrative-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 30px;
+      padding: 28px;
+      min-height: 100%;
+    }
+
+    .narrative-card h2 {
+      margin: 0 0 14px;
+      font-size: 1.6rem;
+      font-family: var(--font-display);
+      letter-spacing: -0.03em;
+    }
+
+    .narrative-card p {
+      margin: 0 0 18px;
+      color: var(--muted-strong);
+      line-height: 1.72;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .stat {
+      background: var(--panel-solid);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 16px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.35rem;
+      font-family: var(--font-display);
+      letter-spacing: -0.03em;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+
+    .phone-stage {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .phone-wrap {
+      width: 280px;
+      text-align: center;
+    }
+
+    .phone-label {
+      display: block;
+      margin: 0 auto 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.72rem;
+      text-align: center;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      padding: 12px;
+      border-radius: 36px;
+      background: linear-gradient(180deg, #1f2635, #0e1422);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.42);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 98px;
+      height: 20px;
+      border-radius: 0 0 16px 16px;
+      background: #05070d;
+      z-index: 2;
+    }
+
+    .screen {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      border-radius: 26px;
+      background: linear-gradient(180deg, #0f1728, #0a101d);
+      padding: 36px 14px 14px;
+      scrollbar-width: none;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      position: relative;
+      z-index: 1;
+    }
+
+    .screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screen-block {
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .screen-hero {
+      margin-bottom: 20px;
+    }
+
+    .screen-hero img {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: block;
+      margin: 0 auto 10px;
+    }
+
+    .screen-kicker {
+      display: block;
+      margin: 0 auto 6px;
+      font-size: 0.66rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      text-align: center;
+    }
+
+    .screen-title {
+      display: block;
+      margin: 0 auto;
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .screen-subtitle {
+      display: block;
+      margin: 8px auto 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .mock-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 22px;
+      padding: 14px;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .mock-card h3,
+    .mock-card h4,
+    .mock-card p,
+    .mock-card span,
+    .mock-card strong {
+      display: block;
+    }
+
+    .mock-card h3,
+    .mock-card h4 {
+      margin: 0;
+      font-size: 0.92rem;
+      letter-spacing: -0.02em;
+    }
+
+    .mock-card p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.48;
+      font-size: 0.76rem;
+    }
+
+    .stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .song-row {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .art {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(255, 122, 53, 0.85), rgba(255, 206, 117, 0.88));
+    }
+
+    .song-copy strong {
+      font-size: 0.77rem;
+      line-height: 1.25;
+      margin: 0;
+    }
+
+    .song-copy span {
+      color: var(--muted);
+      font-size: 0.71rem;
+      margin-top: 3px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.67rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .pill.warn {
+      background: rgba(255, 143, 156, 0.14);
+      color: #ffc1cb;
+      border: 1px solid rgba(255, 143, 156, 0.2);
+    }
+
+    .pill.ok {
+      background: rgba(143, 230, 143, 0.12);
+      color: #cbf5cb;
+      border: 1px solid rgba(143, 230, 143, 0.18);
+    }
+
+    .bar {
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.07);
+      margin-top: 10px;
+    }
+
+    .bar span {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ff7a35, #ffd278);
+      display: block;
+    }
+
+    .queue-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .queue-actions span {
+      padding: 8px 6px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: center;
+      font-size: 0.66rem;
+      color: var(--muted-strong);
+    }
+
+    .section {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 24px;
+    }
+
+    .section-shell {
+      background: rgba(8, 13, 24, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 34px;
+      padding: 34px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    .section-heading {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 26px;
+    }
+
+    .section-heading span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 10px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-family: var(--font-display);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .section-heading p {
+      margin: 14px 0 0;
+      color: var(--muted-strong);
+      line-height: 1.68;
+    }
+
+    .evidence-grid,
+    .benefit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .evidence-card,
+    .benefit-card,
+    .quote-card,
+    .cta-card {
+      background: var(--panel-solid);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 22px;
+    }
+
+    .evidence-card strong,
+    .benefit-card strong {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      display: block;
+      margin-bottom: 12px;
+      letter-spacing: -0.03em;
+    }
+
+    .evidence-card p,
+    .benefit-card p {
+      margin: 0;
+      color: var(--muted-strong);
+      line-height: 1.62;
+    }
+
+    .quote-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .quote-card small {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-size: 0.68rem;
+    }
+
+    .quote-card blockquote {
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .quote-card p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.58;
+      font-size: 0.9rem;
+    }
+
+    .cta-card {
+      text-align: center;
+      background:
+        linear-gradient(180deg, rgba(255, 122, 53, 0.12), rgba(255, 122, 53, 0.03)),
+        var(--panel-solid);
+    }
+
+    .cta-card h2 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-family: var(--font-display);
+      letter-spacing: -0.04em;
+    }
+
+    .cta-card p {
+      margin: 14px auto 26px;
+      max-width: 720px;
+      color: var(--muted-strong);
+      line-height: 1.68;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 24px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ff7a35, #ffa34e);
+      color: #1f1107;
+      font-weight: 700;
+      box-shadow: 0 16px 30px rgba(255, 122, 53, 0.22);
+    }
+
+    .site-footer {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px 44px;
+    }
+
+    .footer-copy {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.6;
+      padding: 12px 0 0;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .evidence-grid,
+      .benefit-grid,
+      .quote-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-shell,
+      .section-shell {
+        padding: 28px 22px;
+      }
+
+      .header-row {
+        flex-direction: column;
+      }
+
+      .header-note {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .phone-wrap {
+        width: 300px;
+      }
+
+      .site-header,
+      .hero,
+      .section,
+      .site-footer {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .stat-grid,
+      .queue-actions {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 2.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="header-row">
+        <div class="brand">
+          <img src="assets/apple-music-icon.jpg" alt="Apple Music icon">
+          <div class="brand-copy">
+            <strong>Apple Music</strong>
+            <span>AI-powered mobile teardown by Elinext</span>
+          </div>
+        </div>
+        <div class="header-note">
+          Focus: queue trust, shuffle transparency, recommendation repair
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-shell">
+          <span class="eyebrow">Apple Music x Elinext concept</span>
+          <h1>Make the next song feel earned.</h1>
+          <p class="hero-subhead">
+            Apple Music's negative feedback is not about catalog size or audio quality. It is about trust. When queue logic, shuffle behavior, and recommendations feel random, users stop believing the product is working for them.
+          </p>
+          <div class="chip-row">
+            <div class="chip">US iOS rating: 4.86 from 2.57M ratings</div>
+            <div class="chip">US Android rating: 4.62 from 713K ratings</div>
+            <div class="chip">100M+ Android installs</div>
+            <div class="chip">Primary complaints: queue, shuffle, discovery</div>
+          </div>
+
+          <div class="hero-grid">
+            <article class="narrative-card">
+              <h2>Prototype thesis</h2>
+              <p>
+                The fix is not a broad redesign. It is a thin product layer that explains playback decisions, exposes queue controls before users hunt for them, and lets listeners tune recommendations without training the system blindly.
+              </p>
+              <p>
+                That keeps the experience aligned with Apple's public promise of curation plus intelligence, while resolving the exact complaints showing up in recent iOS reviews, Android reviews, and Reddit threads.
+              </p>
+              <div class="stat-grid">
+                <div class="stat">
+                  <strong>Queue repair</strong>
+                  <span>Restore `Play Next`, `Play Later`, and queue cleanup without disrupting the current session.</span>
+                </div>
+                <div class="stat">
+                  <strong>Shuffle fairness</strong>
+                  <span>Show when artists are repeating too often and let users rebalance the session.</span>
+                </div>
+                <div class="stat">
+                  <strong>Recommendation tuning</strong>
+                  <span>Let listeners tell the app why a suggestion missed instead of only skipping it.</span>
+                </div>
+                <div class="stat">
+                  <strong>Playback recovery</strong>
+                  <span>Catch car, offline, and purchased-track edge cases before they break trust.</span>
+                </div>
+              </div>
+            </article>
+
+            <div class="phone-stage">
+              <div class="phone-wrap">
+                <span class="phone-label">Current friction</span>
+                <div class="phone">
+                  <div class="screen">
+                    <div class="screen-hero screen-block">
+                      <img src="assets/apple-music-icon.jpg" alt="">
+                      <span class="screen-kicker">Playback today</span>
+                      <strong class="screen-title">Hidden logic</strong>
+                      <span class="screen-subtitle">Users know a track changed. They do not know why.</span>
+                    </div>
+
+                    <div class="mock-card">
+                      <h3>Now playing</h3>
+                      <p>Queue feels detached from intent. Shuffle repeats, car playback resumes on its own, and search-driven discovery feels unrelated.</p>
+                    </div>
+
+                    <div class="mock-card">
+                      <div class="song-row">
+                        <div class="art"></div>
+                        <div class="song-copy">
+                          <strong>Track 01</strong>
+                          <span>Played again 11 min after last spin</span>
+                        </div>
+                        <span class="pill warn">repeat</span>
+                      </div>
+                      <div class="bar"><span style="width: 82%;"></span></div>
+                      <p>Shuffle balance is invisible, so repetition feels like a bug even when it is technically "working."</p>
+                    </div>
+
+                    <div class="mock-card">
+                      <h4>Recent complaints</h4>
+                      <div class="stack">
+                        <div class="song-row">
+                          <div class="art" style="background: linear-gradient(135deg, #8050ff, #5bc8ff);"></div>
+                          <div class="song-copy">
+                            <strong>"It only plays the same 15 songs"</strong>
+                            <span>Recent iOS review</span>
+                          </div>
+                        </div>
+                        <div class="song-row">
+                          <div class="art" style="background: linear-gradient(135deg, #ff6783, #ffb873);"></div>
+                          <div class="song-copy">
+                            <strong>"Play last/after function has gone"</strong>
+                            <span>Recent Android review</span>
+                          </div>
+                        </div>
+                        <div class="song-row">
+                          <div class="art" style="background: linear-gradient(135deg, #12c2a0, #89f5bc);"></div>
+                          <div class="song-copy">
+                            <strong>"Recommendations are unrelated"</strong>
+                            <span>Recent Android review</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mock-card">
+                      <h4>Where trust breaks</h4>
+                      <p>In-car playback, shuffle sessions, and paid-library edge cases all punish users at the exact moment they need certainty.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="phone-wrap">
+                <span class="phone-label">Proposed layer</span>
+                <div class="phone">
+                  <div class="screen">
+                    <div class="screen-hero screen-block">
+                      <img src="assets/apple-music-icon.jpg" alt="">
+                      <span class="screen-kicker">Predictable playback</span>
+                      <strong class="screen-title">Visible intent</strong>
+                      <span class="screen-subtitle">Every queue change explains itself and can be repaired in one tap.</span>
+                    </div>
+
+                    <div class="mock-card">
+                      <h3>Why this is next</h3>
+                      <p>Queued because you liked 4 tracks from this artist, skipped none this week, and asked for "more like this" yesterday.</p>
+                      <div class="queue-actions">
+                        <span>Play now</span>
+                        <span>Play later</span>
+                        <span>Tune this down</span>
+                      </div>
+                    </div>
+
+                    <div class="mock-card">
+                      <div class="song-row">
+                        <div class="art" style="background: linear-gradient(135deg, #11c0aa, #b4f3b3);"></div>
+                        <div class="song-copy">
+                          <strong>Shuffle fairness</strong>
+                          <span>Artist variety: balanced</span>
+                        </div>
+                        <span class="pill ok">healthy</span>
+                      </div>
+                      <div class="bar"><span style="width: 54%; background: linear-gradient(90deg, #11c0aa, #8fe68f);"></span></div>
+                      <p>Users can see if a session is clustering too tightly before the queue starts feeling broken.</p>
+                    </div>
+
+                    <div class="mock-card">
+                      <h4>Queue repair</h4>
+                      <div class="stack">
+                        <div class="song-row">
+                          <div class="art" style="background: linear-gradient(135deg, #ff7a35, #ffbd7b);"></div>
+                          <div class="song-copy">
+                            <strong>Pin current mood</strong>
+                            <span>Hold style and tempo for 30 minutes</span>
+                          </div>
+                        </div>
+                        <div class="song-row">
+                          <div class="art" style="background: linear-gradient(135deg, #6a84ff, #a8c3ff);"></div>
+                          <div class="song-copy">
+                            <strong>Drop duplicates</strong>
+                            <span>Avoid same-artist repeats for 10 tracks</span>
+                          </div>
+                        </div>
+                        <div class="song-row">
+                          <div class="art" style="background: linear-gradient(135deg, #ff6783, #ffc48a);"></div>
+                          <div class="song-copy">
+                            <strong>Fix purchased-track issue</strong>
+                            <span>Show entitlement or download-state error early</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mock-card">
+                      <h4>Car-safe recovery</h4>
+                      <p>If playback restarts unexpectedly, the app surfaces one clear state: autoplay source, connected device, and a single stop/resume toggle.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-shell">
+          <div class="section-heading">
+            <span>Why this matters</span>
+            <h2>The pain is narrow, repeated, and fixable.</h2>
+            <p>
+              Apple Music already wins on brand, catalog, and audio quality. The opportunity is to remove the moments where listeners feel the system is acting on them instead of with them.
+            </p>
+          </div>
+
+          <div class="evidence-grid">
+            <article class="evidence-card">
+              <strong>Queue trust gap</strong>
+              <p>Users across iOS, Android, and Reddit repeatedly describe shuffle and queue behavior as random, repetitive, or missing basic controls.</p>
+            </article>
+            <article class="evidence-card">
+              <strong>Recommendation opacity</strong>
+              <p>Recent low-score reviews say the home feed and search suggestions feel unrelated even after the listener gives explicit feedback.</p>
+            </article>
+            <article class="evidence-card">
+              <strong>Playback edge-case pain</strong>
+              <p>Car playback, purchased tracks, and bug-heavy Android sessions create high-stakes failures that damage trust faster than normal UI friction.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-shell">
+          <div class="section-heading">
+            <span>User voice</span>
+            <h2>What people are actually saying</h2>
+            <p>
+              The wording changes by platform, but the complaint stays the same: "I don't trust the app to manage my session."
+            </p>
+          </div>
+
+          <div class="quote-grid">
+            <article class="quote-card">
+              <small>Recent iOS review</small>
+              <blockquote>"You can download thousands of songs, play shuffle mode and it only plays the same 15 songs."</blockquote>
+              <p>That is a queue-quality problem disguised as a music recommendation problem.</p>
+            </article>
+            <article class="quote-card">
+              <small>Recent Android review</small>
+              <blockquote>"The play last/after function has gone, so there is apparently no way to add a song or album to the end of the queue."</blockquote>
+              <p>Users notice control loss immediately when they compare Apple Music to Spotify or YouTube Music.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-shell">
+          <div class="section-heading">
+            <span>Outcome</span>
+            <h2>What this prototype is designed to prove</h2>
+            <p>
+              A small, explainable playback layer can make Apple Music feel more intelligent without adding more complexity to the core player.
+            </p>
+          </div>
+
+          <div class="benefit-grid">
+            <article class="benefit-card">
+              <strong>Reduce churn risk</strong>
+              <p>Frustrated power users are the most likely to compare against Spotify and YouTube Music. Queue trust is a retention feature.</p>
+            </article>
+            <article class="benefit-card">
+              <strong>Make AI feel useful</strong>
+              <p>Showing why the app made a choice turns opaque personalization into guided curation instead of algorithmic guesswork.</p>
+            </article>
+            <article class="benefit-card">
+              <strong>Improve cross-platform confidence</strong>
+              <p>Explicit recovery states and visible controls matter more as Apple Music expands beyond Apple's own hardware ecosystem.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-shell">
+          <div class="cta-card">
+            <h2>Want the walkthrough?</h2>
+            <p>
+              We can turn this into a clickable teardown of the highest-friction playback flows, or build the same style of concept for another Apple Services touchpoint.
+            </p>
+            <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-copy">
+        Concept prepared for Apple Music using public app-store data, Reddit discussion, and Apple newsroom material.<br>
+        Prototype URL is fixed for deployment at <strong>https://elinext-lab.github.io/prototypes/apple_2026-03-24_16-35-55/</strong>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
