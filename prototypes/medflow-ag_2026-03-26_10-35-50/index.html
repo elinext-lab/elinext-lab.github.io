@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MedFlow AG Mobile - AI Teardown</title>
+  <meta name="description" content="What if MedFlow's mobile experience moved from a login-first screen to instant staffing-gap recovery, multilingual alerts, and one-tap room coverage updates for clinic teams?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/medflow-ag_2026-03-26_10-35-50/">
+  <meta property="og:title" content="MedFlow AG Mobile - AI Teardown">
+  <meta property="og:description" content="What if MedFlow's mobile experience moved from a login-first screen to instant staffing-gap recovery, multilingual alerts, and one-tap room coverage updates for clinic teams?">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/medflow-ag_2026-03-26_10-35-50/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/medflow-ag_2026-03-26_10-35-50/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MedFlow AG Mobile - AI Teardown">
+  <meta name="twitter:description" content="What if MedFlow's mobile experience moved from a login-first screen to instant staffing-gap recovery, multilingual alerts, and one-tap room coverage updates for clinic teams?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/medflow-ag_2026-03-26_10-35-50/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Ratings as of 2026-03-26: iOS n/a (no verified public App Store listing found, source: iTunes Search API), Android n/a (no verified public Google Play listing found, source: google-play-scraper search) -->
+  <style>
+    :root {
+      --bg: #f5f1e8;
+      --panel: rgba(255, 255, 255, 0.92);
+      --panel-strong: #fffdf9;
+      --ink: #13212d;
+      --muted: #596876;
+      --teal: #0b8e8c;
+      --teal-deep: #0f5f6c;
+      --coral: #ef7d59;
+      --sand: #f0e0c0;
+      --line: rgba(19, 33, 45, 0.12);
+      --shadow: 0 26px 80px rgba(17, 31, 43, 0.12);
+      --phone: #10161c;
+      --phone-screen: #f8f4ec;
+      --good: #1a9b69;
+      --warn: #d96f32;
+      --danger: #d14c4c;
+      --max-width: 1200px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "IBM Plex Sans", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(239, 125, 89, 0.2), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(11, 142, 140, 0.22), transparent 28%),
+        linear-gradient(180deg, #f7f3ea 0%, #efe7d6 46%, #f4efe6 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(19, 33, 45, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(19, 33, 45, 0.02) 1px, transparent 1px);
+      background-size: 38px 38px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .wrap {
+      width: min(calc(100% - 32px), var(--max-width));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 36px 0 28px;
+    }
+
+    .hero-shell {
+      position: relative;
+      padding: 26px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 34px;
+      background:
+        linear-gradient(140deg, rgba(255, 255, 255, 0.9), rgba(255, 250, 244, 0.72)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-shell::after {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 1px dashed rgba(19, 33, 45, 0.09);
+      border-radius: 24px;
+      pointer-events: none;
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .brand-chip,
+    .date-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.82);
+      font-size: 13px;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-chip img {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--teal-deep), var(--teal));
+      padding: 4px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 28px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(239, 125, 89, 0.12);
+      color: #8a3f24;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 18px 0 14px;
+      font-family: "Sora", sans-serif;
+      font-size: clamp(40px, 6vw, 68px);
+      line-height: 1;
+      letter-spacing: -0.045em;
+      max-width: 10.8ch;
+    }
+
+    .hero-copy p {
+      margin: 0;
+      max-width: 650px;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .hero-copy strong {
+      color: var(--ink);
+    }
+
+    .stats {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(19, 33, 45, 0.08);
+      min-height: 120px;
+    }
+
+    .stat strong {
+      display: block;
+      font-family: "Sora", sans-serif;
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .evidence {
+      padding: 22px;
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(14, 29, 38, 0.96), rgba(19, 38, 50, 0.98));
+      color: white;
+      box-shadow: 0 20px 60px rgba(10, 23, 34, 0.22);
+    }
+
+    .evidence h2,
+    .section h2 {
+      margin: 0 0 14px;
+      font-family: "Sora", sans-serif;
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.1;
+      letter-spacing: -0.035em;
+    }
+
+    .evidence p {
+      margin: 0 0 16px;
+      color: rgba(255, 255, 255, 0.76);
+      line-height: 1.65;
+    }
+
+    .evidence-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .evidence-item {
+      padding: 14px 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .evidence-item strong,
+    .signal-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--sand);
+    }
+
+    .evidence-item span {
+      display: block;
+      color: rgba(255, 255, 255, 0.88);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .section {
+      padding: 26px 0 18px;
+    }
+
+    .section-shell {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 34px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-kicker {
+      display: inline-block;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--teal-deep);
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .section-head p {
+      max-width: 560px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .phones {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .phone-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      text-align: center;
+    }
+
+    .phone-wrap h3 {
+      margin: 0;
+      font-family: "Sora", sans-serif;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .phone-wrap p {
+      margin: 0;
+      max-width: 280px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      padding: 10px;
+      border-radius: 42px;
+      background:
+        linear-gradient(180deg, #1a2026, #0a0d11);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+        0 34px 90px rgba(16, 22, 28, 0.24);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      width: 104px;
+      height: 28px;
+      margin-left: -52px;
+      border-radius: 18px;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 3;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 32px;
+      background: var(--phone-screen);
+      overflow: auto;
+      padding: 36px 14px 14px;
+      position: relative;
+      text-align: center;
+      display: block;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .phone-status {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: #31424f;
+    }
+
+    .screen-card {
+      background: white;
+      border-radius: 24px;
+      padding: 16px;
+      text-align: left;
+      box-shadow: 0 12px 28px rgba(22, 38, 51, 0.08);
+      border: 1px solid rgba(19, 33, 45, 0.06);
+      margin-bottom: 12px;
+    }
+
+    .screen-card h4,
+    .signal-card h4 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .screen-card p,
+    .screen-card li,
+    .signal-card p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .screen-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .alert {
+      background: linear-gradient(135deg, rgba(239, 125, 89, 0.13), rgba(239, 125, 89, 0.05));
+      border: 1px solid rgba(239, 125, 89, 0.28);
+    }
+
+    .alert strong,
+    .pill strong {
+      display: block;
+      color: #973d26;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .mini-item,
+    .candidate {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(11, 142, 140, 0.08);
+    }
+
+    .mini-item b,
+    .candidate b {
+      display: block;
+      font-size: 13px;
+    }
+
+    .mini-item span,
+    .candidate span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 62px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(17, 31, 43, 0.08);
+      font-size: 11px;
+      font-weight: 700;
+      color: #29414e;
+    }
+
+    .badge.good {
+      background: rgba(26, 155, 105, 0.14);
+      color: var(--good);
+    }
+
+    .badge.warn {
+      background: rgba(217, 111, 50, 0.14);
+      color: var(--warn);
+    }
+
+    .current-shot {
+      margin: 0 auto 12px;
+      width: 100%;
+      border-radius: 20px;
+      border: 1px solid rgba(19, 33, 45, 0.08);
+      box-shadow: 0 14px 36px rgba(17, 31, 43, 0.1);
+    }
+
+    .screen-title {
+      font-family: "Sora", sans-serif;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+      margin: 0 0 6px;
+    }
+
+    .screen-subtitle {
+      display: block;
+      font-size: 12px;
+      color: #6a7c89;
+      margin-bottom: 14px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(11, 142, 140, 0.1);
+      border: 1px solid rgba(11, 142, 140, 0.16);
+      color: var(--teal-deep);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .meter {
+      margin-top: 10px;
+      background: #ebf0f2;
+      border-radius: 999px;
+      overflow: hidden;
+      height: 10px;
+    }
+
+    .meter > span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--warn), var(--good));
+    }
+
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .signal-card {
+      background: var(--panel-strong);
+      border-radius: 24px;
+      padding: 18px;
+      border: 1px solid rgba(19, 33, 45, 0.08);
+      min-height: 200px;
+    }
+
+    .signal-card strong {
+      color: var(--teal-deep);
+    }
+
+    .signal-card h4 {
+      font-family: "Sora", sans-serif;
+      margin: 0 0 10px;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .signal-card ul {
+      padding-left: 18px;
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .cta {
+      padding: 24px 0 48px;
+    }
+
+    .cta-shell {
+      padding: 28px;
+      border-radius: 34px;
+      background:
+        linear-gradient(130deg, rgba(11, 142, 140, 0.96), rgba(20, 61, 82, 0.96));
+      color: white;
+      box-shadow: 0 32px 90px rgba(7, 56, 68, 0.26);
+      text-align: center;
+    }
+
+    .cta-shell h2 {
+      margin-bottom: 12px;
+    }
+
+    .cta-shell p {
+      margin: 0 auto 20px;
+      max-width: 720px;
+      color: rgba(255, 255, 255, 0.82);
+      line-height: 1.7;
+      font-size: 17px;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 24px;
+      border-radius: 999px;
+      background: #fff4df;
+      color: #153043;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      box-shadow: 0 18px 38px rgba(12, 33, 44, 0.18);
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .fade-up {
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .delay-1 { animation-delay: 0.08s; }
+    .delay-2 { animation-delay: 0.16s; }
+    .delay-3 { animation-delay: 0.24s; }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .phones,
+      .signal-grid,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head,
+      .topline {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      h1 {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-shell,
+      .section-shell,
+      .cta-shell {
+        padding: 20px;
+        border-radius: 28px;
+      }
+
+      .wrap {
+        width: min(calc(100% - 20px), var(--max-width));
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-shell fade-up">
+          <div class="topline">
+            <div class="brand-chip">
+              <img src="./assets/medflow-logo.webp" alt="MedFlow logo">
+              <span>MedFlow AG x Elinext Mobile Lab</span>
+            </div>
+            <div class="date-chip">Research cut: 2026-03-26</div>
+          </div>
+          <div class="hero-grid">
+            <div class="hero-copy fade-up delay-1">
+              <span class="eyebrow">Mobile operations teardown</span>
+              <h1>What if staffing gaps closed before the shift broke?</h1>
+              <p>
+                MedFlow's public product story is strong: <strong>schedules, room coverage, notifications, and incident reporting in one system.</strong>
+                The gap is the first mobile moment. The live app surface still starts at a plain login, while the real high-pressure use case is
+                <strong>recovering from late changes fast, with traceability and no spreadsheet detours</strong>.
+              </p>
+              <div class="stats">
+                <div class="stat fade-up delay-1">
+                  <strong>46</strong>
+                  <span>Mobile Lighthouse performance score for the live app/login surface at <code>app.medflow.ee</code>.</span>
+                </div>
+                <div class="stat fade-up delay-2">
+                  <strong>&lt; 4w</strong>
+                  <span>Typical implementation window claimed on MedFlow's solution page. Fast enough to justify sharper mobile polish.</span>
+                </div>
+                <div class="stat fade-up delay-3">
+                  <strong>1 flow</strong>
+                  <span>The prototype narrows scope to the workflow that actually matters under pressure: change notice, replacement, approval, recovery.</span>
+                </div>
+              </div>
+            </div>
+            <aside class="evidence fade-up delay-2">
+              <h2>Why this matters now</h2>
+              <p>This concept is anchored in MedFlow's live product, its public claims, adjacent healthcare user pain, and the internal iOS hiring signal.</p>
+              <div class="evidence-list">
+                <div class="evidence-item">
+                  <strong>Official product claim</strong>
+                  <span>MedFlow says many clinics still run schedules through Excel, calendars, and email, and that changes often reach staff late or not at all.</span>
+                </div>
+                <div class="evidence-item">
+                  <strong>Live app reality</strong>
+                  <span>The verified public app surface is a basic login page. It does not showcase the mobile schedule and response loop MedFlow sells.</span>
+                </div>
+                <div class="evidence-item">
+                  <strong>Healthcare staff signal</strong>
+                  <span>Public nursing discussions still describe manual swaps through management and missed shift changes, which lines up with MedFlow's own problem framing.</span>
+                </div>
+                <div class="evidence-item">
+                  <strong>Build wedge</strong>
+                  <span>Start with staffing-gap recovery and multilingual mobile approvals, then let patient-impact handling branch off the same action stream.</span>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-shell fade-up">
+          <div class="section-head">
+            <div>
+              <span class="section-kicker">Current vs improved</span>
+              <h2>Make the mobile experience useful before the next call-in hits</h2>
+            </div>
+            <p>
+              The current public app surface proves MedFlow has a live product. The opportunity is to move from a login-first mobile posture
+              to a workflow-first one: alert, replace, approve, and fix downstream schedule impact in under a minute.
+            </p>
+          </div>
+          <div class="phones">
+            <article class="phone-wrap fade-up delay-1">
+              <h3>Current public mobile surface</h3>
+              <p>The live app is real, but the first mobile moment is still authentication rather than operational context.</p>
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="phone-status">
+                    <span>09:41</span>
+                    <span>5G</span>
+                  </div>
+                  <img class="current-shot" src="./assets/current-medflow-login.png" alt="Current MedFlow login screen">
+                  <div class="screen-card">
+                    <h4>Observed friction</h4>
+                    <p>Public surface defaults to a login wall with no schedule context, no urgent-task framing, and no preview of the flow MedFlow is selling.</p>
+                  </div>
+                  <div class="screen-card">
+                    <h4>What is missing</h4>
+                    <p>Coverage gaps, replacement options, notifications, and staff actions are invisible until after authentication.</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="phone-wrap fade-up delay-2">
+              <h3>Improved shift-gap recovery</h3>
+              <p>Start on the issue that breaks clinic operations fastest: a call-in that creates a room-coverage gap.</p>
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="phone-status">
+                    <span>07:20</span>
+                    <span>Room board</span>
+                  </div>
+                  <p class="screen-title">Morning recovery</p>
+                  <span class="screen-subtitle">Role-aware home screen for charge nurses and coordinators</span>
+                  <div class="pill-row">
+                    <span class="pill">EN</span>
+                    <span class="pill">3 urgent actions</span>
+                  </div>
+                  <div class="screen-card alert">
+                    <strong>Coverage gap</strong>
+                    <h4>Room 3 is unstaffed for 08:00-12:00</h4>
+                    <p>Sick leave confirmed. Patient block at risk. AI sorted replacement options by skills, overtime risk, and location.</p>
+                    <div class="meter"><span style="width: 68%"></span></div>
+                  </div>
+                  <div class="screen-grid">
+                    <div class="candidate">
+                      <div>
+                        <b>Maria L.</b>
+                        <span>Qualified, onsite in 18 min</span>
+                      </div>
+                      <span class="badge good">Best fit</span>
+                    </div>
+                    <div class="candidate">
+                      <div>
+                        <b>Jonas P.</b>
+                        <span>Needs overtime approval</span>
+                      </div>
+                      <span class="badge warn">Escalate</span>
+                    </div>
+                    <div class="candidate">
+                      <div>
+                        <b>Agency pool</b>
+                        <span>Available after 09:15</span>
+                      </div>
+                      <span class="badge">Fallback</span>
+                    </div>
+                  </div>
+                  <div class="screen-card">
+                    <h4>One-tap actions</h4>
+                    <div class="mini-list">
+                      <div class="mini-item">
+                        <div>
+                          <b>Notify Maria + manager</b>
+                          <span>Push, SMS, and in-app trace</span>
+                        </div>
+                        <span class="badge good">Send</span>
+                      </div>
+                      <div class="mini-item">
+                        <div>
+                          <b>Lock room coverage rule</b>
+                          <span>Update board instantly</span>
+                        </div>
+                        <span class="badge">Apply</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="phone-wrap fade-up delay-3">
+              <h3>Downstream patient impact</h3>
+              <p>Once staffing is fixed, the same flow resolves knock-on patient and room changes instead of opening another tool.</p>
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="phone-status">
+                    <span>07:24</span>
+                    <span>After approval</span>
+                  </div>
+                  <p class="screen-title">Ripple control</p>
+                  <span class="screen-subtitle">Keep patients, rooms, and compliance in the same approval trail</span>
+                  <div class="screen-card">
+                    <h4>Approved replacement</h4>
+                    <p>Maria L. accepted. Manager approval attached to audit log. Room 3 returns to green status.</p>
+                    <div class="mini-list">
+                      <div class="mini-item">
+                        <div>
+                          <b>Room 3 coverage</b>
+                          <span>Updated 07:24 by A. Mueller policy set</span>
+                        </div>
+                        <span class="badge good">100%</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="screen-card">
+                    <h4>Patient actions now ready</h4>
+                    <div class="mini-list">
+                      <div class="mini-item">
+                        <div>
+                          <b>08:30 consult stays on time</b>
+                          <span>Auto-message drafted for patient</span>
+                        </div>
+                        <span class="badge good">Send</span>
+                      </div>
+                      <div class="mini-item">
+                        <div>
+                          <b>09:15 prep moved to Room 2</b>
+                          <span>Staff + patient notified in one step</span>
+                        </div>
+                        <span class="badge">Review</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="screen-card">
+                    <h4>Why this is a better mobile wedge</h4>
+                    <p>It keeps schedule recovery, audit context, multilingual alerts, and patient impact in one short chain instead of scattering them across separate tools.</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-shell fade-up">
+          <div class="section-head">
+            <div>
+              <span class="section-kicker">Why this concept lands</span>
+              <h2>Four signals worth putting in front of a VP Engineering</h2>
+            </div>
+            <p>
+              The point is not to speculate wildly. The point is to connect MedFlow's own positioning, live product reality, and adjacent healthcare user pain into one credible mobile roadmap slice.
+            </p>
+          </div>
+          <div class="signal-grid">
+            <article class="signal-card fade-up delay-1">
+              <strong>Official site</strong>
+              <h4>MedFlow already names the problem</h4>
+              <p>The solution page says clinics still run operations through Excel, calendars, and emails, and that changes reach staff late or not at all.</p>
+              <ul>
+                <li>Coverage gaps discovered last minute</li>
+                <li>Fragmented schedule ownership</li>
+                <li>Manual replacement handling</li>
+              </ul>
+            </article>
+            <article class="signal-card fade-up delay-2">
+              <strong>Live app</strong>
+              <h4>The public app surface is still too thin</h4>
+              <p>The verified app exists, but its public face is a basic login page. That weakens the mobile narrative relative to the product promise.</p>
+              <ul>
+                <li>Performance: 46</li>
+                <li>Accessibility: 87</li>
+                <li>No workflow preview before auth</li>
+              </ul>
+            </article>
+            <article class="signal-card fade-up delay-3">
+              <strong>Public user voice</strong>
+              <h4>Healthcare staff still describe manual swap chaos</h4>
+              <p>Relevant nursing threads still mention swap requests through management or Facebook groups and shift changes that are easy to miss.</p>
+              <ul>
+                <li>Manual approvals slow everything down</li>
+                <li>Notifications are easy to miss</li>
+                <li>Self-serve scheduling is still weak</li>
+              </ul>
+            </article>
+            <article class="signal-card fade-up delay-3">
+              <strong>Internal signal</strong>
+              <h4>The iOS hiring context makes this actionable</h4>
+              <p>The CRM context already points to native iOS demand around scheduling. This concept gives that hiring need a clear product outcome.</p>
+              <ul>
+                <li>Concrete mobile scope</li>
+                <li>Healthcare-safe workflow</li>
+                <li>Easy entry point for Elinext</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="cta-shell fade-up">
+          <h2>Prototype angle: one iPhone flow that makes MedFlow's mobile promise feel real</h2>
+          <p>
+            The highest-leverage improvement is not a full rewrite. It is a better mobile moment for the people resolving schedule changes under pressure:
+            faster detection, clearer approvals, multilingual alerts, and cleaner patient-impact handling from the same action stream.
+          </p>
+          <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+          <div class="footer-note">Built as an evidence-based concept for MedFlow AG by Elinext Mobile Lab.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
