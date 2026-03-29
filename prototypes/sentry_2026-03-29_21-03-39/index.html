@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sentry Mobile — AI Teardown</title>
+    <meta
+      name="description"
+      content="What if Sentry had a first-party AI mobile incident cockpit that compressed noisy issue streams into one action-ready decision feed for on-call teams?"
+    />
+    <link
+      rel="canonical"
+      href="https://elinext-lab.github.io/prototypes/sentry_2026-03-29_21-03-39/"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://elinext-lab.github.io/prototypes/sentry_2026-03-29_21-03-39/"
+    />
+    <meta
+      property="og:image"
+      content="https://elinext-lab.github.io/prototypes/sentry_2026-03-29_21-03-39/og-image.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:title" content="Sentry Mobile — AI Teardown" />
+    <meta
+      property="og:description"
+      content="What if Sentry turned noisy issue streams into a first-party mobile AI command feed with actionability, release health, and one-tap incident decisions?"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image"
+      content="https://elinext-lab.github.io/prototypes/sentry_2026-03-29_21-03-39/og-image.jpg"
+    />
+    <meta name="author" content="Yauheni Shauchenka, Elinext" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-ZR415HX0B2");
+    </script>
+    <!-- Ratings as of 2026-03-29: iOS unavailable (no official first-party App Store listing identified via iTunes Search API US), Android unavailable (no official first-party Google Play listing identified via google-play-scraper search) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #09101e;
+        --bg-soft: rgba(17, 27, 49, 0.84);
+        --panel: rgba(15, 22, 41, 0.9);
+        --panel-solid: #0f1629;
+        --line: rgba(132, 163, 212, 0.2);
+        --text: #eff4ff;
+        --muted: #99a9cb;
+        --accent: #ff8f64;
+        --accent-2: #7ed3ff;
+        --accent-3: #9f8cff;
+        --good: #6ce0a2;
+        --bad: #ff6f91;
+        --shadow: 0 28px 80px rgba(0, 0, 0, 0.35);
+        --radius-xl: 34px;
+        --radius-lg: 24px;
+        --radius-md: 18px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        font-family: "IBM Plex Sans", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 15% 15%, rgba(126, 211, 255, 0.18), transparent 30%),
+          radial-gradient(circle at 85% 20%, rgba(255, 143, 100, 0.2), transparent 28%),
+          radial-gradient(circle at 50% 80%, rgba(159, 140, 255, 0.16), transparent 26%),
+          linear-gradient(180deg, #07101c 0%, #09111d 34%, #0b1222 100%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .orb {
+        position: absolute;
+        border-radius: 999px;
+        filter: blur(14px);
+        opacity: 0.5;
+        z-index: 0;
+      }
+
+      .orb-a {
+        width: 340px;
+        height: 340px;
+        top: 50px;
+        left: -80px;
+        background: rgba(126, 211, 255, 0.2);
+      }
+
+      .orb-b {
+        width: 420px;
+        height: 420px;
+        top: 280px;
+        right: -140px;
+        background: rgba(255, 143, 100, 0.16);
+      }
+
+      .orb-c {
+        width: 300px;
+        height: 300px;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(159, 140, 255, 0.14);
+      }
+
+      .container {
+        position: relative;
+        z-index: 2;
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        padding: 22px 0 8px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 16px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(9, 16, 30, 0.72);
+        backdrop-filter: blur(16px);
+      }
+
+      .brand img {
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        display: block;
+      }
+
+      .brand-copy {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .brand-title {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .top-link {
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .hero {
+        display: grid;
+        gap: 28px;
+        padding: 44px 0 24px;
+      }
+
+      .hero-copy {
+        text-align: center;
+        max-width: 920px;
+        margin: 0 auto;
+      }
+
+      .eyebrow,
+      .section-kicker {
+        display: inline-block;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 9px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(15, 22, 41, 0.7);
+        color: #d7e6ff;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Space Grotesk", sans-serif;
+        margin: 0;
+      }
+
+      h1 {
+        margin-top: 18px;
+        font-size: clamp(2.8rem, 5vw, 5.4rem);
+        line-height: 0.96;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-copy p {
+        max-width: 780px;
+        margin: 18px auto 0;
+        font-size: clamp(1rem, 1.8vw, 1.22rem);
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .hero-actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 28px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 52px;
+        padding: 0 22px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-weight: 600;
+        transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-primary {
+        color: #10111b;
+        background: linear-gradient(135deg, #ffd0a0 0%, var(--accent) 55%, #ff7a5b 100%);
+        box-shadow: 0 18px 32px rgba(255, 143, 100, 0.28);
+      }
+
+      .btn-secondary {
+        color: var(--text);
+        background: rgba(10, 18, 34, 0.46);
+        border-color: rgba(151, 184, 236, 0.22);
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 10px;
+      }
+
+      .panel,
+      .stat,
+      .evidence-card,
+      .detail-card,
+      .mini-card {
+        position: relative;
+        z-index: 2;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: var(--panel);
+        backdrop-filter: blur(20px);
+        box-shadow: var(--shadow);
+      }
+
+      .stat {
+        padding: 18px 18px 16px;
+        overflow: hidden;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 1.7rem;
+        font-family: "Space Grotesk", sans-serif;
+        margin-bottom: 7px;
+      }
+
+      .stat span {
+        display: block;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+
+      .showcase,
+      .detail-section,
+      .delivery,
+      .cta {
+        margin-top: 28px;
+      }
+
+      .panel {
+        padding: 30px;
+        overflow: hidden;
+      }
+
+      .section-head {
+        text-align: center;
+        max-width: 760px;
+        margin: 0 auto 28px;
+      }
+
+      .section-head h2 {
+        margin-top: 16px;
+        font-size: clamp(2rem, 4vw, 3.4rem);
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      .section-head p {
+        margin: 14px auto 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .phone-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        align-items: start;
+      }
+
+      .phone-wrap {
+        text-align: center;
+      }
+
+      .phone-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .phone {
+        position: relative;
+        width: 280px;
+        height: 580px;
+        margin: 0 auto;
+        padding: 10px;
+        border-radius: 38px;
+        background:
+          linear-gradient(180deg, #25304b 0%, #070a12 18%, #0a0d15 100%);
+        box-shadow:
+          0 24px 70px rgba(0, 0, 0, 0.45),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+
+      .phone::before {
+        content: "";
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 112px;
+        height: 22px;
+        border-radius: 0 0 18px 18px;
+        background: #05070d;
+        z-index: 4;
+      }
+
+      .screen {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        border-radius: 30px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at top, rgba(126, 211, 255, 0.12), transparent 30%),
+          linear-gradient(180deg, #10192d 0%, #111626 100%);
+      }
+
+      .phone-scroll {
+        height: 100%;
+        overflow-y: auto;
+        padding: 36px 14px 14px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.24) transparent;
+      }
+
+      .phone-scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .phone-scroll::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.24);
+        border-radius: 999px;
+      }
+
+      .status-row,
+      .screen-title,
+      .phone-chip,
+      .phone-card,
+      .issue-card,
+      .signal-list,
+      .action-row {
+        display: block;
+      }
+
+      .status-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #dce8ff;
+        margin-bottom: 12px;
+      }
+
+      .screen-title strong {
+        display: block;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.28rem;
+        letter-spacing: -0.04em;
+      }
+
+      .screen-title span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      .phone-chip {
+        margin-top: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .phone-card {
+        margin-top: 14px;
+        padding: 14px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .phone-card h3 {
+        font-size: 1rem;
+        line-height: 1.05;
+      }
+
+      .phone-card p {
+        margin: 8px 0 0;
+        color: #bdd0f2;
+        font-size: 0.82rem;
+        line-height: 1.55;
+      }
+
+      .metric-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .metric {
+        padding: 10px;
+        border-radius: 16px;
+        background: rgba(7, 12, 24, 0.54);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .metric span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .metric strong {
+        display: block;
+        margin-top: 6px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1rem;
+      }
+
+      .issue-card {
+        margin-top: 12px;
+        padding: 12px;
+        border-radius: 18px;
+        background: rgba(10, 15, 28, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+      }
+
+      .issue-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: start;
+      }
+
+      .issue-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        line-height: 1.35;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 42px;
+        padding: 5px 8px;
+        border-radius: 999px;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .pill-warn {
+        background: rgba(255, 111, 145, 0.18);
+        color: #ffbdd1;
+      }
+
+      .pill-good {
+        background: rgba(108, 224, 162, 0.16);
+        color: #b6f5cf;
+      }
+
+      .pill-note {
+        background: rgba(126, 211, 255, 0.16);
+        color: #d6f0ff;
+      }
+
+      .issue-card small,
+      .signal-list small {
+        display: block;
+        margin-top: 7px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .signal-list {
+        margin-top: 12px;
+        padding: 0;
+      }
+
+      .signal-list li {
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 0.82rem;
+      }
+
+      .signal-list li:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .action-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .action {
+        padding: 12px 10px;
+        border-radius: 16px;
+        text-align: center;
+        font-size: 0.78rem;
+        font-weight: 600;
+        background: linear-gradient(180deg, rgba(255, 143, 100, 0.22), rgba(255, 143, 100, 0.1));
+        border: 1px solid rgba(255, 143, 100, 0.18);
+      }
+
+      .action.alt {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.08);
+      }
+
+      .evidence-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 28px;
+      }
+
+      .evidence-card {
+        padding: 22px;
+        background: rgba(11, 18, 34, 0.94);
+      }
+
+      .evidence-card span {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #d7e6ff;
+      }
+
+      .evidence-card h3 {
+        margin-top: 14px;
+        font-size: 1.2rem;
+      }
+
+      .evidence-card p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        line-height: 1.7;
+        font-size: 0.95rem;
+      }
+
+      .detail-layout {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .detail-card {
+        padding: 24px;
+      }
+
+      .detail-card h2 {
+        font-size: clamp(1.9rem, 3vw, 2.6rem);
+        line-height: 1.02;
+      }
+
+      .detail-card p {
+        margin: 14px 0 0;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .mini-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .mini-card {
+        padding: 18px;
+        background: rgba(11, 18, 34, 0.96);
+      }
+
+      .mini-card strong {
+        display: block;
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #d7e6ff;
+      }
+
+      .mini-card p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .delivery-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 18px;
+      }
+
+      .delivery-step {
+        padding: 20px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .delivery-step strong {
+        display: block;
+        font-size: 0.88rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #d5e6ff;
+      }
+
+      .delivery-step h3 {
+        margin-top: 10px;
+        font-size: 1.16rem;
+      }
+
+      .delivery-step p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .cta {
+        text-align: center;
+        padding-bottom: 70px;
+      }
+
+      .cta .panel {
+        padding: 34px 24px;
+        background:
+          linear-gradient(135deg, rgba(255, 143, 100, 0.16), rgba(126, 211, 255, 0.12)),
+          rgba(15, 22, 41, 0.96);
+      }
+
+      .cta h2 {
+        font-size: clamp(2rem, 3.5vw, 3rem);
+      }
+
+      .cta p {
+        max-width: 760px;
+        margin: 14px auto 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .footer-note {
+        margin-top: 20px;
+        font-size: 0.88rem;
+        color: #b6c6e4;
+      }
+
+      .fade-up {
+        animation: fadeUp 650ms ease both;
+      }
+
+      .delay-a {
+        animation-delay: 90ms;
+      }
+
+      .delay-b {
+        animation-delay: 180ms;
+      }
+
+      .delay-c {
+        animation-delay: 260ms;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 980px) {
+        .stats,
+        .evidence-grid,
+        .delivery-grid,
+        .detail-layout,
+        .phone-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .phone-grid {
+          justify-items: center;
+        }
+
+        .topbar {
+          flex-direction: column;
+        }
+
+        .top-link {
+          display: none;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          width: min(100% - 24px, 1180px);
+        }
+
+        .panel {
+          padding: 22px 16px;
+        }
+
+        .hero {
+          padding-top: 26px;
+        }
+
+        .hero-copy p {
+          font-size: 0.98rem;
+        }
+
+        .btn {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .phone {
+          width: 300px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="orb orb-a"></div>
+      <div class="orb orb-b"></div>
+      <div class="orb orb-c"></div>
+
+      <div class="container">
+        <header class="topbar fade-up">
+          <div class="brand">
+            <img src="assets/sentry-avatar.png" alt="Sentry logo" />
+            <div>
+              <span class="brand-copy">Elinext Lab</span>
+              <span class="brand-title">Sentry Pulse Concept</span>
+            </div>
+          </div>
+          <a class="top-link" href="#sources">Public-signal teardown for Indragie Karunaratne</a>
+        </header>
+
+        <main>
+          <section class="hero">
+            <div class="hero-copy fade-up delay-a">
+              <span class="eyebrow">AI Mobile Incident Cockpit</span>
+              <h1>What if Sentry had an on-call command center in your pocket?</h1>
+              <p>
+                Public signals say Sentry is deep, powerful, and increasingly AI-driven, but also noisy for some teams.
+                We could not find a clear first-party mobile companion app, so this concept focuses on the missing layer:
+                a mobile surface that compresses issue volume into one ranked, action-ready feed.
+              </p>
+              <div class="hero-actions">
+                <a class="btn btn-primary" href="#concept">See The Concept</a>
+                <a class="btn btn-secondary" href="https://www.elinext.com/contacts/">Get in Touch</a>
+              </div>
+            </div>
+
+            <div class="stats fade-up delay-b">
+              <div class="stat">
+                <strong>No app found</strong>
+                <span>No clear first-party Sentry iOS or Android companion listing surfaced in store search on 2026-03-29.</span>
+              </div>
+              <div class="stat">
+                <strong>38k+ issues</strong>
+                <span>Seer’s GA changelog says it helped fix 38,000+ issues with 94.5% root-cause accuracy.</span>
+              </div>
+              <div class="stat">
+                <strong>TPM buildout</strong>
+                <span>Sentry is hiring a Head of Technical Program Management to make delivery health and execution more predictable.</span>
+              </div>
+            </div>
+          </section>
+
+          <section id="concept" class="showcase panel fade-up delay-c">
+            <div class="section-head">
+              <span class="section-kicker">Before / After</span>
+              <h2>From noisy issue stream to mobile-ready action</h2>
+              <p>
+                The left screen shows the current problem shape: too much context, not enough decision support.
+                The right screen shows the concept: Sentry Pulse, a first-party mobile control surface powered by Seer-style actionability.
+              </p>
+            </div>
+
+            <div class="phone-grid">
+              <article class="phone-wrap">
+                <span class="phone-label">Today: web-first triage</span>
+                <div class="phone">
+                  <div class="screen">
+                    <div class="phone-scroll">
+                      <div class="status-row">
+                        <span>9:41</span>
+                        <span>5G 100%</span>
+                      </div>
+
+                      <div class="screen-title">
+                        <strong>Issue Inbox</strong>
+                        <span>48 unresolved spikes across mobile, backend, and replay.</span>
+                      </div>
+
+                      <div class="phone-chip">Signal overload</div>
+
+                      <div class="phone-card">
+                        <h3>Too many context switches</h3>
+                        <p>Releases, owners, stack traces, slow frames, and replay are split across multiple views.</p>
+                      </div>
+
+                      <div class="issue-card">
+                        <div class="issue-top">
+                          <div class="issue-title">Android slow frames jump after 6.12.0 release</div>
+                          <span class="pill pill-warn">p1</span>
+                        </div>
+                        <small>Needs trace, release diff, owner, and root-cause lookup before a human can decide.</small>
+                      </div>
+
+                      <div class="issue-card">
+                        <div class="issue-top">
+                          <div class="issue-title">Replay upload failures and missing breadcrumbs</div>
+                          <span class="pill pill-note">p2</span>
+                        </div>
+                        <small>Likely tied to a broken artifact upload, but confidence is low on mobile.</small>
+                      </div>
+
+                      <div class="issue-card">
+                        <div class="issue-top">
+                          <div class="issue-title">Source maps uploaded, stack traces still unreadable</div>
+                          <span class="pill pill-note">p2</span>
+                        </div>
+                        <small>Forum-level pain recreated: setup looks right, outcome still feels brittle.</small>
+                      </div>
+
+                      <div class="issue-card">
+                        <div class="issue-top">
+                          <div class="issue-title">Session replay usage spikes cost forecast</div>
+                          <span class="pill pill-note">cost</span>
+                        </div>
+                        <small>Team needs guidance on what to keep, trim, or gate before noise becomes expense.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="phone-wrap">
+                <span class="phone-label">Concept: Sentry Pulse</span>
+                <div class="phone">
+                  <div class="screen">
+                    <div class="phone-scroll">
+                      <div class="status-row">
+                        <span>9:41</span>
+                        <span>AI active</span>
+                      </div>
+
+                      <div class="screen-title">
+                        <strong>Incident Brief</strong>
+                        <span>One ranked queue. One recommended action. One confident owner.</span>
+                      </div>
+
+                      <div class="phone-chip">Actionability 92</div>
+
+                      <div class="phone-card">
+                        <h3>Likely root cause: navigation tracing regression in 6.12.0</h3>
+                        <p>
+                          Seer-level summary says Android slow frames are isolated to one release, one integration path,
+                          and one squad. Blast radius is high enough to act now.
+                        </p>
+                        <div class="metric-row">
+                          <div class="metric">
+                            <span>Users hit</span>
+                            <strong>18.2%</strong>
+                          </div>
+                          <div class="metric">
+                            <span>Confidence</span>
+                            <strong>94%</strong>
+                          </div>
+                          <div class="metric">
+                            <span>ETA save</span>
+                            <strong>41 min</strong>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="issue-card">
+                        <div class="issue-top">
+                          <div class="issue-title">What changed</div>
+                          <span class="pill pill-good">diff</span>
+                        </div>
+                        <small>Navigation integration enabled on Android, replay sample rate raised, one missing debug artifact in release build.</small>
+                      </div>
+
+                      <div class="phone-card">
+                        <h3>Recommended next step</h3>
+                        <p>Throttle replay on the affected release, disable the risky integration flag, and hand Seer a PR task for the squad owner.</p>
+                        <div class="action-row">
+                          <div class="action">Open PR With Seer</div>
+                          <div class="action alt">Rollback Flag</div>
+                          <div class="action alt">Assign Owner</div>
+                          <div class="action alt">Notify TPM</div>
+                        </div>
+                      </div>
+
+                      <div class="issue-card">
+                        <div class="issue-top">
+                          <div class="issue-title">Release health guardrails</div>
+                          <span class="pill pill-good">ready</span>
+                        </div>
+                        <ul class="signal-list">
+                          <li><span>Source maps</span><strong>97% coverage</strong></li>
+                          <li><span>App size delta</span><strong>+0.8 MB</strong></li>
+                          <li><span>Replay spend risk</span><strong>Moderate</strong></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="evidence-grid fade-up">
+            <article class="evidence-card">
+              <span>Store search</span>
+              <h3>No clear first-party mobile app</h3>
+              <p>
+                App Store and Play search did not surface an official Sentry companion. That makes mobile incident response an open product wedge rather than a redesign request.
+              </p>
+            </article>
+            <article class="evidence-card">
+              <span>Public feedback</span>
+              <h3>Powerful, but noisy</h3>
+              <p>
+                Reddit discussions around Sentry alternatives call out expense and information overload. The right answer is not less capability. It is better signal compression.
+              </p>
+            </article>
+            <article class="evidence-card">
+              <span>Roadmap fit</span>
+              <h3>AI plus delivery discipline</h3>
+              <p>
+                Seer is already live, and Sentry is hiring TPM leadership to improve execution visibility. A mobile decision layer amplifies both trends without bloating the core web product.
+              </p>
+            </article>
+          </section>
+
+          <section class="detail-section fade-up">
+            <div class="detail-layout">
+              <article class="detail-card">
+                <span class="section-kicker">Why This Fits</span>
+                <h2>Indragie’s public profile makes this feel unusually well matched.</h2>
+                <p>
+                  The CRM record makes AI the main current lane. Publicly, Indragie also frames his background around iOS, mobile infrastructure, observability, and a mobile APM company that Sentry acquired. That is exactly the mix needed for a mobile AI workflow that feels product-native rather than bolted on.
+                </p>
+                <p>
+                  The concept does not try to shrink the whole Sentry UI onto a phone. It turns Seer into a decision surface: compress, rank, explain, act, and move.
+                </p>
+              </article>
+
+              <div class="mini-grid">
+                <article class="mini-card">
+                  <strong>Signal 01</strong>
+                  <p>Seer’s public GA metrics prove Sentry already believes AI should reduce debugging effort, not just generate text.</p>
+                </article>
+                <article class="mini-card">
+                  <strong>Signal 02</strong>
+                  <p>The careers page says Sentry wants high-signal delivery visibility and fewer surprises across EPD. A mobile approval lane supports that operating model.</p>
+                </article>
+                <article class="mini-card">
+                  <strong>Signal 03</strong>
+                  <p>Mobile workflows are strategic, from crash reporting to app-size intelligence, but the public interaction surface still looks desktop-first.</p>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section class="delivery panel fade-up">
+            <div class="section-head">
+              <span class="section-kicker">How Elinext Helps</span>
+              <h2>Ship the mobile layer without distracting the core platform team</h2>
+              <p>
+                Elinext can build the production-grade mobile companion, the release-health workflows, and the AI-facing orchestration layer around Sentry’s existing APIs and internal services.
+              </p>
+            </div>
+
+            <div class="delivery-grid">
+              <article class="delivery-step">
+                <strong>Phase 1</strong>
+                <h3>Mobile incident cockpit</h3>
+                <p>Native or cross-platform app for on-call briefing, owner routing, and push-prioritized issue digests.</p>
+              </article>
+              <article class="delivery-step">
+                <strong>Phase 2</strong>
+                <h3>AI action layer</h3>
+                <p>Actionability scoring, root-cause brief generation, and one-tap handoff into Seer, rollout flags, or PR workflows.</p>
+              </article>
+              <article class="delivery-step">
+                <strong>Phase 3</strong>
+                <h3>Release guardrails</h3>
+                <p>Size analysis, source-map confidence, replay spend, and mobile rollout health in one approval-oriented surface.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="cta fade-up">
+            <div class="panel">
+              <span class="section-kicker" id="sources">Prototype Thesis</span>
+              <h2>Sentry already has the data. The next win is a mobile AI decision surface.</h2>
+              <p>
+                If this is directionally interesting, Elinext can turn the concept into a production-ready mobile workflow for incident triage, release gating, and AI-assisted action routing.
+              </p>
+              <div class="hero-actions">
+                <a class="btn btn-primary" href="https://www.elinext.com/contacts/">Get in Touch</a>
+              </div>
+              <div class="footer-note">
+                Public sources used: Sentry site, Sentry changelog, Business Wire, BuiltWith, Reddit, Sentry forum, and the supplied CRM context.
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
