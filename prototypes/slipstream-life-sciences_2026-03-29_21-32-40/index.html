@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slipstream Life Sciences Mobile Teardown | Elinext</title>
+  <meta name="description" content="What if DATAstream turned fragmented clinical feeds, QA exceptions, and stale dashboards into a mobile action queue Joe Shramek's operations team could clear before visibility and compliance slipped?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/slipstream-life-sciences_2026-03-29_21-32-40/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/slipstream-life-sciences_2026-03-29_21-32-40/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/slipstream-life-sciences_2026-03-29_21-32-40/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Slipstream Life Sciences Mobile — AI Teardown">
+  <meta property="og:description" content="What if DATAstream turned fragmented clinical feeds, QA exceptions, and stale dashboards into a mobile action queue Joe Shramek's operations team could clear before visibility and compliance slipped?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Slipstream Life Sciences Mobile — AI Teardown">
+  <meta name="twitter:description" content="What if DATAstream turned fragmented clinical feeds, QA exceptions, and stale dashboards into a mobile action queue Joe Shramek's operations team could clear before visibility and compliance slipped?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/slipstream-life-sciences_2026-03-29_21-32-40/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-29: iOS N/A (no relevant public US listing, source: iTunes Search API), Android N/A (no relevant public listing, source: google-play-scraper term search for Slipstream Life Sciences / DATAstream) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f3f6fb;
+      --paper: rgba(255, 255, 255, 0.88);
+      --paper-strong: #ffffff;
+      --ink: #0f1d3c;
+      --ink-soft: #57668e;
+      --line: rgba(15, 32, 96, 0.12);
+      --navy: #0f2060;
+      --navy-deep: #09143d;
+      --cobalt: #4357a4;
+      --violet: #c337f2;
+      --sky: #82c8ff;
+      --mint: #96f0c8;
+      --amber: #ffb85c;
+      --red: #ff6f7d;
+      --shadow: 0 24px 70px rgba(18, 37, 77, 0.12);
+      --radius-xl: 36px;
+      --radius-lg: 28px;
+      --radius-md: 22px;
+      --radius-sm: 16px;
+      --shell: min(1160px, calc(100% - 28px));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(130, 200, 255, 0.3), transparent 28%),
+        radial-gradient(circle at top right, rgba(195, 55, 242, 0.12), transparent 22%),
+        linear-gradient(180deg, #eef3fb 0%, #f7f9fd 38%, #f3f6fb 100%);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(67, 87, 164, 0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(67, 87, 164, 0.055) 1px, transparent 1px);
+      background-size: 52px 52px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .shell {
+      width: var(--shell);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding-top: 22px;
+    }
+
+    .topbar-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(67, 87, 164, 0.14);
+      box-shadow: 0 16px 38px rgba(15, 32, 96, 0.08);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      box-shadow: 0 12px 24px rgba(15, 32, 96, 0.16);
+      flex: 0 0 auto;
+    }
+
+    .brand strong,
+    .brand span {
+      display: block;
+    }
+
+    .brand strong {
+      font-size: 0.96rem;
+      letter-spacing: 0.01em;
+    }
+
+    .brand span {
+      color: var(--ink-soft);
+      font-size: 0.8rem;
+    }
+
+    .top-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(130, 200, 255, 0.18), rgba(150, 240, 200, 0.22));
+      border: 1px solid rgba(67, 87, 164, 0.14);
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+
+    .hero {
+      padding: 30px 0 64px;
+    }
+
+    .hero-card,
+    .section-card,
+    .cta-card {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      border: 1px solid rgba(67, 87, 164, 0.12);
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      border-radius: 42px;
+      padding: 42px 34px 36px;
+    }
+
+    .hero-card::before,
+    .section-card::before,
+    .cta-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(130, 200, 255, 0.22), transparent 26%),
+        radial-gradient(circle at 92% 6%, rgba(195, 55, 242, 0.1), transparent 20%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .eyebrow,
+    .hero-copy,
+    .hero-copy h1,
+    .hero-copy p,
+    .chip-row {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(15, 32, 96, 0.06);
+      border: 1px solid rgba(67, 87, 164, 0.12);
+      color: var(--navy);
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero-copy {
+      max-width: 840px;
+    }
+
+    .hero-copy h1 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2.7rem, 6vw, 5.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      max-width: 900px;
+    }
+
+    .hero-copy p {
+      margin-top: 18px;
+      margin-bottom: 0;
+      max-width: 720px;
+      color: var(--ink-soft);
+      font-size: clamp(1rem, 2.2vw, 1.22rem);
+      line-height: 1.7;
+    }
+
+    .chip-row {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      max-width: 760px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(67, 87, 164, 0.12);
+      color: var(--navy);
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 12px 24px rgba(15, 32, 96, 0.06);
+    }
+
+    .chip::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--sky), var(--violet));
+      flex: 0 0 auto;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 22px;
+      margin-top: 34px;
+      align-items: stretch;
+    }
+
+    .hero-panel,
+    .hero-note {
+      border-radius: 30px;
+      overflow: hidden;
+      border: 1px solid rgba(67, 87, 164, 0.12);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 20px 50px rgba(15, 32, 96, 0.1);
+    }
+
+    .hero-panel {
+      padding: 20px;
+    }
+
+    .hero-panel img {
+      border-radius: 22px;
+      width: 100%;
+      height: auto;
+      border: 1px solid rgba(67, 87, 164, 0.1);
+    }
+
+    .hero-panel-copy {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .hero-panel-copy strong,
+    .hero-panel-copy span {
+      display: block;
+    }
+
+    .hero-panel-copy strong {
+      font-size: 0.96rem;
+    }
+
+    .hero-panel-copy span {
+      margin-top: 4px;
+      font-size: 0.84rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(15, 32, 96, 0.07);
+      color: var(--navy);
+      font-size: 0.78rem;
+      font-weight: 800;
+      white-space: nowrap;
+      height: fit-content;
+    }
+
+    .hero-note {
+      display: grid;
+      gap: 14px;
+      padding: 22px;
+    }
+
+    .hero-note-card {
+      padding: 18px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(15, 32, 96, 0.98), rgba(9, 20, 61, 0.98));
+      color: #eef3ff;
+      min-height: 0;
+    }
+
+    .hero-note-card h2,
+    .hero-note-card p {
+      margin: 0;
+    }
+
+    .hero-note-card h2 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.26rem;
+      line-height: 1.2;
+    }
+
+    .hero-note-card p {
+      margin-top: 12px;
+      color: rgba(238, 243, 255, 0.76);
+      font-size: 0.94rem;
+      line-height: 1.65;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric-tile {
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(15, 32, 96, 0.05);
+      border: 1px solid rgba(67, 87, 164, 0.1);
+    }
+
+    .metric-tile strong,
+    .metric-tile span {
+      display: block;
+    }
+
+    .metric-tile strong {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.4rem;
+      line-height: 1;
+      color: var(--navy);
+    }
+
+    .metric-tile span {
+      margin-top: 8px;
+      font-size: 0.84rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
+    }
+
+    .section {
+      padding-bottom: 24px;
+    }
+
+    .section-card {
+      border-radius: 34px;
+      padding: 32px;
+      background: rgba(255, 255, 255, 0.92);
+    }
+
+    .section-head {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .section-head h2,
+    .section-head p {
+      margin: 0;
+    }
+
+    .section-head h2 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      max-width: 540px;
+      color: var(--ink-soft);
+      line-height: 1.7;
+    }
+
+    .evidence-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .evidence-card {
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(243, 246, 251, 0.95);
+      border: 1px solid rgba(67, 87, 164, 0.1);
+      min-height: 170px;
+    }
+
+    .evidence-card strong,
+    .evidence-card span,
+    .evidence-card p {
+      display: block;
+      margin: 0;
+    }
+
+    .evidence-card strong {
+      font-size: 0.84rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--cobalt);
+    }
+
+    .evidence-card span {
+      margin-top: 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.6rem;
+      line-height: 1;
+      color: var(--navy);
+    }
+
+    .evidence-card p {
+      margin-top: 12px;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .compare-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .compare-card {
+      padding: 22px;
+      border-radius: 30px;
+      border: 1px solid rgba(67, 87, 164, 0.12);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 248, 253, 0.98));
+      min-height: 0;
+    }
+
+    .compare-card h3,
+    .compare-card p {
+      margin: 0;
+      text-align: center;
+    }
+
+    .compare-card h3 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.4rem;
+      line-height: 1.1;
+    }
+
+    .compare-card p {
+      margin-top: 8px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: 18px;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      border-radius: 40px;
+      padding: 12px;
+      background: linear-gradient(180deg, #16214c, #0a1234);
+      box-shadow: 0 26px 56px rgba(10, 18, 52, 0.28);
+      position: relative;
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 124px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(5, 9, 24, 0.95);
+      z-index: 2;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 30px;
+      overflow: auto;
+      padding: 36px 14px 14px;
+      background:
+        radial-gradient(circle at top left, rgba(130, 200, 255, 0.18), transparent 24%),
+        linear-gradient(180deg, #f6f9fe 0%, #edf2fb 100%);
+      position: relative;
+    }
+
+    .screen-block,
+    .screen-chip,
+    .screen-label,
+    .screen-title,
+    .screen-copy {
+      display: block;
+    }
+
+    .screen-head {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .screen-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(15, 32, 96, 0.08);
+      color: var(--navy);
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .screen-title {
+      margin-top: 12px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.35rem;
+      line-height: 1.08;
+      color: var(--navy);
+    }
+
+    .screen-copy {
+      margin-top: 8px;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: var(--ink-soft);
+    }
+
+    .screen-stack {
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .screen-block {
+      padding: 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid rgba(67, 87, 164, 0.1);
+      box-shadow: 0 12px 24px rgba(15, 32, 96, 0.06);
+    }
+
+    .screen-block.dark {
+      background: linear-gradient(180deg, rgba(15, 32, 96, 0.98), rgba(9, 20, 61, 0.98));
+      color: #eff3ff;
+      border-color: rgba(67, 87, 164, 0.16);
+    }
+
+    .screen-block.dark p,
+    .screen-block.dark .mini-note,
+    .screen-block.dark .mini-meta {
+      color: rgba(239, 243, 255, 0.76);
+    }
+
+    .mini-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .mini-head strong,
+    .mini-note,
+    .mini-meta,
+    .mini-stat span,
+    .mini-stat strong,
+    .issue-row strong,
+    .issue-row span,
+    .timeline-item strong,
+    .timeline-item span {
+      display: block;
+    }
+
+    .mini-head strong {
+      font-size: 0.88rem;
+      line-height: 1.35;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .badge.red {
+      background: rgba(255, 111, 125, 0.14);
+      color: #a9293d;
+    }
+
+    .badge.amber {
+      background: rgba(255, 184, 92, 0.18);
+      color: #8a5500;
+    }
+
+    .badge.green {
+      background: rgba(150, 240, 200, 0.25);
+      color: #0b6a47;
+    }
+
+    .mini-note {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: var(--ink-soft);
+    }
+
+    .mini-meta {
+      margin-top: 10px;
+      font-size: 0.72rem;
+      color: rgba(15, 29, 60, 0.55);
+    }
+
+    .mini-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .mini-stat {
+      padding: 10px 11px;
+      border-radius: 16px;
+      background: rgba(15, 32, 96, 0.05);
+    }
+
+    .mini-stat strong {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1rem;
+      line-height: 1;
+      color: var(--navy);
+    }
+
+    .mini-stat span {
+      margin-top: 6px;
+      font-size: 0.7rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
+    }
+
+    .timeline {
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 16px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--sky), var(--violet));
+    }
+
+    .timeline-item strong {
+      font-size: 0.75rem;
+      color: var(--navy);
+    }
+
+    .timeline-item span {
+      margin-top: 3px;
+      font-size: 0.7rem;
+      line-height: 1.45;
+      color: var(--ink-soft);
+    }
+
+    .action-bar {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .action {
+      text-align: center;
+      padding: 11px 10px;
+      border-radius: 16px;
+      background: rgba(15, 32, 96, 0.06);
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .action.primary {
+      background: linear-gradient(135deg, var(--navy), var(--cobalt));
+      color: white;
+    }
+
+    .issue-list {
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .issue-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(67, 87, 164, 0.1);
+    }
+
+    .issue-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      background: var(--red);
+      box-shadow: 0 0 0 5px rgba(255, 111, 125, 0.12);
+    }
+
+    .issue-dot.amber {
+      background: var(--amber);
+      box-shadow: 0 0 0 5px rgba(255, 184, 92, 0.14);
+    }
+
+    .issue-dot.green {
+      background: #35c58d;
+      box-shadow: 0 0 0 5px rgba(53, 197, 141, 0.14);
+    }
+
+    .issue-row strong {
+      font-size: 0.76rem;
+      color: var(--navy);
+    }
+
+    .issue-row span {
+      margin-top: 3px;
+      font-size: 0.68rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
+    }
+
+    .issue-time {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: rgba(15, 29, 60, 0.52);
+      white-space: nowrap;
+    }
+
+    .feature-grid,
+    .signal-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card,
+    .signal-card {
+      padding: 22px;
+      border-radius: 24px;
+      background: rgba(243, 246, 251, 0.95);
+      border: 1px solid rgba(67, 87, 164, 0.1);
+    }
+
+    .feature-card strong,
+    .feature-card p,
+    .signal-card strong,
+    .signal-card p {
+      margin: 0;
+      display: block;
+    }
+
+    .feature-card strong,
+    .signal-card strong {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.14rem;
+      line-height: 1.2;
+      color: var(--navy);
+    }
+
+    .feature-card p,
+    .signal-card p {
+      margin-top: 10px;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      font-size: 0.94rem;
+    }
+
+    .cta {
+      padding: 8px 0 68px;
+    }
+
+    .cta-card {
+      border-radius: 34px;
+      padding: 34px;
+      background: linear-gradient(135deg, rgba(15, 32, 96, 0.98), rgba(8, 22, 68, 0.98));
+      color: white;
+    }
+
+    .cta-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-card h2,
+    .cta-card p {
+      margin: 0;
+      text-align: center;
+    }
+
+    .cta-card h2 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .cta-card p {
+      margin: 14px auto 0;
+      max-width: 720px;
+      color: rgba(238, 243, 255, 0.78);
+      line-height: 1.8;
+    }
+
+    .cta-actions {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-width: 186px;
+      padding: 15px 22px;
+      border-radius: 999px;
+      font-size: 0.96rem;
+      font-weight: 800;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 28px rgba(0, 0, 0, 0.16);
+    }
+
+    .btn.primary {
+      color: white;
+      background: linear-gradient(135deg, var(--violet), #7a5cff);
+    }
+
+    .btn.secondary {
+      color: white;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .footnote {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: rgba(238, 243, 255, 0.6);
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .evidence-grid,
+      .feature-grid,
+      .signal-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar-card,
+      .section-head {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .hero-grid,
+      .evidence-grid,
+      .feature-grid,
+      .signal-grid,
+      .hero-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card,
+      .section-card,
+      .cta-card {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .hero-panel-copy {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .hero {
+        padding-top: 24px;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell topbar">
+      <div class="topbar-card">
+        <div class="brand">
+          <img src="assets/slipstream-mark.jpg" alt="Slipstream Life Sciences logo">
+          <div>
+            <strong>Slipstream Life Sciences</strong>
+            <span>DATAstream mobile exception concept for Joe Shramek</span>
+          </div>
+        </div>
+        <div class="top-pill">No public store app found. This concept targets the public product surface.</div>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="shell">
+        <div class="hero-card">
+          <div class="eyebrow">AI-Powered Mobile Teardown</div>
+          <div class="hero-copy">
+            <h1>What if DATAstream became the action layer, not just the dashboard layer?</h1>
+            <p>Slipstream already sells the governed data foundation. The missing leverage point is a mobile operations desk that turns lagging feeds, QA exceptions, and support risk into one ranked queue Joe's team can clear before visibility and compliance slip.</p>
+          </div>
+          <div class="chip-row">
+            <div class="chip">80% manual aggregation reduction in public case study</div>
+            <div class="chip">QA role dedicated to DATAstream dashboards and pipelines</div>
+            <div class="chip">Service desk role includes tablets and mobile devices</div>
+          </div>
+          <div class="hero-grid">
+            <div class="hero-panel">
+              <img src="assets/datastream-dashboard.jpg" alt="Public DATAstream dashboard screenshot">
+              <div class="hero-panel-copy">
+                <div>
+                  <strong>Public product signal</strong>
+                  <span>Slipstream presents DATAstream as a governed enterprise data foundation for reporting, analytics, and operational visibility across clinical, commercial, and regulated workflows.</span>
+                </div>
+                <div class="hero-tag">Public source: DATAstream page</div>
+              </div>
+            </div>
+            <div class="hero-note">
+              <div class="hero-note-card">
+                <h2>Prototype wedge: DATAstream Ops Pulse</h2>
+                <p>A mobile command surface for the few issues that matter most right now: stale dashboards, delayed study feeds, failed validation, or support escalations tied to active programs.</p>
+              </div>
+              <div class="hero-metrics">
+                <div class="metric-tile">
+                  <strong>600+</strong>
+                  <span>Global resources on the Slipstream home page.</span>
+                </div>
+                <div class="metric-tile">
+                  <strong>230+</strong>
+                  <span>Customers in life sciences on the public site.</span>
+                </div>
+                <div class="metric-tile">
+                  <strong>1st</strong>
+                  <span>Agentforce life-sciences implementation on an iPad.</span>
+                </div>
+                <div class="metric-tile">
+                  <strong>2025</strong>
+                  <span>New GreyLion and Denali investment to scale operations.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h2>Public Evidence</h2>
+            </div>
+            <p>The product page, clinical case study, hiring pages, and external discussions all point to the same gap: strong data foundations still need a faster operational surface for the moments when action cannot wait.</p>
+          </div>
+          <div class="evidence-grid">
+            <div class="evidence-card">
+              <strong>Case Study</strong>
+              <span>80%</span>
+              <p>Slipstream says DATAstream cut manual aggregation by eighty percent while improving near real-time trial visibility.</p>
+            </div>
+            <div class="evidence-card">
+              <strong>QA Hiring</strong>
+              <span>BI + Loads</span>
+              <p>The live `QA-Analyst -- DATAstream` role explicitly covers dashboard, dataset, and pipeline validation with audit requirements.</p>
+            </div>
+            <div class="evidence-card">
+              <strong>Support Hiring</strong>
+              <span>Tickets + Mobile</span>
+              <p>The live service-desk role covers ServiceNow, Freshservice, or Zendesk plus remote support for tablets and mobile devices.</p>
+            </div>
+            <div class="evidence-card">
+              <strong>Reddit Signals</strong>
+              <span>Manual drift</span>
+              <p>Clinical and analytics communities still describe fragmented systems, manual exports, and weak actionability between systems.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h2>Current vs Improved</h2>
+            </div>
+            <p>The left phone shows how the current workflow still feels: insight is available, but urgency is scattered. The right phone compresses that into one mobile queue Joe can act on immediately.</p>
+          </div>
+          <div class="compare-grid">
+            <div class="compare-card">
+              <h3>Current State</h3>
+              <p>Dashboards, QA checks, and service issues exist, but priority is hidden across tools and follow-up chains.</p>
+              <div class="phone-wrap">
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="screen-head">
+                      <span class="screen-label">Current</span>
+                      <strong class="screen-title">Desktop-first visibility</strong>
+                      <span class="screen-copy">Teams can see the data, but the next move is still scattered across dashboards, tickets, and manual follow-up.</span>
+                    </div>
+                    <div class="screen-stack">
+                      <div class="screen-block dark">
+                        <div class="mini-head">
+                          <strong>Portfolio dashboard refresh</strong>
+                          <span class="badge amber">Stale</span>
+                        </div>
+                        <p class="mini-note">Trial performance view last refreshed 7h ago. Site variance and enrollment lag are visible only after the next warehouse load finishes.</p>
+                        <span class="mini-meta">Power BI summary, manual escalation pending</span>
+                      </div>
+                      <div class="screen-block">
+                        <div class="mini-head">
+                          <strong>Validation backlog</strong>
+                          <span class="badge red">8 open</span>
+                        </div>
+                        <div class="mini-grid">
+                          <div class="mini-stat">
+                            <strong>3</strong>
+                            <span>dataset mismatches waiting on QA review</span>
+                          </div>
+                          <div class="mini-stat">
+                            <strong>2</strong>
+                            <span>release checks blocked by missing evidence</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="screen-block">
+                        <div class="mini-head">
+                          <strong>Support crossfire</strong>
+                          <span class="badge amber">Live</span>
+                        </div>
+                        <div class="timeline">
+                          <div class="timeline-item">
+                            <strong>08:10</strong>
+                            <span>Tablet access issue raised for a remote stakeholder demo.</span>
+                          </div>
+                          <div class="timeline-item">
+                            <strong>08:32</strong>
+                            <span>Freshservice ticket updated, but no link to active DATAstream release context.</span>
+                          </div>
+                          <div class="timeline-item">
+                            <strong>09:05</strong>
+                            <span>Ops lead still has to ask who owns the next action.</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="screen-block">
+                        <div class="mini-head">
+                          <strong>What slows Joe down</strong>
+                        </div>
+                        <p class="mini-note">Information exists, but urgency is buried in the gap between dashboards, QA evidence, and service-desk tooling.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="compare-card">
+              <h3>Improved State</h3>
+              <p>One mobile queue ranks the issues that threaten visibility, quality, or delivery and assigns the next action instantly.</p>
+              <div class="phone-wrap">
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="screen-head">
+                      <span class="screen-label">Improved</span>
+                      <strong class="screen-title">DATAstream Ops Pulse</strong>
+                      <span class="screen-copy">A mobile exception desk for the few events that actually deserve Joe's attention right now.</span>
+                    </div>
+                    <div class="screen-stack">
+                      <div class="screen-block dark">
+                        <div class="mini-head">
+                          <strong>Critical issue ranked #1</strong>
+                          <span class="badge red">Act now</span>
+                        </div>
+                        <p class="mini-note">Clinical ingest for Study 14A is 3.2h behind SLA. Last clean load was 05:41. Site metrics and variance reporting are now stale.</p>
+                        <div class="action-bar">
+                          <div class="action primary">Approve rerun</div>
+                          <div class="action">Escalate QA</div>
+                        </div>
+                      </div>
+                      <div class="screen-block">
+                        <div class="mini-head">
+                          <strong>Linked evidence bundle</strong>
+                          <span class="badge green">Ready</span>
+                        </div>
+                        <div class="mini-grid">
+                          <div class="mini-stat">
+                            <strong>Owner</strong>
+                            <span>Priya S. Data QA</span>
+                          </div>
+                          <div class="mini-stat">
+                            <strong>Impact</strong>
+                            <span>4 dashboards, 2 study teams</span>
+                          </div>
+                        </div>
+                        <span class="mini-meta">Lineage, failed rule, release note, and ticket context attached</span>
+                      </div>
+                      <div class="screen-block">
+                        <div class="mini-head">
+                          <strong>Priority queue</strong>
+                        </div>
+                        <div class="issue-list">
+                          <div class="issue-row">
+                            <div class="issue-dot"></div>
+                            <div>
+                              <strong>Study 14A ingest behind SLA</strong>
+                              <span>Synapse pipeline mismatch after vendor drop</span>
+                            </div>
+                            <div class="issue-time">now</div>
+                          </div>
+                          <div class="issue-row">
+                            <div class="issue-dot amber"></div>
+                            <div>
+                              <strong>Dashboard validation drift</strong>
+                              <span>2 KPIs differ from prior approved release</span>
+                            </div>
+                            <div class="issue-time">18m</div>
+                          </div>
+                          <div class="issue-row">
+                            <div class="issue-dot green"></div>
+                            <div>
+                              <strong>Tablet demo support risk</strong>
+                              <span>Service-desk issue linked to customer success owner</span>
+                            </div>
+                            <div class="issue-time">42m</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="screen-block">
+                        <div class="mini-head">
+                          <strong>Audit trail preserved</strong>
+                        </div>
+                        <p class="mini-note">Every decision records approver, timestamp, impacted datasets, evidence, and follow-up owner so mobile speed does not trade off against compliance.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h2>What Changes</h2>
+            </div>
+            <p>The prototype stays narrow on purpose. It does not replace DATAstream. It gives Joe a mobile operating surface for the few moments where delay is expensive.</p>
+          </div>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <strong>Ranked exception feed</strong>
+              <p>Instead of opening dashboards to figure out what might be wrong, Joe sees the highest-risk study load, QA failure, or support issue first with clear severity and business impact.</p>
+            </div>
+            <div class="feature-card">
+              <strong>One owner, one next move</strong>
+              <p>Each issue carries an accountable owner plus fast actions such as rerun, escalate, request validation, or notify the study team. No extra hunt across tools.</p>
+            </div>
+            <div class="feature-card">
+              <strong>Audit-ready by default</strong>
+              <p>Evidence, lineage, failed rule, release note, and approval history travel with the alert so the mobile layer speeds operations without weakening traceability.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h2>Why Now</h2>
+            </div>
+            <p>Slipstream's public signals suggest the timing is right: more investment, more platform work, more QA rigor, and more frontline support complexity. This concept makes that scale easier to operate.</p>
+          </div>
+          <div class="signal-grid">
+            <div class="signal-card">
+              <strong>Investment pressure</strong>
+              <p>Slipstream's August 5, 2025 investment announcement explicitly says the company is investing in people, systems, and processes while expanding across new and existing markets.</p>
+            </div>
+            <div class="signal-card">
+              <strong>Mobile credibility already exists</strong>
+              <p>The home page highlights a first Agentforce life-sciences implementation on an iPad. Mobile is already part of the brand story, just not yet productized for ops visibility.</p>
+            </div>
+            <div class="signal-card">
+              <strong>Operations is the wedge</strong>
+              <p>Joe's role, the DATAstream QA posting, and the service-desk posting all point to one decision maker type who would actually care about this: someone accountable for repeatable execution.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="shell">
+        <div class="cta-card">
+          <h2>Slipstream already owns the data foundation. This adds the pocket-sized command layer.</h2>
+          <p>We built this as a practical mobile wedge for Joe Shramek's operating context: high-risk data, QA, and support issues compressed into one action queue that is easier to review, escalate, and trust.</p>
+          <div class="cta-actions">
+            <a class="btn primary" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Get in Touch</a>
+            <a class="btn secondary" href="https://www.slipstreamls.com/services/datastream/" target="_blank" rel="noopener noreferrer">See DATAstream</a>
+          </div>
+          <div class="footnote">Prototype URL: https://elinext-lab.github.io/prototypes/slipstream-life-sciences_2026-03-29_21-32-40/</div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
