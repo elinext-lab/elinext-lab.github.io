@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HoneyBook Mobile Teardown | Elinext</title>
+  <meta name="description" content="What if HoneyBook turned follow-up suggestions, Gmail lead finder, and priority lists into one mobile rescue queue so independents could recover revenue before file, invoice, or reply friction kills momentum?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/honeybook_2026-03-29_20-09-20/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-29_20-09-20/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-29_20-09-20/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="HoneyBook Mobile — AI Teardown">
+  <meta property="og:description" content="What if HoneyBook merged follow-up suggestions, Gmail lead finder, and overdue client blockers into one mobile rescue queue so independents could act faster and support could absorb fewer mobile failures?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="HoneyBook Mobile — AI Teardown">
+  <meta name="twitter:description" content="What if HoneyBook merged follow-up suggestions, Gmail lead finder, and overdue client blockers into one mobile rescue queue so independents could act faster and support could absorb fewer mobile failures?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-29_20-09-20/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-29: iOS 4.77 (15672 reviews, source: iTunes API), Android 4.58 (2249 reviews, source: https://play.google.com/store/apps/details?id=com.honeybook.alfred&hl=en_US&gl=US) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #15213a;
+      --ink-deep: #0b1224;
+      --ink-soft: #233457;
+      --paper: #fff9ef;
+      --paper-soft: #fffdf8;
+      --panel: rgba(255, 252, 245, 0.96);
+      --panel-strong: #fff4dc;
+      --line: rgba(21, 33, 58, 0.12);
+      --line-strong: rgba(21, 33, 58, 0.24);
+      --muted: #66748e;
+      --gold: #f7b84f;
+      --gold-deep: #d98a14;
+      --mint: #83d7bc;
+      --sky: #88b4ff;
+      --coral: #ff8b78;
+      --shadow: 0 28px 80px rgba(17, 25, 41, 0.12);
+      --radius-xl: 36px;
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+      --shell: min(1180px, calc(100% - 28px));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(247, 184, 79, 0.42), transparent 24%),
+        radial-gradient(circle at 88% 4%, rgba(136, 180, 255, 0.26), transparent 18%),
+        linear-gradient(180deg, #fff7e8 0%, #f8f0df 28%, #f8f5ee 58%, #fffcf8 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background-image:
+        linear-gradient(rgba(21, 33, 58, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(21, 33, 58, 0.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .shell {
+      width: var(--shell);
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 28px 0 52px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+      padding: 14px 18px;
+      background: rgba(255, 252, 245, 0.86);
+      border: 1px solid rgba(21, 33, 58, 0.08);
+      border-radius: 999px;
+      box-shadow: 0 18px 40px rgba(21, 33, 58, 0.07);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      box-shadow: 0 10px 24px rgba(21, 33, 58, 0.2);
+      flex: 0 0 auto;
+    }
+
+    .brand strong,
+    .brand span {
+      display: block;
+    }
+
+    .brand strong {
+      font-size: 0.96rem;
+      letter-spacing: 0.01em;
+    }
+
+    .brand span {
+      font-size: 0.83rem;
+      color: var(--muted);
+    }
+
+    .top-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ffdd97, #f6b23e);
+      color: var(--ink-deep);
+      font-size: 0.83rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .hero-card,
+    .section-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid rgba(21, 33, 58, 0.08);
+      border-radius: 40px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 40px;
+      background:
+        radial-gradient(circle at 14% 14%, rgba(255, 214, 133, 0.45), transparent 22%),
+        radial-gradient(circle at 88% 16%, rgba(136, 180, 255, 0.22), transparent 20%),
+        linear-gradient(155deg, rgba(255, 251, 244, 0.98), rgba(255, 254, 249, 0.96));
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -120px;
+      top: 90px;
+      width: 320px;
+      height: 320px;
+      border-radius: 42%;
+      background: radial-gradient(circle, rgba(247, 184, 79, 0.17), transparent 64%);
+      z-index: 0;
+    }
+
+    .hero-center,
+    .hero-center h1,
+    .hero-center p,
+    .hero-center .eyebrow,
+    .hero-center .hero-stats {
+      display: block;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 auto 18px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 243, 216, 0.94);
+      border: 1px solid rgba(217, 138, 20, 0.22);
+      color: var(--gold-deep);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Fraunces", serif;
+      line-height: 0.96;
+      color: var(--ink-deep);
+    }
+
+    .hero-center h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 940px;
+      margin-bottom: 18px;
+      font-size: clamp(3.4rem, 8vw, 6.4rem);
+      letter-spacing: -0.045em;
+    }
+
+    .hero-center p {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin-bottom: 24px;
+      font-size: clamp(1.03rem, 1.8vw, 1.18rem);
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 34px;
+    }
+
+    .hero-stats span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 252, 246, 0.96);
+      border: 1px solid rgba(21, 33, 58, 0.1);
+      box-shadow: 0 10px 24px rgba(21, 33, 58, 0.06);
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .phone-row {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      padding: 10px;
+      border-radius: 40px;
+      background: linear-gradient(180deg, #15213a, #0d1426);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 28px 64px rgba(9, 16, 28, 0.22);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      width: 124px;
+      height: 26px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: rgba(6, 10, 19, 0.98);
+      z-index: 3;
+    }
+
+    .phone-shell {
+      position: relative;
+      height: 100%;
+      border-radius: 32px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #fffdfa, #fff6e7);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .phone-screen {
+      height: 100%;
+      overflow: auto;
+      padding: 36px 14px 14px;
+      scrollbar-width: none;
+      background:
+        radial-gradient(circle at top right, rgba(255, 211, 118, 0.28), transparent 26%),
+        linear-gradient(180deg, #fffdf8 0%, #fff7ea 100%);
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screen-card {
+      display: block;
+      margin-bottom: 10px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(21, 33, 58, 0.08);
+      box-shadow: 0 12px 28px rgba(21, 33, 58, 0.08);
+    }
+
+    .screen-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .screen-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--ink-deep);
+    }
+
+    .screen-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(247, 184, 79, 0.18);
+      color: var(--gold-deep);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .screen-meta {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .signal-list,
+    .action-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .signal-item,
+    .action-item {
+      display: block;
+      padding: 12px;
+      border-radius: 16px;
+      background: var(--paper-soft);
+      border: 1px solid rgba(21, 33, 58, 0.08);
+    }
+
+    .signal-item strong,
+    .action-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.9rem;
+    }
+
+    .signal-item p,
+    .action-item p {
+      margin: 0;
+      font-size: 0.79rem;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .signal-tags,
+    .action-tags,
+    .mini-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .signal-tags span,
+    .action-tags span,
+    .mini-stats span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: rgba(21, 33, 58, 0.06);
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--ink-soft);
+    }
+
+    .problem {
+      background: rgba(255, 139, 120, 0.12);
+      border-color: rgba(255, 139, 120, 0.24);
+    }
+
+    .success {
+      background: rgba(131, 215, 188, 0.18);
+      border-color: rgba(131, 215, 188, 0.26);
+    }
+
+    .primary-btn,
+    .ghost-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #f7b84f, #ec9830);
+      color: var(--ink-deep);
+      box-shadow: 0 16px 30px rgba(236, 152, 48, 0.26);
+    }
+
+    .ghost-btn {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(21, 33, 58, 0.1);
+      color: var(--ink);
+    }
+
+    .primary-btn:hover,
+    .ghost-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+      padding: 26px 0 52px;
+    }
+
+    .section-card {
+      padding: 30px;
+      background: rgba(255, 252, 246, 0.98);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p {
+      max-width: 560px;
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .grid-three,
+    .grid-two {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid-three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid-two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .insight,
+    .quote-card,
+    .plan-card {
+      display: block;
+      padding: 20px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid rgba(21, 33, 58, 0.08);
+      box-shadow: 0 16px 34px rgba(21, 33, 58, 0.07);
+    }
+
+    .insight strong,
+    .quote-card strong,
+    .plan-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: var(--ink-deep);
+    }
+
+    .insight p,
+    .quote-card p,
+    .plan-card p {
+      margin: 0;
+      font-size: 0.97rem;
+      line-height: 1.72;
+      color: var(--muted);
+    }
+
+    .metric {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(247, 184, 79, 0.16);
+      color: var(--gold-deep);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .cta-card {
+      text-align: center;
+      padding: 36px 26px;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(247, 184, 79, 0.26), transparent 20%),
+        radial-gradient(circle at 82% 10%, rgba(136, 180, 255, 0.18), transparent 18%),
+        linear-gradient(155deg, rgba(255, 249, 240, 0.98), rgba(255, 253, 249, 0.95));
+    }
+
+    .cta-card p {
+      max-width: 640px;
+      margin: 14px auto 22px;
+      font-size: 1rem;
+      line-height: 1.72;
+      color: var(--muted);
+    }
+
+    .cta-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footnote {
+      margin-top: 18px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .fade-up {
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .float {
+      animation: float 4.8s ease-in-out infinite;
+    }
+
+    .delay-1 { animation-delay: 0.08s; }
+    .delay-2 { animation-delay: 0.16s; }
+    .delay-3 { animation-delay: 0.24s; }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @media (max-width: 980px) {
+      .section-head {
+        display: grid;
+      }
+
+      .grid-three,
+      .grid-two {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+        border-radius: 26px;
+      }
+
+      .hero-card,
+      .section-card {
+        padding: 24px;
+        border-radius: 30px;
+      }
+
+      .hero-center h1 {
+        font-size: clamp(2.5rem, 14vw, 4rem);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .shell {
+        width: min(100% - 18px, 1180px);
+      }
+
+      .hero {
+        padding-top: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="shell">
+        <div class="topbar fade-up">
+          <div class="brand">
+            <img src="./assets/app-icon.jpg" alt="HoneyBook app icon">
+            <div>
+              <strong>HoneyBook Mobile Teardown</strong>
+              <span>Built for Inon Stelman · CTO &amp; VP Engineering</span>
+            </div>
+          </div>
+          <div class="top-pill">AI-powered mobile concept by Elinext</div>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-center">
+            <div class="eyebrow fade-up delay-1">Lead Rescue Queue</div>
+            <h1 class="fade-up delay-1">What if HoneyBook stopped hiding the next best action?</h1>
+            <p class="fade-up delay-2">HoneyBook already knows which leads are cooling off, which replies are overdue, and which invoices or files are blocking conversion. The mobile gap is that those signals live in too many places. This concept collapses them into one ranked rescue queue with one-tap actions.</p>
+            <div class="hero-stats fade-up delay-2">
+              <span>iOS 4.77 · 15,672 ratings</span>
+              <span>Android 4.58 · 2,249 ratings</span>
+              <span>Recent iOS low-star sample: 27/50</span>
+              <span>Recent Android low-star sample: 22/50</span>
+            </div>
+          </div>
+
+          <div class="phone-row">
+            <div class="phone fade-up delay-2 float">
+              <div class="phone-shell">
+                <div class="phone-screen" data-phone-screen>
+                  <div class="screen-card">
+                    <div class="screen-header">
+                      <div>
+                        <div class="screen-meta">Current mobile pattern</div>
+                        <div class="screen-title">Signals are scattered</div>
+                      </div>
+                      <div class="screen-chip">Before</div>
+                    </div>
+                    <div class="mini-stats">
+                      <span>4 menus</span>
+                      <span>3 AI surfaces</span>
+                      <span>1 missed lead</span>
+                    </div>
+                  </div>
+
+                  <div class="signal-list">
+                    <div class="signal-item">
+                      <strong>Priority list</strong>
+                      <p>Morning push says a client reply is overdue, but it opens into a generic AI thread.</p>
+                      <div class="signal-tags">
+                        <span>AI</span>
+                        <span>Notification</span>
+                      </div>
+                    </div>
+
+                    <div class="signal-item">
+                      <strong>Gmail lead finder</strong>
+                      <p>A new lead lands in Contacts, but the proposal file and next action live elsewhere.</p>
+                      <div class="signal-tags">
+                        <span>Contacts</span>
+                        <span>Imported</span>
+                      </div>
+                    </div>
+
+                    <div class="signal-item problem">
+                      <strong>Proposal or file blocker</strong>
+                      <p>Users still report mobile file editing gaps, so the rescue path stalls when an asset needs fixing.</p>
+                      <div class="signal-tags">
+                        <span>Editing issue</span>
+                        <span>Support risk</span>
+                      </div>
+                    </div>
+
+                    <div class="signal-item problem">
+                      <strong>Invoice follow-up</strong>
+                      <p>Android reviewers still call out invoice editing bugs and post-update instability.</p>
+                      <div class="signal-tags">
+                        <span>Payment friction</span>
+                        <span>Crash risk</span>
+                      </div>
+                    </div>
+
+                    <div class="signal-item">
+                      <strong>Notification mismatch</strong>
+                      <p>One wrong tap or slow load, and the operator bounces back to desktop to finish the job.</p>
+                      <div class="signal-tags">
+                        <span>Context loss</span>
+                        <span>Menu hunting</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phone fade-up delay-3 float">
+              <div class="phone-shell">
+                <div class="phone-screen" data-phone-screen>
+                  <div class="screen-card success">
+                    <div class="screen-header">
+                      <div>
+                        <div class="screen-meta">Proposed flow</div>
+                        <div class="screen-title">Lead Rescue Queue</div>
+                      </div>
+                      <div class="screen-chip">After</div>
+                    </div>
+                    <div class="mini-stats">
+                      <span>1 ranked queue</span>
+                      <span>1-tap actions</span>
+                      <span>Outcome tracking</span>
+                    </div>
+                  </div>
+
+                  <div class="action-list">
+                    <div class="action-item success">
+                      <strong>1. Wedding inquiry cooling off</strong>
+                      <p>Imported from Gmail two days ago. No reply yet. Proposal opened once. Confidence: high.</p>
+                      <div class="action-tags">
+                        <span>Send AI draft</span>
+                        <span>Attach brochure</span>
+                      </div>
+                    </div>
+
+                    <div class="action-item success">
+                      <strong>2. Client waiting on revised file</strong>
+                      <p>Proposal is blocked by a missing file update. Queue deep-links straight into the file fix step.</p>
+                      <div class="action-tags">
+                        <span>Open file block</span>
+                        <span>Mark resolved</span>
+                      </div>
+                    </div>
+
+                    <div class="action-item success">
+                      <strong>3. Overdue payment at risk</strong>
+                      <p>Priority list, follow-up suggestion, and payment state merge into one action card with recovery copy ready.</p>
+                      <div class="action-tags">
+                        <span>Send reminder</span>
+                        <span>Offer split pay</span>
+                      </div>
+                    </div>
+
+                    <div class="screen-card">
+                      <div class="screen-title">Why this queue works</div>
+                      <p style="margin: 8px 0 0; font-size: 0.79rem; line-height: 1.58; color: var(--muted);">Each card tells the user why it is urgent now, what asset is blocking the close, and what single action is most likely to recover momentum.</p>
+                    </div>
+
+                    <a class="primary-btn" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="shell stack">
+      <section class="section-card fade-up">
+        <div class="section-head">
+          <h2>The Wedge</h2>
+          <p>HoneyBook does not need another broad dashboard on mobile. It needs one place where AI signals become action before a lead, payment, or project update falls through the cracks.</p>
+        </div>
+        <div class="grid-three">
+          <div class="insight">
+            <strong>Unify the signal layer</strong>
+            <p>Pull in Gmail lead finder, follow-up suggestions, priority lists, overdue replies, file blockers, and payment risk so users stop guessing where the next best action lives.</p>
+            <div class="metric">Matches current AI roadmap</div>
+          </div>
+          <div class="insight">
+            <strong>Fix the mobile execution moment</strong>
+            <p>Deep-link the rescue action into the exact contract, invoice, file, or message context instead of dropping users into generic screens that trigger more support tickets.</p>
+            <div class="metric">Reduces menu hunting</div>
+          </div>
+          <div class="insight">
+            <strong>Close the loop</strong>
+            <p>Track whether the rescue draft was sent, the file blocker was resolved, and the lead recovered. That makes AI value visible to users and measurable to the product team.</p>
+            <div class="metric">Ties AI to revenue recovery</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card fade-up">
+        <div class="section-head">
+          <h2>Public Evidence</h2>
+          <p>The app-store averages are fine. The recent review stream is where the execution risk shows up. That is the right signal for a mobile workflow improvement pitch.</p>
+        </div>
+        <div class="grid-two">
+          <div class="quote-card">
+            <strong>Recent iOS pain cluster</strong>
+            <p>From the latest 50 iOS reviews, 27 were 3 stars or below. The repeat pattern is file editing, proposal or invoice handling, slow navigation, and iPad reliability.</p>
+            <div class="metric">17 file-edit mentions · 5 slow-load mentions</div>
+          </div>
+          <div class="quote-card">
+            <strong>Recent Android pain cluster</strong>
+            <p>From the latest 50 Android reviews, 22 were 3 stars or below. The repeat pattern is crashes after updates, invoice-editing friction, wrong notification routing, and login instability.</p>
+            <div class="metric">9 crash mentions · 9 invoice/file mentions</div>
+          </div>
+          <div class="quote-card">
+            <strong>Community risk</strong>
+            <p>Reddit threads are already framing HoneyBook as expensive enough to re-evaluate, and commenters quickly name alternatives. That makes every mobile friction point more expensive.</p>
+            <div class="metric">Price sensitivity + switching intent</div>
+          </div>
+          <div class="quote-card">
+            <strong>Customer-facing effect</strong>
+            <p>Community feedback also points to slow customer booking flows. That turns mobile/product friction into a brand problem, not just an operator productivity problem.</p>
+            <div class="metric">Conversion risk on both sides</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card fade-up">
+        <div class="section-head">
+          <h2>Practical Rollout</h2>
+          <p>This can be shipped as a contained product wedge instead of a full mobile rewrite.</p>
+        </div>
+        <div class="grid-three">
+          <div class="plan-card">
+            <strong>Phase 1</strong>
+            <p>Read-only queue that ranks rescue opportunities from existing AI and notification systems. No new intelligence required.</p>
+          </div>
+          <div class="plan-card">
+            <strong>Phase 2</strong>
+            <p>One-tap actions for AI drafts, payment reminders, file requests, and project follow-ups with direct deep-linking.</p>
+          </div>
+          <div class="plan-card">
+            <strong>Phase 3</strong>
+            <p>Recovery analytics that show which actions reopen stalled leads and which mobile blockers create the most support friction.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card cta-card fade-up">
+        <h2>Built around HoneyBook’s current roadmap, not against it.</h2>
+        <p>This concept keeps HoneyBook’s AI investments intact and makes them easier to trust on mobile. The engineering win is not “more AI.” It is making the existing AI surfaces feel operationally sharp for users who are booking, invoicing, and chasing replies from a phone.</p>
+        <div class="cta-row">
+          <a class="primary-btn" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+          <a class="ghost-btn" href="https://www.honeybook.com/" target="_blank" rel="noreferrer">See HoneyBook</a>
+        </div>
+        <div class="footnote">Analysis based on HoneyBook public docs, app-store review samples, Reddit threads, and Elinext product strategy framing.</div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
