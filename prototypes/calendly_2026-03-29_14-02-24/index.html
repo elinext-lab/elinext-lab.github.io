@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calendly Mobile - AI Teardown</title>
+  <meta name="description" content="What if Calendly's mobile app could resolve booking conflicts, stale links, and schedule overrides before they become support tickets or lost meetings?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/calendly_2026-03-29_14-02-24/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Calendly Mobile - AI Teardown">
+  <meta property="og:description" content="What if Calendly's mobile app could resolve booking conflicts, stale links, and schedule overrides before they become support tickets or lost meetings?">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/calendly_2026-03-29_14-02-24/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/calendly_2026-03-29_14-02-24/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Calendly Mobile - AI Teardown">
+  <meta name="twitter:description" content="What if Calendly's mobile app could resolve booking conflicts, stale links, and schedule overrides before they become support tickets or lost meetings?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/calendly_2026-03-29_14-02-24/og-image.jpg">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <!-- Ratings as of 2026-03-29: iOS 4.85 (50445 reviews, source: iTunes API), Android 4.49 (17257 reviews, source: https://play.google.com/store/apps/details?id=com.calendly.app&hl=en&gl=us) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #102238;
+      --ink-soft: #5f7084;
+      --paper: #f6f0e3;
+      --panel: rgba(255, 250, 242, 0.95);
+      --surface: #ffffff;
+      --surface-alt: #f4efe7;
+      --line: rgba(16, 34, 56, 0.09);
+      --accent: #ff6a3d;
+      --accent-cool: #177e73;
+      --accent-blue: #0f62e6;
+      --danger: #d95c50;
+      --shadow: 0 30px 80px rgba(21, 37, 59, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(255, 106, 61, 0.16), transparent 34%),
+        radial-gradient(circle at top right, rgba(15, 98, 230, 0.18), transparent 35%),
+        linear-gradient(180deg, #f1ebde 0%, #efe7d8 100%);
+      min-height: 100vh;
+      overflow-x: clip;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      border-radius: 999px;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(20px);
+    }
+
+    body::before {
+      width: 340px;
+      height: 340px;
+      top: 6%;
+      right: -80px;
+      background: rgba(255, 106, 61, 0.14);
+    }
+
+    body::after {
+      width: 300px;
+      height: 300px;
+      left: -110px;
+      bottom: 10%;
+      background: rgba(23, 126, 115, 0.14);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .panel {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      padding: clamp(28px, 5vw, 54px);
+      text-align: center;
+    }
+
+    .hero > * {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(15, 98, 230, 0.08);
+      color: var(--accent-blue);
+      font-size: 0.76rem;
+      line-height: 1.1;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .brand-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(16, 34, 56, 0.06);
+      border: 1px solid rgba(16, 34, 56, 0.05);
+    }
+
+    .brand-chip img {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      box-shadow: 0 10px 24px rgba(16, 34, 56, 0.16);
+      display: block;
+    }
+
+    .brand-copy {
+      text-align: left;
+    }
+
+    .brand-copy strong,
+    .brand-copy span {
+      display: block;
+      line-height: 1.15;
+    }
+
+    .brand-copy strong {
+      font-size: 0.98rem;
+    }
+
+    .brand-copy span {
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Space Grotesk", sans-serif;
+      margin: 0;
+      line-height: 0.98;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-top: 22px;
+      font-size: clamp(3rem, 7vw, 5.4rem);
+      letter-spacing: -0.05em;
+    }
+
+    .lead {
+      max-width: 760px;
+      margin-top: 18px;
+      font-size: 1.12rem;
+      line-height: 1.68;
+      color: var(--ink-soft);
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .stat {
+      display: block;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--line);
+      text-align: left;
+    }
+
+    .stat strong,
+    .stat span {
+      display: block;
+    }
+
+    .stat strong {
+      font-size: 1.8rem;
+      line-height: 1;
+      margin-bottom: 7px;
+    }
+
+    .stat span {
+      color: var(--ink-soft);
+      font-size: 0.92rem;
+      line-height: 1.4;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      margin-top: 26px;
+      flex-wrap: wrap;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 22px;
+      border-radius: 999px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      border: 1px solid transparent;
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .cta:hover {
+      transform: translateY(-2px);
+    }
+
+    .cta-primary {
+      background: var(--accent);
+      color: #fffaf5;
+      box-shadow: 0 20px 34px rgba(255, 106, 61, 0.28);
+    }
+
+    .cta-secondary {
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(16, 34, 56, 0.1);
+      color: var(--ink);
+    }
+
+    section {
+      margin-top: 24px;
+      padding: clamp(22px, 4vw, 34px);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: 22px;
+      align-items: end;
+      margin-bottom: 26px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      letter-spacing: -0.05em;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    .phone-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .phone-block {
+      margin: 0;
+      padding: 20px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid var(--line);
+    }
+
+    .phone-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .phone-label strong,
+    .phone-label span {
+      display: block;
+    }
+
+    .phone-label strong {
+      font-size: 1.1rem;
+    }
+
+    .phone-label span {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
+      max-width: 26ch;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .tag-danger {
+      color: #8c2b1f;
+      background: rgba(217, 92, 80, 0.12);
+    }
+
+    .tag-success {
+      color: #0b6258;
+      background: rgba(23, 126, 115, 0.12);
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 36px;
+      background: linear-gradient(180deg, #17263b 0%, #0b1420 100%);
+      box-shadow: 0 32px 56px rgba(11, 20, 32, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      top: 10px;
+      left: 50%;
+      width: 108px;
+      height: 24px;
+      transform: translateX(-50%);
+      border-radius: 0 0 18px 18px;
+      background: #08121d;
+    }
+
+    .phone-screen {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      overflow: auto;
+      border-radius: 27px;
+      background: linear-gradient(180deg, #fffdfa 0%, #f2ede5 100%);
+      padding: 36px 14px 14px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(16, 34, 56, 0.25) transparent;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .phone-screen::-webkit-scrollbar-thumb {
+      background: rgba(16, 34, 56, 0.22);
+      border-radius: 999px;
+    }
+
+    .status-row,
+    .screen-header,
+    .screen-subtitle,
+    .screen-card,
+    .screen-actions,
+    .quote-bar,
+    .mini-note {
+      display: block;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.76rem;
+      color: var(--ink-soft);
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+
+    .screen-header {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.35rem;
+      letter-spacing: -0.04em;
+      margin-bottom: 6px;
+    }
+
+    .screen-subtitle {
+      color: var(--ink-soft);
+      font-size: 0.84rem;
+      line-height: 1.45;
+      margin-bottom: 14px;
+    }
+
+    .screen-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .screen-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(16, 34, 56, 0.08);
+      box-shadow: 0 12px 20px rgba(16, 34, 56, 0.05);
+    }
+
+    .screen-card.alert {
+      background: rgba(255, 245, 243, 0.98);
+      border-color: rgba(217, 92, 80, 0.18);
+    }
+
+    .screen-card.rescue {
+      background: rgba(245, 255, 252, 0.98);
+      border-color: rgba(23, 126, 115, 0.18);
+    }
+
+    .screen-card strong,
+    .screen-card span {
+      display: block;
+    }
+
+    .screen-card strong {
+      font-size: 0.94rem;
+      line-height: 1.3;
+    }
+
+    .screen-card span {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: var(--ink-soft);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      background: rgba(16, 34, 56, 0.06);
+      color: var(--ink);
+    }
+
+    .pill.hot {
+      background: rgba(255, 106, 61, 0.13);
+      color: #9c3b18;
+    }
+
+    .pill.cool {
+      background: rgba(23, 126, 115, 0.13);
+      color: #0d655b;
+    }
+
+    .quote-bar {
+      margin-top: 10px;
+      padding-left: 12px;
+      border-left: 3px solid rgba(16, 34, 56, 0.12);
+      color: var(--ink-soft);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .screen-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .action-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 10px;
+      border-radius: 14px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid rgba(16, 34, 56, 0.08);
+    }
+
+    .action-chip.primary {
+      background: rgba(23, 126, 115, 0.12);
+      border-color: rgba(23, 126, 115, 0.16);
+      color: #0d6459;
+    }
+
+    .action-chip.warning {
+      background: rgba(255, 106, 61, 0.12);
+      border-color: rgba(255, 106, 61, 0.14);
+      color: #943716;
+    }
+
+    .mini-note {
+      margin-top: 8px;
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .insight-card {
+      display: block;
+      padding: 20px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid var(--line);
+      min-height: 100%;
+    }
+
+    .insight-card h3 {
+      font-size: 1.34rem;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+
+    .insight-card p {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.65;
+      font-size: 0.95rem;
+    }
+
+    .signal-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .signal {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 0 13px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .source-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .source-link {
+      display: block;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid var(--line);
+      line-height: 1.5;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+    }
+
+    .source-link strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .closing {
+      text-align: center;
+      padding: 34px 24px;
+    }
+
+    .closing p {
+      max-width: 760px;
+      margin: 16px auto 0;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    footer {
+      margin-top: 20px;
+      text-align: center;
+      color: rgba(16, 34, 56, 0.62);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 980px) {
+      .stat-row,
+      .card-grid,
+      .section-head,
+      .phone-grid,
+      .source-list {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        align-items: start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page-shell {
+        width: min(100% - 20px, 1180px);
+        padding-top: 18px;
+      }
+
+      h1 {
+        max-width: 11ch;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .cta {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .hero {
+        padding: 24px 18px 28px;
+      }
+
+      section {
+        padding: 20px 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .cta {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="panel hero">
+      <div class="eyebrow">AI teardown for Calendly Mobile</div>
+      <div class="brand-chip">
+        <img src="assets/app-icon.jpg" alt="Calendly Mobile app icon">
+        <div class="brand-copy">
+          <strong>Calendly Mobile</strong>
+          <span>Scheduling trust, rebuilt around the edge cases</span>
+        </div>
+      </div>
+      <h1>What if mobile could rescue a broken booking before support ever saw it?</h1>
+      <p class="lead">
+        Recent iOS, Android, and Reddit feedback all point to the same gap: users like Calendly on the happy path, but when a sync drifts, a link goes stale, or a host needs an override, the app still leaks them back to desktop, docs, or support.
+      </p>
+      <div class="stat-row">
+        <div class="stat">
+          <strong>4.85</strong>
+          <span>iOS US rating from 50,445 reviews</span>
+        </div>
+        <div class="stat">
+          <strong>4.49</strong>
+          <span>Google Play rating from 17,257 reviews</span>
+        </div>
+        <div class="stat">
+          <strong>20M+</strong>
+          <span>Users listed in Calendly's corporate fact sheet</span>
+        </div>
+        <div class="stat">
+          <strong>86%</strong>
+          <span>Of the Fortune 500 use Calendly</span>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a class="cta cta-primary" href="https://www.elinext.com/contacts/">Get in Touch</a>
+        <a class="cta cta-secondary" href="#prototype">See the mobile concept</a>
+      </div>
+    </header>
+
+    <section id="prototype" class="panel">
+      <div class="section-head">
+        <div>
+          <h2>The real gap is not booking. It is recovery.</h2>
+        </div>
+        <p>
+          Calendly already owns the simple part: link sharing and fast scheduling. The failure point is the messy part after that: stale one-time links, sync drift, opaque "slot filled" errors, and mobile users who still cannot fix exceptions in place.
+        </p>
+      </div>
+
+      <div class="phone-grid">
+        <figure class="phone-block">
+          <div class="phone-label">
+            <div>
+              <strong>Current friction</strong>
+              <span>Users can see the issue, but the app still struggles to help them recover from it.</span>
+            </div>
+            <span class="tag tag-danger">Support gravity</span>
+          </div>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="status-row">
+                <span>9:41</span>
+                <span>LTE 82%</span>
+              </div>
+              <div class="screen-header">Today's meetings</div>
+              <div class="screen-subtitle">Fast when nothing changes. Painful when something does.</div>
+              <div class="screen-stack">
+                <div class="screen-card alert">
+                  <strong>2:00 PM strategy call failed</strong>
+                  <span>Invitee hit "slot filled" after availability changed in another calendar.</span>
+                  <div class="pill-row">
+                    <span class="pill hot">Conflict detected</span>
+                    <span class="pill">No recovery path</span>
+                  </div>
+                </div>
+                <div class="screen-card">
+                  <strong>One-time link still active</strong>
+                  <span>A reused link is still circulating, but there is no fast mobile retire action here.</span>
+                  <div class="quote-bar">Reddit and store feedback both point to stale-link cleanup as a friction point.</div>
+                </div>
+                <div class="screen-card">
+                  <strong>Need an override?</strong>
+                  <span>Desktop required to book inside a blocked window, resend a broken invite, or apply a quick host-side exception.</span>
+                  <div class="screen-actions">
+                    <span class="action-chip">Open help article</span>
+                    <span class="action-chip">Switch to desktop</span>
+                  </div>
+                </div>
+                <div class="screen-card alert">
+                  <strong>Sign-in drift</strong>
+                  <span>Recent reviews mention login loops and forced logout right when users need to act quickly.</span>
+                  <div class="mini-note">When trust breaks at the moment of change, mobile becomes a viewer instead of a control surface.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </figure>
+
+        <figure class="phone-block">
+          <div class="phone-label">
+            <div>
+              <strong>Proposed fix: Schedule Rescue</strong>
+              <span>A mobile exception layer that explains the problem, unlocks safe actions, and logs what changed.</span>
+            </div>
+            <span class="tag tag-success">Ops-first fix</span>
+          </div>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="status-row">
+                <span>9:41</span>
+                <span>Sync healthy</span>
+              </div>
+              <div class="screen-header">Schedule Rescue</div>
+              <div class="screen-subtitle">Fix the broken meeting without leaving mobile.</div>
+              <div class="screen-stack">
+                <div class="screen-card rescue">
+                  <strong>Conflict explained in plain language</strong>
+                  <span>Outlook imported an all-day hold after the link was generated, so the slot is no longer safe to book.</span>
+                  <div class="pill-row">
+                    <span class="pill cool">Root cause found</span>
+                    <span class="pill">Host impact: 1 invite</span>
+                  </div>
+                </div>
+                <div class="screen-card rescue">
+                  <strong>Take the next best action</strong>
+                  <span>Override once, retire the stale link, resend the invite, or push the guest into a clean replacement slot.</span>
+                  <div class="screen-actions">
+                    <span class="action-chip primary">Override once</span>
+                    <span class="action-chip primary">Resend invite</span>
+                    <span class="action-chip warning">Retire link</span>
+                    <span class="action-chip">Offer 3:30 PM</span>
+                  </div>
+                </div>
+                <div class="screen-card">
+                  <strong>Leave an audit trail</strong>
+                  <span>Every recovery action is tagged for support and platform teams so recurring drift patterns are visible.</span>
+                  <div class="quote-bar">This turns a support ticket into structured product telemetry.</div>
+                </div>
+                <div class="screen-card">
+                  <strong>Protect mobile trust</strong>
+                  <span>Hosts stay inside the app, fix the issue fast, and keep the scheduling promise intact while they are away from desktop.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <h2>Why this direction fits Calendly right now</h2>
+        </div>
+        <p>
+          The company signal is platform scale. The user signal is fragile exception handling. That makes this a strong fit for a targeted mobile systems feature instead of a cosmetic redesign.
+        </p>
+      </div>
+
+      <div class="card-grid">
+        <div class="insight-card">
+          <h3>Reduce support pull</h3>
+          <p>
+            Broken bookings become self-serve recoveries. The prototype replaces generic error states and help-article deflection with clear host actions.
+          </p>
+        </div>
+        <div class="insight-card">
+          <h3>Protect booking trust</h3>
+          <p>
+            Calendar drift, reused links, and host overrides are where confidence drops. Resolving those moments on mobile keeps the product promise intact.
+          </p>
+        </div>
+        <div class="insight-card">
+          <h3>Turn friction into telemetry</h3>
+          <p>
+            A logged rescue flow gives platform and product teams structured evidence about recurring sync failures, stale links, and account-state mismatches.
+          </p>
+        </div>
+      </div>
+
+      <div class="signal-strip">
+        <span class="signal">50 recent iOS reviews analyzed</span>
+        <span class="signal">50 recent Android reviews analyzed</span>
+        <span class="signal">Reddit complaint on stale one-use links</span>
+        <span class="signal">BuiltWith shows a mature experimentation stack</span>
+        <span class="signal">CRM signal: active platform-team investment</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <h2>Research inputs behind the concept</h2>
+        </div>
+        <p>
+          The concept is grounded in public product evidence, not invented feature wishlists. It centers on the part of the mobile experience where public sentiment turns negative.
+        </p>
+      </div>
+
+      <div class="source-list">
+        <a class="source-link" href="https://apps.apple.com/us/app/calendly-mobile/id1451094657?uo=4">
+          <strong>App Store</strong>
+          4.84779 rating, 50,445 US reviews, version 3.5.2, updated 2026-03-27.
+        </a>
+        <a class="source-link" href="https://play.google.com/store/apps/details?id=com.calendly.app&hl=en&gl=us">
+          <strong>Google Play</strong>
+          4.487085 rating, 17,257 ratings, 1,000,000+ installs, version 3.5.1.
+        </a>
+        <a class="source-link" href="https://help.calendly.com/hc/en-us/articles/360018877993-Calendly-mobile-app-overview">
+          <strong>Calendly Help Center</strong>
+          Mobile docs promise one-time links, availability management, event edits, and cancel / reschedule.
+        </a>
+        <a class="source-link" href="https://www.reddit.com/r/calendly/comments/1ondpu1/calendly_just_made_oneuse_links_way_worse/">
+          <strong>Reddit signal</strong>
+          One-use link workflow complaints reinforce the stale-link and cleanup problem.
+        </a>
+        <a class="source-link" href="https://assets.ctfassets.net/k0lk9kiuza3o/3sHOBA8YvlfqrrEmzj3IoR/510fa7b7d72415844e93f7b60026b576/Calendly_External_Fact_Sheet.pdf">
+          <strong>Calendly Fact Sheet</strong>
+          20M+ users, 100k+ organizations, 86% of the Fortune 500, profitable since 2016.
+        </a>
+        <a class="source-link" href="https://builtwith.com/detailed/calendly.com">
+          <strong>BuiltWith</strong>
+          React plus analytics, experimentation, CRM, payments, and observability tooling.
+        </a>
+      </div>
+    </section>
+
+    <section class="panel closing">
+      <div class="eyebrow">Suggested outreach angle</div>
+      <h2>Show John a narrow, operationally credible fix.</h2>
+      <p>
+        Instead of pitching a broad redesign, show how Calendly Mobile could become a true recovery surface for booking exceptions. That ties directly to platform reliability, support cost, and operational trust across sales, recruiting, and customer-facing teams.
+      </p>
+      <div class="hero-actions">
+        <a class="cta cta-primary" href="https://www.elinext.com/contacts/">Get in Touch</a>
+      </div>
+    </section>
+
+    <footer>
+      Prototype concept by Elinext for Calendly Mobile.
+      Public sources retrieved on 2026-03-29 UTC.
+    </footer>
+  </main>
+</body>
+</html>
