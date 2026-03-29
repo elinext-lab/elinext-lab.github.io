@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EVONA Mobile — AI Teardown</title>
+  <meta name="description" content="A mobile-first concept for EVONA's contractor-services workflow: shortlist health, response SLAs, and client feedback in one fast operating view.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/evona_2026-03-29_23-02-28/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="EVONA Mobile — AI Teardown">
+  <meta property="og:description" content="What if EVONA's contractor team could run every shortlist from one mobile control tower, with response SLAs, client feedback, and fit signals visible before great candidates go cold?">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/evona_2026-03-29_23-02-28/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/evona_2026-03-29_23-02-28/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <link rel="icon" href="./assets/fraction-favicon.png" type="image/png">
+  <!-- Ratings as of 2026-03-29: iOS N/A (no matching US App Store listing found, source: iTunes Search API), Android N/A (no matching Google Play listing found, source: Google Play search via google-play-scraper) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #08111d;
+      --bg-soft: #0d1827;
+      --panel: rgba(11, 20, 33, 0.92);
+      --panel-strong: rgba(8, 15, 26, 0.98);
+      --line: rgba(125, 160, 194, 0.22);
+      --text: #eff6ff;
+      --muted: #97adc2;
+      --teal: #6ee7dd;
+      --teal-strong: #17b7ab;
+      --orange: #ff9a52;
+      --danger: #ff7070;
+      --success: #91f3ba;
+      --ink: #03101e;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(23, 183, 171, 0.18), transparent 32%),
+        radial-gradient(circle at top right, rgba(255, 154, 82, 0.15), transparent 28%),
+        linear-gradient(180deg, #06111c 0%, #0a1524 38%, #07111c 100%);
+      font-family: "Montserrat", sans-serif;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    main, header, footer { position: relative; z-index: 1; }
+
+    .shell {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 18px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(8, 18, 30, 0.8);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(110, 231, 221, 0.28), rgba(255, 154, 82, 0.28));
+      padding: 6px;
+      flex: 0 0 auto;
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand-copy strong,
+    .brand-copy span {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-copy strong {
+      font-size: 0.84rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .brand-copy span {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .micro-badge {
+      border: 1px solid rgba(110, 231, 221, 0.24);
+      background: rgba(14, 30, 42, 0.92);
+      color: var(--teal);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      flex: 0 0 auto;
+    }
+
+    .hero {
+      margin-top: 28px;
+      padding: 54px 24px 26px;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at top center, rgba(110, 231, 221, 0.13), transparent 30%),
+        linear-gradient(180deg, rgba(13, 24, 39, 0.96), rgba(8, 16, 27, 0.98));
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .hero-logo,
+    .eyebrow,
+    .hero h1,
+    .hero p,
+    .signal-strip {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-logo {
+      width: 82px;
+      height: 82px;
+      border-radius: 28px;
+      padding: 14px;
+      background: linear-gradient(135deg, rgba(110, 231, 221, 0.2), rgba(255, 154, 82, 0.26));
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    .eyebrow {
+      margin-top: 18px;
+      color: var(--teal);
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      line-height: 1.04;
+    }
+
+    .hero h1 {
+      max-width: 960px;
+      margin-top: 18px;
+      font-size: clamp(2.6rem, 6vw, 5.3rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .hero h1 .accent {
+      color: var(--teal);
+    }
+
+    .hero-copy {
+      max-width: 820px;
+      margin-top: 18px;
+      font-size: 1.06rem;
+      line-height: 1.75;
+      color: #d7e7f6;
+    }
+
+    .signal-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      max-width: 900px;
+      margin-top: 26px;
+    }
+
+    .signal {
+      padding: 12px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(11, 23, 36, 0.86);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .signal strong {
+      color: var(--orange);
+      margin-right: 6px;
+    }
+
+    .section {
+      margin-top: 26px;
+      padding: 28px;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 24px;
+    }
+
+    .section-kicker {
+      color: var(--orange);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .section h2 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      letter-spacing: -0.035em;
+    }
+
+    .section p.lead {
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 720px;
+      line-height: 1.7;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .comparison-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+      padding: 18px;
+    }
+
+    .comparison-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .comparison-card.before .comparison-label {
+      background: rgba(255, 112, 112, 0.12);
+      color: #ffc1c1;
+      border: 1px solid rgba(255, 112, 112, 0.24);
+    }
+
+    .comparison-card.after .comparison-label {
+      background: rgba(110, 231, 221, 0.12);
+      color: var(--teal);
+      border: 1px solid rgba(110, 231, 221, 0.24);
+    }
+
+    .comparison-copy {
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 18px;
+      min-height: 110px;
+    }
+
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      padding: 11px;
+      border-radius: 42px;
+      background:
+        linear-gradient(180deg, #233549, #0b1118 24%, #0b1118 76%, #1c2a39);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.18),
+        0 20px 60px rgba(0, 0, 0, 0.52);
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 13px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 22px;
+      background: #0a0e13;
+      border-radius: 0 0 18px 18px;
+      z-index: 2;
+    }
+
+    .phone-screen {
+      height: 100%;
+      border-radius: 31px;
+      overflow: auto;
+      padding: 36px 14px 14px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 154, 82, 0.16), transparent 26%),
+        radial-gradient(circle at top left, rgba(110, 231, 221, 0.18), transparent 30%),
+        linear-gradient(180deg, #0f1d2d 0%, #0a1321 100%);
+      scrollbar-width: none;
+    }
+
+    .phone-screen::-webkit-scrollbar { display: none; }
+
+    .statusbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: #c6d9ee;
+      margin-bottom: 16px;
+      opacity: 0.92;
+    }
+
+    .screen-card,
+    .list-card,
+    .alert-card,
+    .action-strip {
+      display: block;
+      border-radius: 20px;
+      background: rgba(7, 16, 27, 0.78);
+      border: 1px solid rgba(129, 160, 190, 0.14);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .screen-card h3,
+    .list-card h3 {
+      font-size: 1.08rem;
+      margin-bottom: 6px;
+    }
+
+    .screen-copy {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.92rem;
+    }
+
+    .metric-row,
+    .tag-row,
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .metric {
+      flex: 1 1 0;
+      min-width: 96px;
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(17, 34, 52, 0.82);
+      border: 1px solid rgba(129, 160, 190, 0.18);
+    }
+
+    .metric strong,
+    .list-card strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 2px;
+    }
+
+    .metric span,
+    .list-card small {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .tag {
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      background: rgba(17, 37, 58, 0.82);
+      border: 1px solid rgba(129, 160, 190, 0.14);
+    }
+
+    .tag.good { color: var(--success); }
+    .tag.warn { color: #ffd09c; }
+    .tag.bad { color: #ffb4b4; }
+
+    .list-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .list-head strong {
+      font-size: 0.96rem;
+    }
+
+    .score {
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--teal);
+      background: rgba(16, 53, 56, 0.65);
+      border: 1px solid rgba(110, 231, 221, 0.22);
+      white-space: nowrap;
+    }
+
+    .timeline {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .timeline li {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 12px;
+      border-radius: 16px;
+      background: rgba(16, 30, 46, 0.78);
+      border: 1px solid rgba(129, 160, 190, 0.14);
+    }
+
+    .timeline b {
+      display: block;
+      font-size: 0.86rem;
+      margin-bottom: 4px;
+    }
+
+    .timeline span {
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.45;
+    }
+
+    .alert-card {
+      background: rgba(46, 18, 22, 0.74);
+      border-color: rgba(255, 112, 112, 0.2);
+    }
+
+    .alert-card strong { color: #ffd0d0; }
+    .alert-card p {
+      margin: 8px 0 0;
+      color: #ffc1c1;
+      line-height: 1.5;
+      font-size: 0.84rem;
+    }
+
+    .action-strip {
+      background: linear-gradient(135deg, rgba(13, 61, 64, 0.85), rgba(14, 30, 42, 0.92));
+      border-color: rgba(110, 231, 221, 0.24);
+    }
+
+    .action-strip strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.92rem;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-top: 10px;
+      padding: 11px 14px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, var(--teal), #3cc0ca);
+      color: var(--ink);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+    }
+
+    .bottom-nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .nav-item {
+      padding: 10px 4px;
+      border-radius: 14px;
+      background: rgba(17, 34, 52, 0.82);
+      text-align: center;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    .nav-item.active {
+      color: var(--text);
+      background: linear-gradient(135deg, rgba(110, 231, 221, 0.2), rgba(255, 154, 82, 0.16));
+      border: 1px solid rgba(110, 231, 221, 0.22);
+    }
+
+    .insights {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .insight {
+      padding: 22px;
+      border-radius: var(--radius-lg);
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+    }
+
+    .insight .num {
+      display: inline-flex;
+      width: 38px;
+      height: 38px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255, 154, 82, 0.16);
+      color: var(--orange);
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .insight h3 {
+      font-size: 1.18rem;
+      margin-bottom: 10px;
+    }
+
+    .insight p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .evidence {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+    }
+
+    .quote-box,
+    .tech-box {
+      padding: 22px;
+      border-radius: var(--radius-lg);
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+    }
+
+    .quote-box blockquote {
+      margin: 0;
+      font-family: "Bitter", serif;
+      font-size: 1.18rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .quote-box p,
+    .tech-box p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .stack-list span {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(18, 34, 50, 0.85);
+      border: 1px solid rgba(129, 160, 190, 0.18);
+      color: #d6e7f8;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    .cta-band {
+      text-align: center;
+      padding: 34px 24px;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(110, 231, 221, 0.18);
+      background:
+        radial-gradient(circle at top center, rgba(110, 231, 221, 0.15), transparent 38%),
+        linear-gradient(180deg, rgba(11, 24, 34, 0.98), rgba(8, 17, 28, 0.98));
+    }
+
+    .cta-band h2 {
+      font-size: clamp(1.7rem, 4vw, 2.8rem);
+      margin-bottom: 12px;
+    }
+
+    .cta-band p {
+      max-width: 760px;
+      margin: 0 auto;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 22px;
+      padding: 16px 26px;
+      border-radius: 999px;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--orange), #ffb167);
+      color: var(--ink);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 18px 40px rgba(255, 154, 82, 0.24);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-top: 20px;
+      padding-bottom: 12px;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero,
+    .section,
+    .cta-band {
+      animation: rise 680ms ease both;
+    }
+
+    @media (max-width: 980px) {
+      .comparison,
+      .insights,
+      .evidence {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        display: block;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        padding: 18px 14px 44px;
+      }
+
+      .topbar {
+        border-radius: 22px;
+        padding: 14px;
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .hero,
+      .section,
+      .cta-band {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .hero h1 {
+        font-size: clamp(2rem, 11vw, 3.2rem);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone { width: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <img src="./assets/fraction-favicon.png" alt="EVONA FRACTION icon">
+        <div class="brand-copy">
+          <strong>EVONA FRACTION</strong>
+          <span>Mobile contractor-services teardown for Richard Joyce</span>
+        </div>
+      </div>
+      <a class="micro-badge" href="https://app.evonafraction.com/" target="_blank" rel="noreferrer">Web Product, Not App</a>
+    </header>
+
+    <section class="hero">
+      <img class="hero-logo" src="./assets/fraction-favicon.png" alt="EVONA FRACTION logo">
+      <span class="eyebrow">AI-Powered Mobile Teardown</span>
+      <h1>What if every <span class="accent">EVONA shortlist</span> carried its own response SLA, client vote, and next action?</h1>
+      <p class="hero-copy">
+        EVONA already has the search layer. The bigger opportunity for Richard Joyce's contractor-services team is the operating layer after a candidate is shortlisted: follow-up visibility, shared client context, and fewer strong candidates going cold between recruiter notes, client feedback, and next steps.
+      </p>
+      <div class="signal-strip">
+        <span class="signal"><strong>Signal</strong>No public iOS or Android app found on March 29, 2026</span>
+        <span class="signal"><strong>Signal</strong>FRACTION publicly promotes AI shortlist + investor sharing</span>
+        <span class="signal"><strong>Signal</strong>Via Satellite snippet: 119 applicants per role per month</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Before / After</div>
+          <h2>From fragmented follow-up to a mobile control tower</h2>
+          <p class="lead">The left screen shows the pain pattern public signals imply today. The right screen shows the faster operating model: one card per candidate, one owner, one deadline, one decision path.</p>
+        </div>
+      </div>
+
+      <div class="comparison">
+        <article class="comparison-card before">
+          <div class="comparison-label">Current State</div>
+          <p class="comparison-copy">Shortlists exist, but context leaks across inboxes, recruiter handoffs, and client feedback loops. Candidates wait. Recruiters chase. Richard's team loses time on status recovery instead of placement momentum.</p>
+          <div class="phone-wrap">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="statusbar">
+                  <span>9:41</span>
+                  <span>EVONA Ops</span>
+                </div>
+
+                <div class="screen-card">
+                  <h3>Candidate handoff</h3>
+                  <div class="screen-copy">Three strong profiles sent yesterday. One reply from the client. No shared countdown. No live candidate status.</div>
+                  <div class="metric-row">
+                    <div class="metric">
+                      <strong>12</strong>
+                      <span>live shortlists</span>
+                    </div>
+                    <div class="metric">
+                      <strong>4</strong>
+                      <span>need follow-up</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="alert-card">
+                  <strong>SLA warning</strong>
+                  <p>A candidate intro has been idle for 4 days. No client response logged and no update has been sent back to the candidate.</p>
+                </div>
+
+                <div class="list-card">
+                  <div class="list-head">
+                    <div>
+                      <strong>Board Advisor shortlist</strong>
+                      <small>NASA-adjacent program</small>
+                    </div>
+                    <span class="score">Unclear owner</span>
+                  </div>
+                  <ul class="timeline">
+                    <li>
+                      <div>
+                        <b>Ian S.</b>
+                        <span>CV in email<br>awaiting client notes</span>
+                      </div>
+                      <span class="tag warn">2d idle</span>
+                    </li>
+                    <li>
+                      <div>
+                        <b>Sarah W.</b>
+                        <span>call booked<br>no confirmation sent</span>
+                      </div>
+                      <span class="tag bad">at risk</span>
+                    </li>
+                    <li>
+                      <div>
+                        <b>Mike J.</b>
+                        <span>client liked profile<br>next step not set</span>
+                      </div>
+                      <span class="tag warn">stalled</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="list-card">
+                  <div class="list-head">
+                    <div>
+                      <strong>Feedback trail</strong>
+                      <small>scattered across DM + notes</small>
+                    </div>
+                    <span class="score">Low trust</span>
+                  </div>
+                  <div class="screen-copy">“Need rate range?”<br>“Did we send the availability note?”<br>“Who owns the follow-up?”</div>
+                </div>
+
+                <div class="bottom-nav">
+                  <div class="nav-item active">Search</div>
+                  <div class="nav-item">Vacancies</div>
+                  <div class="nav-item">Notes</div>
+                  <div class="nav-item">Help</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="comparison-card after">
+          <div class="comparison-label">Proposed Flow</div>
+          <p class="comparison-copy">Every shortlisted candidate becomes an operating object: fit score, response timer, client vote, and next step in one mobile view. Recruiters can move fast without losing accountability or candidate trust.</p>
+          <div class="phone-wrap">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="statusbar">
+                  <span>9:41</span>
+                  <span>Contractor Ops</span>
+                </div>
+
+                <div class="screen-card">
+                  <h3>Mission-ready shortlist</h3>
+                  <div class="screen-copy">Live view for Richard Joyce's contractor-services team. One glance shows what is moving, what is blocked, and who needs a follow-up now.</div>
+                  <div class="metric-row">
+                    <div class="metric">
+                      <strong>92%</strong>
+                      <span>match confidence</span>
+                    </div>
+                    <div class="metric">
+                      <strong>3h</strong>
+                      <span>next SLA deadline</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="list-card">
+                  <div class="list-head">
+                    <div>
+                      <strong>Ian Smith</strong>
+                      <small>CFO • National Security • California</small>
+                    </div>
+                    <span class="score">Mission Fit 92</span>
+                  </div>
+                  <div class="tag-row">
+                    <span class="tag good">Client vote 2/3</span>
+                    <span class="tag good">Availability confirmed</span>
+                    <span class="tag warn">Rate check due 3h</span>
+                  </div>
+                  <div class="action-strip">
+                    <strong>Next step</strong>
+                    Auto-send candidate update, lock interview window, and attach the latest client note to the shortlist thread.
+                    <button class="action-btn" type="button">Send Update + Hold Slot</button>
+                  </div>
+                </div>
+
+                <div class="list-card">
+                  <div class="list-head">
+                    <div>
+                      <strong>Sarah Williams</strong>
+                      <small>Board Advisor • AI / Hardware • Texas</small>
+                    </div>
+                    <span class="score">Trusted Intro</span>
+                  </div>
+                  <div class="pill-row">
+                    <span class="tag good">Client note attached</span>
+                    <span class="tag good">Candidate informed</span>
+                    <span class="tag warn">Investor review open</span>
+                  </div>
+                </div>
+
+                <div class="list-card">
+                  <div class="list-head">
+                    <div>
+                      <strong>Shortlist health</strong>
+                      <small>today's operating view</small>
+                    </div>
+                    <span class="score">4 at risk</span>
+                  </div>
+                  <ul class="timeline">
+                    <li>
+                      <div>
+                        <b>Follow-up SLA</b>
+                        <span>2 candidates need an update before end of day</span>
+                      </div>
+                      <span class="tag warn">Today</span>
+                    </li>
+                    <li>
+                      <div>
+                        <b>Client alignment</b>
+                        <span>1 shortlist waiting on final vote</span>
+                      </div>
+                      <span class="tag good">Tracked</span>
+                    </li>
+                    <li>
+                      <div>
+                        <b>Candidate trust</b>
+                        <span>0 profiles waiting without an owner</span>
+                      </div>
+                      <span class="tag good">Healthy</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="bottom-nav">
+                  <div class="nav-item active">Ops</div>
+                  <div class="nav-item">Shortlists</div>
+                  <div class="nav-item">Clients</div>
+                  <div class="nav-item">Help</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Why This Angle Works</div>
+          <h2>The pitch is not “more AI.” It is better execution after the shortlist exists.</h2>
+        </div>
+      </div>
+
+      <div class="insights">
+        <article class="insight">
+          <span class="num">01</span>
+          <h3>Public trust signals are fragile</h3>
+          <p>Reddit comments about EVONA mention missed calls, unclear legitimacy, and no-response moments. A visible follow-up layer directly reduces that trust gap.</p>
+        </article>
+        <article class="insight">
+          <span class="num">02</span>
+          <h3>EVONA already claims shortlist intelligence</h3>
+          <p>FRACTION publicly promotes AI, confidential shortlisting, direct interviews, and investor feedback. The next win is operational state, not another sourcing promise.</p>
+        </article>
+        <article class="insight">
+          <span class="num">03</span>
+          <h3>Volume makes follow-up a conversion problem</h3>
+          <p>When public signals point to 119 applicants per position per month, the placement bottleneck becomes speed, ownership, and candidate confidence after shortlisting.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Research Basis</div>
+          <h2>Built on EVONA's real public product footprint</h2>
+          <p class="lead">This concept stays close to what EVONA already ships: FRACTION for search and shortlists, plus separate candidate and jobs surfaces. The gap is what happens between “good profile found” and “interview locked.”</p>
+        </div>
+      </div>
+
+      <div class="evidence">
+        <article class="quote-box">
+          <blockquote>
+            FRACTION publicly says clients can browse and shortlist confidentially, set meetings directly, and share shortlists with colleagues and investors. The prototype simply turns those states into an operator-friendly mobile workflow.
+          </blockquote>
+          <p>That is why the right intervention for Richard Joyce is a contractor-services command layer, not a net-new discovery interface.</p>
+        </article>
+
+        <article class="tech-box">
+          <h3>Observed stack signals</h3>
+          <div class="stack-list">
+            <span>WordPress</span>
+            <span>Cloudflare</span>
+            <span>Google Analytics</span>
+            <span>HubSpot</span>
+            <span>Pipedrive</span>
+            <span>app.evonafraction.com</span>
+            <span>portal.evona.com</span>
+            <span>jobs.evona.com</span>
+          </div>
+          <p>Multiple visible surfaces usually mean multiple handoff points. Mobile visibility is the cleanest way to reduce state loss without asking EVONA to rethink its whole stack.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <h2>Show Richard the operator view, not another sourcing promise.</h2>
+      <p>This concept was designed to feel native to EVONA’s current motion: premium space-tech recruiting, faster shortlists, and better delivery confidence for contractor services. The next step is a short walkthrough.</p>
+      <a class="cta-btn" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+    </section>
+
+    <footer>
+      Concept prepared for EVONA using public product signals and pre-collected CRM context. Prototype URL path intentionally matches the deployment timestamp.
+    </footer>
+  </main>
+</body>
+</html>
