@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EVONA Mobile Confidence Cockpit</title>
+  <meta name="description" content="A mobile teardown for EVONA and FRACTION showing how verified recruiter identity, response SLAs and one-tap executive intro booking could strengthen trust at first touch.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/evona_2026-03-29_22-34-25/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/evona_2026-03-29_22-34-25/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/evona_2026-03-29_22-34-25/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="EVONA Mobile — AI Teardown">
+  <meta property="og:description" content="What if EVONA turned uncertain recruiter follow-up into a trusted, booked executive-intro flow with verified identity, response SLAs and mobile shortlist sharing?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-29: iOS N/A (no matching public EVONA/FRACTION app found in US iTunes Search API), Android N/A (no matching public EVONA/FRACTION app found via google-play-scraper search) -->
+  <style>
+    :root {
+      --bg: #051018;
+      --bg-2: #0a1823;
+      --panel: #0c1925;
+      --panel-2: #102332;
+      --line: rgba(126, 161, 183, 0.22);
+      --text: #f3fbff;
+      --muted: #9ab0bf;
+      --teal: #55efcf;
+      --cyan: #8fd9ff;
+      --orange: #ff8a5b;
+      --red: #ff6b6b;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      font-family: "Manrope", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(85, 239, 207, 0.08), transparent 30%),
+        radial-gradient(circle at 80% 10%, rgba(143, 217, 255, 0.1), transparent 32%),
+        linear-gradient(180deg, #050d14 0%, #081420 35%, #07101a 100%);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      background-image:
+        linear-gradient(rgba(85, 239, 207, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(85, 239, 207, 0.05) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.2));
+    }
+
+    body::after {
+      background:
+        radial-gradient(circle at center, transparent 0, transparent 55%, rgba(2, 6, 10, 0.82) 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .eyebrow,
+    .hero-logo,
+    .hero-title,
+    .hero-copy {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .hero {
+      padding: 36px 0 24px;
+    }
+
+    .hero-logo {
+      width: min(240px, 70vw);
+      margin-bottom: 24px;
+      filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.35));
+    }
+
+    .eyebrow {
+      width: fit-content;
+      max-width: 100%;
+      padding: 8px 14px;
+      border: 1px solid rgba(85, 239, 207, 0.28);
+      border-radius: 999px;
+      background: rgba(8, 22, 31, 0.92);
+      color: var(--teal);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      max-width: 920px;
+      margin-top: 18px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(40px, 7vw, 74px);
+      line-height: 0.97;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-title .accent {
+      color: var(--teal);
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: clamp(18px, 2.2vw, 22px);
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 0 20px;
+      border-radius: 16px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, var(--teal), #2ab7ff);
+      color: #031019;
+      box-shadow: 0 18px 40px rgba(85, 239, 207, 0.22);
+    }
+
+    .button-secondary {
+      background: rgba(11, 23, 34, 0.94);
+      border-color: rgba(154, 176, 191, 0.22);
+      color: var(--text);
+    }
+
+    .hero-grid {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.85fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .panel {
+      background: #091520;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-panel {
+      padding: 28px;
+      overflow: hidden;
+      position: relative;
+      background:
+        radial-gradient(circle at top right, rgba(85, 239, 207, 0.16), transparent 28%),
+        linear-gradient(180deg, #0b1824, #0a1620);
+    }
+
+    .hero-panel::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -30% 40%;
+      height: 220px;
+      background: linear-gradient(135deg, rgba(85, 239, 207, 0.2), rgba(143, 217, 255, 0.04));
+      transform: rotate(-11deg);
+      border-radius: 44px;
+    }
+
+    .lead-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .lead-meta img {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      object-fit: cover;
+    }
+
+    .lead-meta h2 {
+      margin: 0;
+      font-size: 24px;
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    .lead-meta p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .signal-list {
+      margin: 22px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .signal-list li {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(5, 12, 19, 0.72);
+      border: 1px solid rgba(154, 176, 191, 0.12);
+    }
+
+    .signal-no {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(85, 239, 207, 0.18), rgba(143, 217, 255, 0.12));
+      color: var(--teal);
+      font-weight: 800;
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    .signal-list strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 17px;
+    }
+
+    .signal-list span {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .fact-panel {
+      padding: 28px;
+      background:
+        radial-gradient(circle at 100% 0, rgba(255, 138, 91, 0.18), transparent 28%),
+        linear-gradient(180deg, #0b1620, #0a1219);
+    }
+
+    .panel-label {
+      color: var(--orange);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .fact-panel h3 {
+      margin: 14px 0 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 30px;
+      line-height: 1.05;
+    }
+
+    .fact-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .stat-grid {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(5, 11, 18, 0.9);
+      border: 1px solid rgba(154, 176, 191, 0.12);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 30px;
+      line-height: 1;
+      color: var(--text);
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .section {
+      padding: 28px 0;
+    }
+
+    .section-card {
+      padding: 30px;
+      background: #081520;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-head {
+      max-width: 760px;
+      margin: 0 auto 24px;
+      text-align: center;
+    }
+
+    .section-head .eyebrow {
+      margin-bottom: 14px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(28px, 5vw, 52px);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    .evidence-grid,
+    .fit-grid,
+    .ops-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .evidence-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .evidence {
+      padding: 22px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #0b1a26, #0a141d);
+      border: 1px solid rgba(154, 176, 191, 0.14);
+    }
+
+    .evidence strong {
+      display: block;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 16px;
+      color: var(--teal);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .evidence p,
+    .fit-card p,
+    .ops-card p,
+    .footer-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    .prototype-stage {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .phone-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .phone-tag {
+      width: fit-content;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 800;
+      border: 1px solid transparent;
+    }
+
+    .phone-tag.current {
+      background: rgba(255, 107, 107, 0.1);
+      color: #ff9d9d;
+      border-color: rgba(255, 107, 107, 0.25);
+    }
+
+    .phone-tag.future {
+      background: rgba(85, 239, 207, 0.1);
+      color: var(--teal);
+      border-color: rgba(85, 239, 207, 0.3);
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      padding: 14px;
+      border-radius: 42px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04)),
+        linear-gradient(180deg, #0e202d, #09131b 58%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.48);
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 132px;
+      height: 28px;
+      border-radius: 0 0 18px 18px;
+      background: #02070b;
+      z-index: 3;
+    }
+
+    .phone-screen {
+      position: relative;
+      height: 100%;
+      overflow: auto;
+      border-radius: 30px;
+      padding: 36px 14px 14px;
+      background:
+        radial-gradient(circle at top right, rgba(85, 239, 207, 0.16), transparent 28%),
+        linear-gradient(180deg, #0a141d, #081018);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      scrollbar-width: none;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screen-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      margin-bottom: 14px;
+    }
+
+    .screen-pill,
+    .screen-card,
+    .timeline-step,
+    .mini-card,
+    .status-row {
+      display: block;
+    }
+
+    .screen-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      width: fit-content;
+      margin-bottom: 12px;
+      border: 1px solid rgba(154, 176, 191, 0.18);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .screen-heading {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 28px;
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .screen-sub {
+      margin: 10px 0 18px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .screen-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(154, 176, 191, 0.14);
+      margin-bottom: 12px;
+    }
+
+    .screen-card strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .screen-card p,
+    .mini-card p,
+    .status-row span {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .status.warn {
+      color: #ffd2bc;
+      background: rgba(255, 138, 91, 0.12);
+      border: 1px solid rgba(255, 138, 91, 0.22);
+    }
+
+    .status.bad {
+      color: #ffb5b5;
+      background: rgba(255, 107, 107, 0.12);
+      border: 1px solid rgba(255, 107, 107, 0.22);
+    }
+
+    .status.good {
+      color: #c9fff1;
+      background: rgba(85, 239, 207, 0.12);
+      border: 1px solid rgba(85, 239, 207, 0.28);
+    }
+
+    .timeline {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .timeline-step {
+      padding: 12px 12px 12px 14px;
+      border-left: 3px solid rgba(154, 176, 191, 0.2);
+      border-radius: 0 16px 16px 0;
+      background: rgba(6, 13, 20, 0.7);
+    }
+
+    .timeline-step strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .timeline-step span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .split-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .mini-card {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(154, 176, 191, 0.14);
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 20px;
+      font-family: "Space Grotesk", sans-serif;
+      margin-bottom: 4px;
+    }
+
+    .cta-chip {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 46px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--teal), #30c2ff);
+      color: #041017;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .status-feed {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .status-row {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(154, 176, 191, 0.14);
+    }
+
+    .status-row strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .fit-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 24px;
+    }
+
+    .fit-card,
+    .ops-card,
+    .footer-card {
+      padding: 22px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #0b1824, #09131b);
+      border: 1px solid rgba(154, 176, 191, 0.14);
+    }
+
+    .fit-card strong,
+    .ops-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 21px;
+      line-height: 1.1;
+    }
+
+    .ops-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 24px;
+    }
+
+    .footer-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: center;
+      margin-top: 24px;
+      background:
+        radial-gradient(circle at 100% 0, rgba(85, 239, 207, 0.18), transparent 24%),
+        linear-gradient(180deg, #0d1a25, #0a131b);
+    }
+
+    .footer-card h3 {
+      margin: 0 0 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      color: rgba(154, 176, 191, 0.85);
+      font-size: 13px;
+    }
+
+    footer {
+      padding: 18px 0 48px;
+      text-align: center;
+      color: rgba(154, 176, 191, 0.8);
+      font-size: 13px;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .prototype-stage,
+      .evidence-grid,
+      .fit-grid,
+      .ops-grid,
+      .footer-card {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-card {
+        justify-items: start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding-top: 26px;
+      }
+
+      .hero-panel,
+      .fact-panel,
+      .section-card {
+        padding: 22px;
+      }
+
+      .lead-meta {
+        align-items: flex-start;
+      }
+
+      .stat-grid,
+      .split-metrics {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .container {
+        width: min(100% - 20px, 1160px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="container">
+        <img class="hero-logo" src="assets/fraction-logo.png" alt="FRACTION logo">
+        <span class="eyebrow">Built for Tom Kelly • EVONA • March 29, 2026</span>
+        <h1 class="hero-title">What if <span class="accent">EVONA’s first touch</span> felt as premium as the talent it sells?</h1>
+        <p class="hero-copy">Public signals say the positioning is strong. The leakage happens between recruiter outreach, trust and a booked next step. This concept turns that gap into a mobile product advantage for EVONA and FRACTION.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#prototype">See the Prototype</a>
+          <a class="button button-secondary" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+        </div>
+
+        <div class="hero-grid">
+          <article class="panel hero-panel">
+            <div class="lead-meta">
+              <img src="assets/tom-kelly.png" alt="Tom Kelly">
+              <div>
+                <h2>Tom Kelly</h2>
+                <p>Co-Founder & CEO, EVONA<br>Public web product fallback: FRACTION</p>
+              </div>
+            </div>
+
+            <ul class="signal-list">
+              <li>
+                <div class="signal-no">01</div>
+                <div>
+                  <strong>No public mobile app</strong>
+                  <span>No matching EVONA or FRACTION app was found in US App Store or Google Play checks on 2026-03-29. The live product surface is the FRACTION web experience.</span>
+                </div>
+              </li>
+              <li>
+                <div class="signal-no">02</div>
+                <div>
+                  <strong>Brand promise is already premium</strong>
+                  <span>FRACTION promises elite fractional-executive access in seconds, AI support, shortlist sharing and direct meetings. The product direction is there.</span>
+                </div>
+              </li>
+              <li>
+                <div class="signal-no">03</div>
+                <div>
+                  <strong>Public trust still leaks early</strong>
+                  <span>Candidate chatter on Reddit questions legitimacy and follow-up quality. That makes first-touch confidence the sharpest mobile opportunity.</span>
+                </div>
+              </li>
+            </ul>
+          </article>
+
+          <aside class="panel fact-panel">
+            <span class="panel-label">Public Signals</span>
+            <h3>Protect the strongest part of the brand: responsiveness.</h3>
+            <p>EVONA's own published client survey shows high marks for communication and overall delivery. A mobile trust layer helps keep that premium reputation intact before a live recruiter ever speaks.</p>
+            <div class="stat-grid">
+              <div class="stat">
+                <strong>+5,000</strong>
+                <span>network of seasoned leaders promoted on the FRACTION site</span>
+              </div>
+              <div class="stat">
+                <strong>4.8/5</strong>
+                <span>communication score in EVONA's published client survey</span>
+              </div>
+              <div class="stat">
+                <strong>2017</strong>
+                <span>founding year listed on EVONA's public SIA member profile</span>
+              </div>
+              <div class="stat">
+                <strong>1 tap</strong>
+                <span>target outcome: from verified outreach to booked intro</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section">
+        <div class="container">
+          <div class="section-card">
+            <div class="section-head">
+              <span class="eyebrow">Why This Lead Works</span>
+              <h2>EVONA is already acting like a platform company.</h2>
+              <p>That makes this a credible mobile conversation. The opportunity is not to invent a new line of business. It is to turn EVONA’s strongest service trait into a visible product feature.</p>
+            </div>
+
+            <div class="evidence-grid">
+              <article class="evidence">
+                <strong>FRACTION</strong>
+                <p>Public messaging positions it as an AI-powered platform for founders, VCs and PEs to browse, shortlist and directly engage fractional executives.</p>
+              </article>
+              <article class="evidence">
+                <strong>Reddit</strong>
+                <p>Public candidate comments mention uncertainty around legitimacy, missed calls and no response after follow-up. That is a first-touch confidence problem.</p>
+              </article>
+              <article class="evidence">
+                <strong>Hiring Pressure</strong>
+                <p>EVONA’s own content highlights program management and software-development hiring, where stakeholder coordination and speed matter more than a normal agency workflow.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="prototype">
+        <div class="container">
+          <div class="section-card">
+            <div class="section-head">
+              <span class="eyebrow">Prototype</span>
+              <h2>From uncertain outreach to a trusted executive-intro flow.</h2>
+              <p>The left phone shows the current public perception gap. The right phone shows a mobile confidence cockpit built around verification, visibility and speed.</p>
+            </div>
+
+            <div class="prototype-stage">
+              <div class="phone-wrap">
+                <span class="phone-tag current">Current Perception</span>
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="screen-top">
+                      <span>9:41</span>
+                      <span>EVONA outreach</span>
+                    </div>
+                    <span class="screen-pill">Current journey</span>
+                    <h3 class="screen-heading">Interest arrives.<br>Confidence doesn’t.</h3>
+                    <p class="screen-sub">The public signal is not "bad sourcing." It is uncertainty around who is reaching out, whether the process is real, and what happens next.</p>
+
+                    <div class="screen-card">
+                      <strong>LinkedIn message received</strong>
+                      <p>"Thriving space company" sounds good, but the role context is thin and the path forward feels opaque.</p>
+                      <span class="status warn">Low trust • vague next step</span>
+                    </div>
+
+                    <div class="screen-card">
+                      <strong>Phone call arranged</strong>
+                      <p>No visible confirmation, no backup channel, no shared record, no SLA.</p>
+                      <span class="status bad">Missed callback risk</span>
+                    </div>
+
+                    <div class="timeline">
+                      <div class="timeline-step">
+                        <strong>Step 1</strong>
+                        <span>Candidate wonders if the recruiter is legitimate.</span>
+                      </div>
+                      <div class="timeline-step">
+                        <strong>Step 2</strong>
+                        <span>There is no persistent status view for follow-up.</span>
+                      </div>
+                      <div class="timeline-step">
+                        <strong>Step 3</strong>
+                        <span>Momentum drops before the first value-rich conversation.</span>
+                      </div>
+                    </div>
+
+                    <div class="split-metrics">
+                      <div class="mini-card">
+                        <strong>0</strong>
+                        <p>mobile touchpoints publicly available today</p>
+                      </div>
+                      <div class="mini-card">
+                        <strong>High</strong>
+                        <p>brand risk when premium outreach feels unclear</p>
+                      </div>
+                    </div>
+
+                    <div class="screen-card">
+                      <strong>Result</strong>
+                      <p>Even a strong recruiting brand can lose trust before it gets the chance to prove quality.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="phone-wrap">
+                <span class="phone-tag future">Improved Mobile Flow</span>
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="screen-top">
+                      <span>9:41</span>
+                      <span>Confidence cockpit</span>
+                    </div>
+                    <span class="screen-pill">EVONA x FRACTION</span>
+                    <h3 class="screen-heading">Verified. Scheduled.<br>Shared.</h3>
+                    <p class="screen-sub">One portable workflow for founders, investors and candidates handling complex executive or program-management searches.</p>
+
+                    <div class="screen-card">
+                      <strong>Tom Kelly • Verified EVONA recruiter</strong>
+                      <p>VP Program Management search • Satcom / infrastructure focus • 94% profile match</p>
+                      <span class="status good">Response SLA • 2 hours</span>
+                    </div>
+
+                    <div class="split-metrics">
+                      <div class="mini-card">
+                        <strong>15m</strong>
+                        <p>intro slot held for tomorrow, 09:30 ET</p>
+                      </div>
+                      <div class="mini-card">
+                        <strong>3</strong>
+                        <p>stakeholders already attached to the shortlist</p>
+                      </div>
+                    </div>
+
+                    <a class="cta-chip" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Book intro in one tap</a>
+
+                    <div class="status-feed">
+                      <div class="status-row">
+                        <strong>Role brief synced</strong>
+                        <span>Program, software and infrastructure requirements summarized in plain language instead of buried in a DM.</span>
+                      </div>
+                      <div class="status-row">
+                        <strong>Shortlist shared</strong>
+                        <span>Founders, investors and recruiters can approve, reject or comment without email ping-pong.</span>
+                      </div>
+                      <div class="status-row">
+                        <strong>Confidence preserved</strong>
+                        <span>Each touchpoint shows who owns the next action and when the user will hear back.</span>
+                      </div>
+                    </div>
+
+                    <div class="screen-card">
+                      <strong>Why it matters</strong>
+                      <p>EVONA's strongest service quality becomes a productized trust signal instead of a behind-the-scenes promise.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-card">
+            <div class="section-head">
+              <span class="eyebrow">Elinext Fit</span>
+              <h2>The mobile layer maps directly to EVONA’s harder searches.</h2>
+              <p>Your CRM signal points to program-management and infrastructure-heavy hiring. Those searches break when recruiter ops, status tracking and stakeholder feedback stay fragmented.</p>
+            </div>
+
+            <div class="fit-grid">
+              <article class="fit-card">
+                <strong>Infrastructure-grade workflow</strong>
+                <p>Elinext case studies around telecom virtualization and infrastructure delivery align with building a reliable recruiter-control layer for complex satellite and platform hiring.</p>
+              </article>
+              <article class="fit-card">
+                <strong>Network-aware planning</strong>
+                <p>Experience with network-planning software translates well to shortlist routing, stakeholder approvals and high-signal candidate coordination.</p>
+              </article>
+              <article class="fit-card">
+                <strong>Faster shipping</strong>
+                <p>CI/CD optimization work is relevant because EVONA is already experimenting with product-led recruiting. The win is faster iteration without breaking trust-sensitive workflows.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-card">
+            <div class="section-head">
+              <span class="eyebrow">What Ships First</span>
+              <h2>A lean release that proves the thesis fast.</h2>
+              <p>This does not need a giant platform rewrite. The fastest path is a mobile companion that sits on top of the existing EVONA and FRACTION workflow.</p>
+            </div>
+
+            <div class="ops-grid">
+              <article class="ops-card">
+                <strong>1. Verified outreach</strong>
+                <p>Recruiter identity, role summary, fit score and response expectation shown in a persistent mobile view.</p>
+              </article>
+              <article class="ops-card">
+                <strong>2. Shortlist collaboration</strong>
+                <p>Founders and investors approve candidates, leave notes and avoid losing context across calls, email and CRM.</p>
+              </article>
+              <article class="ops-card">
+                <strong>3. Meeting certainty</strong>
+                <p>One-tap booking, backup channel, reminders and ownership of the next action reduce the exact trust gap showing up in public chatter.</p>
+              </article>
+            </div>
+
+            <div class="footer-card">
+              <div>
+                <h3>If EVONA already sells premium access, the mobile layer should feel premium too.</h3>
+                <p>This prototype focuses on the narrowest high-value fix: make every first-touch conversation feel verified, visible and easy to advance.</p>
+                <div class="footer-note">Prototype path: https://elinext-lab.github.io/prototypes/evona_2026-03-29_22-34-25/</div>
+              </div>
+              <a class="button button-primary" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      AI-powered mobile teardown concept for EVONA by Elinext.
+    </footer>
+  </div>
+</body>
+</html>
