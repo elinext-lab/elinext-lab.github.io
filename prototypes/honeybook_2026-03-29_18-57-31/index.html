@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HoneyBook Mobile Teardown | Elinext</title>
+  <meta name="description" content="What if HoneyBook turned scattered AI follow-up suggestions, Gmail lead signals, and rescue actions into a single mobile queue that actually helps small-business owners save cold leads fast?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/honeybook_2026-03-29_18-57-31/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-29_18-57-31/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-29_18-57-31/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="HoneyBook Mobile — AI Teardown">
+  <meta property="og:description" content="What if HoneyBook turned hidden follow-up suggestions, Gmail lead signals, and mobile rescue actions into one fast queue so cold leads could be recovered before users bounce back to desktop?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="HoneyBook Mobile — AI Teardown">
+  <meta name="twitter:description" content="What if HoneyBook turned hidden follow-up suggestions, Gmail lead signals, and mobile rescue actions into one fast queue so cold leads could be recovered before users bounce back to desktop?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-29_18-57-31/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-29: iOS 4.77 (15672 reviews, source: iTunes API), Android 4.58 (2249 reviews, source: https://play.google.com/store/apps/details?id=com.honeybook.alfred&hl=en_US&gl=US) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Literata:opsz,wght@7..72,500;7..72,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #10203c;
+      --ink-deep: #081429;
+      --ink-soft: #182a48;
+      --paper: #f6f1e6;
+      --paper-soft: #fffaf0;
+      --panel: #fffdf7;
+      --panel-strong: #fff7e8;
+      --line: rgba(20, 35, 64, 0.12);
+      --line-strong: rgba(20, 35, 64, 0.22);
+      --muted: #5e6e87;
+      --gold: #f5b84f;
+      --gold-deep: #db8c0f;
+      --honey: #ffcf70;
+      --mint: #71d4b6;
+      --blue: #6ea7ff;
+      --red: #ff7c6e;
+      --shadow: 0 24px 60px rgba(7, 17, 31, 0.12);
+      --radius-xl: 36px;
+      --radius-lg: 26px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+      --shell: min(1180px, calc(100% - 28px));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Sora", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(255, 207, 112, 0.55), transparent 22%),
+        radial-gradient(circle at 92% 8%, rgba(110, 167, 255, 0.18), transparent 16%),
+        linear-gradient(180deg, #fff7e8 0%, #f7efe0 28%, #f7f4ec 60%, #fcfbf7 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(rgba(16, 32, 60, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 32, 60, 0.04) 1px, transparent 1px);
+      background-size: 52px 52px;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .shell {
+      width: var(--shell);
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 28px 0 48px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 26px;
+      padding: 16px 18px;
+      background: rgba(255, 253, 247, 0.86);
+      border: 1px solid rgba(20, 35, 64, 0.08);
+      box-shadow: 0 18px 44px rgba(20, 35, 64, 0.06);
+      border-radius: 999px;
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      box-shadow: 0 10px 22px rgba(16, 32, 60, 0.18);
+      flex: 0 0 auto;
+    }
+
+    .brand-text strong,
+    .brand-text span {
+      display: block;
+    }
+
+    .brand-text strong {
+      font-size: 0.96rem;
+      letter-spacing: 0.01em;
+    }
+
+    .brand-text span {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .top-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ffde92, #f3b545);
+      color: var(--ink-deep);
+      font-size: 0.84rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 40px;
+      padding: 38px;
+      background:
+        radial-gradient(circle at 10% 18%, rgba(255, 216, 126, 0.45), transparent 26%),
+        radial-gradient(circle at 88% 16%, rgba(110, 167, 255, 0.2), transparent 22%),
+        linear-gradient(160deg, rgba(255, 250, 240, 0.98), rgba(255, 254, 250, 0.96));
+      border: 1px solid rgba(20, 35, 64, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -110px;
+      top: 70px;
+      width: 320px;
+      height: 320px;
+      border-radius: 36%;
+      background: radial-gradient(circle, rgba(219, 140, 15, 0.16), transparent 62%);
+      z-index: 0;
+    }
+
+    .hero-copy,
+    .hero-copy h1,
+    .hero-copy p,
+    .hero-copy .hero-badges {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 auto 18px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 244, 220, 0.95);
+      border: 1px solid rgba(219, 140, 15, 0.22);
+      color: var(--gold-deep);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .hero-copy h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 920px;
+      margin-top: 0;
+      margin-bottom: 18px;
+      font-family: "Literata", serif;
+      font-size: clamp(2.6rem, 5vw, 5.3rem);
+      line-height: 0.99;
+      letter-spacing: -0.05em;
+      color: var(--ink-deep);
+    }
+
+    .hero-copy p {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin-top: 0;
+      margin-bottom: 26px;
+      font-size: clamp(1rem, 2vw, 1.14rem);
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .hero-badges {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .hero-badge {
+      padding: 11px 14px;
+      border-radius: 999px;
+      background: rgba(255, 253, 248, 0.96);
+      border: 1px solid rgba(20, 35, 64, 0.09);
+      font-size: 0.86rem;
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+
+    .stats {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(20, 35, 64, 0.08);
+      text-align: left;
+    }
+
+    .stat strong,
+    .stat span {
+      display: block;
+    }
+
+    .stat strong {
+      font-size: 1.6rem;
+      color: var(--ink-deep);
+      margin-bottom: 6px;
+    }
+
+    .stat span {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    section {
+      padding: 0 0 56px;
+    }
+
+    .panel {
+      background: rgba(255, 253, 247, 0.92);
+      border: 1px solid rgba(20, 35, 64, 0.08);
+      border-radius: var(--radius-xl);
+      box-shadow: 0 18px 44px rgba(20, 35, 64, 0.07);
+    }
+
+    .problem {
+      padding: 34px;
+    }
+
+    .section-head {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+
+    .section-head span {
+      color: var(--gold-deep);
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-family: "Literata", serif;
+      font-size: clamp(2rem, 3vw, 3.15rem);
+      line-height: 1.06;
+      letter-spacing: -0.04em;
+      color: var(--ink-deep);
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 1rem;
+    }
+
+    .signals {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .signal {
+      padding: 20px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, rgba(255, 250, 241, 0.98), rgba(255, 255, 255, 0.96));
+      border: 1px solid rgba(20, 35, 64, 0.08);
+    }
+
+    .signal strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      color: var(--ink-deep);
+    }
+
+    .signal p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.68;
+    }
+
+    .comparison-wrap {
+      padding: 34px;
+      background: linear-gradient(180deg, rgba(255, 252, 245, 0.95), rgba(249, 244, 235, 0.95));
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 620px);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .comparison-copy {
+      display: grid;
+      gap: 18px;
+    }
+
+    .comparison-copy h3 {
+      margin: 0;
+      font-family: "Literata", serif;
+      font-size: clamp(1.8rem, 2.7vw, 2.9rem);
+      line-height: 1.08;
+      letter-spacing: -0.05em;
+      color: var(--ink-deep);
+    }
+
+    .comparison-copy p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 1rem;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 12px;
+    }
+
+    .check {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      padding: 15px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(20, 35, 64, 0.08);
+    }
+
+    .check-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--ink-deep);
+      background: rgba(255, 207, 112, 0.9);
+      font-weight: 800;
+      font-size: 0.86rem;
+    }
+
+    .check strong,
+    .check span {
+      display: block;
+    }
+
+    .check strong {
+      margin-bottom: 5px;
+      font-size: 0.95rem;
+      color: var(--ink-deep);
+    }
+
+    .check span {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .phones {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .phone-block {
+      display: grid;
+      justify-items: center;
+      gap: 12px;
+    }
+
+    .phone-label {
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .phone-label.current {
+      color: #894d00;
+      background: rgba(255, 214, 129, 0.72);
+    }
+
+    .phone-label.future {
+      color: #15513c;
+      background: rgba(113, 212, 182, 0.32);
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      padding: 10px;
+      border-radius: 38px;
+      background: linear-gradient(180deg, #16202f, #090f19);
+      box-shadow: 0 24px 50px rgba(8, 20, 41, 0.25);
+      position: relative;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 118px;
+      height: 26px;
+      border-radius: 0 0 18px 18px;
+      background: #060b12;
+      z-index: 3;
+    }
+
+    .phone-screen {
+      height: 100%;
+      border-radius: 30px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #f8f3e8;
+      padding: 36px 14px 14px;
+      position: relative;
+      scrollbar-width: none;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .phone-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      color: var(--ink-soft);
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    .mini-title {
+      display: grid;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+
+    .mini-title strong {
+      color: var(--ink-deep);
+      font-size: 1.1rem;
+      letter-spacing: -0.03em;
+    }
+
+    .mini-title span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .capture {
+      position: relative;
+      margin-bottom: 14px;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(20, 35, 64, 0.1);
+      background: #fff;
+    }
+
+    .capture img {
+      width: 100%;
+      display: block;
+    }
+
+    .callout {
+      padding: 12px 12px 11px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(20, 35, 64, 0.08);
+      margin-bottom: 10px;
+    }
+
+    .callout strong,
+    .callout span {
+      display: block;
+    }
+
+    .callout strong {
+      font-size: 0.83rem;
+      color: var(--ink-deep);
+      margin-bottom: 4px;
+    }
+
+    .callout span {
+      font-size: 0.76rem;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .future-head {
+      padding: 14px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #152747, #243f6a);
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .future-head strong,
+    .future-head span {
+      display: block;
+    }
+
+    .future-head strong {
+      font-size: 0.95rem;
+      margin-bottom: 5px;
+    }
+
+    .future-head span {
+      font-size: 0.77rem;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .rescue-card,
+    .preview-card,
+    .action-row,
+    .handoff-card {
+      border-radius: 18px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(20, 35, 64, 0.08);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .rescue-card {
+      padding: 14px;
+    }
+
+    .rescue-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .rescue-head strong,
+    .rescue-head span {
+      display: block;
+    }
+
+    .rescue-head strong {
+      font-size: 0.88rem;
+      color: var(--ink-deep);
+    }
+
+    .rescue-head span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .score-pill {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255, 207, 112, 0.24);
+      color: #8b5d00;
+      font-size: 0.72rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .signal-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .signal-chip {
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: #f7f2e8;
+      color: var(--ink-soft);
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .rescue-card p,
+    .preview-card p,
+    .handoff-card p {
+      margin: 0;
+      font-size: 0.76rem;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .preview-card {
+      padding: 14px;
+      background: linear-gradient(180deg, #fffaf0, #fffefc);
+    }
+
+    .preview-card strong,
+    .handoff-card strong {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 0.82rem;
+      color: var(--ink-deep);
+    }
+
+    .draft {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid rgba(20, 35, 64, 0.08);
+      font-size: 0.75rem;
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
+    .action-row {
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .action-btn {
+      display: grid;
+      place-items: center;
+      min-height: 42px;
+      border-radius: 14px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(135deg, #f3b545, #de8c15);
+      color: #13243f;
+    }
+
+    .action-btn.secondary {
+      background: #f0f3f8;
+      color: var(--ink-soft);
+    }
+
+    .handoff-card {
+      padding: 14px;
+      background: rgba(113, 212, 182, 0.11);
+    }
+
+    .proof {
+      padding: 34px;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .proof-card {
+      padding: 22px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(20, 35, 64, 0.08);
+    }
+
+    .proof-card span {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255, 207, 112, 0.22);
+      color: #905f00;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .proof-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--ink-deep);
+      font-size: 1rem;
+    }
+
+    .proof-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    .roadmap {
+      padding: 34px;
+      background: linear-gradient(180deg, rgba(13, 24, 43, 0.98), rgba(17, 31, 55, 0.97));
+      color: #f7f9ff;
+    }
+
+    .roadmap .section-head span {
+      color: var(--honey);
+    }
+
+    .roadmap .section-head h2,
+    .roadmap .section-head p {
+      color: #f7f9ff;
+    }
+
+    .roadmap .section-head p {
+      color: rgba(247, 249, 255, 0.78);
+    }
+
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .road {
+      padding: 20px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .road b,
+    .road strong,
+    .road span {
+      display: block;
+    }
+
+    .road b {
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 0.78rem;
+      margin-bottom: 8px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .road strong {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      color: #fff;
+    }
+
+    .road span {
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    .cta {
+      padding: 0 0 64px;
+    }
+
+    .cta-card {
+      padding: 34px;
+      border-radius: 34px;
+      background: linear-gradient(135deg, #ffd485, #f6ba52 38%, #fff7e7 100%);
+      border: 1px solid rgba(16, 32, 60, 0.08);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .cta-card h2,
+    .cta-card p,
+    .cta-card .cta-actions {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .cta-card h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      max-width: 760px;
+      font-family: "Literata", serif;
+      font-size: clamp(2rem, 3vw, 3rem);
+      line-height: 1.08;
+      letter-spacing: -0.05em;
+      color: var(--ink-deep);
+    }
+
+    .cta-card p {
+      max-width: 720px;
+      margin-top: 0;
+      margin-bottom: 22px;
+      color: rgba(16, 32, 60, 0.78);
+      line-height: 1.75;
+    }
+
+    .cta-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 170px;
+      padding: 15px 22px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .cta-btn.primary {
+      background: var(--ink-deep);
+      color: #fff;
+    }
+
+    .cta-btn.secondary {
+      background: rgba(255, 255, 255, 0.74);
+      color: var(--ink-deep);
+      border: 1px solid rgba(16, 32, 60, 0.08);
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      font-size: 0.78rem;
+      color: rgba(16, 32, 60, 0.65);
+    }
+
+    @media (max-width: 1100px) {
+      .stats,
+      .signals,
+      .proof-grid,
+      .roadmap-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 780px) {
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+        border-radius: 28px;
+      }
+
+      .brand {
+        justify-content: center;
+      }
+
+      .top-pill {
+        width: 100%;
+      }
+
+      .hero-card,
+      .problem,
+      .comparison-wrap,
+      .proof,
+      .roadmap,
+      .cta-card {
+        padding: 26px;
+      }
+
+      .stats,
+      .signals,
+      .proof-grid,
+      .roadmap-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .hero-card,
+      .problem,
+      .comparison-wrap,
+      .proof,
+      .roadmap,
+      .cta-card {
+        padding: 22px;
+      }
+
+      .cta-actions {
+        flex-direction: column;
+      }
+
+      .cta-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body id="top">
+  <div class="page">
+    <section class="hero">
+      <div class="shell">
+        <div class="topbar">
+          <div class="brand">
+            <img src="assets/app-icon.jpg" alt="HoneyBook app icon">
+            <div class="brand-text">
+              <strong>HoneyBook Mobile Teardown</strong>
+              <span>AI lead management concept by Elinext</span>
+            </div>
+          </div>
+          <div class="top-pill">Built for HoneyBook's lead rescue flow</div>
+        </div>
+
+        <div class="hero-card panel">
+          <div class="hero-copy">
+            <div class="eyebrow">AI Lead Rescue Queue</div>
+            <h1>What if HoneyBook made every cold lead rescue feel like one fast mobile action?</h1>
+            <p>
+              HoneyBook is already shipping AI follow-ups, Gmail suggestions, and AI note-taking.
+              The gap is execution: public docs still spread rescue work across filters, notifications,
+              and settings while mobile reviews keep calling out slow menus, hidden controls, and desktop fallback.
+            </p>
+            <div class="hero-badges">
+              <div class="hero-badge">Contacts filter for unconverted leads</div>
+              <div class="hero-badge">Projects filter for silent threads</div>
+              <div class="hero-badge">Bell notifications for new suggestions</div>
+              <div class="hero-badge">One missing mobile action breaks the rescue</div>
+            </div>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <strong>4.77</strong>
+              <span>iOS rating in the US from 15,672 ratings as retrieved on 2026-03-29.</span>
+            </div>
+            <div class="stat">
+              <strong>4.58</strong>
+              <span>Android listing snapshot from 2,249 ratings and 100,000+ installs on 2026-03-29.</span>
+            </div>
+            <div class="stat">
+              <strong>3+</strong>
+              <span>Distinct AI lead-signal entry points already exist across filters, Gmail, and notifications.</span>
+            </div>
+            <div class="stat">
+              <strong>1 queue</strong>
+              <span>The prototype collapses those signals into a single action surface for mobile recovery.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <div class="problem panel">
+          <div class="section-head">
+            <span>Why This Matters</span>
+            <h2>HoneyBook has the intelligence. The mobile path to action is still too fragmented.</h2>
+            <p>
+              The official help flow for AI follow-up suggestions is useful, but it assumes the operator knows where to look.
+              That is a desktop-shaped mental model. On mobile, the rescue moment needs to be obvious, fast, and safe.
+            </p>
+          </div>
+          <div class="signals">
+            <div class="signal">
+              <strong>Hidden signal paths</strong>
+              <p>HoneyBook documents AI follow-up suggestions through Contacts filters, Projects filters, scheduled notifications, and settings toggles. The signal exists, but not in one operational home.</p>
+            </div>
+            <div class="signal">
+              <strong>Critical parity gaps</strong>
+              <p>Recent reviews still mention missing file edits, contract friction, slow transitions, and cases where the browser is easier than the app for important work.</p>
+            </div>
+            <div class="signal">
+              <strong>AI trust risk</strong>
+              <p>Shipping more AI into a workflow app raises the bar. If the rescue action feels buried or unstable, the feature reads as extra noise instead of saved revenue.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <div class="comparison-wrap panel">
+          <div class="comparison">
+            <div class="comparison-copy">
+              <h3>Replace scattered follow-up hunting with one mobile Lead Rescue Queue.</h3>
+              <p>
+                The idea is narrow on purpose. Do not redesign all of HoneyBook. Just pull the rescue moment
+                into a single mobile surface that explains why the lead surfaced, previews the AI draft, and lets
+                the user send, convert, schedule, or assign without leaving the screen.
+              </p>
+              <div class="checklist">
+                <div class="check">
+                  <div class="check-mark">1</div>
+                  <div>
+                    <strong>Unify signal sources</strong>
+                    <span>Combine unconverted leads, silent threads, Gmail opportunities, and follow-up reminders into one queue ordered by urgency.</span>
+                  </div>
+                </div>
+                <div class="check">
+                  <div class="check-mark">2</div>
+                  <div>
+                    <strong>Explain the AI</strong>
+                    <span>Show the reason the lead surfaced now: no reply in 4 days, no booking after proposal, or a new matched Gmail thread.</span>
+                  </div>
+                </div>
+                <div class="check">
+                  <div class="check-mark">3</div>
+                  <div>
+                    <strong>Keep the handoff intact</strong>
+                    <span>After the action, let the user convert to project, assign a reminder, or attach the correct automation without hunting elsewhere.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phones">
+              <div class="phone-block">
+                <div class="phone-label current">Current state</div>
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="phone-top">
+                      <span>9:41</span>
+                      <span>5G 100%</span>
+                    </div>
+                    <div class="mini-title">
+                      <strong>Where do I rescue this lead?</strong>
+                      <span>Signal exists, but the route to action is still fragmented.</span>
+                    </div>
+                    <div class="capture">
+                      <img src="assets/screen-1.png" alt="Official HoneyBook app screenshot">
+                    </div>
+                    <div class="callout">
+                      <strong>Follow-up suggestions live behind filters</strong>
+                      <span>Docs route unconverted leads through Contacts and silent threads through Projects.</span>
+                    </div>
+                    <div class="callout">
+                      <strong>Users still hit mobile parity limits</strong>
+                      <span>Recent reviews mention no file edits, no smooth contract work, and iPad send issues.</span>
+                    </div>
+                    <div class="callout">
+                      <strong>Menu hunting kills urgency</strong>
+                      <span>Low-score reviews repeatedly describe slow screens and controls buried too deep.</span>
+                    </div>
+                    <div class="capture">
+                      <img src="assets/screen-3.png" alt="Official HoneyBook app screenshot">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="phone-block">
+                <div class="phone-label future">Proposed flow</div>
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="phone-top">
+                      <span>9:41</span>
+                      <span>Lead AI On</span>
+                    </div>
+                    <div class="future-head">
+                      <strong>Lead Rescue Queue</strong>
+                      <span>One mobile place for AI follow-ups, Gmail leads, and urgent next actions.</span>
+                    </div>
+
+                    <div class="rescue-card">
+                      <div class="rescue-head">
+                        <div>
+                          <strong>Lina Studio</strong>
+                          <span>No reply for 4 days after proposal</span>
+                        </div>
+                        <div class="score-pill">92% save chance</div>
+                      </div>
+                      <div class="signal-row">
+                        <div class="signal-chip">Follow-up suggestion</div>
+                        <div class="signal-chip">Viewed proposal twice</div>
+                        <div class="signal-chip">No payment yet</div>
+                      </div>
+                      <p>AI says this is a high-intent lead that stalled after the pricing page. Best next move: concise follow-up with one booking shortcut.</p>
+                    </div>
+
+                    <div class="preview-card">
+                      <strong>Draft preview</strong>
+                      <p>Edit before send. Keep tone human. Preserve the context that made the AI surface this lead in the first place.</p>
+                      <div class="draft">
+                        Hi Lina, just checking in since you reviewed the proposal this week. I can hold the original scope through Friday, and I added one tap to confirm the kickoff slot if you want to move forward.
+                      </div>
+                    </div>
+
+                    <div class="action-row">
+                      <div class="action-btn primary">Send follow-up</div>
+                      <div class="action-btn secondary">Convert to project</div>
+                      <div class="action-btn secondary">Set reminder</div>
+                      <div class="action-btn secondary">Call task</div>
+                    </div>
+
+                    <div class="handoff-card">
+                      <strong>Automation handoff</strong>
+                      <p>After send, attach the right nurture sequence, mark the lead rescued, and keep the project state aligned without jumping to another menu.</p>
+                    </div>
+
+                    <div class="rescue-card">
+                      <div class="rescue-head">
+                        <div>
+                          <strong>New Gmail opportunity</strong>
+                          <span>Matched inquiry from design@northbayevents.co</span>
+                        </div>
+                        <div class="score-pill">New lead</div>
+                      </div>
+                      <div class="signal-row">
+                        <div class="signal-chip">AI Gmail suggestion</div>
+                        <div class="signal-chip">No workspace yet</div>
+                        <div class="signal-chip">Preferred date found</div>
+                      </div>
+                      <p>Instead of surfacing this in settings or later, let the operator create the lead and trigger the right intake flow immediately.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <div class="proof panel">
+          <div class="section-head">
+            <span>Evidence Stack</span>
+            <h2>This concept is anchored in HoneyBook's own roadmap language and recent user friction.</h2>
+            <p>
+              The goal is not to invent a new category for HoneyBook. It is to make the already-public AI lead features easier to use on the device where execution currently feels weakest.
+            </p>
+          </div>
+          <div class="proof-grid">
+            <div class="proof-card">
+              <span>Help Center</span>
+              <strong>AI follow-ups depend on filters and notifications</strong>
+              <p>HoneyBook documents unconverted leads in Contacts filters, unresponsive leads in Projects filters, plus different notification-center cadences. That is discoverable, but not frictionless on mobile.</p>
+            </div>
+            <div class="proof-card">
+              <span>App Reviews</span>
+              <strong>Users still call out slow screens and missing edits</strong>
+              <p>Recent iOS and Android reviews mention clunky navigation, crashes, desktop fallback for contract work, and critical actions that do not feel reliable enough when the user is on the move.</p>
+            </div>
+            <div class="proof-card">
+              <span>Market Pressure</span>
+              <strong>Price pressure makes trust more important</strong>
+              <p>Reddit discussions around HoneyBook alternatives and workflow rigidity suggest that polished design alone is not enough. The product needs to feel fast and decisive when revenue is on the line.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <div class="roadmap panel">
+          <div class="section-head">
+            <span>How It Ships</span>
+            <h2>A believable engineering slice, not a full-platform redesign.</h2>
+            <p>
+              This is a good Engineering Manager pitch because the scope can stay contained while still producing a visible user win.
+            </p>
+          </div>
+          <div class="roadmap-grid">
+            <div class="road">
+              <b>Step 01</b>
+              <strong>Aggregate the signals</strong>
+              <span>Normalize follow-up suggestions, Gmail opportunities, and rescue reminders into a shared mobile queue model with explainable trigger reasons.</span>
+            </div>
+            <div class="road">
+              <b>Step 02</b>
+              <strong>Design for safe action</strong>
+              <span>Keep edits lightweight: draft preview, clear reason codes, one-tap send, and explicit next-step attachments instead of deep navigation chains.</span>
+            </div>
+            <div class="road">
+              <b>Step 03</b>
+              <strong>Measure rescue outcomes</strong>
+              <span>Track tap-to-send rate, recovered-lead conversion, mobile-to-desktop drop-off, and time-to-action before and after the queue ships.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="shell">
+        <div class="cta-card panel">
+          <h2>HoneyBook already has the signals. The opportunity is making the rescue moment obvious.</h2>
+          <p>
+            Elinext can help product teams turn AI suggestions into mobile-native actions that feel faster, safer, and easier to trust. This prototype focuses on one narrow wedge because that is usually how meaningful mobile wins actually ship.
+          </p>
+          <div class="cta-actions">
+            <a class="cta-btn primary" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Get in Touch</a>
+            <a class="cta-btn secondary" href="#top">Review the teardown</a>
+          </div>
+          <div class="footer-note">AI-powered mobile teardown by Elinext for HoneyBook's lead-management flow.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
