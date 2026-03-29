@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TribolaTech Mobile - AI Teardown</title>
+    <meta
+      name="description"
+      content="A focused mobile teardown for TribolaTech: what if its 24x7 DBA and ServiceNow-led operations had a mobile incident commander for outages, runbooks, and faster escalation?"
+    />
+    <link
+      rel="canonical"
+      href="https://elinext-lab.github.io/prototypes/tribolatech_2026-03-29_23-37-56/"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="TribolaTech Mobile - AI Teardown" />
+    <meta
+      property="og:description"
+      content="What if TribolaTech turned 2am alerts into a guided mobile incident bridge with CI context, CMDB confidence, and one-tap escalation instead of fragmented handoffs?"
+    />
+    <meta
+      property="og:url"
+      content="https://elinext-lab.github.io/prototypes/tribolatech_2026-03-29_23-37-56/"
+    />
+    <meta
+      property="og:image"
+      content="https://elinext-lab.github.io/prototypes/tribolatech_2026-03-29_23-37-56/og-image.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="author" content="Yauheni Shauchenka, Elinext" />
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-ZR415HX0B2");
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Ratings as of 2026-03-29: no attributable iOS/Android app listing found for TribolaTech in US App Store / Google Play search; prototype based on Comprehensive DBA Support Services web product -->
+
+    <style>
+      :root {
+        --ink: #12233d;
+        --ink-soft: #425877;
+        --paper: #f2ebe0;
+        --paper-strong: #fdf8f1;
+        --navy: #0f1c33;
+        --navy-soft: #162849;
+        --teal: #43d4bf;
+        --teal-deep: #167c6e;
+        --orange: #f37b37;
+        --orange-soft: #f8b37f;
+        --rose: #ffe3d4;
+        --sky: #dcecff;
+        --mint: #dff5eb;
+        --white: #ffffff;
+        --line: rgba(18, 35, 61, 0.12);
+        --line-strong: rgba(18, 35, 61, 0.2);
+        --shadow: 0 24px 60px rgba(15, 28, 51, 0.18);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: "Bricolage Grotesque", "Avenir Next", sans-serif;
+        letter-spacing: -0.04em;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .page {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .section {
+        position: relative;
+        z-index: 1;
+        background: var(--paper);
+      }
+
+      .container {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at top left, rgba(67, 212, 191, 0.18), transparent 34%),
+          radial-gradient(circle at bottom right, rgba(243, 123, 55, 0.2), transparent 30%),
+          linear-gradient(180deg, #12213a 0%, #0f1c33 100%);
+        color: var(--paper-strong);
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+        background-size: 68px 68px;
+        opacity: 0.24;
+        z-index: 0;
+      }
+
+      .hero-inner {
+        position: relative;
+        z-index: 1;
+        padding: 36px 0 84px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 auto 18px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.08);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .eyebrow img {
+        width: 22px;
+        height: 22px;
+        border-radius: 7px;
+      }
+
+      .hero-copy {
+        max-width: 940px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .hero-copy p,
+      .hero-copy h1,
+      .hero-copy span {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+      }
+
+      .hero-kicker {
+        margin-bottom: 16px;
+        color: #a4f0e2;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      h1 {
+        font-size: clamp(2.9rem, 6vw, 5.4rem);
+        line-height: 0.92;
+      }
+
+      .lede {
+        max-width: 780px;
+        margin-top: 22px;
+        font-size: clamp(1rem, 1.9vw, 1.2rem);
+        line-height: 1.72;
+        color: rgba(253, 248, 241, 0.84);
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 24px;
+        margin-top: 40px;
+        align-items: stretch;
+      }
+
+      .hero-card,
+      .signal-card {
+        min-height: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 26px;
+        background: rgba(255, 255, 255, 0.07);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+        backdrop-filter: blur(14px);
+      }
+
+      .hero-card {
+        padding: 24px;
+      }
+
+      .hero-card h2,
+      .signal-card h2 {
+        font-size: 1.25rem;
+        margin-bottom: 14px;
+      }
+
+      .hero-card p,
+      .signal-card p {
+        color: rgba(253, 248, 241, 0.78);
+        line-height: 1.65;
+      }
+
+      .signal-card {
+        padding: 24px;
+      }
+
+      .signal-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .signal-item {
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.07);
+      }
+
+      .signal-item strong,
+      .proof-card strong,
+      .why-card strong,
+      .metric strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .proof {
+        background: var(--paper-strong);
+      }
+
+      .proof-inner {
+        padding: 28px 0;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .proof-card {
+        padding: 20px;
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        background: var(--white);
+        box-shadow: 0 16px 34px rgba(18, 35, 61, 0.08);
+      }
+
+      .proof-card p {
+        color: var(--ink-soft);
+        line-height: 1.6;
+      }
+
+      .showcase {
+        background:
+          linear-gradient(180deg, var(--paper) 0%, var(--paper-strong) 100%);
+      }
+
+      .showcase-inner {
+        padding: 78px 0 86px;
+      }
+
+      .section-head {
+        max-width: 760px;
+        text-align: center;
+        margin: 0 auto 34px;
+      }
+
+      .section-head span,
+      .section-head h2,
+      .section-head p {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+      }
+
+      .section-head span {
+        margin-bottom: 10px;
+        color: var(--orange);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .section-head h2 {
+        font-size: clamp(2rem, 4vw, 3.5rem);
+      }
+
+      .section-head p {
+        margin-top: 16px;
+        line-height: 1.74;
+        color: var(--ink-soft);
+      }
+
+      .phones {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 26px;
+        align-items: start;
+      }
+
+      .device {
+        padding: 16px;
+        border-radius: 34px;
+        background: linear-gradient(180deg, #203458 0%, #101a2f 100%);
+        box-shadow: var(--shadow);
+      }
+
+      .device-label {
+        margin-bottom: 12px;
+        color: rgba(255, 255, 255, 0.88);
+        text-align: center;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .phone {
+        position: relative;
+        width: 280px;
+        height: 580px;
+        margin: 0 auto;
+        padding: 36px 14px 14px;
+        overflow: auto;
+        border-radius: 28px;
+        background: #f8f2e8;
+        color: var(--ink);
+      }
+
+      .phone::before {
+        content: "";
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 110px;
+        height: 18px;
+        border-radius: 999px;
+        background: rgba(15, 28, 51, 0.9);
+      }
+
+      .phone::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+      }
+
+      .status {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+        color: rgba(18, 35, 61, 0.56);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .phone-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .phone-brand img {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+      }
+
+      .phone-brand div {
+        display: block;
+      }
+
+      .phone-brand strong,
+      .phone-brand span {
+        display: block;
+      }
+
+      .phone-brand strong {
+        font-size: 15px;
+      }
+
+      .phone-brand span {
+        color: var(--ink-soft);
+        font-size: 12px;
+      }
+
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .pill {
+        padding: 8px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .pill.red {
+        color: #a24029;
+        background: #ffe4da;
+      }
+
+      .pill.teal {
+        color: #0f6b5e;
+        background: #dff7ef;
+      }
+
+      .pill.blue {
+        color: #2257ad;
+        background: #e0ecff;
+      }
+
+      .phone-panel {
+        margin-bottom: 12px;
+        padding: 15px;
+        border-radius: 20px;
+        border: 1px solid rgba(18, 35, 61, 0.08);
+        background: var(--white);
+        box-shadow: 0 10px 20px rgba(18, 35, 61, 0.06);
+      }
+
+      .phone-panel h3,
+      .phone-panel p,
+      .phone-panel strong,
+      .phone-panel span {
+        display: block;
+      }
+
+      .phone-panel h3 {
+        font-size: 15px;
+        margin-bottom: 8px;
+      }
+
+      .phone-panel p {
+        color: var(--ink-soft);
+        line-height: 1.5;
+        font-size: 12px;
+      }
+
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .metric {
+        padding: 12px;
+        border-radius: 16px;
+        background: #f6f0e7;
+      }
+
+      .metric span {
+        color: var(--ink-soft);
+        font-size: 11px;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .timeline-item {
+        display: grid;
+        grid-template-columns: 44px 1fr;
+        gap: 10px;
+        align-items: start;
+      }
+
+      .timeline-item strong {
+        color: var(--orange);
+        font-size: 11px;
+      }
+
+      .timeline-item span {
+        color: var(--ink-soft);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .button-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .mini-btn {
+        padding: 11px 10px;
+        border-radius: 14px;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .mini-btn.primary {
+        color: var(--white);
+        background: linear-gradient(135deg, #19325f 0%, #0f1c33 100%);
+      }
+
+      .mini-btn.secondary {
+        color: var(--ink);
+        background: #edf3ff;
+      }
+
+      .stack-row {
+        display: grid;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .alert-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: #fff2eb;
+      }
+
+      .alert-line strong,
+      .alert-line span {
+        display: block;
+      }
+
+      .alert-line span {
+        color: var(--ink-soft);
+        font-size: 11px;
+      }
+
+      .split-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .split-card .mini {
+        padding: 12px;
+        border-radius: 16px;
+        background: #eef8f4;
+      }
+
+      .split-card .mini.orange {
+        background: #fff1e6;
+      }
+
+      .strategy {
+        background: var(--white);
+      }
+
+      .strategy-inner {
+        padding: 80px 0;
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+        gap: 30px;
+      }
+
+      .strategy-copy {
+        padding: 6px 0;
+      }
+
+      .strategy-copy span,
+      .strategy-copy h2,
+      .strategy-copy p {
+        display: block;
+      }
+
+      .strategy-copy span {
+        color: var(--teal-deep);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .strategy-copy h2 {
+        margin-top: 12px;
+        font-size: clamp(2rem, 4vw, 3.2rem);
+      }
+
+      .strategy-copy p {
+        margin-top: 16px;
+        color: var(--ink-soft);
+        line-height: 1.74;
+      }
+
+      .why-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .why-card {
+        padding: 18px;
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, #fffdf8 0%, #f7f1e8 100%);
+        box-shadow: 0 14px 30px rgba(18, 35, 61, 0.08);
+      }
+
+      .why-card p {
+        color: var(--ink-soft);
+        line-height: 1.62;
+      }
+
+      .cta {
+        background:
+          radial-gradient(circle at top right, rgba(67, 212, 191, 0.15), transparent 30%),
+          linear-gradient(180deg, #13233e 0%, #0f1c33 100%);
+        color: var(--paper-strong);
+      }
+
+      .cta-inner {
+        padding: 70px 0 84px;
+        text-align: center;
+      }
+
+      .cta-inner h2,
+      .cta-inner p,
+      .cta-inner a {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+      }
+
+      .cta-inner h2 {
+        max-width: 720px;
+        font-size: clamp(2rem, 4vw, 3.6rem);
+      }
+
+      .cta-inner p {
+        max-width: 720px;
+        margin-top: 16px;
+        color: rgba(253, 248, 241, 0.8);
+        line-height: 1.7;
+      }
+
+      .cta-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 28px;
+        padding: 15px 24px;
+        border-radius: 999px;
+        color: var(--navy);
+        background: linear-gradient(135deg, #f8c48d 0%, #f5e7cc 100%);
+        font-weight: 800;
+        box-shadow: 0 18px 34px rgba(243, 123, 55, 0.2);
+      }
+
+      .footer-note {
+        margin-top: 18px;
+        color: rgba(253, 248, 241, 0.6);
+        font-size: 13px;
+      }
+
+      @media (max-width: 1080px) {
+        .hero-grid,
+        .strategy-inner,
+        .proof-inner,
+        .phones {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-card,
+        .signal-card {
+          min-height: auto;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .hero-inner {
+          padding-bottom: 64px;
+        }
+
+        .proof-inner,
+        .showcase-inner,
+        .strategy-inner {
+          padding-top: 58px;
+          padding-bottom: 58px;
+        }
+
+        .container {
+          width: min(100% - 28px, 1180px);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .phone {
+          width: 300px;
+        }
+
+        h1 {
+          font-size: 2.7rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <section class="hero section">
+        <div class="container hero-inner">
+          <div class="hero-copy">
+            <div class="eyebrow">
+              <img src="./assets/icon.jpg" alt="TribolaTech icon" />
+              AI-Powered Mobile Teardown
+            </div>
+            <span class="hero-kicker">TribolaTech x 24x7 Managed Operations</span>
+            <h1>What if 2am alerts came with a guided mobile incident bridge?</h1>
+            <p class="lede">
+              TribolaTech already sells 24x7 monitoring, ServiceNow AI, and
+              proactive incident response. The gap is the last mile: when a power
+              event or P1 database outage hits, responders still need one place
+              to see CI context, trust the data, launch the runbook, and pull the
+              right owner in fast.
+            </p>
+          </div>
+
+          <div class="hero-grid">
+            <div class="hero-card">
+              <h2>The prototype angle</h2>
+              <p>
+                We designed <strong>Ops Pulse</strong>, a mobile incident commander
+                for TribolaTech's DBA and ServiceNow-led operations. It focuses on
+                the exact friction visible in the public material: gaps during
+                nights and weekends, elevated MTTR, thin self-service, and too much
+                context trapped inside dashboards and SOPs.
+              </p>
+            </div>
+            <div class="signal-card">
+              <h2>Why this is credible</h2>
+              <div class="signal-list">
+                <div class="signal-item">
+                  <strong>Official challenge</strong>
+                  TribolaTech's own enterprise-ops page names support gaps,
+                  inconsistent escalation, and high MTTR.
+                </div>
+                <div class="signal-item">
+                  <strong>Community signal</strong>
+                  ServiceNow practitioners say virtual-agent value depends on real
+                  orchestration, KB quality, and clean CMDB ownership.
+                </div>
+                <div class="signal-item">
+                  <strong>CRM fit</strong>
+                  The pre-collected pain context points directly at outage
+                  monitoring, infrastructure oversight, and AIOps simplification.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="proof section">
+        <div class="container proof-inner">
+          <div class="proof-card">
+            <strong>Public product used</strong>
+            <p>
+              No attributable mobile app was found, so this teardown uses
+              TribolaTech's <em>Comprehensive DBA Support Services</em> web product
+              as the anchor.
+            </p>
+          </div>
+          <div class="proof-card">
+            <strong>Key public friction</strong>
+            <p>
+              Nights and weekends, high MTTR, and underused monitoring or
+              automation are already documented in TribolaTech's own ops content.
+            </p>
+          </div>
+          <div class="proof-card">
+            <strong>Elinext wedge</strong>
+            <p>
+              Not a broad app rewrite. A focused mobile response layer that
+              shortens handoffs and makes the managed-services story feel more
+              productized.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="showcase section">
+        <div class="container showcase-inner">
+          <div class="section-head">
+            <span>Before / After</span>
+            <h2>From fragmented handoffs to a mobile response cockpit</h2>
+            <p>
+              The left phone shows the current-state pain TribolaTech already names
+              publicly. The center and right phones show the opportunity: mobile
+              triage, visible CI confidence, guided runbooks, and leadership-ready
+              recovery metrics.
+            </p>
+          </div>
+
+          <div class="phones">
+            <div class="device">
+              <div class="device-label">Current State</div>
+              <div class="phone">
+                <div class="status">
+                  <span>2:07 AM</span>
+                  <span>LTE 91%</span>
+                </div>
+
+                <div class="phone-brand">
+                  <img src="./assets/icon.jpg" alt="TribolaTech" />
+                  <div>
+                    <strong>On-Call Relay</strong>
+                    <span>Too many systems, not enough context</span>
+                  </div>
+                </div>
+
+                <div class="pill-row">
+                  <div class="pill red">P1 power event</div>
+                  <div class="pill blue">CMDB confidence 46%</div>
+                </div>
+
+                <div class="phone-panel">
+                  <h3>Dallas DR cluster power anomaly</h3>
+                  <p>
+                    Alert fired from monitoring. Change history missing. Ownership
+                    unclear across infra, DBA, and ServiceNow support.
+                  </p>
+                  <div class="metric-grid">
+                    <div class="metric">
+                      <strong>17 min</strong>
+                      <span>time to correct owner</span>
+                    </div>
+                    <div class="metric">
+                      <strong>3 tools</strong>
+                      <span>needed before action</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="phone-panel">
+                  <h3>Escalation chain</h3>
+                  <div class="timeline">
+                    <div class="timeline-item">
+                      <strong>2:07</strong>
+                      <span>Pager alert lands without runbook context.</span>
+                    </div>
+                    <div class="timeline-item">
+                      <strong>2:14</strong>
+                      <span>Slack pings start while CI ownership is verified.</span>
+                    </div>
+                    <div class="timeline-item">
+                      <strong>2:23</strong>
+                      <span>Bridge opens after manual handoff to regional lead.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="stack-row">
+                  <div class="alert-line">
+                    <div>
+                      <strong>Virtual Agent</strong>
+                      <span>KB article suggested, no guided execution</span>
+                    </div>
+                    <strong>Thin</strong>
+                  </div>
+                  <div class="alert-line">
+                    <div>
+                      <strong>Monitoring</strong>
+                      <span>Signal exists, action path still manual</span>
+                    </div>
+                    <strong>Lag</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="device">
+              <div class="device-label">Proposed Mobile Flow</div>
+              <div class="phone">
+                <div class="status">
+                  <span>2:09 AM</span>
+                  <span>5G 93%</span>
+                </div>
+
+                <div class="phone-brand">
+                  <img src="./assets/logo.png" alt="TribolaTech logo" />
+                  <div>
+                    <strong>Ops Pulse</strong>
+                    <span>Guided incident commander</span>
+                  </div>
+                </div>
+
+                <div class="pill-row">
+                  <div class="pill red">P1 active</div>
+                  <div class="pill teal">AI summary ready</div>
+                  <div class="pill blue">SLA breach in 41m</div>
+                </div>
+
+                <div class="phone-panel">
+                  <h3>Likely cause</h3>
+                  <p>
+                    Power instability on upstream switch cascaded to the standby
+                    node. Previous patch window and failover history match this
+                    pattern.
+                  </p>
+                  <div class="button-row">
+                    <div class="mini-btn primary">Launch bridge</div>
+                    <div class="mini-btn secondary">Open failover SOP</div>
+                  </div>
+                </div>
+
+                <div class="phone-panel">
+                  <h3>CI confidence</h3>
+                  <div class="split-card">
+                    <div class="mini">
+                      <strong>89%</strong>
+                      <span>owner + dependency data verified</span>
+                    </div>
+                    <div class="mini orange">
+                      <strong>1 alert</strong>
+                      <span>similar event in last 30 days</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="phone-panel">
+                  <h3>Next 3 actions</h3>
+                  <div class="timeline">
+                    <div class="timeline-item">
+                      <strong>01</strong>
+                      <span>Shift writes to standby and verify replication lag.</span>
+                    </div>
+                    <div class="timeline-item">
+                      <strong>02</strong>
+                      <span>Notify infra lead and client contact from approved list.</span>
+                    </div>
+                    <div class="timeline-item">
+                      <strong>03</strong>
+                      <span>Auto-generate status update in ServiceNow incident record.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="device">
+              <div class="device-label">Leadership View</div>
+              <div class="phone">
+                <div class="status">
+                  <span>2:17 AM</span>
+                  <span>Wi-Fi 100%</span>
+                </div>
+
+                <div class="phone-brand">
+                  <img src="./assets/icon.jpg" alt="TribolaTech icon" />
+                  <div>
+                    <strong>Recovery Snapshot</strong>
+                    <span>What Vishal can show clients</span>
+                  </div>
+                </div>
+
+                <div class="phone-panel">
+                  <h3>Recovery board</h3>
+                  <div class="metric-grid">
+                    <div class="metric">
+                      <strong>9m</strong>
+                      <span>ack time</span>
+                    </div>
+                    <div class="metric">
+                      <strong>-28%</strong>
+                      <span>MTTR trend</span>
+                    </div>
+                    <div class="metric">
+                      <strong>97.6%</strong>
+                      <span>SLA adherence</span>
+                    </div>
+                    <div class="metric">
+                      <strong>71%</strong>
+                      <span>automation coverage</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="phone-panel">
+                  <h3>Client-facing status</h3>
+                  <p>
+                    A structured update timeline can push into ServiceNow, email,
+                    or Teams without forcing the incident lead to write status
+                    messages from scratch.
+                  </p>
+                  <div class="timeline">
+                    <div class="timeline-item">
+                      <strong>2:11</strong>
+                      <span>Bridge launched. Failover initiated.</span>
+                    </div>
+                    <div class="timeline-item">
+                      <strong>2:15</strong>
+                      <span>Primary DB isolated. Client update sent.</span>
+                    </div>
+                    <div class="timeline-item">
+                      <strong>2:21</strong>
+                      <span>Replication stable. Recovery watch active.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="phone-panel">
+                  <h3>Why it matters</h3>
+                  <p>
+                    TribolaTech already has the service model. This mobile layer
+                    makes the value feel faster, clearer, and easier to trust during
+                    the highest-pressure moments.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="strategy section">
+        <div class="container strategy-inner">
+          <div class="strategy-copy">
+            <span>Why This Works</span>
+            <h2>A realistic software wedge for a services-heavy story</h2>
+            <p>
+              This concept does not ask TribolaTech to become a consumer-app
+              company. It packages the most valuable part of its managed-services
+              promise into a tighter operator experience: faster acknowledgment,
+              better context, more reliable escalation, and a cleaner ServiceNow
+              handoff.
+            </p>
+            <p>
+              For Vishal, that means a stronger demo story, a more differentiated
+              reliability offer, and a mobile layer that supports both internal
+              teams and client-facing operations.
+            </p>
+          </div>
+
+          <div class="why-grid">
+            <div class="why-card">
+              <strong>Aligned to public pain</strong>
+              <p>
+                TribolaTech's own ops content already names support gaps, elevated
+                MTTR, and thin tooling adoption. The prototype attacks that exact
+                bottleneck.
+              </p>
+            </div>
+            <div class="why-card">
+              <strong>Aligned to CRM pain context</strong>
+              <p>
+                Power-outage monitoring, infrastructure visibility, and AIOps
+                self-service are already in the pre-collected lead context, so the
+                concept is not a generic mobile pitch.
+              </p>
+            </div>
+            <div class="why-card">
+              <strong>Small enough to execute</strong>
+              <p>
+                A mobile incident commander can be shipped as a focused product
+                surface that sits on top of ServiceNow, observability, and runbook
+                data instead of replacing existing systems.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta section">
+        <div class="container cta-inner">
+          <h2>TribolaTech already has the data and delivery model. The next step is a better moment of response.</h2>
+          <p>
+            This teardown shows one practical way to turn 24x7 monitoring,
+            ServiceNow AI, and managed-services delivery into a cleaner mobile
+            operating product. If that is useful, Elinext can help shape it into a
+            shippable roadmap.
+          </p>
+          <a class="cta-btn" href="https://www.elinext.com/contacts/">Get in Touch</a>
+          <div class="footer-note">Prototype concept prepared for Vishal Wadhwa and TribolaTech on 2026-03-29.</div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
