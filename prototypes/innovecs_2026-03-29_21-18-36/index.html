@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Innovecs Mobile Teardown | Elinext</title>
+  <meta name="description" content="What if Innochain turned weak yard alerts, missing proof-of-delivery documents, and dock exceptions into one mobile command surface supervisors could clear before service levels slipped?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/innovecs_2026-03-29_21-18-36/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/innovecs_2026-03-29_21-18-36/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/innovecs_2026-03-29_21-18-36/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Innovecs Mobile — AI Teardown">
+  <meta property="og:description" content="What if Innochain turned weak yard alerts, missing proof-of-delivery documents, and dock exceptions into one mobile command surface supervisors could clear before service levels slipped?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Innovecs Mobile — AI Teardown">
+  <meta name="twitter:description" content="What if Innochain turned weak yard alerts, missing proof-of-delivery documents, and dock exceptions into one mobile command surface supervisors could clear before service levels slipped?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/innovecs_2026-03-29_21-18-36/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-29: iOS N/A (no relevant public US listing, source: iTunes Search API), Android N/A (no relevant public listing, source: google-play-scraper term search for Innovecs/Innochain) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #06111f;
+      --bg-deep: #03111a;
+      --panel: rgba(11, 24, 41, 0.92);
+      --panel-strong: #0c1a2d;
+      --panel-soft: #12253d;
+      --paper: #f4f6fa;
+      --muted: #96a6bb;
+      --line: rgba(157, 182, 211, 0.18);
+      --white: #f7fbff;
+      --cyan: #65d6ff;
+      --cyan-soft: #9ee8ff;
+      --lime: #ccf06d;
+      --amber: #ffbe63;
+      --red: #ff7f88;
+      --blue: #6d8fff;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      --radius-xl: 34px;
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+      --shell: min(1180px, calc(100% - 28px));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 12% 12%, rgba(101, 214, 255, 0.18), transparent 22%),
+        radial-gradient(circle at 88% 0%, rgba(204, 240, 109, 0.12), transparent 16%),
+        linear-gradient(180deg, #08111d 0%, #071521 42%, #06111f 100%);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(157, 182, 211, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(157, 182, 211, 0.05) 1px, transparent 1px);
+      background-size: 56px 56px;
+      opacity: 0.38;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .shell {
+      width: var(--shell);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding-top: 22px;
+    }
+
+    .topbar-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 16px 18px;
+      border-radius: 999px;
+      background: rgba(7, 20, 35, 0.86);
+      border: 1px solid rgba(157, 182, 211, 0.16);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+      flex: 0 0 auto;
+    }
+
+    .brand-copy strong,
+    .brand-copy span {
+      display: block;
+    }
+
+    .brand-copy strong {
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-copy span {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .top-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(204, 240, 109, 0.18), rgba(101, 214, 255, 0.22));
+      border: 1px solid rgba(204, 240, 109, 0.28);
+      color: var(--white);
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .hero {
+      padding: 28px 0 56px;
+    }
+
+    .hero-card,
+    .section-card,
+    .cta-card {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      background: rgba(8, 19, 33, 0.9);
+      border: 1px solid rgba(157, 182, 211, 0.14);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 38px;
+      border-radius: 40px;
+    }
+
+    .hero-card::before,
+    .section-card::before,
+    .cta-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(101, 214, 255, 0.12), transparent 22%),
+        radial-gradient(circle at 92% 8%, rgba(204, 240, 109, 0.08), transparent 20%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .eyebrow,
+    .hero-copy,
+    .hero-copy h1,
+    .hero-copy p,
+    .chip-row {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding: 10px 15px;
+      border-radius: 999px;
+      background: rgba(101, 214, 255, 0.12);
+      border: 1px solid rgba(101, 214, 255, 0.22);
+      color: var(--cyan-soft);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .hero-copy h1 {
+      max-width: 980px;
+      margin-top: 0;
+      margin-bottom: 18px;
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: clamp(2.6rem, 5vw, 5.7rem);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-copy p {
+      max-width: 840px;
+      margin-top: 0;
+      margin-bottom: 28px;
+      font-size: clamp(1rem, 2vw, 1.16rem);
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .chip {
+      padding: 12px 14px;
+      border-radius: 999px;
+      background: rgba(14, 31, 50, 0.98);
+      border: 1px solid rgba(157, 182, 211, 0.14);
+      color: #dce7f3;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .stage {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.05fr 1.15fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .stage-copy {
+      display: grid;
+      gap: 16px;
+    }
+
+    .signal-panel,
+    .note-panel,
+    .timeline-board,
+    .evidence-card,
+    .proof-card {
+      position: relative;
+      z-index: 1;
+      border-radius: var(--radius-lg);
+      background: rgba(15, 31, 51, 0.94);
+      border: 1px solid var(--line);
+      padding: 22px;
+    }
+
+    .signal-panel h2,
+    .section-head h2,
+    .flow-copy h2,
+    .proof-card h3,
+    .cta-card h2 {
+      margin: 0 0 12px;
+      font-family: "Bricolage Grotesque", sans-serif;
+      letter-spacing: -0.03em;
+    }
+
+    .signal-panel h2 {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+    }
+
+    .signal-panel p,
+    .note-panel p,
+    .flow-copy p,
+    .proof-card p,
+    .cta-card p,
+    .evidence-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .metric {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(6, 17, 31, 0.82);
+      border: 1px solid rgba(157, 182, 211, 0.12);
+    }
+
+    .metric strong,
+    .metric span {
+      display: block;
+    }
+
+    .metric strong {
+      margin-bottom: 6px;
+      font-size: 1rem;
+      color: var(--white);
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .note-panel {
+      display: grid;
+      gap: 12px;
+    }
+
+    .note-panel .label,
+    .evidence-card .label,
+    .proof-card .label,
+    .timeline-step .label,
+    .phone-chip,
+    .flow-list .label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      width: max-content;
+      background: rgba(101, 214, 255, 0.14);
+      border: 1px solid rgba(101, 214, 255, 0.2);
+      color: var(--cyan-soft);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .note-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .note-item {
+      display: flex;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(6, 17, 31, 0.82);
+      border: 1px solid rgba(157, 182, 211, 0.12);
+    }
+
+    .note-item strong,
+    .note-item span {
+      display: block;
+    }
+
+    .note-index {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      background: rgba(204, 240, 109, 0.18);
+      color: var(--lime);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .note-item strong {
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+
+    .note-item span {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+
+    .phones {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .phone-wrap {
+      display: grid;
+      justify-items: center;
+      gap: 12px;
+    }
+
+    .phone-label {
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .phone-label.current {
+      background: rgba(255, 127, 136, 0.14);
+      border: 1px solid rgba(255, 127, 136, 0.26);
+      color: #ffc1c6;
+    }
+
+    .phone-label.next {
+      background: rgba(204, 240, 109, 0.14);
+      border: 1px solid rgba(204, 240, 109, 0.24);
+      color: var(--lime);
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      padding: 36px 14px 14px;
+      border-radius: 38px;
+      background:
+        linear-gradient(180deg, rgba(26, 38, 58, 1), rgba(9, 18, 30, 1));
+      border: 1px solid rgba(157, 182, 211, 0.22);
+      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.42);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(1, 8, 16, 0.88);
+      z-index: 2;
+    }
+
+    .screen {
+      height: 100%;
+      overflow: auto;
+      border-radius: 26px;
+      background: linear-gradient(180deg, #edf4fb 0%, #dfe9f4 100%);
+      color: #091521;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ui {
+      display: block;
+      padding: 16px;
+    }
+
+    .ui-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .ui-head strong,
+    .ui-head span,
+    .stack strong,
+    .stack span,
+    .alert-card strong,
+    .alert-card span,
+    .ghost-card strong,
+    .ghost-card span,
+    .queue-row strong,
+    .queue-row span,
+    .incident-card strong,
+    .incident-card span,
+    .action-row strong,
+    .action-row span,
+    .eta-strip strong,
+    .eta-strip span,
+    .doc-card strong,
+    .doc-card span {
+      display: block;
+    }
+
+    .ui-head strong {
+      font-size: 0.95rem;
+      letter-spacing: -0.03em;
+    }
+
+    .ui-head span {
+      font-size: 0.75rem;
+      color: #5c7287;
+    }
+
+    .stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .ghost-card,
+    .alert-card,
+    .incident-card,
+    .doc-card {
+      border-radius: 20px;
+      padding: 14px;
+    }
+
+    .ghost-card {
+      background: #ffffff;
+      border: 1px solid rgba(10, 32, 53, 0.08);
+      box-shadow: 0 12px 28px rgba(18, 38, 56, 0.08);
+    }
+
+    .ghost-card strong {
+      margin-bottom: 6px;
+      font-size: 0.86rem;
+    }
+
+    .ghost-card span {
+      font-size: 0.76rem;
+      line-height: 1.5;
+      color: #5f7288;
+    }
+
+    .alert-card {
+      background: linear-gradient(180deg, #16293b 0%, #0c1f30 100%);
+      color: #f5fbff;
+      box-shadow: 0 16px 30px rgba(12, 31, 48, 0.22);
+    }
+
+    .alert-card .tone {
+      margin-bottom: 10px;
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.67rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .alert-card.critical .tone {
+      background: rgba(255, 127, 136, 0.16);
+      color: #ffc1c6;
+    }
+
+    .alert-card.warn .tone {
+      background: rgba(255, 190, 99, 0.16);
+      color: #ffd9a6;
+    }
+
+    .alert-card strong {
+      margin-bottom: 8px;
+      font-size: 0.92rem;
+    }
+
+    .alert-card span {
+      font-size: 0.76rem;
+      line-height: 1.55;
+      color: rgba(247, 251, 255, 0.78);
+    }
+
+    .queue-box,
+    .mini-actions,
+    .timeline-mini {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .queue-row,
+    .action-row,
+    .timeline-mini .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .queue-row strong,
+    .action-row strong,
+    .timeline-mini .row strong {
+      font-size: 0.72rem;
+      color: inherit;
+    }
+
+    .queue-row span,
+    .action-row span,
+    .timeline-mini .row span {
+      font-size: 0.68rem;
+      color: inherit;
+      opacity: 0.78;
+    }
+
+    .incident-card {
+      background: linear-gradient(180deg, #091625 0%, #0f2035 100%);
+      color: #f6fbff;
+      box-shadow: 0 16px 32px rgba(5, 14, 22, 0.28);
+    }
+
+    .incident-card .phone-chip {
+      margin-bottom: 10px;
+      background: rgba(204, 240, 109, 0.14);
+      border-color: rgba(204, 240, 109, 0.22);
+      color: #e6f8b1;
+    }
+
+    .incident-card strong {
+      margin-bottom: 8px;
+      font-size: 0.98rem;
+      line-height: 1.25;
+    }
+
+    .incident-card span {
+      font-size: 0.76rem;
+      line-height: 1.55;
+      color: rgba(247, 251, 255, 0.8);
+    }
+
+    .eta-strip {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .eta-strip strong {
+      margin-bottom: 4px;
+      font-size: 0.74rem;
+      color: #e9f4ff;
+    }
+
+    .eta-strip span {
+      font-size: 0.68rem;
+      color: rgba(233, 244, 255, 0.72);
+      line-height: 1.45;
+    }
+
+    .doc-card {
+      background: #ffffff;
+      border: 1px solid rgba(10, 32, 53, 0.08);
+      box-shadow: 0 12px 28px rgba(18, 38, 56, 0.08);
+    }
+
+    .doc-card strong {
+      margin-bottom: 6px;
+      font-size: 0.84rem;
+    }
+
+    .doc-card span {
+      font-size: 0.74rem;
+      line-height: 1.5;
+      color: #62758a;
+    }
+
+    .section {
+      padding-bottom: 26px;
+    }
+
+    .section-card {
+      border-radius: 36px;
+      padding: 34px;
+    }
+
+    .section-head {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin-bottom: 24px;
+    }
+
+    .section-head .label {
+      margin-bottom: 12px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(2rem, 4vw, 3.1rem);
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .evidence-grid,
+    .proof-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .evidence-card h3,
+    .proof-card h3 {
+      margin: 10px 0 10px;
+      font-size: 1.18rem;
+      letter-spacing: -0.03em;
+    }
+
+    .evidence-card strong,
+    .proof-card strong {
+      color: var(--white);
+    }
+
+    .evidence-card .quote {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(6, 17, 31, 0.82);
+      border: 1px solid rgba(157, 182, 211, 0.12);
+      color: #d9e4f0;
+      font-size: 0.84rem;
+      line-height: 1.6;
+    }
+
+    .flow-card {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 0.95fr;
+      gap: 16px;
+    }
+
+    .flow-copy,
+    .timeline-board {
+      border-radius: var(--radius-lg);
+      background: rgba(15, 31, 51, 0.94);
+      border: 1px solid var(--line);
+      padding: 24px;
+    }
+
+    .flow-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .flow-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(6, 17, 31, 0.82);
+      border: 1px solid rgba(157, 182, 211, 0.12);
+    }
+
+    .flow-item .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--lime), var(--cyan));
+      box-shadow: 0 0 0 6px rgba(101, 214, 255, 0.08);
+      flex: 0 0 auto;
+      margin-top: 7px;
+    }
+
+    .flow-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+
+    .flow-item span {
+      display: block;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.84rem;
+    }
+
+    .timeline-board {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .timeline-step {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(6, 17, 31, 0.82);
+      border: 1px solid rgba(157, 182, 211, 0.12);
+    }
+
+    .timeline-step strong {
+      display: block;
+      margin: 10px 0 4px;
+      font-size: 0.96rem;
+    }
+
+    .timeline-step span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+
+    .cta {
+      padding-bottom: 44px;
+    }
+
+    .cta-card {
+      border-radius: 38px;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .cta-card .label {
+      margin: 0 auto 14px;
+    }
+
+    .cta-card h2 {
+      max-width: 860px;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1;
+    }
+
+    .cta-card p {
+      max-width: 760px;
+      margin: 0 auto 24px;
+      font-size: 1rem;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 24px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #d9f678, #7ce1ff);
+      color: #091521;
+      font-weight: 800;
+      font-size: 0.96rem;
+      box-shadow: 0 18px 34px rgba(101, 214, 255, 0.18);
+    }
+
+    .fade-rise {
+      animation: fade-rise 1s ease both;
+    }
+
+    @keyframes fade-rise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1080px) {
+      .stage,
+      .flow-card,
+      .evidence-grid,
+      .proof-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card,
+      .section-card,
+      .cta-card {
+        padding: 28px;
+      }
+
+      .topbar-card {
+        border-radius: 26px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .top-pill {
+        white-space: normal;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .hero-card,
+      .section-card,
+      .cta-card {
+        padding: 22px;
+        border-radius: 28px;
+      }
+
+      .hero {
+        padding-top: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="shell topbar-card fade-rise">
+        <div class="brand">
+          <img src="assets/innovecs-icon.png" alt="Innovecs icon">
+          <div class="brand-copy">
+            <strong>Innovecs / Innochain</strong>
+            <span>Mobile teardown for Oleksii Shcherbatiuk, Director of IT</span>
+          </div>
+        </div>
+        <div class="top-pill">No public store app found. This concept targets the live web product.</div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="shell hero-card fade-rise">
+          <div class="eyebrow">Supervisor Exception Desk</div>
+          <div class="hero-copy">
+            <h1>What if Innochain cleared the dock fire drill on mobile before it became a phone tree?</h1>
+            <p>Innovecs already sells the AI building blocks for supply-chain teams: document automation, voice workflows, yard vision, and support assistants. The missing surface is a mobile control layer for the moment a dock slips, proof-of-delivery is missing, or a driver hits the wrong gate.</p>
+          </div>
+
+          <div class="chip-row">
+            <div class="chip">650+ engineers and architects</div>
+            <div class="chip">150+ clients</div>
+            <div class="chip">Supply-chain AI push is live</div>
+            <div class="chip">Weak alerts called out by Innovecs itself</div>
+          </div>
+
+          <div class="stage">
+            <div class="stage-copy">
+              <div class="signal-panel">
+                <h2>Mobile is the missing product layer.</h2>
+                <p>Innochain's public story names the exact operational gap: weak alerts, slow document handling, poor traceability, and disruptions that stay hidden until teams start calling each other. This concept turns that pain into one ranked supervisor workflow.</p>
+                <div class="metric-grid">
+                  <div class="metric">
+                    <strong>95-99%</strong>
+                    <span>Document recognition accuracy claimed on the public Innochain page.</span>
+                  </div>
+                  <div class="metric">
+                    <strong>30%+</strong>
+                    <span>Warehouse productivity improvement claimed for voice-guided execution.</span>
+                  </div>
+                  <div class="metric">
+                    <strong>99.9%</strong>
+                    <span>Pick precision claim for voice confirmations.</span>
+                  </div>
+                  <div class="metric">
+                    <strong>24/7</strong>
+                    <span>Support-assistant coverage claim that still needs a real operator surface.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="note-panel">
+                <div class="label">Prototype Focus</div>
+                <div class="note-list">
+                  <div class="note-item">
+                    <div class="note-index">1</div>
+                    <div>
+                      <strong>Rank the highest-risk issue now</strong>
+                      <span>Dock queues, missing POD, wrong gate arrival, or manual approval backlog.</span>
+                    </div>
+                  </div>
+                  <div class="note-item">
+                    <div class="note-index">2</div>
+                    <div>
+                      <strong>Pull yard, ETA, and document context into one card</strong>
+                      <span>No jumping between desktop pages, calls, or chat threads while walking the floor.</span>
+                    </div>
+                  </div>
+                  <div class="note-item">
+                    <div class="note-index">3</div>
+                    <div>
+                      <strong>Resolve with one owner and one audit trail</strong>
+                      <span>Approve, reroute, request a rescan, or escalate without losing the timeline.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phones">
+              <article class="phone-wrap">
+                <div class="phone-label current">Current floor reality</div>
+                <div class="phone">
+                  <div class="screen">
+                    <div class="ui">
+                      <div class="ui-head">
+                        <div>
+                          <strong>Ops exceptions</strong>
+                          <span>07:18 AM shift handoff</span>
+                        </div>
+                        <div class="phone-chip" style="background: rgba(255, 127, 136, 0.14); border: 1px solid rgba(255, 127, 136, 0.24); color: #ff8f98;">4 open</div>
+                      </div>
+
+                      <div class="stack">
+                        <div class="alert-card critical">
+                          <div class="tone">Critical</div>
+                          <strong>Dock 14 slipped. POD still missing. Driver waiting 21 min.</strong>
+                          <span>Message thread has 11 replies. Yard camera flagged arrival. CSR asked for confirmation. No clear owner.</span>
+                          <div class="queue-box">
+                            <div class="queue-row">
+                              <strong>WhatsApp photo</strong>
+                              <span>blurry / unreadable</span>
+                            </div>
+                            <div class="queue-row">
+                              <strong>Approval chain</strong>
+                              <span>finance still pending</span>
+                            </div>
+                            <div class="queue-row">
+                              <strong>Dock reslot</strong>
+                              <span>manual phone call</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="ghost-card">
+                          <strong>Gate B queue spike</strong>
+                          <span>Two unplanned arrivals. Yard state is visible in one system, approvals live in another.</span>
+                        </div>
+
+                        <div class="alert-card warn">
+                          <div class="tone">Warning</div>
+                          <strong>Invoice pack incomplete for outbound 5A</strong>
+                          <span>OCR batch not reconciled. Team is asking whether to release the truck anyway.</span>
+                          <div class="timeline-mini">
+                            <div class="row">
+                              <strong>Driver call</strong>
+                              <span>3 missed</span>
+                            </div>
+                            <div class="row">
+                              <strong>Slack channel</strong>
+                              <span>7 replies</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="ghost-card">
+                          <strong>The hidden cost</strong>
+                          <span>Good AI modules still feel fragmented if exception handling depends on desk tools and ad hoc messaging.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="phone-wrap">
+                <div class="phone-label next">Proposed mobile layer</div>
+                <div class="phone">
+                  <div class="screen">
+                    <div class="ui">
+                      <div class="ui-head">
+                        <div>
+                          <strong>Innochain exception desk</strong>
+                          <span>1 ranked incident needs action now</span>
+                        </div>
+                        <div class="phone-chip">Owned</div>
+                      </div>
+
+                      <div class="stack">
+                        <div class="incident-card">
+                          <div class="phone-chip">Highest risk</div>
+                          <strong>Dock 14 delay can be cleared in under 3 minutes.</strong>
+                          <span>Trailer 88K reached Gate B, but POD image is unreadable and slot timing drifted. OCR confidence is low, dock turnover is tightening, and the customer ETA commitment is at risk.</span>
+                          <div class="eta-strip">
+                            <strong>Recommended next action</strong>
+                            <span>Request a rescan from driver, pre-approve release with note, and move unloading to Dock 12 before queue spillover starts.</span>
+                          </div>
+                          <div class="mini-actions">
+                            <div class="action-row">
+                              <strong>Request clean POD</strong>
+                              <span>SMS + link sent</span>
+                            </div>
+                            <div class="action-row">
+                              <strong>Move to Dock 12</strong>
+                              <span>slot open in 6 min</span>
+                            </div>
+                            <div class="action-row">
+                              <strong>Notify CSR</strong>
+                              <span>ETA auto-updated</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="doc-card">
+                          <strong>Document state</strong>
+                          <span>POD image 2 uploaded at 07:21. OCR confidence 98%. Delivery note matched. Approval trail attached automatically.</span>
+                        </div>
+
+                        <div class="ghost-card">
+                          <strong>Why this surface matters</strong>
+                          <span>Supervisors do not need every warehouse tool on mobile. They need the single incident, context, and next action while they are moving.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell section-card fade-rise">
+          <div class="section-head">
+            <div class="label">Source Read</div>
+            <h2>Why this wedge is credible for Innovecs.</h2>
+            <p>The concept is not speculative. It is built directly on the pressure points Innovecs already publishes and the workflow failures operators describe in logistics communities.</p>
+          </div>
+
+          <div class="evidence-grid">
+            <article class="evidence-card">
+              <div class="label">From Innochain</div>
+              <h3>Weak alerts are already in the public product story.</h3>
+              <p>Innovecs explicitly says supply-chain disruptions can stay unnoticed because alerts are weak and fallback options are missing.</p>
+              <div class="quote">"Potential supply chain disruptions left unnoticed due to weak alerts and no fallback options."</div>
+            </article>
+
+            <article class="evidence-card">
+              <div class="label">From Operators</div>
+              <h3>Documents still break at the field edge.</h3>
+              <p>Recent logistics threads describe drivers bringing paperwork back late or sending blurry WhatsApp photos, forcing customer-service and ops teams to chase proof manually.</p>
+              <div class="quote">The pattern is consistent: the system knows the shipment exists, but the proof, approval, or image arrives too late to keep the workflow clean.</div>
+            </article>
+
+            <article class="evidence-card">
+              <div class="label">From GTM</div>
+              <h3>The supply-chain offer needs to feel productized.</h3>
+              <p>The CRM context points to supply-chain and logistics commercial hiring. A mobile supervisor layer makes Innochain easier to demo, easier to pilot, and easier to position as more than separate AI modules.</p>
+              <div class="quote">This is the difference between an AI toolkit narrative and an operator-ready product moment.</div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell section-card fade-rise">
+          <div class="flow-card">
+            <div class="flow-copy">
+              <div class="label">Proposed Flow</div>
+              <h2>One ranked incident, one owner, one audit trail.</h2>
+              <p>This concept keeps the surface intentionally narrow. It does not try to rebuild the full WMS or yard system on mobile. It gives supervisors the exact controls they need when service risk starts to rise away from a desk.</p>
+
+              <div class="flow-list">
+                <div class="flow-item">
+                  <div class="dot"></div>
+                  <div>
+                    <strong>Risk engine creates one mobile incident card</strong>
+                    <span>Dock delay, missing POD, ETA drift, and yard congestion are merged into a single decision object.</span>
+                  </div>
+                </div>
+                <div class="flow-item">
+                  <div class="dot"></div>
+                  <div>
+                    <strong>Document state is visible without opening another system</strong>
+                    <span>OCR confidence, latest upload, missing fields, and approval blockers sit next to the operational issue.</span>
+                  </div>
+                </div>
+                <div class="flow-item">
+                  <div class="dot"></div>
+                  <div>
+                    <strong>Supervisor clears the issue in seconds</strong>
+                    <span>Approve with note, reroute to another dock, request a rescan, or escalate with full context already attached.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-board">
+              <div class="timeline-step">
+                <div class="label">07:18</div>
+                <strong>Arrival mismatch detected</strong>
+                <span>Vehicle enters Gate B but assigned dock slot is no longer safe against the queue forecast.</span>
+              </div>
+              <div class="timeline-step">
+                <div class="label">07:19</div>
+                <strong>POD confidence drops below threshold</strong>
+                <span>First image upload is unreadable. OCR flags low confidence and keeps release in a guarded state.</span>
+              </div>
+              <div class="timeline-step">
+                <div class="label">07:20</div>
+                <strong>Supervisor gets one next-step recommendation</strong>
+                <span>Move unloading, request rescan, and auto-update the ETA for downstream teams instead of starting a message thread.</span>
+              </div>
+              <div class="timeline-step">
+                <div class="label">07:23</div>
+                <strong>Resolution trail closes automatically</strong>
+                <span>New image, approval note, dock reassignment, and customer ETA update stay attached to the same event.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell section-card fade-rise">
+          <div class="section-head">
+            <div class="label">Why Oleksii</div>
+            <h2>This is the kind of change IT can sponsor without boiling the ocean.</h2>
+            <p>The value is operational, but the implementation conversation sits close to platform design, integration reliability, observability, and mobile delivery discipline.</p>
+          </div>
+
+          <div class="proof-grid">
+            <article class="proof-card">
+              <div class="label">Execution</div>
+              <h3>Small surface, high leverage</h3>
+              <p>A focused exception desk is easier to ship than a full mobile suite and easier to prove with measurable outcomes like queue time, document completion speed, and exception resolution time.</p>
+            </article>
+
+            <article class="proof-card">
+              <div class="label">Sales</div>
+              <h3>Better demo story</h3>
+              <p>When a supply-chain prospect asks "what happens when something goes wrong on the floor?", Innovecs can show a real operator response instead of switching to a static slide.</p>
+            </article>
+
+            <article class="proof-card">
+              <div class="label">Trust</div>
+              <h3>AI feels safer when humans stay in control</h3>
+              <p>The app does not replace the supervisor. It compresses the time between signal, decision, and audit trail, which is where enterprise trust usually gets won or lost.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="shell cta-card fade-rise">
+          <div class="label">Built For Innovecs</div>
+          <h2>Turn Innochain from an AI toolkit story into a mobile control surface teams can actually pilot.</h2>
+          <p>This concept package is aimed at the exact moment where product readiness, sales readiness, and IT execution start overlapping.</p>
+          <a class="cta-button" href="https://www.elinext.com/contacts/">Get in Touch</a>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
