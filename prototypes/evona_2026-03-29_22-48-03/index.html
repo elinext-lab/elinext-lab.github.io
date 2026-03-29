@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EVONA Mobile Teardown | Elinext</title>
+  <meta name="description" content="What if EVONA turned FRACTION shortlists, stakeholder feedback, and interview booking into one mobile approval loop so founders and investors could act before executive candidates cooled off?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/evona_2026-03-29_22-48-03/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/evona_2026-03-29_22-48-03/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/evona_2026-03-29_22-48-03/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="EVONA Mobile — AI Teardown">
+  <meta property="og:description" content="What if EVONA turned FRACTION shortlists, stakeholder feedback, and interview booking into one mobile approval loop so founders and investors could approve faster and keep top executive talent warm?">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="EVONA Mobile — AI Teardown">
+  <meta name="twitter:description" content="What if EVONA turned FRACTION shortlists, stakeholder feedback, and interview booking into one mobile approval loop so founders and investors could approve faster and keep top executive talent warm?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/evona_2026-03-29_22-48-03/og-image.jpg">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-29: iOS unavailable (no verified US App Store listing, source: iTunes Search API queries EVONA / EVONA FRACTION / FRACTION), Android unavailable (no verified first-party Google Play listing, source: repo scraper queries EVONA / EVONA FRACTION / Fraction executives). -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy-950: #081120;
+      --navy-900: #0e1730;
+      --navy-850: #13203f;
+      --navy-800: #17274f;
+      --slate-500: #8190ad;
+      --slate-300: #c8d2e4;
+      --paper: #f3f7ff;
+      --panel: #ffffff;
+      --panel-strong: #f6f9ff;
+      --panel-dark: #0f1d39;
+      --line: rgba(107, 131, 180, 0.18);
+      --line-strong: rgba(107, 131, 180, 0.32);
+      --blue: #4d88ff;
+      --cyan: #59d8ff;
+      --orange: #ff8457;
+      --mint: #39d3a7;
+      --red: #ff6b73;
+      --shadow-xl: 0 32px 80px rgba(7, 16, 36, 0.28);
+      --shadow-lg: 0 22px 54px rgba(11, 22, 45, 0.15);
+      --radius-xl: 36px;
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --shell: min(1180px, calc(100% - 28px));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--paper);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(77, 136, 255, 0.22), transparent 22%),
+        radial-gradient(circle at 84% 8%, rgba(255, 132, 87, 0.24), transparent 20%),
+        linear-gradient(180deg, #071121 0%, #0d1a34 42%, #0f1831 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(189, 210, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(189, 210, 255, 0.05) 1px, transparent 1px);
+      background-size: 44px 44px;
+      opacity: 0.28;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .shell {
+      width: var(--shell);
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 30px 0 54px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 18px;
+      border-radius: 999px;
+      background: rgba(13, 25, 49, 0.84);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.18);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      box-shadow: 0 12px 24px rgba(4, 12, 25, 0.28);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 6px;
+    }
+
+    .brand-copy strong,
+    .brand-copy span {
+      display: block;
+    }
+
+    .brand-copy strong {
+      font-size: 0.98rem;
+      letter-spacing: 0.01em;
+    }
+
+    .brand-copy span {
+      font-size: 0.84rem;
+      color: var(--slate-300);
+    }
+
+    .top-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ff9569, #ff744a);
+      color: white;
+      font-size: 0.84rem;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 14px 30px rgba(255, 117, 74, 0.32);
+    }
+
+    .hero-card {
+      position: relative;
+      margin-top: 26px;
+      padding: 42px;
+      border-radius: 42px;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(89, 216, 255, 0.18), transparent 20%),
+        radial-gradient(circle at 86% 12%, rgba(255, 132, 87, 0.18), transparent 22%),
+        linear-gradient(150deg, rgba(17, 28, 56, 0.95), rgba(11, 20, 38, 0.94));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+    }
+
+    .hero-card::before,
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-card::before {
+      width: 420px;
+      height: 420px;
+      right: -120px;
+      top: -80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(76, 136, 255, 0.24), transparent 62%);
+    }
+
+    .hero-card::after {
+      width: 340px;
+      height: 340px;
+      left: -90px;
+      bottom: -140px;
+      border-radius: 40%;
+      background: radial-gradient(circle, rgba(255, 132, 87, 0.18), transparent 70%);
+    }
+
+    .hero-copy,
+    .hero-copy .eyebrow,
+    .hero-copy h1,
+    .hero-copy p,
+    .hero-copy .hero-stats,
+    .hero-copy .hero-actions {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 11px 16px;
+      border-radius: 999px;
+      margin-bottom: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #b9d9ff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .hero-copy h1 {
+      max-width: 900px;
+      margin: 0 auto;
+      font-family: "Bitter", serif;
+      font-size: clamp(2.6rem, 5vw, 5rem);
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+    }
+
+    .hero-copy p {
+      max-width: 760px;
+      margin: 20px auto 0;
+      color: #d8e2f4;
+      font-size: 1.08rem;
+      line-height: 1.65;
+    }
+
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 11px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #eff4ff;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 6px rgba(89, 216, 255, 0.14);
+      flex: 0 0 auto;
+    }
+
+    .dot.orange {
+      background: var(--orange);
+      box-shadow: 0 0 0 6px rgba(255, 132, 87, 0.14);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, #ff976e, #ff7548);
+      color: white;
+      box-shadow: 0 18px 36px rgba(255, 117, 74, 0.3);
+    }
+
+    .button.secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #eef4ff;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .section {
+      padding: 34px 0 0;
+    }
+
+    .section-panel {
+      position: relative;
+      z-index: 1;
+      padding: 34px;
+      border-radius: 34px;
+      background: var(--panel);
+      color: var(--navy-900);
+      border: 1px solid rgba(14, 24, 48, 0.08);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .section-heading {
+      margin: 0;
+      font-family: "Bitter", serif;
+      font-size: clamp(2rem, 3vw, 3rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: var(--navy-900);
+    }
+
+    .section-intro {
+      max-width: 760px;
+      margin: 14px 0 0;
+      color: #445273;
+      font-size: 1rem;
+      line-height: 1.72;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .proof-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #f9fbff, #eef4ff);
+      border: 1px solid rgba(107, 131, 180, 0.16);
+    }
+
+    .proof-card strong {
+      display: block;
+      font-size: 1.95rem;
+      line-height: 1;
+      color: var(--navy-850);
+    }
+
+    .proof-card span {
+      display: block;
+      margin-top: 10px;
+      color: #53627f;
+      font-size: 0.94rem;
+      line-height: 1.5;
+    }
+
+    .phones-shell {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 26px;
+      margin-top: 28px;
+      align-items: start;
+    }
+
+    .phones-copy {
+      padding-right: 8px;
+    }
+
+    .kicker {
+      display: inline-block;
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: #eaf3ff;
+      color: #2554bf;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .opportunity-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .opportunity-item {
+      padding: 18px 18px 18px 50px;
+      border-radius: 20px;
+      background: #f8fbff;
+      border: 1px solid rgba(57, 87, 140, 0.12);
+      position: relative;
+    }
+
+    .opportunity-item::before {
+      content: "";
+      position: absolute;
+      left: 18px;
+      top: 22px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      box-shadow: 0 0 0 7px rgba(89, 216, 255, 0.14);
+    }
+
+    .opportunity-item strong {
+      display: block;
+      font-size: 1rem;
+      color: var(--navy-900);
+    }
+
+    .opportunity-item p {
+      margin: 8px 0 0;
+      color: #4d5c79;
+      line-height: 1.6;
+    }
+
+    .phones-stage {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .phone-wrap {
+      width: 310px;
+    }
+
+    .phone-label {
+      text-align: center;
+      margin: 0 0 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #5d6c8e;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 38px;
+      background: linear-gradient(180deg, #16284d, #071021);
+      box-shadow: 0 34px 70px rgba(8, 17, 36, 0.26);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 12px;
+      transform: translateX(-50%);
+      width: 118px;
+      height: 22px;
+      border-radius: 999px;
+      background: #030712;
+      z-index: 3;
+    }
+
+    .phone-scroll {
+      width: 100%;
+      height: 100%;
+      border-radius: 28px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 36px 14px 14px;
+      background: linear-gradient(180deg, #f5f8ff 0%, #ecf1ff 100%);
+      position: relative;
+      z-index: 1;
+    }
+
+    .phone-scroll.current {
+      background: linear-gradient(180deg, #fff7f6 0%, #fffdf8 100%);
+    }
+
+    .mobile-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #5d6c8e;
+      font-size: 0.73rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .mobile-card {
+      border-radius: 22px;
+      background: white;
+      border: 1px solid rgba(75, 104, 160, 0.12);
+      box-shadow: 0 12px 24px rgba(25, 39, 69, 0.08);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .mobile-card.dark {
+      background: linear-gradient(180deg, #142447, #0f1d39);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 16px 28px rgba(7, 17, 31, 0.24);
+    }
+
+    .mobile-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    .mobile-card.dark .mobile-title {
+      color: white;
+    }
+
+    .mobile-text {
+      margin: 8px 0 0;
+      color: #4d5c79;
+      font-size: 0.84rem;
+      line-height: 1.55;
+    }
+
+    .mobile-card.dark .mobile-text {
+      color: #cfdaef;
+    }
+
+    .mini-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .mini-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #edf3ff;
+      color: #3458b5;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .mini-pill.red {
+      background: #ffe5e8;
+      color: #b33143;
+    }
+
+    .mini-pill.green {
+      background: #def8ef;
+      color: #0c8f65;
+    }
+
+    .candidate {
+      padding: 14px;
+      border-radius: 20px;
+      background: white;
+      border: 1px solid rgba(75, 104, 160, 0.13);
+      box-shadow: 0 10px 22px rgba(18, 32, 59, 0.06);
+      margin-top: 12px;
+    }
+
+    .candidate-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .candidate-name {
+      margin: 0;
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    .candidate-role {
+      margin: 4px 0 0;
+      font-size: 0.78rem;
+      color: #5d6c8e;
+    }
+
+    .score-chip {
+      min-width: 62px;
+      padding: 8px 9px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #dff3ff, #d6eff7);
+      text-align: center;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #006e92;
+    }
+
+    .candidate-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .signal {
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: #f3f7ff;
+      color: #3c4e73;
+      font-size: 0.73rem;
+      line-height: 1.45;
+    }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .action {
+      padding: 10px 8px;
+      border-radius: 14px;
+      text-align: center;
+      font-size: 0.73rem;
+      font-weight: 700;
+      background: #ecf2ff;
+      color: #3557ad;
+    }
+
+    .action.strong {
+      background: linear-gradient(135deg, #ff9365, #ff7749);
+      color: white;
+    }
+
+    .timeline {
+      margin-top: 12px;
+      padding-left: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .timeline li {
+      padding: 12px 12px 12px 38px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #d4dff1;
+      font-size: 0.77rem;
+      position: relative;
+    }
+
+    .timeline li::before {
+      content: "";
+      position: absolute;
+      left: 14px;
+      top: 15px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 0 5px rgba(57, 211, 167, 0.18);
+    }
+
+    .stage-grid {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 24px;
+      margin-top: 26px;
+      align-items: center;
+    }
+
+    .visual-card {
+      padding: 20px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, #0f1d39, #0a1428);
+      overflow: hidden;
+      min-height: 100%;
+    }
+
+    .visual-card img {
+      width: 100%;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .stage-notes {
+      display: grid;
+      gap: 12px;
+    }
+
+    .note {
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: #f7faff;
+      border: 1px solid rgba(90, 118, 172, 0.14);
+    }
+
+    .note strong {
+      display: block;
+      color: var(--navy-900);
+      font-size: 0.98rem;
+    }
+
+    .note p {
+      margin: 8px 0 0;
+      color: #4e5f80;
+      line-height: 1.6;
+    }
+
+    .cta-panel {
+      margin: 34px 0 44px;
+      padding: 32px;
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(89, 216, 255, 0.14), transparent 20%),
+        radial-gradient(circle at 82% 18%, rgba(255, 132, 87, 0.18), transparent 24%),
+        linear-gradient(145deg, rgba(16, 27, 52, 0.96), rgba(9, 17, 33, 0.98));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow-xl);
+      text-align: center;
+    }
+
+    .cta-panel h2,
+    .cta-panel p,
+    .cta-panel .hero-actions {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .cta-panel h2 {
+      margin: 0;
+      font-family: "Bitter", serif;
+      font-size: clamp(2rem, 3vw, 3rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .cta-panel p {
+      max-width: 700px;
+      margin-top: 14px;
+      color: #d5dff1;
+      line-height: 1.7;
+    }
+
+    .fade-up {
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .fade-up.delay-1 {
+      animation-delay: 0.1s;
+    }
+
+    .fade-up.delay-2 {
+      animation-delay: 0.2s;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1080px) {
+      .proof-grid,
+      .phones-shell,
+      .stage-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .phones-copy {
+        padding-right: 0;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        border-radius: 28px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .top-pill {
+        width: 100%;
+      }
+
+      .hero-card,
+      .section-panel,
+      .cta-panel {
+        padding: 24px;
+        border-radius: 28px;
+      }
+
+      .hero-copy h1 {
+        font-size: clamp(2.3rem, 9vw, 3.6rem);
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 480px) {
+      .shell {
+        width: min(100% - 20px, 1180px);
+      }
+
+      .proof-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .phone {
+        width: 300px;
+      }
+
+      .phone-wrap {
+        width: 100%;
+      }
+
+      .phones-stage {
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="shell">
+        <div class="topbar fade-up">
+          <div class="brand">
+            <img src="assets/fraction-favicon.png" alt="Fraction icon">
+            <div class="brand-copy">
+              <strong>EVONA × FRACTION</strong>
+              <span>AI-assisted executive hiring workflow</span>
+            </div>
+          </div>
+          <div class="top-pill">Prototype concept for Theo Borek</div>
+        </div>
+
+        <div class="hero-card fade-up delay-1">
+          <div class="hero-copy">
+            <div class="eyebrow">AI Shortlist Command Layer</div>
+            <h1>What if FRACTION approvals happened on mobile before candidates went cold?</h1>
+            <p>EVONA already has the valuable workflow: AI-assisted shortlists, stakeholder feedback, messaging, and interview setup. The missing layer looks mobile. This concept turns that last decision mile into one explainable, phone-native approval loop.</p>
+            <div class="hero-stats">
+              <div class="stat-pill"><span class="dot"></span> No verified App Store or Play listing found on March 29, 2026</div>
+              <div class="stat-pill"><span class="dot orange"></span> Public EVONA stats: +300K network, 213 applicants per role, 6.1 interviews</div>
+            </div>
+            <div class="hero-actions">
+              <a class="button primary" href="#prototype">See The Mobile Fix</a>
+              <a class="button secondary" href="https://app.evonafraction.com/login" target="_blank" rel="noreferrer">Open Current Web App</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-panel fade-up">
+          <span class="kicker">Public Signals</span>
+          <h2 class="section-heading">The product is real. The mobile decision layer is still open.</h2>
+          <p class="section-intro">FRACTION publicly promises AI-assisted shortlists, direct interview setup, and investor or colleague feedback. The live app bundle also exposes shortlist, messaging, vacancy, application, and feedback flows. That makes this a strong mobile wedge: not a speculative app idea, just the fastest place to compress decision latency.</p>
+          <div class="proof-grid">
+            <div class="proof-card">
+              <strong>+300K</strong>
+              <span>EVONA says its subscription products reach an elite network of more than 300,000 space professionals.</span>
+            </div>
+            <div class="proof-card">
+              <strong>213</strong>
+              <span>Public subscription stats claim 213 applicants per role on average, which makes fast mobile triage more valuable.</span>
+            </div>
+            <div class="proof-card">
+              <strong>6.1</strong>
+              <span>Average interviews per role. A mobile approval loop can keep those handoffs from stalling after shortlist creation.</span>
+            </div>
+            <div class="proof-card">
+              <strong>4.8/5</strong>
+              <span>Communication score from EVONA's public testimonials deck. Mobile visibility helps protect that reputation at scale.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="prototype">
+      <div class="shell">
+        <div class="section-panel fade-up">
+          <div class="phones-shell">
+            <div class="phones-copy">
+              <span class="kicker">Prototype Focus</span>
+              <h2 class="section-heading">Turn shortlist review into a single mobile motion.</h2>
+              <p class="section-intro">The problem is not candidate discovery. The problem is what happens after the shortlist exists: feedback requests, approval chasing, and interview booking likely leak into inboxes and browser tabs. This concept keeps everything inside one narrow mobile surface with explainable AI and visible ownership.</p>
+              <div class="opportunity-list">
+                <div class="opportunity-item">
+                  <strong>Explainable ranking, not just AI branding</strong>
+                  <p>Each executive gets fit reasons, confidence, readiness, and explicit risk notes so founders and investors can approve faster without asking for a desktop deck.</p>
+                </div>
+                <div class="opportunity-item">
+                  <strong>Feedback stops living in scattered threads</strong>
+                  <p>Approvals, neutral votes, disapprovals, and comments sit on the same mobile card instead of drifting into email, WhatsApp, or Slack.</p>
+                </div>
+                <div class="opportunity-item">
+                  <strong>Book the interview inside the decision flow</strong>
+                  <p>Once enough approvals land, the next action is immediate: route to recruiter owner, show SLA, and confirm a meeting without context switching.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="phones-stage">
+              <div class="phone-wrap">
+                <p class="phone-label">Current Friction</p>
+                <div class="phone">
+                  <div class="phone-scroll current">
+                    <div class="mobile-top">
+                      <span>9:41</span>
+                      <span>4 new replies</span>
+                    </div>
+                    <div class="mobile-card">
+                      <h3 class="mobile-title">Shortlist #42 is ready</h3>
+                      <p class="mobile-text">3 board-ready candidates for a defense-tech COO role. Feedback still spread across investor email, recruiter notes, and browser tabs.</p>
+                      <div class="mini-row">
+                        <span class="mini-pill red">2 pending reviewers</span>
+                        <span class="mini-pill">Desktop only</span>
+                      </div>
+                    </div>
+                    <div class="mobile-card">
+                      <h3 class="mobile-title">Email thread</h3>
+                      <p class="mobile-text">"Can you resend the shortlist?" "Which one had export-control experience?" "Can we book Thursday?"</p>
+                      <div class="mini-row">
+                        <span class="mini-pill">Investor feedback</span>
+                        <span class="mini-pill red">No owner visible</span>
+                      </div>
+                    </div>
+                    <div class="mobile-card">
+                      <h3 class="mobile-title">Candidate cool-off risk</h3>
+                      <p class="mobile-text">Top match is available this week. Decision lag turns a strong shortlist into a slower follow-up problem for the recruiter.</p>
+                      <div class="mini-row">
+                        <span class="mini-pill red">48h waiting</span>
+                        <span class="mini-pill">Message sent</span>
+                      </div>
+                    </div>
+                    <div class="mobile-card dark">
+                      <h3 class="mobile-title">What breaks trust</h3>
+                      <ul class="timeline">
+                        <li>AI ranking is not visible enough to explain why Candidate A beats Candidate B.</li>
+                        <li>Stakeholders approve in different places, so nobody sees a single source of truth.</li>
+                        <li>The recruiter owns the handoff, but the app does not keep that ownership obvious on mobile.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="phone-wrap">
+                <p class="phone-label">Improved Mobile Flow</p>
+                <div class="phone">
+                  <div class="phone-scroll">
+                    <div class="mobile-top">
+                      <span>9:41</span>
+                      <span>FRACTION AI</span>
+                    </div>
+                    <div class="mobile-card dark">
+                      <h3 class="mobile-title">Defense COO shortlist</h3>
+                      <p class="mobile-text">AI reduced 12 executives to 3 approvals worth acting on now. Two investor responses are in. One founder decision still pending.</p>
+                      <div class="mini-row">
+                        <span class="mini-pill green">87% confidence</span>
+                        <span class="mini-pill">Owner: Rebecca</span>
+                      </div>
+                    </div>
+
+                    <div class="candidate">
+                      <div class="candidate-top">
+                        <div>
+                          <p class="candidate-name">Isla Coldwell</p>
+                          <p class="candidate-role">Fractional COO / CRO • Defense</p>
+                        </div>
+                        <div class="score-chip">92 match</div>
+                      </div>
+                      <div class="candidate-grid">
+                        <div class="signal">Scaled billion-dollar defense programs</div>
+                        <div class="signal">Immediate availability signal</div>
+                        <div class="signal">2 of 3 stakeholders already approve</div>
+                        <div class="signal">AI notes strong operational turnaround fit</div>
+                      </div>
+                      <div class="action-row">
+                        <div class="action">Neutral</div>
+                        <div class="action strong">Approve</div>
+                        <div class="action">Comment</div>
+                      </div>
+                    </div>
+
+                    <div class="candidate">
+                      <div class="candidate-top">
+                        <div>
+                          <p class="candidate-name">Ian Smith</p>
+                          <p class="candidate-role">Fractional CFO • Space / National Security</p>
+                        </div>
+                        <div class="score-chip">88 match</div>
+                      </div>
+                      <div class="candidate-grid">
+                        <div class="signal">Raised $2B in prior leadership roles</div>
+                        <div class="signal">Best fit for board reporting depth</div>
+                        <div class="signal">Investor notes already attached</div>
+                        <div class="signal">Bookable Thursday 14:00 UTC</div>
+                      </div>
+                      <div class="action-row">
+                        <div class="action">Pass</div>
+                        <div class="action strong">Book interview</div>
+                        <div class="action">Share</div>
+                      </div>
+                    </div>
+
+                    <div class="mobile-card">
+                      <h3 class="mobile-title">Decision timeline</h3>
+                      <p class="mobile-text">Every shortlist now shows reviewer status, SLA, and next step so the recruiter does not need to chase context manually.</p>
+                      <div class="mini-row">
+                        <span class="mini-pill green">3 comments synced</span>
+                        <span class="mini-pill">SLA: 4h</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-panel fade-up">
+          <span class="kicker">Grounded In Public Product Evidence</span>
+          <h2 class="section-heading">The idea stays close to what EVONA already ships.</h2>
+          <p class="section-intro">We did not invent a new business model here. The concept is anchored in EVONA's public subscription engine, FRACTION's existing shortlist-and-feedback promise, and the real product visuals already on the site.</p>
+          <div class="stage-grid">
+            <div class="visual-card">
+              <img src="assets/fraction-screens.png" alt="Fraction public product screens">
+            </div>
+            <div class="stage-notes">
+              <div class="note">
+                <strong>Current stack already supports product work</strong>
+                <p>Public signals show a WordPress marketing layer, a React app shell, GTM, and CRM tooling. That is enough maturity for a focused mobile extension without a full platform reset.</p>
+              </div>
+              <div class="note">
+                <strong>The workflow is already valuable</strong>
+                <p>Shortlists, feedback requests, messaging, and interview scheduling are the right primitives. The missing leverage is speed and visibility for stakeholders away from desktop.</p>
+              </div>
+              <div class="note">
+                <strong>The pitch matches Theo's remit</strong>
+                <p>This is an AI and automation conversation first. Mobile is simply the fastest way to surface approvals, confidence, and next actions where busy decision-makers already are.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="cta-panel fade-up">
+          <h2>EVONA does not need another generic app.</h2>
+          <p>It needs a thinner, faster mobile surface for the part of the workflow that actually decides whether a great executive gets booked or goes cold. That is the wedge this prototype is designed to show.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+            <a class="button secondary" href="#prototype">Back To Prototype</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
