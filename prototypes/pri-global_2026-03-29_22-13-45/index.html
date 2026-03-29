@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRI Global PRISM Mobile Teardown | Elinext</title>
+  <meta name="description" content="What if PRISM turned vendor, payment, tax, and onboarding exceptions into one mobile resolution queue so PRI Global's ops teams could clear blocked supplier work before it slowed payroll, invoices, or MSP delivery?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/pri-global_2026-03-29_22-13-45/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/pri-global_2026-03-29_22-13-45/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/pri-global_2026-03-29_22-13-45/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="PRI Global Mobile — AI Teardown">
+  <meta property="og:description" content="What if PRISM turned blocked vendors, missing banking details, invoice holds, and payment exceptions into one ranked mobile command center that ops could act on in minutes instead of bouncing between portals?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PRI Global Mobile — AI Teardown">
+  <meta name="twitter:description" content="What if PRISM turned blocked vendors, missing banking details, invoice holds, and payment exceptions into one ranked mobile command center that ops could act on in minutes instead of bouncing between portals?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/pri-global_2026-03-29_22-13-45/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-29: no attributable iOS/Android app listing found for PRI Global or PRISM in US App Store / Google Play search; prototype based on PRISM web product -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink-0: #07111f;
+      --ink-1: #0f1f36;
+      --ink-2: #163154;
+      --paper: #f6efe4;
+      --panel: #fffaf1;
+      --panel-2: #f5efe3;
+      --line: rgba(15, 31, 54, 0.12);
+      --text: #0c1a2f;
+      --muted: #5f6e82;
+      --cyan: #79d7ff;
+      --cyan-2: #3bb0e5;
+      --amber: #f2b451;
+      --amber-2: #de8141;
+      --mint: #83d6be;
+      --rose: #ef8d7d;
+      --danger: #ff7d6b;
+      --shadow: 0 28px 70px rgba(5, 12, 24, 0.18);
+      --radius-xl: 38px;
+      --radius-lg: 26px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+      --shell: min(1180px, calc(100% - 28px));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(121, 215, 255, 0.18), transparent 24%),
+        radial-gradient(circle at 92% 12%, rgba(242, 180, 81, 0.22), transparent 20%),
+        linear-gradient(180deg, #ede4d4 0%, #f5efe6 28%, #f6f3ec 60%, #fcfbf8 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.24;
+      background-image:
+        linear-gradient(rgba(15, 31, 54, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 31, 54, 0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .shell {
+      width: var(--shell);
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 28px 0 42px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+      padding: 14px 18px;
+      border-radius: 999px;
+      background: rgba(255, 250, 241, 0.86);
+      border: 1px solid rgba(15, 31, 54, 0.08);
+      box-shadow: 0 18px 38px rgba(12, 26, 47, 0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background:
+        linear-gradient(145deg, rgba(121, 215, 255, 0.24), rgba(242, 180, 81, 0.26)),
+        linear-gradient(180deg, #15253f, #0a1426);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(7, 17, 31, 0.22);
+      flex: 0 0 auto;
+    }
+
+    .brand-copy strong,
+    .brand-copy span {
+      display: block;
+    }
+
+    .brand-copy strong {
+      font-size: 0.96rem;
+    }
+
+    .brand-copy span {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 15px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f5c46f, #df8853);
+      color: #1d1e25;
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .hero-card,
+    .section-card,
+    .footer-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(15, 31, 54, 0.08);
+      background: rgba(255, 250, 241, 0.92);
+      box-shadow: var(--shadow);
+      z-index: 1;
+    }
+
+    .hero-card {
+      border-radius: 42px;
+      padding: 36px;
+      background:
+        radial-gradient(circle at 0% 10%, rgba(121, 215, 255, 0.22), transparent 28%),
+        radial-gradient(circle at 100% 18%, rgba(242, 180, 81, 0.18), transparent 24%),
+        linear-gradient(160deg, rgba(255, 252, 245, 0.98), rgba(251, 245, 235, 0.97));
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -120px;
+      top: 50px;
+      width: 360px;
+      height: 360px;
+      border-radius: 34%;
+      background: radial-gradient(circle, rgba(59, 176, 229, 0.15), transparent 62%);
+      z-index: 0;
+    }
+
+    .hero-copy,
+    .hero-copy h1,
+    .hero-copy p,
+    .hero-copy .hero-badges {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 auto 18px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(7, 17, 31, 0.95);
+      color: #f3e4c6;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.02;
+    }
+
+    .hero-copy h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      letter-spacing: -0.05em;
+      color: #09152a;
+    }
+
+    .hero-copy h1 .serif {
+      font-family: "DM Serif Display", serif;
+      font-style: italic;
+      font-weight: 400;
+      color: #18406e;
+    }
+
+    .hero-copy p {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+      margin-top: 18px;
+      font-size: 1.06rem;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    .hero-copy strong {
+      color: #173258;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 15px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(15, 31, 54, 0.08);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #173258;
+      box-shadow: 0 10px 24px rgba(15, 31, 54, 0.08);
+    }
+
+    .hero-rail {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 22px;
+      margin-top: 30px;
+    }
+
+    .signal-panel,
+    .benchmark-panel {
+      border-radius: 28px;
+      padding: 22px;
+      background: #fbf5ea;
+      border: 1px solid var(--line);
+      min-height: 100%;
+    }
+
+    .signal-panel h3,
+    .benchmark-panel h3,
+    .section-card h2,
+    .footer-card h2 {
+      font-size: clamp(1.5rem, 2.4vw, 2.35rem);
+      letter-spacing: -0.04em;
+    }
+
+    .panel-kicker {
+      display: inline-block;
+      margin-bottom: 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #5a708e;
+    }
+
+    .signal-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .signal-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(15, 31, 54, 0.08);
+    }
+
+    .signal-index {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, rgba(121, 215, 255, 0.22), rgba(242, 180, 81, 0.26));
+      color: #102342;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .signal-item strong,
+    .signal-item span {
+      display: block;
+    }
+
+    .signal-item strong {
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .signal-item span {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .score-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .score-row {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(7, 17, 31, 0.94);
+      color: #f4efe6;
+    }
+
+    .score-row strong,
+    .score-row span {
+      display: block;
+    }
+
+    .score-row strong {
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .score-chip {
+      padding: 10px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      text-align: center;
+    }
+
+    .score-chip b,
+    .score-chip small {
+      display: block;
+    }
+
+    .score-chip b {
+      font-size: 1rem;
+    }
+
+    .score-chip small {
+      margin-top: 3px;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      color: rgba(244, 239, 230, 0.72);
+      text-transform: uppercase;
+    }
+
+    .section-card {
+      margin-top: 22px;
+      border-radius: 34px;
+      padding: 34px;
+      background: linear-gradient(180deg, rgba(255, 251, 245, 0.96), rgba(248, 242, 233, 0.98));
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .section-head p {
+      margin: 10px 0 0;
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--muted);
+      max-width: 660px;
+    }
+
+    .mini-proof {
+      display: grid;
+      gap: 10px;
+      padding: 20px;
+      border-radius: 24px;
+      background: rgba(7, 17, 31, 0.94);
+      color: #f4efe6;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .mini-proof strong {
+      font-size: 0.98rem;
+    }
+
+    .mini-proof span {
+      font-size: 0.86rem;
+      line-height: 1.6;
+      color: rgba(244, 239, 230, 0.76);
+    }
+
+    .phone-stage {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .phone-panel {
+      padding: 22px;
+      border-radius: 30px;
+      background: #f2eadb;
+      border: 1px solid var(--line);
+      min-height: 100%;
+    }
+
+    .phone-panel h3 {
+      font-size: 1.3rem;
+      letter-spacing: -0.04em;
+    }
+
+    .phone-panel p {
+      margin: 10px 0 0;
+      font-size: 0.94rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      margin: 24px auto 0;
+      padding: 10px;
+      border-radius: 38px;
+      background:
+        linear-gradient(180deg, #1d2b44, #090f1a);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+        0 22px 46px rgba(7, 17, 31, 0.22);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      width: 120px;
+      height: 26px;
+      transform: translateX(-50%);
+      border-radius: 0 0 18px 18px;
+      background: #050a12;
+      z-index: 3;
+    }
+
+    .phone-screen {
+      position: relative;
+      height: 100%;
+      border-radius: 30px;
+      overflow: hidden;
+      background: #f7f0e4;
+      box-shadow: inset 0 0 0 1px rgba(15, 31, 54, 0.08);
+    }
+
+    .phone-scroll {
+      height: 100%;
+      overflow-y: auto;
+      padding: 36px 14px 14px;
+      scrollbar-width: none;
+      background: linear-gradient(180deg, #fffaf2 0%, #f5eee2 100%);
+    }
+
+    .phone-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .phone-top,
+    .phone-card,
+    .queue-item,
+    .timeline-row,
+    .resolve-card {
+      display: block;
+    }
+
+    .phone-top {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tiny-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(7, 17, 31, 0.95);
+      color: #f3e4c6;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .tiny-logo span {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      background: linear-gradient(145deg, rgba(121, 215, 255, 0.38), rgba(242, 180, 81, 0.45));
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 0.64rem;
+    }
+
+    .phone-headline {
+      margin-top: 12px;
+      font-size: 1.35rem;
+      line-height: 1.08;
+      letter-spacing: -0.05em;
+    }
+
+    .phone-subline {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+
+    .stack {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .phone-card,
+    .queue-item,
+    .resolve-card {
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(15, 31, 54, 0.08);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 12px 24px rgba(15, 31, 54, 0.08);
+    }
+
+    .phone-card.dark,
+    .resolve-card.dark {
+      background: linear-gradient(180deg, #13223a, #0c1727);
+      color: #f6f1e7;
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .pill.warn {
+      background: rgba(255, 125, 107, 0.14);
+      color: #b6402e;
+    }
+
+    .pill.ok {
+      background: rgba(131, 214, 190, 0.18);
+      color: #13654d;
+    }
+
+    .pill.focus {
+      background: rgba(121, 215, 255, 0.16);
+      color: #125784;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      padding: 10px;
+      border-radius: 14px;
+      background: rgba(15, 31, 54, 0.06);
+    }
+
+    .phone-card.dark .metric {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .metric strong,
+    .metric span {
+      display: block;
+    }
+
+    .metric strong {
+      font-size: 1rem;
+    }
+
+    .metric span {
+      margin-top: 3px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .phone-card.dark .metric span {
+      color: rgba(246, 241, 231, 0.72);
+    }
+
+    .queue-item {
+      display: grid;
+      gap: 10px;
+    }
+
+    .queue-item strong {
+      font-size: 0.92rem;
+    }
+
+    .queue-item span,
+    .queue-item small,
+    .timeline-row span,
+    .resolve-card span {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .queue-item small,
+    .timeline-row small,
+    .resolve-card small {
+      display: block;
+      font-size: 0.72rem;
+    }
+
+    .queue-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip-soft {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: rgba(15, 31, 54, 0.06);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #24486d;
+    }
+
+    .phone-card.dark .chip-soft {
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(246, 241, 231, 0.84);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      margin-top: 4px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, var(--cyan), var(--amber));
+      flex: 0 0 auto;
+    }
+
+    .cta-band {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 22px;
+      margin-top: 22px;
+    }
+
+    .cta-box,
+    .proof-box {
+      padding: 24px;
+      border-radius: 28px;
+      background: #10213a;
+      color: #f4efe6;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .cta-box p,
+    .proof-box p {
+      margin: 12px 0 0;
+      font-size: 0.96rem;
+      line-height: 1.72;
+      color: rgba(244, 239, 230, 0.78);
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .proof-stat {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      text-align: center;
+    }
+
+    .proof-stat strong,
+    .proof-stat span {
+      display: block;
+    }
+
+    .proof-stat strong {
+      font-size: 1.15rem;
+    }
+
+    .proof-stat span {
+      margin-top: 4px;
+      font-size: 0.74rem;
+      line-height: 1.45;
+      color: rgba(244, 239, 230, 0.74);
+    }
+
+    .footer-card {
+      margin: 22px 0 34px;
+      border-radius: 32px;
+      padding: 30px 34px;
+      background:
+        radial-gradient(circle at top left, rgba(121, 215, 255, 0.14), transparent 24%),
+        linear-gradient(155deg, #fffaf2, #f6efe4);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .footer-card p {
+      margin: 12px 0 0;
+      max-width: 680px;
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    .cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-weight: 700;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, #11233c, #1f4571);
+      color: #f4efe6;
+      box-shadow: 0 16px 30px rgba(10, 18, 30, 0.18);
+    }
+
+    .button.secondary {
+      background: #fff;
+      color: #173258;
+      border: 1px solid rgba(15, 31, 54, 0.1);
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 1024px) {
+      .hero-rail,
+      .section-head,
+      .phone-stage,
+      .cta-band,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hero-card,
+      .section-card,
+      .footer-card {
+        padding: 22px;
+        border-radius: 28px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+        border-radius: 24px;
+      }
+
+      .brand {
+        justify-content: center;
+      }
+
+      .hero-copy h1 {
+        font-size: clamp(2.4rem, 15vw, 4rem);
+      }
+
+      .score-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .score-grid,
+      .proof-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="top">
+    <section class="hero">
+      <div class="shell">
+        <div class="topbar">
+          <div class="brand">
+            <div class="brand-mark">PR</div>
+            <div class="brand-copy">
+              <strong>PRISM Mobile Ops</strong>
+              <span>Prototype for PRI Global's vendor exception flow</span>
+            </div>
+          </div>
+          <div class="meta-chip">No public mobile app found. Built from PRISM web research.</div>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-copy">
+            <div class="eyebrow">AI Teardown for Keenan Patel</div>
+            <h1>What if <span class="serif">PRISM</span> could clear vendor and payment blockers <span class="serif">away from the desk</span>?</h1>
+            <p>
+              PRI Global already markets PRISM as a secure AI command center. The operational gap is the last mile:
+              <strong>blocked suppliers, missing bank or tax details, invoice holds, and payroll-sensitive exceptions still need a fast human resolution surface.</strong>
+              This prototype turns that work into one ranked mobile queue.
+            </p>
+            <div class="hero-badges">
+              <div class="badge">CRM signal: vendor-management and payment maintenance</div>
+              <div class="badge">PRISM promise: secure, accurate, actionable AI</div>
+              <div class="badge">Mobile wedge: one queue, one owner, one next action</div>
+            </div>
+          </div>
+
+          <div class="hero-rail">
+            <div class="signal-panel">
+              <span class="panel-kicker">Why This Wedge</span>
+              <h3>PRISM already sells the intelligence layer. This adds the execution layer.</h3>
+              <div class="signal-list">
+                <div class="signal-item">
+                  <div class="signal-index">1</div>
+                  <div>
+                    <strong>Too many surfaces</strong>
+                    <span>PRI's public workflow spans PRISM pages, staffing pages, and an embedded JobDiva portal. That invites context switching at the worst possible moment.</span>
+                  </div>
+                </div>
+                <div class="signal-item">
+                  <div class="signal-index">2</div>
+                  <div>
+                    <strong>High-cost exceptions</strong>
+                    <span>Banking, tax, invoice, and approval issues are small tickets individually, but they directly affect supplier trust, payroll timing, and MSP delivery.</span>
+                  </div>
+                </div>
+                <div class="signal-item">
+                  <div class="signal-index">3</div>
+                  <div>
+                    <strong>Visible fit with PRISM</strong>
+                    <span>PRISM already promises "no more dashboards you don't trust" and natural-language answers. A mobile resolution queue makes that promise operational.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="benchmark-panel">
+              <span class="panel-kicker">Public Benchmark</span>
+              <h3>PRI's public digital layer is not currently winning on mobile polish.</h3>
+              <div class="score-list">
+                <div class="score-row">
+                  <strong>priglobal.com</strong>
+                  <div class="score-grid">
+                    <div class="score-chip"><b>19</b><small>Perf</small></div>
+                    <div class="score-chip"><b>80</b><small>Access</small></div>
+                    <div class="score-chip"><b>61</b><small>Best</small></div>
+                    <div class="score-chip"><b>85</b><small>SEO</small></div>
+                  </div>
+                </div>
+                <div class="score-row">
+                  <strong>magnitglobal.com</strong>
+                  <div class="score-grid">
+                    <div class="score-chip"><b>37</b><small>Perf</small></div>
+                    <div class="score-chip"><b>85</b><small>Access</small></div>
+                    <div class="score-chip"><b>57</b><small>Best</small></div>
+                    <div class="score-chip"><b>85</b><small>SEO</small></div>
+                  </div>
+                </div>
+                <div class="score-row">
+                  <strong>beeline.com</strong>
+                  <div class="score-grid">
+                    <div class="score-chip"><b>54</b><small>Perf</small></div>
+                    <div class="score-chip"><b>96</b><small>Access</small></div>
+                    <div class="score-chip"><b>79</b><small>Best</small></div>
+                    <div class="score-chip"><b>92</b><small>SEO</small></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <span class="panel-kicker">Before / After</span>
+              <h2>From scattered exception noise to one mobile resolution queue.</h2>
+              <p>
+                The current pattern is reactive: ops bounce between notes, spreadsheets, portal entries, email approvals, and payment statuses.
+                The proposed pattern gives PRISM one mobile surface for triage, ownership, and action.
+              </p>
+            </div>
+            <div class="mini-proof">
+              <strong>Prototype wedge</strong>
+              <span>Blocked vendor records, missing bank confirmations, expiring tax documents, invoice holds, and payroll-sensitive approvals all land in one ranked queue with a reason code and one next step.</span>
+            </div>
+          </div>
+
+          <div class="phone-stage">
+            <div class="phone-panel">
+              <span class="panel-kicker">Current</span>
+              <h3>Ops teams hunt across systems before they can act.</h3>
+              <p>The blocker exists. The ownership does not. By the time someone finds the right record, the supplier or project team has already been waiting.</p>
+
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="phone-scroll">
+                    <div class="phone-top">
+                      <div class="tiny-logo"><span>PR</span> fragmented workflow</div>
+                      <div class="phone-headline">Morning handoff</div>
+                      <div class="phone-subline">Four unresolved issues. Three systems. No ranked owner.</div>
+                    </div>
+
+                    <div class="stack">
+                      <div class="phone-card">
+                        <div class="label-row">
+                          <span>Portal note</span>
+                          <div class="pill warn">stalled</div>
+                        </div>
+                        <strong>Supplier banking file incomplete</strong>
+                        <span>Invoice release is blocked, but the note only says "waiting on update."</span>
+                      </div>
+
+                      <div class="queue-item">
+                        <div class="label-row">
+                          <span>JobDiva / email</span>
+                          <div class="pill focus">manual</div>
+                        </div>
+                        <strong>MSP approval chain unclear</strong>
+                        <small>Project owner says payroll is waiting. Finance says it never reached the final reviewer.</small>
+                        <div class="queue-meta">
+                          <div class="chip-soft">approval owner unknown</div>
+                          <div class="chip-soft">no ETA</div>
+                        </div>
+                      </div>
+
+                      <div class="queue-item">
+                        <div class="label-row">
+                          <span>Spreadsheet</span>
+                          <div class="pill warn">risk</div>
+                        </div>
+                        <strong>W-9 expired 3 days ago</strong>
+                        <small>Vendor record is still active in one system and on hold in another.</small>
+                        <div class="queue-meta">
+                          <div class="chip-soft">duplicate status</div>
+                          <div class="chip-soft">audit gap</div>
+                        </div>
+                      </div>
+
+                      <div class="phone-card dark">
+                        <div class="label-row">
+                          <span>Current snapshot</span>
+                          <div class="pill warn">buried</div>
+                        </div>
+                        <div class="metric-grid">
+                          <div class="metric">
+                            <strong>14 hrs</strong>
+                            <span>avg time to clear finance-linked exceptions</span>
+                          </div>
+                          <div class="metric">
+                            <strong>5 clicks</strong>
+                            <span>before an owner even sees the full context</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="timeline">
+                        <div class="timeline-row">
+                          <div class="dot"></div>
+                          <div>
+                            <strong>8:41 AM</strong>
+                            <span>Invoice hold logged in one system.</span>
+                          </div>
+                        </div>
+                        <div class="timeline-row">
+                          <div class="dot"></div>
+                          <div>
+                            <strong>9:10 AM</strong>
+                            <span>Email asks for missing bank confirmation.</span>
+                          </div>
+                        </div>
+                        <div class="timeline-row">
+                          <div class="dot"></div>
+                          <div>
+                            <strong>10:02 AM</strong>
+                            <span>Payroll team still cannot see if supplier is ready.</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phone-panel">
+              <span class="panel-kicker">Proposed</span>
+              <h3>PRISM Mobile ranks what is blocked, why it matters, and what to do next.</h3>
+              <p>One queue. One confidence layer. One action bar. AI summarizes the issue, but the human clears it fast with a full audit trail.</p>
+
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="phone-scroll">
+                    <div class="phone-top">
+                      <div class="tiny-logo"><span>PR</span> PRISM mobile ops</div>
+                      <div class="phone-headline">Vendor Resolution Queue</div>
+                      <div class="phone-subline">12 live exceptions. Ranked by payment risk, deadline, and downstream impact.</div>
+                    </div>
+
+                    <div class="stack">
+                      <div class="phone-card dark">
+                        <div class="label-row">
+                          <span>Today at a glance</span>
+                          <div class="pill ok">priority view</div>
+                        </div>
+                        <div class="metric-grid">
+                          <div class="metric">
+                            <strong>3</strong>
+                            <span>payment-critical items due before noon</span>
+                          </div>
+                          <div class="metric">
+                            <strong>7</strong>
+                            <span>supplier records missing bank or tax data</span>
+                          </div>
+                          <div class="metric">
+                            <strong>92%</strong>
+                            <span>confidence on AI-ranked ownership</span>
+                          </div>
+                          <div class="metric">
+                            <strong>4 min</strong>
+                            <span>projected median resolution after assignment</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="queue-item">
+                        <div class="label-row">
+                          <span>#1 payment blocker</span>
+                          <div class="pill warn">act now</div>
+                        </div>
+                        <strong>Atlas MRO supplier payment on hold</strong>
+                        <small>Blocked because the ACH confirmation is missing and the W-9 on file expired 72 hours ago.</small>
+                        <div class="queue-meta">
+                          <div class="chip-soft">deadline 11:30 AM</div>
+                          <div class="chip-soft">affects 2 invoices</div>
+                          <div class="chip-soft">owner: vendor ops</div>
+                        </div>
+                      </div>
+
+                      <div class="resolve-card">
+                        <div class="label-row">
+                          <span>AI explanation</span>
+                          <div class="pill focus">reason code</div>
+                        </div>
+                        <strong>Why PRISM ranked this first</strong>
+                        <span>Release depends on bank validation, tax refresh, and final approval. Delaying this item risks payroll-adjacent downstream timing for an MSP-backed project.</span>
+                      </div>
+
+                      <div class="resolve-card">
+                        <div class="label-row">
+                          <span>One next step</span>
+                          <div class="pill ok">recommended</div>
+                        </div>
+                        <strong>Request corrected banking packet</strong>
+                        <span>PRISM drafts the outreach, routes finance for review, and pauses the invoice-release clock until new documents arrive.</span>
+                      </div>
+
+                      <div class="timeline">
+                        <div class="timeline-row">
+                          <div class="dot"></div>
+                          <div>
+                            <strong>Tap resolve</strong>
+                            <span>Send bank-doc request, notify AP, and tag the MSP owner.</span>
+                          </div>
+                        </div>
+                        <div class="timeline-row">
+                          <div class="dot"></div>
+                          <div>
+                            <strong>Tap escalate</strong>
+                            <span>Reassign to finance lead with one attached AI summary.</span>
+                          </div>
+                        </div>
+                        <div class="timeline-row">
+                          <div class="dot"></div>
+                          <div>
+                            <strong>Tap approve</strong>
+                            <span>Clear the hold if all required documents are already validated.</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="queue-item">
+                        <div class="label-row">
+                          <span>Audit-ready</span>
+                          <div class="pill ok">tracked</div>
+                        </div>
+                        <strong>Every action leaves a clean trail</strong>
+                        <small>Who acted, what changed, what was missing, and how the resolution affected payment readiness all stay attached to the record.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cta-band">
+            <div class="cta-box">
+              <span class="panel-kicker">Why It Fits PRI</span>
+              <h3>Not another AI promise. A better last mile.</h3>
+              <p>
+                PRI already markets PRISM as the place where connected data becomes trusted insight.
+                This mobile layer is the missing operational companion for vendor ops, supplier maintenance, invoice-release coordination, and payment-sensitive approvals.
+              </p>
+            </div>
+            <div class="proof-box">
+              <span class="panel-kicker">Public Signals</span>
+              <h3>Built for the work PRI is already close to.</h3>
+              <div class="proof-grid">
+                <div class="proof-stat">
+                  <strong>1997</strong>
+                  <span>public founding date on company history</span>
+                </div>
+                <div class="proof-stat">
+                  <strong>300+</strong>
+                  <span>successful projects claimed on site</span>
+                </div>
+                <div class="proof-stat">
+                  <strong>96%</strong>
+                  <span>client retention claimed on site</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-card">
+          <div class="footer-grid">
+            <div>
+              <span class="panel-kicker">Next Step</span>
+              <h2>Use mobile to make PRISM's AI actually finish the job.</h2>
+              <p>
+                The strongest mobile opportunity is not a generic company app. It is a focused PRISM companion for fast exception handling in vendor, supplier, and payment operations.
+                That is a wedge Elinext can design, ship, and instrument without asking PRI to reinvent its product strategy.
+              </p>
+            </div>
+            <div class="cta-actions">
+              <a class="button secondary" href="#top">Review Again</a>
+              <a class="button primary" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
