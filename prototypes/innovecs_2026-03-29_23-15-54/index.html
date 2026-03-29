@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Innovecs Mobile - AI Teardown</title>
+    <meta
+      name="description"
+      content="A focused mobile teardown for Innovecs: what if Innochain had a frontline mobile exception hub for dock check-ins, document mismatches, and live yard issues?"
+    />
+    <link
+      rel="canonical"
+      href="https://elinext-lab.github.io/prototypes/innovecs_2026-03-29_23-15-54/"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Innovecs Mobile - AI Teardown" />
+    <meta
+      property="og:description"
+      content="What if Innovecs turned Innochain into a mobile exception hub for dock events, AI document capture, and operator-side resolution instead of desktop cleanup?"
+    />
+    <meta
+      property="og:url"
+      content="https://elinext-lab.github.io/prototypes/innovecs_2026-03-29_23-15-54/"
+    />
+    <meta
+      property="og:image"
+      content="https://elinext-lab.github.io/prototypes/innovecs_2026-03-29_23-15-54/og-image.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="author" content="Yauheni Shauchenka, Elinext" />
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-ZR415HX0B2");
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --ink: #12203a;
+        --ink-soft: #2d4264;
+        --paper: #f3eee7;
+        --paper-strong: #fffaf3;
+        --line: rgba(18, 32, 58, 0.12);
+        --line-strong: rgba(18, 32, 58, 0.22);
+        --night: #0b1426;
+        --night-soft: #16233c;
+        --orange: #f06d2f;
+        --orange-soft: #f6b16e;
+        --mint: #dff6ea;
+        --mint-strong: #0f8e62;
+        --sky: #d9e7ff;
+        --sky-strong: #2b67d9;
+        --rose: #ffe0d6;
+        --danger: #c94d2a;
+        --white: #ffffff;
+        --shadow: 0 28px 70px rgba(11, 20, 38, 0.18);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: "Space Grotesk", "Avenir Next", sans-serif;
+        letter-spacing: -0.04em;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .page {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .section {
+        position: relative;
+        z-index: 1;
+        background: var(--paper);
+      }
+
+      .container {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        color: var(--paper-strong);
+        background:
+          radial-gradient(circle at top left, rgba(240, 109, 47, 0.24), transparent 32%),
+          radial-gradient(circle at top right, rgba(255, 214, 151, 0.16), transparent 28%),
+          linear-gradient(180deg, #13213b 0%, #0b1426 100%);
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 64px 64px;
+        opacity: 0.25;
+        z-index: 0;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        width: 360px;
+        height: 360px;
+        right: -90px;
+        bottom: -120px;
+        border-radius: 999px;
+        background: rgba(240, 109, 47, 0.18);
+        filter: blur(18px);
+        z-index: 0;
+      }
+
+      .hero-inner {
+        position: relative;
+        z-index: 1;
+        padding: 34px 0 86px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 auto 18px;
+        padding: 9px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.08);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .eyebrow img {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+      }
+
+      .hero-copy {
+        max-width: 900px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .hero-copy p,
+      .hero-copy h1,
+      .hero-copy span {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+      }
+
+      .hero-kicker {
+        margin-bottom: 16px;
+        color: #ffcca5;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-size: clamp(2.7rem, 6vw, 5.2rem);
+        line-height: 0.92;
+      }
+
+      .lede {
+        max-width: 790px;
+        margin-top: 22px;
+        font-size: clamp(1rem, 1.9vw, 1.22rem);
+        line-height: 1.72;
+        color: rgba(255, 250, 243, 0.84);
+      }
+
+      .hero-note {
+        max-width: 760px;
+        margin: 24px auto 0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: rgba(255, 250, 243, 0.7);
+        text-align: center;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        max-width: 920px;
+        margin: 34px auto 42px;
+      }
+
+      .metric {
+        padding: 18px 16px;
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 1.9rem;
+        font-family: "Space Grotesk", "Avenir Next", sans-serif;
+      }
+
+      .metric span {
+        display: block;
+        margin-top: 6px;
+        font-size: 0.92rem;
+        line-height: 1.45;
+        color: rgba(255, 250, 243, 0.78);
+      }
+
+      .phones {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 26px;
+        align-items: start;
+      }
+
+      .phone-block {
+        text-align: center;
+        animation: fade-up 0.7s ease both;
+      }
+
+      .phone-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 auto 14px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 250, 243, 0.9);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .phone {
+        position: relative;
+        width: 280px;
+        height: 580px;
+        margin: 0 auto;
+        padding: 12px;
+        border-radius: 36px;
+        background:
+          linear-gradient(180deg, #1f2a42 0%, #0d1629 100%);
+        box-shadow: 0 32px 80px rgba(2, 7, 16, 0.46);
+      }
+
+      .phone::before {
+        content: "";
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        width: 108px;
+        height: 24px;
+        transform: translateX(-50%);
+        border-radius: 0 0 18px 18px;
+        background: #0a1120;
+        z-index: 2;
+      }
+
+      .phone-screen {
+        position: relative;
+        height: 100%;
+        overflow: auto;
+        padding: 36px 14px 14px;
+        border-radius: 26px;
+        background: linear-gradient(180deg, #fbf7f0 0%, #efe6da 100%);
+        color: var(--ink);
+        scrollbar-width: none;
+      }
+
+      .phone-screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      .app-top,
+      .status-row,
+      .phone-card,
+      .phone-list,
+      .phone-chart,
+      .action-grid {
+        display: block;
+      }
+
+      .status-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(18, 32, 58, 0.66);
+      }
+
+      .app-top {
+        margin-top: 14px;
+      }
+
+      .app-top strong {
+        display: block;
+        font-size: 1.35rem;
+        line-height: 1.05;
+        font-family: "Space Grotesk", "Avenir Next", sans-serif;
+      }
+
+      .app-top span {
+        display: block;
+        margin-top: 6px;
+        font-size: 0.86rem;
+        line-height: 1.48;
+        color: rgba(18, 32, 58, 0.72);
+      }
+
+      .phone-card {
+        margin-top: 14px;
+        padding: 14px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.84);
+        border: 1px solid rgba(18, 32, 58, 0.08);
+        box-shadow: 0 12px 30px rgba(18, 32, 58, 0.08);
+      }
+
+      .phone-card.dark {
+        background: linear-gradient(180deg, #142039 0%, #10192c 100%);
+        color: var(--paper-strong);
+      }
+
+      .phone-card h3 {
+        font-size: 1rem;
+        line-height: 1.05;
+      }
+
+      .phone-card p {
+        margin-top: 8px;
+        font-size: 0.84rem;
+        line-height: 1.5;
+      }
+
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .tag {
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        background: var(--paper);
+        color: var(--ink-soft);
+      }
+
+      .tag.alert {
+        background: var(--rose);
+        color: var(--danger);
+      }
+
+      .tag.ok {
+        background: var(--mint);
+        color: var(--mint-strong);
+      }
+
+      .tag.sky {
+        background: var(--sky);
+        color: var(--sky-strong);
+      }
+
+      .list-item {
+        display: flex;
+        gap: 10px;
+        margin-top: 12px;
+        align-items: flex-start;
+      }
+
+      .list-icon {
+        flex: 0 0 30px;
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        font-weight: 700;
+        background: var(--night);
+        color: var(--paper-strong);
+      }
+
+      .list-item strong,
+      .flow-item strong {
+        display: block;
+        font-size: 0.82rem;
+        line-height: 1.35;
+      }
+
+      .list-item span,
+      .flow-item span {
+        display: block;
+        margin-top: 4px;
+        font-size: 0.74rem;
+        line-height: 1.45;
+        color: rgba(18, 32, 58, 0.72);
+      }
+
+      .action-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .action {
+        padding: 12px 10px;
+        border-radius: 16px;
+        background: var(--paper-strong);
+        border: 1px solid rgba(18, 32, 58, 0.08);
+        text-align: left;
+      }
+
+      .action strong {
+        display: block;
+        font-size: 0.76rem;
+        line-height: 1.25;
+      }
+
+      .action span {
+        display: block;
+        margin-top: 5px;
+        font-size: 0.68rem;
+        line-height: 1.38;
+        color: rgba(18, 32, 58, 0.68);
+      }
+
+      .flow-item {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(18, 32, 58, 0.08);
+      }
+
+      .flow-item:first-of-type {
+        padding-top: 0;
+        border-top: 0;
+      }
+
+      .scoreboard {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .score {
+        padding: 12px 10px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+      }
+
+      .score strong {
+        display: block;
+        font-size: 1.2rem;
+        line-height: 1;
+      }
+
+      .score span {
+        display: block;
+        margin-top: 6px;
+        font-size: 0.66rem;
+        line-height: 1.35;
+        color: rgba(255, 250, 243, 0.74);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .summary-bar {
+        margin-top: 14px;
+        padding: 12px 14px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.12);
+        color: rgba(255, 250, 243, 0.9);
+        font-size: 0.78rem;
+        line-height: 1.48;
+      }
+
+      .band {
+        padding: 24px 0;
+        background: var(--paper-strong);
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .band-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 1.9fr;
+        gap: 22px;
+        align-items: start;
+      }
+
+      .band-copy h2,
+      .signals h2,
+      .delivery h2,
+      .cta h2 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        line-height: 0.95;
+      }
+
+      .band-copy p,
+      .signals p,
+      .delivery p,
+      .cta p {
+        margin-top: 16px;
+        font-size: 1rem;
+        line-height: 1.72;
+        color: rgba(18, 32, 58, 0.76);
+      }
+
+      .proof-grid,
+      .signal-grid,
+      .step-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .proof,
+      .signal,
+      .step {
+        padding: 20px;
+        border-radius: 22px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        box-shadow: 0 14px 36px rgba(18, 32, 58, 0.06);
+      }
+
+      .proof strong,
+      .signal strong,
+      .step strong {
+        display: block;
+        font-size: 0.92rem;
+        line-height: 1.35;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--ink-soft);
+      }
+
+      .proof span,
+      .signal span,
+      .step span {
+        display: block;
+        margin-top: 12px;
+        font-size: 0.92rem;
+        line-height: 1.62;
+        color: rgba(18, 32, 58, 0.78);
+      }
+
+      .signals {
+        padding: 86px 0;
+        background: #f8f2e8;
+      }
+
+      .signals-head,
+      .delivery-head {
+        max-width: 760px;
+        margin-bottom: 28px;
+      }
+
+      .signal {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 250, 243, 0.96) 100%);
+      }
+
+      .delivery {
+        padding: 86px 0;
+        background: var(--paper-strong);
+      }
+
+      .step {
+        position: relative;
+        padding-top: 58px;
+      }
+
+      .step-number {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        background: var(--orange);
+        color: var(--paper-strong);
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .cta {
+        padding: 88px 0 96px;
+        background:
+          radial-gradient(circle at top right, rgba(240, 109, 47, 0.14), transparent 34%),
+          linear-gradient(180deg, #15233f 0%, #0b1426 100%);
+        color: var(--paper-strong);
+      }
+
+      .cta-card {
+        padding: 34px;
+        border-radius: 30px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: var(--shadow);
+      }
+
+      .cta-card p {
+        color: rgba(255, 250, 243, 0.78);
+      }
+
+      .cta-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        align-items: center;
+        margin-top: 24px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 52px;
+        padding: 0 22px;
+        border-radius: 999px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .button.primary {
+        background: var(--orange);
+        color: var(--paper-strong);
+        box-shadow: 0 18px 36px rgba(240, 109, 47, 0.24);
+      }
+
+      .button.secondary {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: var(--paper-strong);
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+      }
+
+      .footer-note {
+        margin-top: 18px;
+        font-size: 0.85rem;
+        line-height: 1.6;
+        color: rgba(255, 250, 243, 0.66);
+      }
+
+      @keyframes fade-up {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 980px) {
+        .metrics,
+        .phones,
+        .proof-grid,
+        .signal-grid,
+        .step-grid,
+        .band-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .proof-grid,
+        .signal-grid,
+        .step-grid {
+          gap: 14px;
+        }
+
+        .band-copy,
+        .signals-head,
+        .delivery-head {
+          max-width: none;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          width: min(100% - 24px, 1180px);
+        }
+
+        .hero-inner,
+        .signals,
+        .delivery,
+        .cta {
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        .phone {
+          width: 300px;
+        }
+
+        .cta-card {
+          padding: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Ratings as of 2026-03-29: iOS N/A (no public first-party listing, source: iTunes Search API search), Android N/A (no public first-party listing, source: google-play-scraper search) -->
+    <div class="page" id="top">
+      <section class="hero section">
+        <div class="container hero-inner">
+          <div class="hero-copy">
+            <div class="eyebrow">
+              <img src="assets/innovecs-icon.png" alt="Innovecs icon" />
+              <span>AI teardown for Dmitry Kushnir, COO at Innovecs</span>
+            </div>
+            <span class="hero-kicker">Innochain needs a field-ready mobile layer</span>
+            <h1>What if dock, yard, and document exceptions never had to wait for a desktop?</h1>
+            <p class="lede">
+              Innovecs already markets the right supply-chain logic across document processing,
+              yard visibility, and support. This prototype turns that toolkit into a mobile
+              exception hub supervisors can use in the moment the issue happens.
+            </p>
+            <p class="hero-note">
+              Built from public Innovecs signals: disconnected systems, manual EDI handling,
+              poor document traceability, and queue-sensitive yard workflows that lose time when
+              resolution happens after the fact.
+            </p>
+          </div>
+
+          <div class="metrics">
+            <div class="metric">
+              <strong>650+</strong>
+              <span>Innovecs engineers, developers, and architects on the public site</span>
+            </div>
+            <div class="metric">
+              <strong>150+</strong>
+              <span>Clients already in the Innovecs commercial footprint</span>
+            </div>
+            <div class="metric">
+              <strong>0</strong>
+              <span>Relevant first-party public mobile apps found in US store checks</span>
+            </div>
+            <div class="metric">
+              <strong>4</strong>
+              <span>Published Innochain modules: docs, voice, yard, support</span>
+            </div>
+          </div>
+
+          <div class="phones">
+            <div class="phone-block">
+              <div class="phone-label">Current state</div>
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="status-row">
+                    <span>08:43</span>
+                    <span>Dock ops</span>
+                  </div>
+                  <div class="app-top">
+                    <strong>Too many places to clear one issue</strong>
+                    <span>
+                      The logic exists, but the operator workflow still leaks into docs, chat,
+                      inboxes, and follow-up cleanup.
+                    </span>
+                  </div>
+
+                  <div class="phone-card">
+                    <h3>Dock 7 delayed 23 min</h3>
+                    <p>Carrier arrived, POD is unreadable, reassignment still sitting in email.</p>
+                    <div class="tag-row">
+                      <span class="tag alert">Queue risk</span>
+                      <span class="tag">Manual handoff</span>
+                    </div>
+                  </div>
+
+                  <div class="phone-card">
+                    <div class="list-item">
+                      <div class="list-icon">W</div>
+                      <div>
+                        <strong>WhatsApp photo</strong>
+                        <span>Driver sends a blurry receipt. Nobody wants it as the system record.</span>
+                      </div>
+                    </div>
+                    <div class="list-item">
+                      <div class="list-icon">X</div>
+                      <div>
+                        <strong>Spreadsheet patch</strong>
+                        <span>Ops reconciles bay changes and delay reasons in a side sheet.</span>
+                      </div>
+                    </div>
+                    <div class="list-item">
+                      <div class="list-icon">E</div>
+                      <div>
+                        <strong>Email escalation</strong>
+                        <span>Support only sees the issue after the queue is already growing.</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="phone-card dark">
+                    <h3>Source of truth still moves</h3>
+                    <p>
+                      Public Innovecs copy already calls out disconnected systems, manual EDI
+                      handling, and weak traceability. The mobile surface should close that gap.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phone-block">
+              <div class="phone-label">Proposed mobile hub</div>
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="status-row">
+                    <span>08:43</span>
+                    <span>Innochain mobile</span>
+                  </div>
+                  <div class="app-top">
+                    <strong>Exception hub</strong>
+                    <span>
+                      One timeline per issue. The operator sees what happened, what is missing,
+                      and the fastest next action.
+                    </span>
+                  </div>
+
+                  <div class="phone-card dark">
+                    <h3>Dock 7 | Carrier late + POD mismatch</h3>
+                    <p>Arrived 08:31. Bay blocked. Receipt captured. Two fields failed validation.</p>
+                    <div class="tag-row">
+                      <span class="tag ok">Driver verified</span>
+                      <span class="tag alert">2 mismatches</span>
+                    </div>
+                  </div>
+
+                  <div class="action-grid">
+                    <div class="action">
+                      <strong>Verify plate</strong>
+                      <span>Camera + OCR syncs carrier, trailer, and bay.</span>
+                    </div>
+                    <div class="action">
+                      <strong>Scan POD</strong>
+                      <span>Extracts consignee, SKU count, and receipt number.</span>
+                    </div>
+                    <div class="action">
+                      <strong>Reassign bay</strong>
+                      <span>One tap pushes the change into the live event thread.</span>
+                    </div>
+                    <div class="action">
+                      <strong>Escalate</strong>
+                      <span>Dispatch or support gets the structured context, not a screenshot.</span>
+                    </div>
+                  </div>
+
+                  <div class="phone-card">
+                    <div class="flow-item">
+                      <strong>08:31 Arrival confirmed</strong>
+                      <span>License plate and trailer matched against expected carrier record.</span>
+                    </div>
+                    <div class="flow-item">
+                      <strong>08:34 Receipt parsed</strong>
+                      <span>POD image converted into structured fields with confidence flags.</span>
+                    </div>
+                    <div class="flow-item">
+                      <strong>08:36 Bay reassigned</strong>
+                      <span>Dock supervisor rerouted the truck before queue spillover.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phone-block">
+              <div class="phone-label">Outcome layer</div>
+              <div class="phone">
+                <div class="phone-screen">
+                  <div class="status-row">
+                    <span>08:43</span>
+                    <span>Resolution view</span>
+                  </div>
+                  <div class="app-top">
+                    <strong>Document AI + live ops context</strong>
+                    <span>
+                      The value is not just scanning faster. It is knowing what to do with the
+                      discrepancy while the shipment is still live.
+                    </span>
+                  </div>
+
+                  <div class="phone-card">
+                    <h3>Parsed fields</h3>
+                    <div class="tag-row">
+                      <span class="tag ok">Receipt # match</span>
+                      <span class="tag alert">SKU count mismatch</span>
+                      <span class="tag sky">Bay 11 assigned</span>
+                    </div>
+                    <div class="list-item">
+                      <div class="list-icon">1</div>
+                      <div>
+                        <strong>Expected 48 cases / scanned 46</strong>
+                        <span>Reason code suggested: partial unload with signed variance.</span>
+                      </div>
+                    </div>
+                    <div class="list-item">
+                      <div class="list-icon">2</div>
+                      <div>
+                        <strong>Receiver signature found</strong>
+                        <span>Confidence 98%. Ready to attach to the case record.</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="phone-card dark">
+                    <h3>Expected effect</h3>
+                    <div class="scoreboard">
+                      <div class="score">
+                        <strong>Fewer</strong>
+                        <span>side sheets</span>
+                      </div>
+                      <div class="score">
+                        <strong>Faster</strong>
+                        <span>dock decisions</span>
+                      </div>
+                      <div class="score">
+                        <strong>Clearer</strong>
+                        <span>audit trail</span>
+                      </div>
+                    </div>
+                    <div class="summary-bar">
+                      Stronger product packaging for sales. Better operator adoption for delivery.
+                      Same Innochain logic, but closer to the work.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band section">
+        <div class="container band-grid">
+          <div class="band-copy">
+            <h2>Why this is the right wedge</h2>
+            <p>
+              Innovecs does not need another abstract AI concept. It needs a mobile product story
+              that packages what `Innochain` already does into one frontline experience.
+            </p>
+          </div>
+
+          <div class="proof-grid">
+            <div class="proof">
+              <strong>From Innovecs</strong>
+              <span>
+                Public supply-chain pages explicitly call out disconnected systems, manual EDI
+                handling, and weak document traceability.
+              </span>
+            </div>
+            <div class="proof">
+              <strong>From Innochain</strong>
+              <span>
+                The published modules already cover document processing, voice-led execution, yard
+                management, and support automation.
+              </span>
+            </div>
+            <div class="proof">
+              <strong>From Operations</strong>
+              <span>
+                Reddit logistics threads still describe spreadsheet reconciliation, blurry POD
+                photos, and exceptions living outside the system of record.
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="signals section">
+        <div class="container">
+          <div class="signals-head">
+            <h2>Public signals behind the prototype</h2>
+            <p>
+              The prototype is anchored to Innovecs' own supply-chain language and recent public
+              logistics discussion, not generic mobile wishlists.
+            </p>
+          </div>
+
+          <div class="signal-grid">
+            <div class="signal">
+              <strong>Signal 01</strong>
+              <span>
+                Innovecs markets supply-chain software around WMS and API/EDI integrations,
+                document flows, and operational scale. The mobile gap is therefore commercial as
+                much as technical.
+              </span>
+            </div>
+            <div class="signal">
+              <strong>Signal 02</strong>
+              <span>
+                Their 4PL EDI case study talks about inconsistent document processing, delayed
+                responses, and limited visibility. A mobile exception layer directly improves those
+                moments.
+              </span>
+            </div>
+            <div class="signal">
+              <strong>Signal 03</strong>
+              <span>
+                The AI supply-chain page highlights check-ins, milestone tracking, truck queues,
+                detention fees, and approval bottlenecks. Those are live workflows, not back-office
+                reports.
+              </span>
+            </div>
+            <div class="signal">
+              <strong>Signal 04</strong>
+              <span>
+                Voice workflows already promise 30%+ productivity improvement and 99.9% pick
+                precision. That says frontline UX matters, which makes mobile a natural next layer.
+              </span>
+            </div>
+            <div class="signal">
+              <strong>Signal 05</strong>
+              <span>
+                No relevant first-party public Innovecs app appeared in US Apple or Google store
+                checks on 2026-03-29. The opportunity is still open to define.
+              </span>
+            </div>
+            <div class="signal">
+              <strong>Signal 06</strong>
+              <span>
+                For a COO, this is not a design refresh. It is a tighter product package for
+                delivery teams, pilots, demos, and operator adoption.
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="delivery section">
+        <div class="container">
+          <div class="delivery-head">
+            <h2>What Elinext can actually ship</h2>
+            <p>
+              A practical first release does not try to mobilize the entire platform. It starts
+              with the exceptions that cost the most time and credibility.
+            </p>
+          </div>
+
+          <div class="step-grid">
+            <div class="step">
+              <div class="step-number">1</div>
+              <strong>Dock Arrival Workflow</strong>
+              <span>
+                Capture license plate, trailer, carrier, bay, and arrival time from one screen.
+              </span>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <strong>Document AI Intake</strong>
+              <span>
+                Scan POD, bill of lading, or receipt and turn it into structured fields with
+                confidence markers.
+              </span>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <strong>Structured Exception Routing</strong>
+              <span>
+                Reassign bays, add reason codes, escalate to support, or request manager approval
+                without leaving the thread.
+              </span>
+            </div>
+            <div class="step">
+              <div class="step-number">4</div>
+              <strong>Unified Mobile Timeline</strong>
+              <span>
+                Keep the operator, dispatcher, and support agent aligned on one live record.
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta section">
+        <div class="container">
+          <div class="cta-card">
+            <h2>Make Innochain feel like a frontline product, not just a smart toolkit.</h2>
+            <p>
+              The fastest path is a mobile exception hub that wraps existing supply-chain logic into
+              an operator workflow clients can adopt immediately.
+            </p>
+            <div class="cta-actions">
+              <a class="button primary" href="https://www.elinext.com/contacts/">Get in Touch</a>
+              <a class="button secondary" href="#top">Replay the concept</a>
+            </div>
+            <p class="footer-note">
+              Prototype prepared for Innovecs using public company materials and store searches
+              retrieved on 2026-03-29.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
