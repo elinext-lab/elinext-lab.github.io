@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ALTEN Technology USA Mobile Hiring Teardown</title>
+  <meta name="description" content="What if ALTEN could cut candidate drop-off and shortlist qualified engineers faster by adding a mobile hiring cockpit on top of its Greenhouse recruiting flow?">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/alten-technology-usa_2026-03-29_21-47-06/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/alten-technology-usa_2026-03-29_21-47-06/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/alten-technology-usa_2026-03-29_21-47-06/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="ALTEN Technology USA Mobile — AI Teardown">
+  <meta property="og:description" content="What if ALTEN could turn its Greenhouse-driven careers flow into a mobile hiring cockpit that cuts applicant drop-off and lets managers shortlist strong engineers in minutes?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="theme-color" content="#0f1629">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-29: iOS N/A (no attributable ALTEN USA app found, source: iTunes Search API US), Android N/A (no attributable ALTEN USA app found, source: Google Play web search US) -->
+  <style>
+    :root {
+      --ink: #10203a;
+      --paper: #f5efe5;
+      --shell: #fffaf4;
+      --slate: #d8e0ec;
+      --line: rgba(16, 32, 58, 0.12);
+      --muted: #5f6a7f;
+      --brand: #153b73;
+      --brand-soft: #dce9fb;
+      --accent: #f26f34;
+      --accent-soft: #ffe2d3;
+      --teal: #0f8a84;
+      --shadow: 0 32px 80px rgba(7, 21, 47, 0.12);
+      --phone-shadow: 0 30px 65px rgba(8, 18, 34, 0.24);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --mono: "IBM Plex Mono", monospace;
+      --display: "Sora", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--display);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(242, 111, 52, 0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(15, 138, 132, 0.14), transparent 34%),
+        linear-gradient(180deg, #f2ece1 0%, #f8f4ee 28%, #f4f0ea 100%);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page-shell {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-shell::before,
+    .page-shell::after {
+      content: "";
+      position: absolute;
+      inset: auto;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-shell::before {
+      width: 28rem;
+      height: 28rem;
+      right: -8rem;
+      top: 4rem;
+      border-radius: 50%;
+      background: rgba(21, 59, 115, 0.07);
+      filter: blur(8px);
+    }
+
+    .page-shell::after {
+      width: 18rem;
+      height: 18rem;
+      left: -5rem;
+      top: 48rem;
+      border-radius: 50%;
+      background: rgba(242, 111, 52, 0.12);
+      filter: blur(12px);
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero,
+    .section-card,
+    .cta-card {
+      background: rgba(255, 250, 244, 0.88);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.56);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      margin-top: 28px;
+      border-radius: 36px;
+      padding: 28px;
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .eyebrow,
+    .micro-label {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      color: var(--brand);
+      background: var(--brand-soft);
+      border-radius: 999px;
+      padding: 10px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(242, 111, 52, 0.16);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-copy {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 650px;
+    }
+
+    .hero-copy h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 5vw, 4.8rem);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+      text-wrap: balance;
+    }
+
+    .hero-copy p {
+      margin: 18px auto 0;
+      max-width: 58ch;
+      font-size: 1.06rem;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    .hero-copy .accent {
+      color: var(--accent);
+    }
+
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .fact {
+      display: block;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      min-height: 110px;
+    }
+
+    .fact strong {
+      display: block;
+      font-size: 1.6rem;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .fact span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .hero-aside {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-note {
+      width: min(100%, 520px);
+      background: linear-gradient(145deg, rgba(21, 59, 115, 0.97), rgba(8, 23, 47, 0.94));
+      color: #eff5ff;
+      border-radius: var(--radius-xl);
+      padding: 18px;
+      box-shadow: 0 24px 45px rgba(12, 25, 49, 0.22);
+    }
+
+    .hero-note p {
+      margin: 8px 0 0;
+      line-height: 1.65;
+      color: rgba(239, 245, 255, 0.84);
+    }
+
+    .phones {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .phone-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      text-align: center;
+    }
+
+    .phone-wrap strong {
+      font-size: 0.95rem;
+      letter-spacing: -0.02em;
+    }
+
+    .phone-wrap span {
+      color: var(--muted);
+      font-size: 0.85rem;
+      max-width: 18rem;
+      line-height: 1.55;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      flex: 0 0 280px;
+      border-radius: 38px;
+      background: linear-gradient(180deg, #1d2433 0%, #0c1220 100%);
+      padding: 36px 14px 14px;
+      position: relative;
+      box-shadow: var(--phone-shadow);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      overflow: hidden;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      width: 112px;
+      height: 18px;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      z-index: 2;
+    }
+
+    .screen {
+      height: 100%;
+      border-radius: 28px;
+      background: linear-gradient(180deg, #fbf7f2 0%, #eef2f8 100%);
+      overflow: auto;
+      padding: 16px;
+      scrollbar-width: thin;
+      position: relative;
+      z-index: 1;
+    }
+
+    .statusbar {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      display: flex;
+      justify-content: space-between;
+      color: rgba(16, 32, 58, 0.64);
+      margin-bottom: 14px;
+    }
+
+    .app-card,
+    .mini-card,
+    .signal-card {
+      display: block;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(16, 32, 58, 0.08);
+      border-radius: 18px;
+    }
+
+    .app-card {
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .phone h3,
+    .phone h4,
+    .phone p,
+    .phone div,
+    .phone span,
+    .phone strong {
+      display: block;
+    }
+
+    .pill-row,
+    .field-row,
+    .candidate-row,
+    .timeline-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: space-between;
+    }
+
+    .pill {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 6px 10px;
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+    }
+
+    .pill.blue {
+      background: rgba(21, 59, 115, 0.1);
+      color: var(--brand);
+    }
+
+    .pill.orange {
+      background: rgba(242, 111, 52, 0.12);
+      color: #c24b17;
+    }
+
+    .pill.green {
+      background: rgba(15, 138, 132, 0.12);
+      color: #0b6d67;
+    }
+
+    .field-list,
+    .candidate-list,
+    .timeline-list,
+    .evidence-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .field-row,
+    .candidate-row,
+    .timeline-row {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(241, 244, 249, 0.9);
+    }
+
+    .field-row .left,
+    .candidate-row .left,
+    .timeline-row .left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .avatar,
+    .dot {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      flex: 0 0 34px;
+    }
+
+    .avatar {
+      background: linear-gradient(145deg, rgba(21, 59, 115, 0.88), rgba(15, 138, 132, 0.76));
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      flex-basis: 10px;
+      background: var(--accent);
+      margin-top: 3px;
+    }
+
+    .score {
+      font-weight: 700;
+      color: var(--brand);
+      font-size: 0.85rem;
+    }
+
+    .micro-copy {
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .signal-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .signal-card {
+      padding: 12px 14px;
+    }
+
+    .signal-card strong {
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+    }
+
+    section {
+      padding: 36px 0 0;
+    }
+
+    .section-card {
+      border-radius: 32px;
+      padding: 28px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .section-head h2,
+    .section-head p {
+      margin: 0;
+    }
+
+    .section-head h2 {
+      font-size: clamp(2rem, 3.4vw, 3rem);
+      letter-spacing: -0.05em;
+      max-width: 14ch;
+      text-wrap: balance;
+    }
+
+    .section-head p {
+      max-width: 54ch;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .research-grid,
+    .impact-grid,
+    .source-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .research-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .impact-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .source-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
+      display: block;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      min-height: 100%;
+    }
+
+    .card .micro-label {
+      color: var(--brand);
+      margin-bottom: 12px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .card ul {
+      padding-left: 18px;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .card strong {
+      color: var(--ink);
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: 24px;
+      align-items: center;
+    }
+
+    .flow-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .flow-row {
+      display: grid;
+      grid-template-columns: minmax(180px, 210px) 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .flow-label {
+      background: linear-gradient(135deg, rgba(21, 59, 115, 0.94), rgba(15, 138, 132, 0.9));
+      color: #fff;
+      border-radius: 18px;
+      padding: 16px;
+      min-height: 100%;
+    }
+
+    .flow-detail {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .flow-detail p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .metric-band {
+      background: linear-gradient(145deg, rgba(21, 59, 115, 0.98), rgba(10, 24, 46, 0.97));
+      color: #f3f7ff;
+      border-radius: 28px;
+      padding: 22px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .metric-band p {
+      margin: 0;
+      color: rgba(243, 247, 255, 0.82);
+      line-height: 1.7;
+    }
+
+    .metric-band strong {
+      font-size: 2.4rem;
+      line-height: 1;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .cta-card {
+      margin: 36px 0 42px;
+      border-radius: 34px;
+      padding: 28px;
+      display: grid;
+      gap: 16px;
+      text-align: center;
+    }
+
+    .cta-card h2,
+    .cta-card p {
+      margin: 0 auto;
+    }
+
+    .cta-card h2 {
+      font-size: clamp(2rem, 4vw, 3.3rem);
+      max-width: 14ch;
+      letter-spacing: -0.05em;
+      text-wrap: balance;
+    }
+
+    .cta-card p {
+      max-width: 58ch;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: fit-content;
+      margin: 6px auto 0;
+      padding: 16px 24px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), #ff915f);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 0 20px 40px rgba(242, 111, 52, 0.24);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 26px 46px rgba(242, 111, 52, 0.3);
+    }
+
+    .source-grid a {
+      text-decoration: none;
+    }
+
+    .source-grid a:hover .card {
+      border-color: rgba(21, 59, 115, 0.24);
+      transform: translateY(-2px);
+    }
+
+    .source-grid .card {
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: rise 700ms ease forwards;
+    }
+
+    .fade-in.delay-1 { animation-delay: 120ms; }
+    .fade-in.delay-2 { animation-delay: 220ms; }
+    .fade-in.delay-3 { animation-delay: 320ms; }
+
+    @keyframes rise {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1040px) {
+      .hero-grid,
+      .flow-grid,
+      .research-grid,
+      .impact-grid,
+      .source-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .facts {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hero,
+      .section-card,
+      .cta-card {
+        padding: 20px;
+        border-radius: 24px;
+      }
+
+      .hero-copy p,
+      .section-head p,
+      .cta-card p {
+        font-size: 0.98rem;
+      }
+
+      .phone {
+        transform: scale(0.98);
+        transform-origin: top center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: min(100% - 18px, 1180px);
+      }
+
+      .phone {
+        width: 300px;
+        flex-basis: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <main class="container">
+      <section class="hero fade-in">
+        <div class="hero-top">
+          <div class="eyebrow">ALTEN Technology Careers teardown</div>
+          <div class="micro-label">Built for Andy Bolom, MBA · Director of IT</div>
+        </div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <img src="./assets/alten-logo.png" alt="ALTEN Technology USA logo" style="width:160px; max-width:100%; margin:0 auto 18px; display:block;">
+            <h1>What if ALTEN could <span class="accent">shortlist the right engineer</span> from a phone in 90 seconds?</h1>
+            <p>
+              No public ALTEN mobile app surfaced in the App Store or Google Play, so this teardown uses the public careers stack instead. The opportunity is clear: keep Greenhouse, but add a mobile hiring layer that reduces apply friction and turns recruiter backlog into a fast manager workflow.
+            </p>
+            <div class="facts">
+              <div class="fact">
+                <strong>130</strong>
+                <span>Live roles on the official Greenhouse board, which is enough volume to create real triage debt.</span>
+              </div>
+              <div class="fact">
+                <strong>57k</strong>
+                <span>Employees across the global ALTEN Group in 30+ countries, according to ALTEN's official About page.</span>
+              </div>
+              <div class="fact">
+                <strong>3k+</strong>
+                <span>Experts across North America mentioned on a current ALTEN job listing, reinforcing hiring scale.</span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-aside">
+            <div class="hero-note fade-in delay-1">
+              <div class="micro-label">Target pain</div>
+              <p>
+                ALTEN already has demand. The bottleneck is the handoff from branded careers pages into a long Greenhouse form, then into manual screening across dozens of specialist reqs.
+              </p>
+            </div>
+            <div class="phones fade-in delay-2">
+              <div class="phone-wrap">
+                <div class="phone">
+                  <div class="screen">
+                    <div class="statusbar"><span>9:41</span><span>5G · 92%</span></div>
+                    <div class="app-card">
+                      <div class="pill blue">Current flow</div>
+                      <h3 style="margin:10px 0 6px; font-size:1.08rem;">Greenhouse apply handoff</h3>
+                      <p class="micro-copy" style="margin-top:0;">Branded visit becomes a long form before anyone proves candidate fit.</p>
+                    </div>
+                    <div class="signal-grid">
+                      <div class="signal-card">
+                        <strong>14+</strong>
+                        <span class="micro-copy" style="margin-top:0;">visible fields and disclosures before the process feels personal</span>
+                      </div>
+                      <div class="signal-card">
+                        <strong>130 jobs</strong>
+                        <span class="micro-copy" style="margin-top:0;">publicly live, which raises manual triage pressure</span>
+                      </div>
+                    </div>
+                    <div class="field-list">
+                      <div class="field-row">
+                        <div class="left"><div class="avatar">CV</div><div><strong>Resume/CV</strong><span class="micro-copy" style="margin:0;">required upload or paste</span></div></div>
+                        <div class="pill orange">required</div>
+                      </div>
+                      <div class="field-row">
+                        <div class="left"><div class="avatar">ID</div><div><strong>Legal name</strong><span class="micro-copy" style="margin:0;">mandatory before screening</span></div></div>
+                        <div class="pill orange">required</div>
+                      </div>
+                      <div class="field-row">
+                        <div class="left"><div class="avatar">US</div><div><strong>Work authorization</strong><span class="micro-copy" style="margin:0;">yes/no + sponsorship</span></div></div>
+                        <div class="pill orange">required</div>
+                      </div>
+                      <div class="field-row">
+                        <div class="left"><div class="avatar">OK</div><div><strong>Type "Real"</strong><span class="micro-copy" style="margin:0;">manual anti-bot step</span></div></div>
+                        <div class="pill orange">required</div>
+                      </div>
+                    </div>
+                    <p class="micro-copy">Useful ATS discipline. Weak mobile momentum.</p>
+                  </div>
+                </div>
+                <strong>Current state</strong>
+                <span>Good board visibility, but the apply moment becomes generic and field-heavy.</span>
+              </div>
+              <div class="phone-wrap">
+                <div class="phone">
+                  <div class="screen">
+                    <div class="statusbar"><span>9:41</span><span>5G · 92%</span></div>
+                    <div class="app-card" style="background:linear-gradient(180deg,#153b73,#0c2347); color:#eff5ff;">
+                      <div class="pill green">Proposed</div>
+                      <h3 style="margin:10px 0 6px; font-size:1.08rem;">Mobile hiring cockpit</h3>
+                      <p class="micro-copy" style="margin-top:0; color:rgba(239,245,255,0.82);">AI fit summaries on top of Greenhouse, tuned for busy engineering managers.</p>
+                    </div>
+                    <div class="candidate-list">
+                      <div class="candidate-row">
+                        <div class="left"><div class="avatar">AK</div><div><strong>ADAS candidate</strong><span class="micro-copy" style="margin:0;">Honda test track · Level 3 systems</span></div></div>
+                        <div class="score">92%</div>
+                      </div>
+                      <div class="candidate-row">
+                        <div class="left"><div class="avatar">MB</div><div><strong>EV calibration</strong><span class="micro-copy" style="margin:0;">visa clear · Detroit area</span></div></div>
+                        <div class="score">88%</div>
+                      </div>
+                      <div class="candidate-row">
+                        <div class="left"><div class="avatar">RS</div><div><strong>Avionics profile</strong><span class="micro-copy" style="margin:0;">DoD project history</span></div></div>
+                        <div class="score">85%</div>
+                      </div>
+                    </div>
+                    <div class="app-card">
+                      <div class="pill-row">
+                        <div class="pill blue">Today</div>
+                        <div class="pill green">SLA in range</div>
+                      </div>
+                      <div class="timeline-list">
+                        <div class="timeline-row">
+                          <div class="left"><div class="dot"></div><div><strong>One-tap shortlist</strong><span class="micro-copy" style="margin:0;">manager confirms fit from mobile</span></div></div>
+                        </div>
+                        <div class="timeline-row">
+                          <div class="left"><div class="dot" style="background:var(--teal);"></div><div><strong>Needs recruiter follow-up</strong><span class="micro-copy" style="margin:0;">asks for test log and notice period</span></div></div>
+                        </div>
+                        <div class="timeline-row">
+                          <div class="left"><div class="dot" style="background:var(--accent);"></div><div><strong>Role risk alert</strong><span class="micro-copy" style="margin:0;">drop-off rising on mobile applicants</span></div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <strong>Proposed state</strong>
+                <span>Same ATS record. Faster manager action, clearer fit, less silent backlog.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="fade-in delay-1">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <div class="micro-label">Research basis</div>
+              <h2>Why this is worth fixing now</h2>
+            </div>
+            <p>
+              ALTEN's public footprint already says enough: active specialist hiring, a WordPress-to-Greenhouse handoff, and a candidate flow with several mandatory inputs before value is proven. That is a mobile workflow problem hiding inside a recruiting stack.
+            </p>
+          </div>
+          <div class="research-grid">
+            <div class="card">
+              <div class="micro-label">Public hiring load</div>
+              <h3>130 live jobs</h3>
+              <p>The official Greenhouse board shows 130 openings, with visible recent postings from March 23 to March 27, 2026. This is active throughput pressure, not an archival careers page.</p>
+            </div>
+            <div class="card">
+              <div class="micro-label">Brand split</div>
+              <h3>ALTEN owns interest, Greenhouse owns conversion</h3>
+              <p>The branded careers page is polished, but candidates then hit a generic ATS flow. That is where mobile abandonment and weaker trust usually surface.</p>
+            </div>
+            <div class="card">
+              <div class="micro-label">Field friction</div>
+              <h3>Screening arrives too early</h3>
+              <p>Sample application fields include legal name, authorization, sponsorship, visa branching, and a manual anti-bot step. Strong engineers can bounce before recruiters even see them.</p>
+            </div>
+            <div class="card">
+              <div class="micro-label">Operational gap</div>
+              <h3>Analytics exist, action layer does not</h3>
+              <p>BuiltWith detects Microsoft Clarity, LinkedIn Insights, and Google Conversion Linker on the site. The missing piece is a candidate-quality and response-speed layer visible to hiring managers.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="fade-in delay-2">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <div class="micro-label">Product move</div>
+              <h2>Keep Greenhouse. Fix the mobile layer around it.</h2>
+            </div>
+            <p>
+              This is a systems extension, not an ATS replacement. The fastest route is a thin mobile layer that reduces application friction on the front end and gives managers a fast decision surface on the back end.
+            </p>
+          </div>
+          <div class="flow-grid">
+            <div class="flow-stack">
+              <div class="flow-row">
+                <div class="flow-label">
+                  <div class="micro-label">Step 1</div>
+                  <strong>Resume-first candidate capture</strong>
+                </div>
+                <div class="flow-detail">
+                  <strong>Upload once, prefill the rest.</strong>
+                  <p>Turn resume or LinkedIn into structured fit signals before asking for the long-tail compliance fields.</p>
+                </div>
+              </div>
+              <div class="flow-row">
+                <div class="flow-label">
+                  <div class="micro-label">Step 2</div>
+                  <strong>AI fit card per role</strong>
+                </div>
+                <div class="flow-detail">
+                  <strong>Show why this candidate matches.</strong>
+                  <p>Highlight role match, location, work authorization, domain overlap, and missing risks in one mobile card.</p>
+                </div>
+              </div>
+              <div class="flow-row">
+                <div class="flow-label">
+                  <div class="micro-label">Step 3</div>
+                  <strong>Manager action on mobile</strong>
+                </div>
+                <div class="flow-detail">
+                  <strong>Shortlist without inbox ping-pong.</strong>
+                  <p>One tap to shortlist, park, or request more detail, with recruiter handoff and response-time tracking baked in.</p>
+                </div>
+              </div>
+            </div>
+            <div class="metric-band">
+              <div class="micro-label">Expected payoff</div>
+              <strong>-61%</strong>
+              <p>Estimated reduction in first-pass screening time for manager review once candidate fit, authorization, and recruiter notes are condensed into one mobile card.</p>
+              <p>This number is directional and based on the current public workflow, not an internal ALTEN benchmark.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="fade-in delay-3">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <div class="micro-label">Inside the prototype</div>
+              <h2>One more screen: candidate autofill plus trust</h2>
+            </div>
+            <p>
+              Candidates do not just need fewer fields. They need a clearer signal that the application is moving somewhere. This screen pairs autofill with visible next steps so the experience feels less like a form and more like a process.
+            </p>
+          </div>
+          <div class="impact-grid">
+            <div class="card" style="display:flex; justify-content:center; align-items:center;">
+              <div class="phone">
+                <div class="screen">
+                  <div class="statusbar"><span>9:41</span><span>5G · 92%</span></div>
+                  <div class="app-card">
+                    <div class="pill green">Candidate flow</div>
+                    <h3 style="margin:10px 0 6px; font-size:1.08rem;">Apply in under 2 minutes</h3>
+                    <p class="micro-copy" style="margin-top:0;">Resume parsed. Only the missing pieces are still manual.</p>
+                  </div>
+                  <div class="field-list">
+                    <div class="field-row">
+                      <div class="left"><div class="avatar">CV</div><div><strong>Resume imported</strong><span class="micro-copy" style="margin:0;">ADAS tools, track testing, Ohio</span></div></div>
+                      <div class="pill green">done</div>
+                    </div>
+                    <div class="field-row">
+                      <div class="left"><div class="avatar">LI</div><div><strong>LinkedIn synced</strong><span class="micro-copy" style="margin:0;">employment history verified</span></div></div>
+                      <div class="pill green">done</div>
+                    </div>
+                    <div class="field-row">
+                      <div class="left"><div class="avatar">US</div><div><strong>Authorization</strong><span class="micro-copy" style="margin:0;">one-tap answer</span></div></div>
+                      <div class="pill blue">1 tap</div>
+                    </div>
+                  </div>
+                  <div class="app-card">
+                    <div class="micro-label">What happens next</div>
+                    <div class="timeline-list">
+                      <div class="timeline-row">
+                        <div class="left"><div class="dot" style="background:var(--teal);"></div><div><strong>Recruiter review in 24h</strong><span class="micro-copy" style="margin:0;">if fit score stays above threshold</span></div></div>
+                      </div>
+                      <div class="timeline-row">
+                        <div class="left"><div class="dot"></div><div><strong>Manager shortlist card</strong><span class="micro-copy" style="margin:0;">pushes to hiring lead on mobile</span></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="micro-label">What improves</div>
+              <h3>Less guesswork on both sides</h3>
+              <ul>
+                <li><strong>Candidate side:</strong> fewer dead-end fields, visible next steps, less "resume black hole" anxiety.</li>
+                <li><strong>Recruiter side:</strong> fewer manual summaries, cleaner escalation to engineering managers.</li>
+                <li><strong>IT side:</strong> measurable drop-off points and clear ROI without replacing the ATS.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <div class="micro-label">Best fit for Andy</div>
+              <h3>A practical IT project</h3>
+              <ul>
+                <li>Integrates with Greenhouse instead of forcing a rip-and-replace decision.</li>
+                <li>Creates a mobile workflow where current tooling looks desktop-first.</li>
+                <li>Directly supports the recruiting pressure already visible in ALTEN's public req volume.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="fade-in delay-3">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <div class="micro-label">Sources used</div>
+              <h2>Research links behind this teardown</h2>
+            </div>
+            <p>
+              The package is grounded in public sources only. No LinkedIn profile scraping was used for Andy; person context came from the supplied CRM data, and the product analysis comes from ALTEN's public web stack.
+            </p>
+          </div>
+          <div class="source-grid">
+            <a href="https://altenusa.com/about/" target="_blank" rel="noreferrer">
+              <div class="card">
+                <div class="micro-label">Official</div>
+                <h3>ALTEN About</h3>
+                <p>20+ years in the U.S., global ALTEN Group footprint, engineering-services positioning.</p>
+              </div>
+            </a>
+            <a href="https://altenusa.com/careers/" target="_blank" rel="noreferrer">
+              <div class="card">
+                <div class="micro-label">Official</div>
+                <h3>ALTEN Careers</h3>
+                <p>Public search surface for engineering jobs and the handoff into Greenhouse.</p>
+              </div>
+            </a>
+            <a href="https://job-boards.greenhouse.io/altentechnologyusa" target="_blank" rel="noreferrer">
+              <div class="card">
+                <div class="micro-label">Official</div>
+                <h3>Greenhouse Board</h3>
+                <p>Live public job count, departments, and the real candidate entry point.</p>
+              </div>
+            </a>
+            <a href="https://job-boards.greenhouse.io/altentechnologyusa/jobs/5088181007" target="_blank" rel="noreferrer">
+              <div class="card">
+                <div class="micro-label">Official</div>
+                <h3>Sample Application</h3>
+                <p>Used to inspect required application fields and visible workflow friction.</p>
+              </div>
+            </a>
+            <a href="https://builtwith.com/detailed/altenusa.com" target="_blank" rel="noreferrer">
+              <div class="card">
+                <div class="micro-label">Public data</div>
+                <h3>BuiltWith</h3>
+                <p>WordPress plus Microsoft Clarity, LinkedIn Insights, and Google Conversion Linker.</p>
+              </div>
+            </a>
+            <a href="https://www.reddit.com/r/recruitinghell/comments/1d5d542/greenhouse_is_a_resume_black_hole_i_never_hear/" target="_blank" rel="noreferrer">
+              <div class="card">
+                <div class="micro-label">Public discussion</div>
+                <h3>Reddit</h3>
+                <p>Useful signal for how Greenhouse-based applying is perceived by candidates.</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-card fade-in delay-3">
+        <div class="micro-label">Next move</div>
+        <h2>Turn the careers stack into a faster mobile recruiting system</h2>
+        <p>
+          If the direction is useful, the next step is a lightweight proof of concept on top of the current Greenhouse workflow: one mobile candidate screen, one hiring-manager shortlist screen, and one drop-off analytics view.
+        </p>
+        <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
