@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentry Mobile — AI Teardown</title>
+  <meta name="description" content="What if every Sentry mobile release shipped with an AI pulse that separated noisy client errors from real regressions, assigned an owner, and told the team whether to keep shipping or halt rollout?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/sentry_2026-03-30_03-46-18/">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/sentry_2026-03-30_03-46-18/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/sentry_2026-03-30_03-46-18/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Sentry Mobile — AI Teardown">
+  <meta property="og:description" content="What if every Sentry mobile release shipped with an AI pulse that separated noisy client errors from real regressions, assigned an owner, and told the team whether to keep shipping or halt rollout?">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sentry Mobile — AI Teardown">
+  <meta name="twitter:description" content="What if every Sentry mobile release shipped with an AI pulse that separated noisy client errors from real regressions, assigned an owner, and told the team whether to keep shipping or halt rollout?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/sentry_2026-03-30_03-46-18/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-30: iOS N/A (0 reviews, source: no Sentry-owned public App Store app found via iTunes Search API US), Android N/A (0 reviews, source: no Sentry-owned public Google Play app found via scraper search) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d1021;
+      --bg-2: #171b34;
+      --panel: rgba(17, 20, 42, 0.92);
+      --panel-solid: #151937;
+      --panel-soft: #1d2348;
+      --line: rgba(255, 255, 255, 0.1);
+      --text: #f7f3ff;
+      --muted: #bdb9d5;
+      --soft: #8c87a8;
+      --accent: #ff9057;
+      --accent-2: #76f2cf;
+      --danger: #ff5f7d;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 144, 87, 0.18), transparent 28%),
+        radial-gradient(circle at 85% 15%, rgba(118, 242, 207, 0.15), transparent 24%),
+        linear-gradient(180deg, #0c1022 0%, #0f1430 45%, #0a0d1b 100%);
+      min-height: 100vh;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      z-index: 0;
+      pointer-events: none;
+      filter: blur(20px);
+      opacity: 0.65;
+    }
+
+    body::before {
+      top: 110px;
+      left: -80px;
+      width: 240px;
+      height: 240px;
+      background: rgba(255, 144, 87, 0.22);
+      border-radius: 999px;
+    }
+
+    body::after {
+      right: -90px;
+      top: 420px;
+      width: 280px;
+      height: 280px;
+      background: rgba(118, 242, 207, 0.14);
+      border-radius: 999px;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    main,
+    footer {
+      position: relative;
+      z-index: 2;
+    }
+
+    .shell {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 32px 0 28px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding: 16px 20px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(13, 16, 33, 0.74);
+      backdrop-filter: blur(16px);
+      position: relative;
+      z-index: 3;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.2), transparent 35%),
+        linear-gradient(145deg, #1f2450, #11152d);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 24px rgba(0,0,0,0.25);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-mark::before {
+      content: "";
+      width: 22px;
+      height: 22px;
+      border: 3px solid #fff;
+      border-left-color: transparent;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      transform: rotate(18deg);
+      opacity: 0.9;
+    }
+
+    .brand-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-copy strong {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.98rem;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-copy span,
+    .nav-note,
+    .micro {
+      color: var(--soft);
+      font-size: 0.88rem;
+    }
+
+    .hero-card {
+      position: relative;
+      z-index: 2;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 36px;
+      background:
+        linear-gradient(180deg, rgba(22, 26, 56, 0.96), rgba(9, 12, 28, 0.98)),
+        #10142e;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      padding: 34px;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        linear-gradient(120deg, rgba(255, 144, 87, 0.08), transparent 36%),
+        radial-gradient(circle at 70% 15%, rgba(118, 242, 207, 0.12), transparent 28%);
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #ffd6c3;
+      font-size: 0.86rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h1,
+    h2,
+    h3,
+    .phone h4,
+    .phone h5,
+    .quote strong {
+      font-family: "Space Grotesk", sans-serif;
+      margin: 0;
+      line-height: 0.96;
+    }
+
+    .hero-copy {
+      text-align: center;
+    }
+
+    .hero-copy h1 {
+      margin-top: 18px;
+      font-size: clamp(2.7rem, 5.2vw, 5.6rem);
+      letter-spacing: -0.05em;
+      max-width: 10ch;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-copy p {
+      max-width: 650px;
+      margin: 18px auto 0;
+      font-size: 1.08rem;
+      line-height: 1.68;
+      color: var(--muted);
+    }
+
+    .hero-copy p strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .stat {
+      display: block;
+      padding: 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      text-align: center;
+    }
+
+    .stat strong,
+    .signal strong {
+      display: block;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.45rem;
+      margin-bottom: 6px;
+    }
+
+    .signal-wrap {
+      display: grid;
+      gap: 14px;
+    }
+
+    .signal {
+      display: block;
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: rgba(7, 9, 22, 0.74);
+    }
+
+    .signal:nth-child(2) strong {
+      color: var(--accent);
+    }
+
+    .signal:nth-child(3) strong {
+      color: var(--accent-2);
+    }
+
+    .signal p,
+    .signal span,
+    .fact p,
+    .bullet-list li,
+    .phone p,
+    .phone li,
+    .footer-note {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    section {
+      position: relative;
+      z-index: 2;
+      padding: 18px 0;
+    }
+
+    .section-card {
+      background: rgba(14, 17, 38, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-intro {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 26px;
+    }
+
+    .section-intro h2 {
+      font-size: clamp(2rem, 4vw, 3.3rem);
+      letter-spacing: -0.04em;
+    }
+
+    .section-intro p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .evidence-grid,
+    .facts-grid,
+    .plan-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .fact {
+      display: block;
+      min-height: 100%;
+      padding: 22px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    }
+
+    .fact .kicker,
+    .phone .kicker {
+      color: #ffd2bd;
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-size: 0.78rem;
+      margin-bottom: 10px;
+    }
+
+    .fact h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      line-height: 1.05;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .compare-copy {
+      padding-top: 8px;
+    }
+
+    .quote {
+      padding: 18px 20px;
+      border-left: 3px solid var(--accent);
+      background: rgba(255,255,255,0.04);
+      border-radius: 18px;
+      margin-top: 14px;
+    }
+
+    .quote p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .bullet-list {
+      list-style: none;
+      padding: 0;
+      margin: 22px 0 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .bullet-list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .bullet-list li::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--accent), #ff5f7d);
+      margin-top: 8px;
+      flex: none;
+    }
+
+    .phones {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 22px;
+    }
+
+    .phone-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .phone-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+      background: rgba(255,255,255,0.04);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      padding: 10px;
+      border-radius: 42px;
+      background:
+        linear-gradient(180deg, #23294b 0%, #070a18 100%);
+      box-shadow: 0 28px 80px rgba(0,0,0,0.52), inset 0 1px 0 rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.12);
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 10px;
+      width: 118px;
+      height: 24px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: #05070f;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.08);
+      z-index: 3;
+    }
+
+    .phone-screen {
+      height: 100%;
+      border-radius: 32px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #151938 0%, #090c1d 100%);
+      border: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+      z-index: 1;
+    }
+
+    .phone-inner {
+      height: 100%;
+      overflow-y: auto;
+      padding: 36px 14px 14px;
+      scrollbar-width: none;
+      background:
+        radial-gradient(circle at top right, rgba(255,144,87,0.12), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+    }
+
+    .phone-inner::-webkit-scrollbar {
+      display: none;
+    }
+
+    .phone .hero-mini,
+    .phone .mini-card,
+    .phone .mini-chart,
+    .phone .mini-issue,
+    .phone .mini-row,
+    .phone .mini-footer,
+    .phone .mini-pill {
+      display: block;
+    }
+
+    .phone .hero-mini {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .phone .hero-mini h4 {
+      font-size: 1.55rem;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      text-align: center;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .phone .hero-mini p {
+      margin: 0 auto;
+      max-width: 210px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .mini-card,
+    .mini-chart,
+    .mini-issue {
+      padding: 14px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.07);
+      margin-bottom: 12px;
+    }
+
+    .mini-issue.danger {
+      background: rgba(255,95,125,0.11);
+      border-color: rgba(255,95,125,0.22);
+    }
+
+    .mini-issue.good {
+      background: rgba(118,242,207,0.1);
+      border-color: rgba(118,242,207,0.2);
+    }
+
+    .mini-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .mini-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .mini-row strong {
+      font-size: 0.95rem;
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    .mini-row span,
+    .mini-pill,
+    .badge {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .mini-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin: 3px 4px 0 0;
+    }
+
+    .bars {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      align-items: end;
+      gap: 8px;
+      height: 90px;
+      margin-top: 12px;
+    }
+
+    .bars span {
+      border-radius: 999px 999px 6px 6px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,144,87,0.48));
+      opacity: 0.9;
+    }
+
+    .bars span:nth-child(1) { height: 24px; }
+    .bars span:nth-child(2) { height: 36px; }
+    .bars span:nth-child(3) { height: 44px; }
+    .bars span:nth-child(4) { height: 62px; }
+    .bars span:nth-child(5) { height: 78px; }
+    .bars span:nth-child(6) { height: 86px; background: linear-gradient(180deg, #ffb28e, #ff5f7d); }
+
+    .bars.clean span:nth-child(1) { height: 30px; }
+    .bars.clean span:nth-child(2) { height: 42px; }
+    .bars.clean span:nth-child(3) { height: 58px; }
+    .bars.clean span:nth-child(4) { height: 66px; }
+    .bars.clean span:nth-child(5) { height: 74px; }
+    .bars.clean span:nth-child(6) { height: 80px; background: linear-gradient(180deg, #9af4dd, #44cfb2); }
+
+    .plan-step {
+      display: block;
+      padding: 22px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      min-height: 100%;
+    }
+
+    .plan-step strong {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.08);
+      font-family: "Space Grotesk", sans-serif;
+      margin-bottom: 12px;
+    }
+
+    .cta {
+      padding-bottom: 42px;
+    }
+
+    .cta-card {
+      text-align: center;
+      padding: 38px 30px;
+      border-radius: 34px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background:
+        radial-gradient(circle at top center, rgba(255,144,87,0.14), transparent 30%),
+        linear-gradient(180deg, rgba(21, 24, 50, 0.98), rgba(9, 11, 26, 1));
+      box-shadow: var(--shadow);
+    }
+
+    .cta-card h2 {
+      font-size: clamp(2rem, 4.4vw, 3.5rem);
+      letter-spacing: -0.04em;
+    }
+
+    .cta-card p {
+      max-width: 720px;
+      margin: 16px auto 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .cta-actions {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 176px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 600;
+      transition: transform 180ms ease, opacity 180ms ease, box-shadow 180ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.96;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #ff6f70);
+      color: #1b1022;
+      box-shadow: 0 16px 32px rgba(255, 111, 112, 0.24);
+    }
+
+    .btn-secondary {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+
+    footer {
+      padding: 0 0 34px;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.87rem;
+      opacity: 0.92;
+    }
+
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .comparison,
+      .evidence-grid,
+      .facts-grid,
+      .plan-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-intro {
+        flex-direction: column;
+        align-items: start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .nav {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero-card,
+      .section-card,
+      .cta-card {
+        padding: 24px;
+        border-radius: 26px;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .shell {
+        width: min(calc(100% - 18px), var(--max));
+      }
+
+      .hero-copy h1 {
+        font-size: clamp(2.3rem, 11vw, 3.5rem);
+      }
+
+      .section-intro h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="shell">
+        <div class="nav">
+          <a class="brand" href="#concept">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span class="brand-copy">
+              <strong>Sentry Release Pulse</strong>
+              <span>Concept by Elinext for Dustin Bailey</span>
+            </span>
+          </a>
+          <span class="nav-note">Built from CRM context, public product research, and current community feedback</span>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <span class="eyebrow">AI-powered mobile teardown for Sentry</span>
+              <h1>What if release health felt decisive?</h1>
+              <p><strong>Sentry already captures the right signals.</strong> The gap is the first 15 minutes after a mobile release, when noisy client errors, grouping ambiguity, and runtime regressions make the team ask a slower question than they should: <strong>is this a real rollout problem or not?</strong></p>
+              <div class="hero-stats">
+                <span class="stat">
+                  <strong>4M</strong>
+                  developers on Sentry's public about page
+                </span>
+                <span class="stat">
+                  <strong>150K</strong>
+                  organizations publicly claimed by Sentry
+                </span>
+                <span class="stat">
+                  <strong>0 public apps</strong>
+                  Sentry-owned App Store / Play listings found on 2026-03-30
+                </span>
+              </div>
+            </div>
+
+            <div class="signal-wrap">
+              <span class="signal">
+                <strong>Public pain</strong>
+                <p>Recent React Native and Next.js threads point to slowdowns, noisy client-side errors, and issue-grouping confusion.</p>
+              </span>
+              <span class="signal">
+                <strong>Hiring signal</strong>
+                <p>Sentry is hiring a Head of Technical Program Management focused on predictable technical execution, CI/CD, and release discipline.</p>
+              </span>
+              <span class="signal">
+                <strong>Product fit</strong>
+                <p>Release Health already tracks crash-free sessions, usage, and adoption. The opportunity is to compress that into one mobile-ready decision surface.</p>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="concept">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-intro">
+            <div>
+              <span class="eyebrow">Concept</span>
+              <h2>Release Pulse for mobile teams</h2>
+            </div>
+            <p>A native companion or mobile-first workflow that turns a fresh release into a single call: keep shipping, watch closely, or halt rollout. This is the most credible mobile wedge for Sentry because it builds on existing release-health data instead of inventing a second observability stack.</p>
+          </div>
+
+          <div class="facts-grid">
+            <span class="fact">
+              <span class="kicker">Current reality</span>
+              <h3>Plenty of telemetry. Too much interpretation.</h3>
+              <p>Public user feedback shows that client noise and grouped errors can still blur the line between a real regression and background chatter.</p>
+            </span>
+            <span class="fact">
+              <span class="kicker">Prototype move</span>
+              <h3>Impact-ranked release digest</h3>
+              <p>Every release starts with a concise pulse: crash-free sessions, affected users, runtime overhead, source-map integrity, likely owner, and recommended action.</p>
+            </span>
+            <span class="fact">
+              <span class="kicker">Commercial upside</span>
+              <h3>Better demos for Solutions Engineering</h3>
+              <p>Dustin's team gets a cleaner narrative in customer calls: not just "we found the events," but "we can tell you what this release means right now."</p>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="before-after">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-intro">
+            <div>
+              <span class="eyebrow">Before / After</span>
+              <h2>From issue fog to one release decision</h2>
+            </div>
+            <p>The left screen represents the public pain pattern: error volume, unclear severity, and uncertain grouping. The right screen shows the proposed fix: a release pulse that scores impact, names an owner, and recommends the next move.</p>
+          </div>
+
+          <div class="comparison">
+            <div class="compare-copy">
+              <span class="fact">
+                <span class="kicker">Research-backed pain</span>
+                <h3>Noisy client failures slow down trust</h3>
+                <p>One recent user called out recurring `fetch failed` and `load failed` events without clear UX impact. Another said Sentry on mobile can feel heavy until teams aggressively tune event volume and integrations.</p>
+              </span>
+              <div class="quote">
+                <p><strong>React Native feedback:</strong> "Sentry super detailed, but can feel a bit heavy on mobile."</p>
+              </div>
+              <div class="quote">
+                <p><strong>Next.js feedback:</strong> client errors can become a sea of failed fetches, extensions, and page-leave noise.</p>
+              </div>
+              <ul class="bullet-list">
+                <li>Group issues by likely root cause, not only raw event similarity.</li>
+                <li>Show crash-free session movement beside the issue spike, not on another page.</li>
+                <li>Add confidence scoring for "halt rollout" versus "likely harmless noise."</li>
+              </ul>
+            </div>
+
+            <div class="phones">
+              <div class="phone-wrap">
+                <span class="phone-label">Current workflow</span>
+                <div class="phone" aria-label="Current Sentry triage concept">
+                  <div class="phone-screen">
+                    <div class="phone-inner">
+                      <div class="hero-mini">
+                        <span class="kicker">Release 4.18.0</span>
+                        <h4>Issue flood</h4>
+                        <p>Raw event volume rises faster than confidence.</p>
+                      </div>
+                      <div class="mini-card">
+                        <div class="mini-row"><strong>Crash-free sessions</strong><span>96.8%</span></div>
+                        <div class="mini-row"><span>last 30 min</span><span class="badge">down 1.7%</span></div>
+                        <div class="bars"></div>
+                      </div>
+                      <div class="mini-issue danger">
+                        <div class="mini-row"><strong>fetch failed</strong><span>427 events</span></div>
+                        <div class="mini-row"><span>Client / network / pageleave?</span><span>unclear</span></div>
+                      </div>
+                      <div class="mini-issue">
+                        <div class="mini-row"><strong>TypeError: load failed</strong><span>203 events</span></div>
+                        <div class="mini-row"><span>Merged with 3 signatures</span><span>low trust</span></div>
+                      </div>
+                      <div class="mini-issue">
+                        <div class="mini-row"><strong>Slow frame spike</strong><span>14% sessions</span></div>
+                        <div class="mini-row"><span>After enabling replay + tracing</span><span>possible SDK weight</span></div>
+                      </div>
+                      <div class="mini-footer">
+                        <span class="mini-pill">owner unclear</span>
+                        <span class="mini-pill">source map check pending</span>
+                        <span class="mini-pill">no release recommendation</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="phone-wrap">
+                <span class="phone-label">Proposed mobile pulse</span>
+                <div class="phone" aria-label="Improved Sentry release pulse concept">
+                  <div class="phone-screen">
+                    <div class="phone-inner">
+                      <div class="hero-mini">
+                        <span class="kicker">AI Release Pulse</span>
+                        <h4>Watch closely</h4>
+                        <p>One cluster is real. Two are noise. Owner already assigned.</p>
+                      </div>
+                      <div class="mini-card good">
+                        <div class="mini-row"><strong>Release health score</strong><span>81 / 100</span></div>
+                        <div class="mini-row"><span>Crash-free sessions</span><span>98.1%</span></div>
+                        <div class="bars clean"></div>
+                      </div>
+                      <div class="mini-issue good">
+                        <div class="mini-row"><strong>Primary regression</strong><span>1 cluster</span></div>
+                        <div class="mini-row"><span>Android image pipeline after 4.18.0</span><span>85 impacted users</span></div>
+                      </div>
+                      <div class="mini-card">
+                        <div class="mini-row"><strong>Noise filtered</strong><span>2 clusters</span></div>
+                        <div class="mini-row"><span>pageleave fetch failures / extension noise</span><span>suppressed</span></div>
+                      </div>
+                      <div class="mini-card">
+                        <div class="mini-row"><strong>Action</strong><span>Patch forward</span></div>
+                        <div class="mini-row"><span>Owner</span><span>Mobile Platform</span></div>
+                        <div class="mini-row"><span>Source map integrity</span><span>healthy</span></div>
+                      </div>
+                      <div class="mini-footer">
+                        <span class="mini-pill">Slack brief ready</span>
+                        <span class="mini-pill">rollback not required</span>
+                        <span class="mini-pill">SE-safe summary</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="evidence">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-intro">
+            <div>
+              <span class="eyebrow">Evidence</span>
+              <h2>Why this concept is grounded</h2>
+            </div>
+            <p>This is not speculative design theater. It is anchored in Sentry's public product language, public hiring signals, and current user commentary from engineers working with client-heavy apps.</p>
+          </div>
+          <div class="evidence-grid">
+            <span class="fact">
+              <span class="kicker">Official product</span>
+              <h3>Release Health already exists</h3>
+              <p>Sentry documents crash-free sessions, adoption, usage, and release details as first-class release-health data. The design move here is packaging, not reinvention.</p>
+            </span>
+            <span class="fact">
+              <span class="kicker">Official hiring</span>
+              <h3>Predictable execution is important enough to hire for</h3>
+              <p>The careers page references technical program management, CI/CD understanding, release tools, automation, and predictable cross-team delivery.</p>
+            </span>
+            <span class="fact">
+              <span class="kicker">Community feedback</span>
+              <h3>Trust breaks when issue grouping feels fuzzy</h3>
+              <p>One recent React Native discussion explicitly called out different errors appearing under one issue. That creates hesitation at the exact moment teams need certainty.</p>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="plan">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-intro">
+            <div>
+              <span class="eyebrow">Delivery path</span>
+              <h2>How Elinext could build it</h2>
+            </div>
+            <p>This is a bounded feature package, not an open-ended redesign. It is a realistic augmentation project for a mobile/product engineering partner.</p>
+          </div>
+          <div class="plan-grid">
+            <span class="plan-step">
+              <strong>01</strong>
+              <h3>Define pulse logic</h3>
+              <p>Map release-health fields, event clusters, and rollback heuristics into one scoring model with explicit confidence.</p>
+            </span>
+            <span class="plan-step">
+              <strong>02</strong>
+              <h3>Build native surfaces</h3>
+              <p>Ship iOS and Android companion views for release digest, issue review, owner routing, and SE-friendly summaries.</p>
+            </span>
+            <span class="plan-step">
+              <strong>03</strong>
+              <h3>Instrument feedback loops</h3>
+              <p>Track what teams actually do after an alert so the pulse learns which issue shapes are real regressions versus safe noise.</p>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="shell">
+        <div class="cta-card">
+          <span class="eyebrow">Conversation starter</span>
+          <h2>A mobile wedge that sharpens Sentry's release story</h2>
+          <p>This concept is designed to help a Solutions Engineering team tell a stronger story in demos and help mobile teams make a faster call after deploy. If the idea resonates, Elinext can scope the native experience, release scoring logic, and delivery plan.</p>
+          <div class="cta-actions">
+            <a class="btn btn-primary" href="https://www.elinext.com/contacts/">Get in Touch</a>
+            <a class="btn btn-secondary" href="https://sentry.io/solutions/mobile-developers/">See Sentry's mobile solution</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell">
+      <p class="footer-note">Research basis: CRM context, Sentry public site/docs/careers pages, iTunes Search API, Google Play scraper discovery, BuiltWith, and current Reddit threads from React Native and Next.js communities.</p>
+    </div>
+  </footer>
+</body>
+</html>
