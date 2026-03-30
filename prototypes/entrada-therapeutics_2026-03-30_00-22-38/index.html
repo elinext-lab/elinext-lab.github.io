@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrada Therapeutics Mobile - AI Teardown</title>
+  <meta name="description" content="What if Entrada could turn rare-disease study discovery into a mobile readiness flow that checks exon fit, organizes biomarker and caregiver tasks, and reduces travel friction before site outreach?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/entrada-therapeutics_2026-03-30_00-22-38/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/entrada-therapeutics_2026-03-30_00-22-38/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/entrada-therapeutics_2026-03-30_00-22-38/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Entrada Therapeutics Mobile - AI Teardown">
+  <meta property="og:description" content="What if families could pre-check exon eligibility, travel support, and biomarker readiness in one mobile study companion instead of bouncing between FAQs and study microsites?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-30: iOS N/A (no first-party App Store listing found via iTunes Search API US), Android N/A (no first-party Play listing found via google-play-scraper US search) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4efe5;
+      --panel: rgba(255, 251, 245, 0.88);
+      --panel-solid: #fffaf0;
+      --ink: #112a2e;
+      --muted: #4f696c;
+      --border: rgba(17, 42, 46, 0.12);
+      --teal: #0f7f83;
+      --teal-deep: #0d4d56;
+      --moss: #1a6a5d;
+      --gold: #f0a94e;
+      --shadow: 0 26px 70px rgba(17, 42, 46, 0.12);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--bg);
+      color: var(--ink);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", sans-serif;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(15, 127, 131, 0.16), transparent 32%),
+        radial-gradient(circle at 100% 0%, rgba(240, 169, 78, 0.18), transparent 26%),
+        linear-gradient(180deg, #f7f2e8 0%, #eef2eb 48%, #f6f2ea 100%);
+      color: var(--ink);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(17, 42, 46, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(17, 42, 46, 0.02) 1px, transparent 1px);
+      background-size: 32px 32px;
+      opacity: 0.55;
+      z-index: 0;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .container {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 32px 0 28px;
+    }
+
+    .hero-shell {
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 34px;
+      padding: 28px;
+      background:
+        radial-gradient(circle at top right, rgba(240, 169, 78, 0.26), transparent 33%),
+        linear-gradient(135deg, rgba(12, 51, 58, 0.95), rgba(19, 91, 90, 0.92));
+      box-shadow: var(--shadow);
+      color: #fbf8f2;
+    }
+
+    .hero-shell::after {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      pointer-events: none;
+    }
+
+    .hero-top,
+    .hero-kicker,
+    .hero-title,
+    .hero-copy {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .hero-top {
+      max-width: 720px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(251, 248, 242, 0.78);
+    }
+
+    .hero-mark {
+      width: 54px;
+      height: 54px;
+      padding: 8px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+      flex: 0 0 auto;
+    }
+
+    .hero-kicker {
+      width: fit-content;
+      padding: 8px 14px;
+      margin-bottom: 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: 0.82rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: rgba(251, 248, 242, 0.86);
+    }
+
+    .hero-title {
+      max-width: 880px;
+      margin-bottom: 18px;
+      font-family: "Fraunces", serif;
+      font-size: clamp(2.4rem, 5vw, 5rem);
+      line-height: 0.94;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      margin-bottom: 24px;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: rgba(251, 248, 242, 0.82);
+    }
+
+    .evidence-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .evidence-card {
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 20px;
+      backdrop-filter: blur(6px);
+    }
+
+    .evidence-card strong,
+    .evidence-card span {
+      display: block;
+    }
+
+    .evidence-card strong {
+      margin-bottom: 8px;
+      font-size: 0.88rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ffd9a7;
+    }
+
+    .evidence-card span {
+      color: rgba(251, 248, 242, 0.85);
+      line-height: 1.55;
+      font-size: 0.98rem;
+    }
+
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 26px 0 0;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 26px;
+      backdrop-filter: blur(8px);
+    }
+
+    .section-heading {
+      margin: 0 0 10px;
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.9rem, 3vw, 3.2rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .section-copy {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 28px;
+      margin-top: 22px;
+      align-items: start;
+    }
+
+    .phone-group {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      align-items: start;
+    }
+
+    .phone-wrap {
+      text-align: center;
+    }
+
+    .phone-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 14px;
+      margin-bottom: 14px;
+      border-radius: 999px;
+      background: #fdf8ee;
+      border: 1px solid rgba(17, 42, 46, 0.1);
+      color: var(--teal-deep);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 24px rgba(17, 42, 46, 0.08);
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      margin: 0 auto;
+      border-radius: 36px;
+      padding: 12px;
+      background: linear-gradient(180deg, #142126 0%, #081014 100%);
+      box-shadow:
+        0 34px 60px rgba(17, 42, 46, 0.22),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      width: 128px;
+      height: 26px;
+      transform: translateX(-50%);
+      border-radius: 0 0 18px 18px;
+      background: #020406;
+      z-index: 3;
+    }
+
+    .phone::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 36px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .phone-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 28px;
+      background: #f7f3ea;
+    }
+
+    .phone-scroll {
+      width: 100%;
+      height: 100%;
+      padding: 36px 14px 14px;
+      overflow-y: auto;
+      scrollbar-width: none;
+      background: #f7f3ea;
+    }
+
+    .phone-scroll::-webkit-scrollbar { display: none; }
+
+    .shot {
+      overflow: hidden;
+      padding: 36px 14px 14px;
+      background: #edf0ea;
+    }
+
+    .shot img {
+      width: 100%;
+      height: auto;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(17, 42, 46, 0.12);
+    }
+
+    .phone-card {
+      display: block;
+      margin-bottom: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background: #fffaf1;
+      border: 1px solid rgba(17, 42, 46, 0.08);
+      box-shadow: 0 14px 28px rgba(17, 42, 46, 0.08);
+    }
+
+    .phone-kicker,
+    .phone-title,
+    .phone-note {
+      display: block;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .phone-kicker {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+
+    .phone-title {
+      font-family: "Fraunces", serif;
+      font-size: 1.3rem;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .phone-note {
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .progress {
+      display: grid;
+      gap: 8px;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #eef5f0;
+      color: var(--ink);
+      font-size: 0.87rem;
+    }
+
+    .tag {
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .tag.ready {
+      background: rgba(26, 106, 93, 0.16);
+      color: var(--moss);
+    }
+
+    .tag.warn {
+      background: rgba(240, 169, 78, 0.18);
+      color: #9b620f;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .mini-stat {
+      padding: 12px;
+      border-radius: 16px;
+      background: #f0f6f8;
+      border: 1px solid rgba(15, 127, 131, 0.12);
+      text-align: center;
+    }
+
+    .mini-stat strong,
+    .mini-stat span {
+      display: block;
+    }
+
+    .mini-stat strong {
+      font-size: 1.1rem;
+      color: var(--teal-deep);
+    }
+
+    .mini-stat span {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .analysis-stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .analysis-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: var(--panel-solid);
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(17, 42, 46, 0.08);
+    }
+
+    .analysis-card h3,
+    .analysis-card p,
+    .analysis-card ul,
+    .analysis-card li {
+      margin: 0;
+    }
+
+    .analysis-card h3 {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--teal-deep);
+    }
+
+    .analysis-card p {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .analysis-card ul {
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .analysis-card li + li {
+      margin-top: 6px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .metric-card {
+      padding: 22px;
+      border-radius: 22px;
+      background: var(--panel-solid);
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(17, 42, 46, 0.08);
+    }
+
+    .metric-card strong,
+    .metric-card span {
+      display: block;
+    }
+
+    .metric-card strong {
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+
+    .metric-card span {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .cta {
+      padding: 26px 0 34px;
+    }
+
+    .cta-panel {
+      text-align: center;
+      padding: 28px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, #13353c, #17595f);
+      color: #fbf8f2;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: var(--shadow);
+    }
+
+    .cta-panel h2 {
+      margin: 0 0 10px;
+      font-family: "Fraunces", serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+    }
+
+    .cta-panel p {
+      max-width: 720px;
+      margin: 0 auto 22px;
+      color: rgba(251, 248, 242, 0.82);
+      line-height: 1.7;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #23343c;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      box-shadow: 0 18px 30px rgba(240, 169, 78, 0.24);
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.18s; }
+    .delay-3 { animation-delay: 0.26s; }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .comparison,
+      .cards,
+      .evidence-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .phone-group {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-shell,
+      .panel,
+      .cta-panel {
+        padding: 20px;
+      }
+
+      .hero-top {
+        flex-direction: column;
+      }
+
+      .comparison {
+        gap: 18px;
+      }
+
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone { width: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-shell">
+          <div class="hero-top fade-up">
+            <img class="hero-mark" src="./assets/elevate45-icon.png" alt="ELEVATE study mark">
+            <span>Entrada Therapeutics • Nathan Dowden • rare-disease study ops</span>
+          </div>
+          <span class="hero-kicker fade-up delay-1">AI-powered mobile teardown</span>
+          <h1 class="hero-title fade-up delay-1">What if Duchenne study enrollment felt like a guided mobile intake instead of a brochure maze?</h1>
+          <p class="hero-copy fade-up delay-2">Entrada's public study flow already acknowledges travel complexity, home-visit logistics, and exon-specific eligibility. The missing layer is a mobile companion that organizes caregiver readiness before a coordinator has to chase documents, answer basic routing questions, or recover lost intent.</p>
+          <div class="evidence-strip fade-up delay-3">
+            <div class="evidence-card">
+              <strong>Public product analyzed</strong>
+              <span>No first-party App Store or Play listing surfaced on March 30, 2026, so this teardown targets the Clinical Studies web flow and ELEVATE microsites.</span>
+            </div>
+            <div class="evidence-card">
+              <strong>Why now</strong>
+              <span>Entrada reported UK, EU, and US Duchenne study progress and a Q2 2027 cash runway while concentrating resources around clinical execution.</span>
+            </div>
+            <div class="evidence-card">
+              <strong>Ops risk</strong>
+              <span>Entrada's annual report explicitly flags patient identification, eligibility, site proximity, consent, and monitoring as enrollment constraints.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="panel">
+          <h2 class="section-heading">Before And After</h2>
+          <p class="section-copy">The current public flow is informative but fragmented: long-form education on the main site, then handoff to separate study microsites, then email or offline follow-up. The proposed companion turns that into a patient-readiness funnel with structured inputs and cleaner downstream handoff.</p>
+          <div class="comparison">
+            <div class="phone-group">
+              <div class="phone-wrap">
+                <span class="phone-label">Current mobile experience</span>
+                <div class="phone">
+                  <div class="phone-screen shot">
+                    <img src="./assets/current-clinical-studies-mobile.png" alt="Current Entrada Clinical Studies mobile page">
+                  </div>
+                </div>
+              </div>
+              <div class="phone-wrap">
+                <span class="phone-label">Improved study companion</span>
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="phone-scroll">
+                      <div class="phone-card">
+                        <span class="phone-kicker">Entrada Trial Readiness</span>
+                        <h3 class="phone-title">See if we are ready for ELEVATE-45</h3>
+                        <p class="phone-note">One guided flow for exon fit, care-team documents, biomarkers, and travel planning.</p>
+                        <div class="mini-grid">
+                          <div class="mini-stat">
+                            <strong>82%</strong>
+                            <span>readiness score</span>
+                          </div>
+                          <div class="mini-stat">
+                            <strong>2</strong>
+                            <span>items missing</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="phone-card">
+                        <div class="progress">
+                          <div class="progress-row">
+                            <span>Genetic report confirms exon 45</span>
+                            <span class="tag ready">ready</span>
+                          </div>
+                          <div class="progress-row">
+                            <span>Current medication list uploaded</span>
+                            <span class="tag ready">done</span>
+                          </div>
+                          <div class="progress-row">
+                            <span>Biomarker visit checklist</span>
+                            <span class="tag warn">2 tasks</span>
+                          </div>
+                          <div class="progress-row">
+                            <span>Travel radius and home-visit fit</span>
+                            <span class="tag warn">review</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="phone-card">
+                        <span class="phone-kicker">Next best action</span>
+                        <h3 class="phone-title">Upload labs before advocacy outreach</h3>
+                        <p class="phone-note">The family sees exactly what is missing before a coordinator ever opens the case.</p>
+                      </div>
+
+                      <div class="phone-card">
+                        <span class="phone-kicker">Travel clarity</span>
+                        <p class="phone-note">4 on-site visits likely. Home-visit window available after screening. Reimbursement checklist already started.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="analysis-stack">
+              <div class="analysis-card">
+                <h3>Friction we are removing</h3>
+                <ul>
+                  <li>Families have to self-interpret exon fit and document readiness before they know if the study path is realistic.</li>
+                  <li>The public journey jumps from corporate hub to external study microsites, which weakens continuity.</li>
+                  <li>Travel and home-visit questions show up as copy, not as guided decisions.</li>
+                </ul>
+              </div>
+              <div class="analysis-card">
+                <h3>Why this is relevant to Nathan</h3>
+                <p>This is not a marketing refresh. It is a cleaner ops intake. Nathan's remit covers strategic planning, portfolio management, and general operations, which makes a lower-friction study funnel materially relevant.</p>
+              </div>
+              <div class="analysis-card">
+                <h3>Where Elinext fits</h3>
+                <p>Elinext can ship the companion as a secure mobile-first web app or native wrapper, connect it to trial ops tooling, and harden the caregiver workflow around data quality instead of email back-and-forth.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cards">
+          <div class="metric-card">
+            <strong>Enrollment reality</strong>
+            <span>Entrada's SEC risk factors call out patient identification, eligibility criteria, site proximity, consent, and monitoring as reasons enrollment can slip.</span>
+          </div>
+          <div class="metric-card">
+            <strong>Public signal</strong>
+            <span>Entrada says travel, accommodation, and meals are covered and that home visits are prioritized when possible, which means logistics are already part of the patient decision.</span>
+          </div>
+          <div class="metric-card">
+            <strong>Execution pressure</strong>
+            <span>With Duchenne studies advancing and biomarker-related hiring context in the CRM signal, a tighter mobile intake reduces operational drag without changing the science.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container">
+        <div class="cta-panel">
+          <h2>Turn study interest into study readiness.</h2>
+          <p>This concept is deliberately narrow: one mobile layer that helps rare-disease families answer the first operational questions faster, while giving Entrada cleaner handoff data for advocacy and study teams.</p>
+          <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
