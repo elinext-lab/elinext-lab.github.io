@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NiOS Mobile — AI Teardown</title>
+  <meta name="description" content="What if NiOS gave federal telecom teams a secure mobile companion for approvals, spend anomalies, and field incident triage instead of forcing every action through a desktop portal?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/turning-point-global-solutions_2026-03-30_06-25-10/">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/turning-point-global-solutions_2026-03-30_06-25-10/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/turning-point-global-solutions_2026-03-30_06-25-10/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="TurningPoint Global Solutions Mobile — AI Teardown">
+  <meta property="og:description" content="What if NiOS gave federal telecom teams a secure mobile companion for approvals, spend anomalies, and field incident triage instead of forcing every action through a desktop portal?">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TurningPoint Global Solutions Mobile — AI Teardown">
+  <meta name="twitter:description" content="What if NiOS gave federal telecom teams a secure mobile companion for approvals, spend anomalies, and field incident triage instead of forcing every action through a desktop portal?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/turning-point-global-solutions_2026-03-30_06-25-10/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-30: iOS N/A (0 reviews, source: no TPGSI-owned public App Store app found via US iTunes Search API queries for TurningPoint Global Solutions / TPGSI / NiOS), Android N/A (0 reviews, source: no TPGSI-owned public Google Play app found via scraper-backed Play search; TurningPoint TMS rejected as unrelated to tpgsi.com) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #081220;
+      --bg-2: #0d1d32;
+      --panel: rgba(9, 18, 31, 0.9);
+      --panel-solid: #0d1728;
+      --panel-soft: #12233a;
+      --card: #f3f7fb;
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #edf6ff;
+      --muted: #a8bfd7;
+      --soft: #7d97b3;
+      --ink: #102033;
+      --accent: #ff9b52;
+      --accent-2: #48d0c8;
+      --accent-3: #7fe5ff;
+      --danger: #ff6478;
+      --success: #4dd184;
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.34);
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 14% 16%, rgba(127, 229, 255, 0.17), transparent 28%),
+        radial-gradient(circle at 84% 18%, rgba(255, 155, 82, 0.16), transparent 26%),
+        linear-gradient(180deg, #06101b 0%, #091523 36%, #08111d 100%);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 84px 84px;
+      opacity: 0.16;
+      z-index: 0;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.7), transparent 90%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    main,
+    footer {
+      position: relative;
+      z-index: 2;
+    }
+
+    .shell {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 28px 0 34px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 16px 20px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(8, 18, 32, 0.76);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 28% 22%, rgba(255,255,255,0.22), transparent 38%),
+        linear-gradient(155deg, #143458, #0b1626 78%);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 16px 30px rgba(0,0,0,0.24);
+      display: grid;
+      place-items: center;
+      font-family: "Sora", sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: auto -8px -6px auto;
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), #ffcf71);
+      filter: blur(0.4px);
+      opacity: 0.95;
+    }
+
+    .brand-copy {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-copy strong {
+      font-family: "Sora", sans-serif;
+      font-size: 0.98rem;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-copy span,
+    .nav-note {
+      color: var(--soft);
+      font-size: 0.88rem;
+    }
+
+    .hero-card,
+    .section-card,
+    .cta-card {
+      background: linear-gradient(180deg, rgba(11, 24, 40, 0.96), rgba(7, 15, 27, 0.98));
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card {
+      padding: 34px;
+    }
+
+    .hero-card::before,
+    .section-card::before,
+    .cta-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 8%, rgba(72, 208, 200, 0.12), transparent 24%),
+        linear-gradient(120deg, rgba(255,155,82,0.08), transparent 30%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-grid,
+    .section-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 28px;
+    }
+
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.06);
+      color: #ffe0cd;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .phone h5 {
+      font-family: "Sora", sans-serif;
+      margin: 0;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2.8rem, 5.4vw, 5.4rem);
+      line-height: 0.95;
+      margin-top: 18px;
+      max-width: 10.5ch;
+    }
+
+    .hero-copy p {
+      max-width: 62ch;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin: 18px 0 0;
+    }
+
+    .hero-notes {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .note {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      min-height: 118px;
+    }
+
+    .note strong,
+    .chip strong {
+      display: block;
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent-3);
+      margin-bottom: 8px;
+    }
+
+    .note span,
+    .mini,
+    .caption,
+    .footnote,
+    .proof p,
+    .signal p,
+    .cta-card p {
+      color: var(--muted);
+    }
+
+    .note span {
+      display: block;
+      font-size: 0.94rem;
+      line-height: 1.5;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button,
+    .button-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .button {
+      color: #081220;
+      background: linear-gradient(135deg, #ffd6ae, #ff9b52 70%);
+      box-shadow: 0 16px 26px rgba(255, 155, 82, 0.25);
+    }
+
+    .button-secondary {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+
+    .button:hover,
+    .button-secondary:hover {
+      transform: translateY(-1px);
+    }
+
+    .phone-pair {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .phone-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .stack-label {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-3);
+      font-weight: 700;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      padding: 10px;
+      border-radius: 36px;
+      background:
+        linear-gradient(180deg, #101c31, #091321);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 26px 56px rgba(0,0,0,0.38);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 108px;
+      height: 18px;
+      background: rgba(6, 10, 18, 0.96);
+      border-radius: 999px;
+      z-index: 4;
+    }
+
+    .phone-screen {
+      position: relative;
+      height: 100%;
+      border-radius: 28px;
+      overflow: auto;
+      padding: 36px 14px 14px;
+      background:
+        linear-gradient(180deg, #f3f8fc 0%, #ebf3fb 100%);
+      color: var(--ink);
+      scrollbar-width: none;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .phone-head {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .phone-logo {
+      display: block;
+      width: 52px;
+      height: 52px;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 24% 20%, rgba(255,255,255,0.38), transparent 34%),
+        linear-gradient(145deg, #16385e, #0a1630);
+      color: white;
+      font-family: "Sora", sans-serif;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 14px 30px rgba(22, 56, 94, 0.25);
+    }
+
+    .phone-kicker {
+      display: block;
+      margin: 12px auto 8px;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #557496;
+      font-weight: 800;
+    }
+
+    .phone h4 {
+      font-size: 1.52rem;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.03;
+      max-width: 8.4ch;
+    }
+
+    .phone p {
+      margin: 8px auto 0;
+      text-align: center;
+      font-size: 0.86rem;
+      line-height: 1.5;
+      color: #5a7088;
+      max-width: 23ch;
+      display: block;
+    }
+
+    .phone-panel {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 18px;
+      background: white;
+      border: 1px solid rgba(10, 30, 52, 0.08);
+      box-shadow: 0 10px 24px rgba(12, 29, 50, 0.06);
+    }
+
+    .phone-row,
+    .task-row,
+    .incident {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .phone-row + .phone-row,
+    .task-row + .task-row,
+    .incident + .incident {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(10, 30, 52, 0.08);
+    }
+
+    .metric {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .metric strong {
+      font-size: 0.98rem;
+      letter-spacing: -0.03em;
+      color: #122940;
+    }
+
+    .metric span,
+    .pill,
+    .task-row span,
+    .incident span {
+      color: #5d7086;
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    .pill {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #edf5fb;
+      font-weight: 700;
+      min-width: 68px;
+      text-align: center;
+      color: #153455;
+    }
+
+    .alert-band {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      padding: 12px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #10243d, #0a192d);
+      color: #eff7ff;
+      border: 1px solid rgba(16, 54, 90, 0.16);
+    }
+
+    .chip strong {
+      margin-bottom: 6px;
+      color: #9de7ff;
+    }
+
+    .chip span {
+      display: block;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: #b6d6f0;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .task-row strong,
+    .incident strong {
+      font-size: 0.9rem;
+      line-height: 1.3;
+      color: #0f243d;
+    }
+
+    .badge,
+    .badge-warn,
+    .badge-ok,
+    .badge-soft {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .badge {
+      background: rgba(255, 100, 120, 0.13);
+      color: #d2354d;
+    }
+
+    .badge-warn {
+      background: rgba(255, 155, 82, 0.18);
+      color: #c96a18;
+    }
+
+    .badge-ok {
+      background: rgba(77, 209, 132, 0.14);
+      color: #1f8852;
+    }
+
+    .badge-soft {
+      background: rgba(19, 52, 82, 0.08);
+      color: #385977;
+    }
+
+    .section {
+      padding: 0 0 26px;
+    }
+
+    .section-card {
+      padding: 30px;
+    }
+
+    .section-header {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(2rem, 3vw, 3.4rem);
+      line-height: 0.98;
+      max-width: 9ch;
+    }
+
+    .section-header p {
+      max-width: 54ch;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .proof-grid,
+    .signal-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .proof,
+    .signal {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      min-height: 184px;
+    }
+
+    .proof strong,
+    .signal strong {
+      display: block;
+      font-family: "Sora", sans-serif;
+      font-size: 1.12rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 10px;
+    }
+
+    .proof p,
+    .signal p {
+      margin: 0;
+      line-height: 1.65;
+      font-size: 0.95rem;
+    }
+
+    .signal-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .signal-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .signal-row:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .signal-index {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.08);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #fff;
+      flex: 0 0 auto;
+    }
+
+    .signal-copy strong {
+      font-size: 0.98rem;
+      margin-bottom: 5px;
+    }
+
+    .signal-copy p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .cta-card {
+      margin-top: 6px;
+      padding: 28px 30px;
+    }
+
+    .cta-shell {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .cta-card h3 {
+      font-size: clamp(1.8rem, 2.8vw, 3rem);
+      max-width: 10ch;
+      line-height: 0.98;
+      margin-bottom: 10px;
+    }
+
+    .cta-card p {
+      max-width: 58ch;
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .foot {
+      padding: 0 0 38px;
+    }
+
+    .footnote {
+      font-size: 0.82rem;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .footnote a {
+      color: #d4ecff;
+      text-decoration: underline;
+      text-decoration-color: rgba(212, 236, 255, 0.34);
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .section-grid,
+      .proof-grid,
+      .signal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-notes {
+        grid-template-columns: 1fr;
+      }
+
+      .section-header h2 {
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        border-radius: 28px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero-card,
+      .section-card,
+      .cta-card {
+        padding: 22px;
+      }
+
+      .phone-pair {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-shell {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .shell {
+        width: min(calc(100% - 20px), var(--max));
+      }
+
+      .phone {
+        width: 300px;
+      }
+
+      .hero-copy h1 {
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="shell">
+        <div class="nav">
+          <a class="brand" href="#prototype">
+            <span class="brand-mark">N</span>
+            <span class="brand-copy">
+              <strong>NiOS Mission Pulse</strong>
+              <span>Prototype for TurningPoint Global Solutions</span>
+            </span>
+          </a>
+          <span class="nav-note">Prepared for Kamran Kamrani, CIO</span>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <span class="eyebrow">No verified public mobile app found • fallback: NiOS web product</span>
+              <h1>A secure mobile command layer for NiOS.</h1>
+              <p>
+                TurningPoint already runs mobility-heavy federal telecom programs through NiOS. The public story is strong on
+                portals, dashboards, and controls, but weak on the one experience operators actually need away from a desk:
+                fast approvals, spend-anomaly triage, and field incident response.
+              </p>
+
+              <div class="hero-notes">
+                <div class="note">
+                  <strong>Public signal</strong>
+                  <span>NiOS has been in production since 2004 and manages telecom orders, inventory, expenses, and reporting.</span>
+                </div>
+                <div class="note">
+                  <strong>Why now</strong>
+                  <span>NiOS hit FedRAMP In Process on December 11, 2024, raising the bar for both security and product polish.</span>
+                </div>
+                <div class="note">
+                  <strong>Mobile wedge</strong>
+                  <span>HHS OIG and GSA mobility programs both cite NiOS as the operating portal for devices, orders, and cost control.</span>
+                </div>
+              </div>
+
+              <div class="actions">
+                <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Get in Touch</a>
+                <a class="button-secondary" href="#prototype">See the mobile concept</a>
+              </div>
+            </div>
+
+            <div class="phone-pair" id="prototype">
+              <div class="phone-stack">
+                <span class="stack-label">Current public story</span>
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="phone-head">
+                      <span class="phone-logo">N</span>
+                      <span class="phone-kicker">Portal-first operations</span>
+                      <h4>Dense queues, slow triage</h4>
+                      <p>The existing story is powerful, but it feels like every urgent action still flows through a desktop portal.</p>
+                    </div>
+
+                    <div class="phone-panel">
+                      <div class="phone-row">
+                        <div class="metric">
+                          <strong>18 approvals waiting</strong>
+                          <span>Carrier changes, disconnects, budget holds</span>
+                        </div>
+                        <span class="badge">Backlog</span>
+                      </div>
+                      <div class="phone-row">
+                        <div class="metric">
+                          <strong>4 billing disputes</strong>
+                          <span>Need quote + contract backup before noon</span>
+                        </div>
+                        <span class="badge-warn">Manual</span>
+                      </div>
+                      <div class="phone-row">
+                        <div class="metric">
+                          <strong>2 field incidents</strong>
+                          <span>Regional offices waiting on status updates</span>
+                        </div>
+                        <span class="badge-soft">Queued</span>
+                      </div>
+                    </div>
+
+                    <div class="phone-panel">
+                      <div class="metric">
+                        <strong>What a user sees today</strong>
+                        <span>Search, exports, workflow queues, and multiple exception types competing for attention.</span>
+                      </div>
+                      <div class="timeline">
+                        <div class="task-row">
+                          <div class="metric">
+                            <strong>Review invoices against inventory</strong>
+                            <span>Need order, quote, and carrier context</span>
+                          </div>
+                          <span class="pill">08:30</span>
+                        </div>
+                        <div class="task-row">
+                          <div class="metric">
+                            <strong>Approve mobility device request</strong>
+                            <span>Traveler flagged, cost center missing</span>
+                          </div>
+                          <span class="pill">09:15</span>
+                        </div>
+                        <div class="task-row">
+                          <div class="metric">
+                            <strong>Chase outage update</strong>
+                            <span>Status still buried in a broader order view</span>
+                          </div>
+                          <span class="pill">10:40</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="phone-panel">
+                      <div class="metric">
+                        <strong>Operator pain</strong>
+                        <span>Important work is visible, but not prioritized for mobile moments.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <span class="caption">Strong backend, weak mobile decision surface.</span>
+              </div>
+
+              <div class="phone-stack">
+                <span class="stack-label">Improved concept</span>
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="phone-head">
+                      <span class="phone-logo">N</span>
+                      <span class="phone-kicker">Mission Pulse</span>
+                      <h4>One mobile view for what matters now</h4>
+                      <p>Scoped actions, high-signal alerts, and audit-ready approvals that work on the move.</p>
+                    </div>
+
+                    <div class="alert-band">
+                      <div class="chip">
+                        <strong>Spend pulse</strong>
+                        <span>$42k carrier variance detected before invoice close</span>
+                      </div>
+                      <div class="chip">
+                        <strong>Field ops</strong>
+                        <span>3 region leads waiting on device swap approval</span>
+                      </div>
+                    </div>
+
+                    <div class="phone-panel">
+                      <div class="metric">
+                        <strong>Priority actions</strong>
+                        <span>Only the items that need a decision, not the whole portal.</span>
+                      </div>
+                      <div class="timeline">
+                        <div class="task-row">
+                          <div class="metric">
+                            <strong>Approve 11 device refresh orders</strong>
+                            <span>Role-based policy passed • budget attached</span>
+                          </div>
+                          <span class="badge-ok">Approve</span>
+                        </div>
+                        <div class="task-row">
+                          <div class="metric">
+                            <strong>Escalate spend anomaly</strong>
+                            <span>Unexpected roaming spike in Northeast region</span>
+                          </div>
+                          <span class="badge-warn">Escalate</span>
+                        </div>
+                        <div class="task-row">
+                          <div class="metric">
+                            <strong>Hold disconnect batch</strong>
+                            <span>Potential premature disconnect risk detected</span>
+                          </div>
+                          <span class="badge">Hold</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="phone-panel">
+                      <div class="metric">
+                        <strong>Field incident lane</strong>
+                        <span>Compressed, mobile-friendly incident context for roaming leaders.</span>
+                      </div>
+                      <div class="timeline">
+                        <div class="incident">
+                          <div class="metric">
+                            <strong>Mid-Atlantic outage cluster</strong>
+                            <span>14 devices • carrier response in progress</span>
+                          </div>
+                          <span class="badge-soft">Track</span>
+                        </div>
+                        <div class="incident">
+                          <div class="metric">
+                            <strong>HHS OIG swap queue</strong>
+                            <span>6 devices awaiting same-day authorization</span>
+                          </div>
+                          <span class="badge-ok">Route</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="phone-panel">
+                      <div class="metric">
+                        <strong>Why it wins</strong>
+                        <span>NiOS stays the system of record. Mobile just becomes the fastest place to decide.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <span class="caption">Better for CIO review, field ops, and federal mobility teams.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Public evidence</span>
+              <h2>Why this prototype is credible.</h2>
+            </div>
+            <p>
+              The concept is intentionally narrow. It extends NiOS into mobile moments that TPGSI already owns operationally,
+              instead of inventing a new product category.
+            </p>
+          </div>
+
+          <div class="proof-grid">
+            <div class="proof">
+              <strong>NiOS already runs mission workflows</strong>
+              <p>TurningPoint says NiOS handles telecom orders, inventory, expense management, dashboards, and exception alerts across government agencies.</p>
+            </div>
+            <div class="proof">
+              <strong>Mobility is core, not adjacent</strong>
+              <p>Public contract announcements tie NiOS directly to mobile-device ordering, wireless mobility services, billing audit, and cost optimization.</p>
+            </div>
+            <div class="proof">
+              <strong>No public app-store presence</strong>
+              <p>As of March 30, 2026, no verified TPGSI-owned iOS or Android app was found, leaving a real opening for a mobile-facing product surface.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">What changes</span>
+              <h2>The mobile wedge for Kamran.</h2>
+            </div>
+            <p>
+              This is the part a CIO can defend internally: a secure, role-scoped mobile layer that makes a mature
+              telecom platform feel faster without ripping out the core portal.
+            </p>
+          </div>
+
+          <div class="signal-grid">
+            <div class="signal">
+              <strong>1. Approvals become mobile-native</strong>
+              <p>Device orders, disconnect holds, and exception routing move from queue management into one-tap, auditable decisions.</p>
+            </div>
+            <div class="signal">
+              <strong>2. Spend anomalies get surfaced early</strong>
+              <p>NiOS already has the billing and inventory data. A mobile pulse turns that into an alerting experience executives can actually act on quickly.</p>
+            </div>
+            <div class="signal">
+              <strong>3. Field response gets simpler</strong>
+              <p>Outages, swaps, and incident clusters get their own lane, so telecom leads do not need a full desktop session to keep operations moving.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Why now</span>
+              <h2>Three signals Kamran cannot ignore.</h2>
+            </div>
+            <p>
+              Each one came from TPGSI's current public footprint. Together they point to a product-story gap, not just a UX gap.
+            </p>
+          </div>
+
+          <div class="signal-list">
+            <div class="signal-row">
+              <div class="signal-index">01</div>
+              <div class="signal-copy">
+                <strong>FedRAMP pressure is rising.</strong>
+                <p>TurningPoint announced on December 11, 2024 that NiOS had reached FedRAMP In Process status. Secure mobile actions are a stronger story than “use the portal on a smaller screen.”</p>
+              </div>
+            </div>
+            <div class="signal-row">
+              <div class="signal-index">02</div>
+              <div class="signal-copy">
+                <strong>Mobility contracts are already here.</strong>
+                <p>HHS OIG and GSA both position NiOS inside large-scale mobile-device and telecom-management programs. That makes a mobile companion commercially believable today.</p>
+              </div>
+            </div>
+            <div class="signal-row">
+              <div class="signal-index">03</div>
+              <div class="signal-copy">
+                <strong>The public surface looks fragmented.</strong>
+                <p>BuiltWith still tracks multiple TPGSI subdomains, while direct checks show mixed availability. A cleaner mobile layer helps make the platform story feel modern and unified.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-shell">
+            <div>
+              <span class="eyebrow">Elinext angle</span>
+              <h3>Use mobile to sharpen the platform, not replace it.</h3>
+              <p>
+                Elinext can take a secure, enterprise web workflow like NiOS and turn the highest-value user moments into a
+                polished mobile experience that still respects compliance, integrations, and role-based controls.
+              </p>
+            </div>
+            <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Get in Touch</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="shell">
+      <p class="footnote">
+        Concept based on public sources from TPGSI product pages, mobility contract announcements, FedRAMP news, BuiltWith, and store discovery completed on 2026-03-30.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
