@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calance Mobile — AI Teardown</title>
+  <meta name="description" content="What if AskMe Assistant captured device, vendor, and SLA context inside Teams before a request hit Genesys, cutting repetitive triage for Calance's managed services team?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/calance_2026-03-30_04-02-28/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/calance_2026-03-30_04-02-28/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/calance_2026-03-30_04-02-28/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Calance Mobile — AI Teardown">
+  <meta property="og:description" content="What if AskMe Assistant captured device, vendor, and SLA context inside Teams before a request hit Genesys, cutting repetitive triage for Calance's managed services team?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-30: iOS N/A (no public AskMe Assistant listing found via iTunes Search API US), Android N/A (no public AskMe Assistant listing found via google-play-scraper search US) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #08111f;
+      --bg-2: #10213a;
+      --bg-3: #172744;
+      --panel: #0d1728;
+      --panel-2: #101d31;
+      --card: #13223a;
+      --line: rgba(255, 255, 255, 0.1);
+      --text: #f7efe4;
+      --muted: #9db0c7;
+      --accent: #ff8a3d;
+      --accent-2: #ffd272;
+      --mint: #8bdcc7;
+      --danger: #ff7568;
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Instrument Sans", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 138, 61, 0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(139, 220, 199, 0.12), transparent 24%),
+        linear-gradient(180deg, #07101b 0%, #0a1628 46%, #0b1321 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      border-radius: 999px;
+      filter: blur(24px);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      width: 240px;
+      height: 240px;
+      left: -100px;
+      top: 180px;
+      background: rgba(255, 138, 61, 0.14);
+    }
+
+    body::after {
+      width: 320px;
+      height: 320px;
+      right: -120px;
+      top: 520px;
+      background: rgba(139, 220, 199, 0.08);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 36px 20px 64px;
+    }
+
+    .panel {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(13, 23, 40, 0.98), rgba(16, 29, 49, 0.98));
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel + .panel {
+      margin-top: 22px;
+    }
+
+    .hero {
+      padding: 34px 34px 30px;
+      text-align: center;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255, 138, 61, 0.1), transparent 34%),
+        linear-gradient(225deg, rgba(139, 220, 199, 0.08), transparent 30%);
+      z-index: 0;
+    }
+
+    .hero > * {
+      position: relative;
+      z-index: 1;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .logo-band {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(8, 17, 31, 0.62);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .logo-band img {
+      display: block;
+      width: 168px;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .logo-band span {
+      font-size: 0.84rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      margin-top: 18px;
+      font-size: 0.82rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+    }
+
+    h1,
+    h2,
+    h3,
+    .kicker {
+      font-family: "Space Grotesk", sans-serif;
+      margin: 0;
+      line-height: 1.02;
+    }
+
+    h1 {
+      max-width: 14ch;
+      margin-top: 16px;
+      font-size: clamp(2.8rem, 7vw, 5.6rem);
+      letter-spacing: -0.05em;
+    }
+
+    .lede {
+      max-width: 860px;
+      margin-top: 18px;
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      line-height: 1.68;
+      color: #d4deec;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .metric {
+      padding: 16px 16px 18px;
+      border-radius: 22px;
+      background: rgba(8, 17, 31, 0.76);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: left;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.55rem;
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: -0.04em;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 6px;
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .section-head {
+      max-width: 720px;
+      margin: 0 auto 24px;
+      text-align: center;
+    }
+
+    .section-head p {
+      margin: 12px auto 0;
+      color: #cad7e7;
+      line-height: 1.65;
+    }
+
+    .showcase,
+    .system,
+    .evidence,
+    .cta {
+      padding: 30px;
+      background-color: var(--panel);
+    }
+
+    .phone-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .phone-card {
+      padding: 18px;
+      border-radius: 26px;
+      background: rgba(8, 17, 31, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: center;
+    }
+
+    .phone-card .tag {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent-2);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .phone-card h3 {
+      margin-top: 12px;
+      font-size: 1.38rem;
+    }
+
+    .phone-card p {
+      margin: 10px 0 18px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 38px;
+      background:
+        linear-gradient(180deg, #222f46 0%, #0f192b 100%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 20px 55px rgba(0, 0, 0, 0.42);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      width: 118px;
+      height: 20px;
+      transform: translateX(-50%);
+      border-radius: 0 0 16px 16px;
+      background: #0a1322;
+      z-index: 3;
+    }
+
+    .phone-screen {
+      position: relative;
+      height: 100%;
+      border-radius: 30px;
+      overflow: auto;
+      padding: 36px 14px 14px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 138, 61, 0.16), transparent 28%),
+        linear-gradient(180deg, #f2f6fb 0%, #e8eef7 100%);
+      color: #0b1524;
+      scrollbar-width: thin;
+    }
+
+    .status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.76rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .app-shell {
+      padding: 14px;
+      border-radius: 24px;
+      background: #ffffff;
+      box-shadow: 0 14px 24px rgba(9, 18, 34, 0.12);
+    }
+
+    .app-shell + .app-shell {
+      margin-top: 12px;
+    }
+
+    .mini-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .mini-dot {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #ff8a3d, #ffd272);
+      color: #0d1728;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+    }
+
+    .mini-brand strong,
+    .mini-brand span {
+      display: block;
+    }
+
+    .mini-brand span {
+      font-size: 0.74rem;
+      color: #6b7b92;
+    }
+
+    .chip-row,
+    .button-row,
+    .score-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip,
+    .pill,
+    .action,
+    .score {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .chip {
+      padding: 7px 10px;
+      background: #eef3f9;
+      color: #40516c;
+    }
+
+    .chip.hot {
+      background: rgba(255, 117, 104, 0.12);
+      color: #c94137;
+    }
+
+    .chip.good {
+      background: rgba(139, 220, 199, 0.2);
+      color: #116757;
+    }
+
+    .message-stack {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .bubble {
+      max-width: 86%;
+      padding: 11px 12px;
+      border-radius: 16px;
+      font-size: 0.79rem;
+      line-height: 1.45;
+      box-shadow: 0 8px 16px rgba(19, 34, 58, 0.08);
+    }
+
+    .bubble.user {
+      margin-left: auto;
+      background: linear-gradient(135deg, #ff8a3d, #ffb152);
+      color: #0b1422;
+      border-bottom-right-radius: 6px;
+    }
+
+    .bubble.bot {
+      background: #eef3f9;
+      color: #243247;
+      border-bottom-left-radius: 6px;
+    }
+
+    .bubble.warn {
+      background: #fff2ef;
+      color: #7b362f;
+    }
+
+    .field {
+      display: grid;
+      gap: 4px;
+      margin-bottom: 11px;
+    }
+
+    .field label {
+      font-size: 0.7rem;
+      color: #5f6f87;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+
+    .field div {
+      min-height: 42px;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid #dbe5f0;
+      background: #f8fbff;
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .button-row {
+      margin-top: 14px;
+    }
+
+    .action {
+      padding: 10px 14px;
+      border: 0;
+      background: #10213a;
+      color: #f7efe4;
+    }
+
+    .action.alt {
+      background: #eef3f9;
+      color: #243247;
+    }
+
+    .timeline {
+      position: relative;
+      margin-top: 8px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 4px;
+      bottom: 4px;
+      width: 2px;
+      background: #d9e4f1;
+    }
+
+    .event {
+      position: relative;
+      padding-left: 26px;
+    }
+
+    .event::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ff8a3d;
+      box-shadow: 0 0 0 4px rgba(255, 138, 61, 0.15);
+    }
+
+    .event strong {
+      display: block;
+      font-size: 0.78rem;
+    }
+
+    .event span {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.74rem;
+      color: #687891;
+      line-height: 1.45;
+    }
+
+    .score {
+      padding: 9px 11px;
+      min-width: 76px;
+      background: #eef3f9;
+      color: #10213a;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .score small {
+      font-size: 0.64rem;
+      color: #5d6e87;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .system-grid,
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .system-card,
+    .evidence-card {
+      padding: 20px;
+      border-radius: 24px;
+      background: rgba(8, 17, 31, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .system-card h3,
+    .evidence-card h3 {
+      font-size: 1.14rem;
+    }
+
+    .system-card p,
+    .evidence-card p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .quote {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: #dce6f4;
+      line-height: 1.65;
+      font-size: 0.92rem;
+    }
+
+    .quote strong {
+      color: var(--accent-2);
+    }
+
+    .audit-table {
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .audit-row {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(4, 0.7fr);
+      gap: 8px;
+      align-items: center;
+      font-size: 0.82rem;
+      color: #d7e1ee;
+    }
+
+    .audit-row span:first-child {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .audit-row strong {
+      display: block;
+      text-align: center;
+      padding: 8px 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.82rem;
+    }
+
+    .cta {
+      text-align: center;
+    }
+
+    .cta p {
+      max-width: 760px;
+      margin: 14px auto 0;
+      color: #d3deec;
+      line-height: 1.7;
+    }
+
+    .cta .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 22px;
+      padding: 15px 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ff8a3d, #ffb152);
+      color: #08111f;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      box-shadow: 0 18px 30px rgba(255, 138, 61, 0.24);
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1120px) {
+      .hero-metrics,
+      .phone-grid,
+      .system-grid,
+      .evidence-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        padding: 18px 14px 44px;
+      }
+
+      .hero,
+      .showcase,
+      .system,
+      .evidence,
+      .cta {
+        padding: 22px;
+      }
+
+      .hero-metrics,
+      .phone-grid,
+      .system-grid,
+      .evidence-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .audit-row {
+        grid-template-columns: 1.2fr repeat(2, 0.8fr);
+      }
+
+      .audit-row strong:nth-child(n+4) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .logo-band {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero panel">
+      <div class="logo-band">
+        <img src="assets/askme-mark.svg" alt="AskMe Assistant">
+        <span>Built for David Kim • VP, Managed Services</span>
+      </div>
+      <div class="eyebrow">Calance / AskMe Assistant / Teams + Genesys teardown</div>
+      <h1>What if AskMe captured device, vendor, and SLA context before the ticket hit Genesys?</h1>
+      <p class="lede">
+        Calance already has the integration layer. This concept sharpens the handoff between Microsoft Teams, frontline users, and managed-services agents so fewer incidents bounce back for missing context, repeated questions, or hidden vendor dependencies.
+      </p>
+      <div class="hero-metrics">
+        <div class="metric">
+          <strong>Gap = handoff</strong>
+          <span>AskMe publicly bridges Teams and Genesys. The most valuable improvement is richer intake before the queue starts working.</span>
+        </div>
+        <div class="metric">
+          <strong>Reddit signal</strong>
+          <span>Genesys + Teams integration is described as “pain and suffering” when licensing, docs, and handoffs get messy.</span>
+        </div>
+        <div class="metric">
+          <strong>48 / 95 / 57</strong>
+          <span>Calance’s mobile Lighthouse snapshot is credible, but not yet product-leader polish on performance and best-practices.</span>
+        </div>
+        <div class="metric">
+          <strong>Vendor-aware</strong>
+          <span>CRM context points to sourcing and vendor-governance pressure. Managed services needs those lanes visible inside intake.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="showcase panel">
+      <div class="section-head">
+        <div class="eyebrow">Prototype</div>
+        <h2>From chat-first support to context-first execution</h2>
+        <p>
+          The public AskMe story promises fast support inside Teams. The prototype below adds the structured context, queue visibility, and vendor-routing signals that make that promise hold up under real managed-services volume.
+        </p>
+      </div>
+      <div class="phone-grid">
+        <article class="phone-card">
+          <span class="tag">Current</span>
+          <h3>Simple chat, thin payload</h3>
+          <p>Users can reach support quickly, but key triage data arrives late and the agent ends up rebuilding the incident.</p>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="status">
+                <span>9:41</span>
+                <span>5G • 91%</span>
+              </div>
+              <div class="app-shell">
+                <div class="mini-brand">
+                  <div class="mini-dot">A</div>
+                  <div>
+                    <strong>AskMe</strong>
+                    <span>Teams thread</span>
+                  </div>
+                </div>
+                <div class="chip-row">
+                  <span class="chip">Ticket #4182</span>
+                  <span class="chip hot">SLA unknown</span>
+                </div>
+                <div class="message-stack">
+                  <div class="bubble user">Hi, VPN is down again and I can’t reach the client SharePoint from my iPhone.</div>
+                  <div class="bubble bot">I can help with that. What device are you using?</div>
+                  <div class="bubble user">iPhone 15. Same issue as last week.</div>
+                  <div class="bubble bot">Do you know which office or network you are on?</div>
+                  <div class="bubble bot warn">Missing: asset ID, severity, screenshot, vendor dependency, affected client, outage scope.</div>
+                </div>
+              </div>
+              <div class="app-shell">
+                <strong style="display:block;font-size:0.78rem;">Observed friction</strong>
+                <div class="timeline">
+                  <div class="event">
+                    <strong>Repeated discovery</strong>
+                    <span>Agent restarts triage in chat because the request enters with too little structure.</span>
+                  </div>
+                  <div class="event">
+                    <strong>Vendor path hidden</strong>
+                    <span>No visible clue whether a carrier, Microsoft, or security vendor is already in play.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="phone-card">
+          <span class="tag">Better Intake</span>
+          <h3>Adaptive card before queue entry</h3>
+          <p>The Teams thread stays familiar, but the request is upgraded into a ready-to-route incident before it ever touches Genesys.</p>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="status">
+                <span>9:41</span>
+                <span>5G • 91%</span>
+              </div>
+              <div class="app-shell">
+                <div class="mini-brand">
+                  <div class="mini-dot">A</div>
+                  <div>
+                    <strong>Smart incident card</strong>
+                    <span>Built inside Teams</span>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Affected asset</label>
+                  <div>DKIM-MOB-15 • iPhone 15 • Anaheim HQ</div>
+                </div>
+                <div class="field">
+                  <label>Impact</label>
+                  <div>Executive unable to reach client documents during active service review.</div>
+                </div>
+                <div class="field">
+                  <label>Vendor dependency</label>
+                  <div>Microsoft 365 + VPN provider tagged automatically from prior incidents.</div>
+                </div>
+                <div class="field">
+                  <label>Evidence</label>
+                  <div>Screenshot attached • outage started 8 min ago • last similar incident last Tuesday.</div>
+                </div>
+                <div class="button-row">
+                  <span class="action">Route to Genesys</span>
+                  <span class="action alt">Ask follow-up</span>
+                </div>
+              </div>
+              <div class="app-shell">
+                <div class="chip-row">
+                  <span class="chip good">SLA: 30 min first response</span>
+                  <span class="chip">Queue: Mobility Ops</span>
+                  <span class="chip">Priority: P2</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="phone-card">
+          <span class="tag">Ops View</span>
+          <h3>Resolution timeline with vendor lane</h3>
+          <p>Agents and supervisors see status, next action, and outside dependencies in one mobile view instead of piecing them together.</p>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="status">
+                <span>9:41</span>
+                <span>5G • 91%</span>
+              </div>
+              <div class="app-shell">
+                <div class="mini-brand">
+                  <div class="mini-dot">Q</div>
+                  <div>
+                    <strong>Queue timeline</strong>
+                    <span>Ticket #4182</span>
+                  </div>
+                </div>
+                <div class="score-row">
+                  <span class="score"><small>SLA</small>11m left</span>
+                  <span class="score"><small>Owner</small>Priya</span>
+                  <span class="score"><small>Vendor</small>M365</span>
+                </div>
+                <div class="timeline">
+                  <div class="event">
+                    <strong>Context package created</strong>
+                    <span>Teams card pushed asset, outage scope, prior history, and screenshot into Genesys.</span>
+                  </div>
+                  <div class="event">
+                    <strong>Vendor lane pre-tagged</strong>
+                    <span>Known Microsoft dependency surfaced with contract note and escalation policy.</span>
+                  </div>
+                  <div class="event">
+                    <strong>Client-safe status update ready</strong>
+                    <span>Agent can send a plain-language update back into Teams without rewriting the timeline.</span>
+                  </div>
+                </div>
+                <div class="button-row">
+                  <span class="action">Resolve</span>
+                  <span class="action alt">Escalate vendor</span>
+                </div>
+              </div>
+              <div class="app-shell">
+                <strong style="display:block;font-size:0.78rem;">Why David cares</strong>
+                <p style="margin:8px 0 0;font-size:0.78rem;line-height:1.55;color:#5f6f87;">
+                  Fewer repeated questions, cleaner handoffs, and visible vendor ownership are managed-services wins, not cosmetic mobile wins.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="system panel">
+      <div class="section-head">
+        <div class="eyebrow">Design Logic</div>
+        <h2>The wedge is small on purpose</h2>
+        <p>
+          This does not replace Genesys or rebuild Teams. It strengthens the layer Calance already owns: the moment where a loose support chat becomes a structured service event.
+        </p>
+      </div>
+      <div class="system-grid">
+        <div class="system-card">
+          <h3>1. Capture once</h3>
+          <p>Auto-fill asset identity, location, and prior incident history while the user is already in Teams. The first payload should be the best payload.</p>
+        </div>
+        <div class="system-card">
+          <h3>2. Route with context</h3>
+          <p>Push severity, vendor dependency, and evidence into Genesys on creation so queue logic can do more than react to free text.</p>
+        </div>
+        <div class="system-card">
+          <h3>3. Expose ownership</h3>
+          <p>Show SLA state, current owner, and vendor lane in one timeline so supervisors are not chasing status across multiple systems.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="evidence panel">
+      <div class="section-head">
+        <div class="eyebrow">Evidence</div>
+        <h2>Why this concept is credible</h2>
+        <p>
+          The pain point is already visible in Calance’s own positioning, in operator conversations around Teams-based ticketing, and in the public quality signals around competitor pages.
+        </p>
+      </div>
+      <div class="evidence-grid">
+        <div class="evidence-card">
+          <h3>Public product story</h3>
+          <p>Calance says AskMe connects Microsoft Teams and Genesys Cloud CX, keeps routing and SLAs in Genesys, and removes the need to switch tabs.</p>
+          <div class="quote">
+            <strong>Implication:</strong> if the handoff still lacks asset, impact, or vendor context, the product misses the exact value it promises.
+          </div>
+        </div>
+        <div class="evidence-card">
+          <h3>Real operator language</h3>
+          <div class="quote">
+            “the pain and suffering behind this insanity is hard to describe... the lack of really good documentation is staggering”
+          </div>
+          <p>Reddit, Genesys + Teams integration thread.</p>
+          <div class="quote">
+            “Our users have always struggled with submitting tickets, and our techs... struggled with responding and getting useful history and information in the ticket.”
+          </div>
+          <p>Reddit, sysadmin thread on Teams-integrated ticketing.</p>
+        </div>
+        <div class="evidence-card">
+          <h3>Lighthouse snapshot</h3>
+          <p>Mobile scores captured locally on March 30, 2026.</p>
+          <div class="audit-table">
+            <div class="audit-row">
+              <span>Calance AskMe</span>
+              <strong>48</strong>
+              <strong>95</strong>
+              <strong>57</strong>
+              <strong>85</strong>
+            </div>
+            <div class="audit-row">
+              <span>Desk365</span>
+              <strong>37</strong>
+              <strong>87</strong>
+              <strong>57</strong>
+              <strong>85</strong>
+            </div>
+            <div class="audit-row">
+              <span>Aisera</span>
+              <strong>50</strong>
+              <strong>86</strong>
+              <strong>57</strong>
+              <strong>85</strong>
+            </div>
+            <div class="audit-row">
+              <span>Moveworks</span>
+              <strong>61</strong>
+              <strong>85</strong>
+              <strong>96</strong>
+              <strong>77</strong>
+            </div>
+          </div>
+          <p>Order: performance, accessibility, best-practices, SEO.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta panel">
+      <div class="eyebrow">Outcome</div>
+      <h2>Make AskMe feel less like a bot and more like a managed-services console</h2>
+      <p>
+        The opportunity is straightforward: improve the first payload, surface ownership instantly, and stop vendor-aware incidents from disappearing into plain chat. That is a credible, high-leverage wedge for David Kim’s team.
+      </p>
+      <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Get in Touch</a>
+      <div class="footer-note">Prototype URL: https://elinext-lab.github.io/prototypes/calance_2026-03-30_04-02-28/</div>
+    </section>
+  </main>
+</body>
+</html>
