@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentSync Contracting Teardown | Elinext</title>
+  <meta name="description" content="A mobile exception inbox concept for AgentSync Contracting that reduces one-way sync friction, pending-producer delays, and manual portal verification overhead.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/agentsync_2026-03-30_06-08-32/">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/agentsync_2026-03-30_06-08-32/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/agentsync_2026-03-30_06-08-32/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="AgentSync Contracting — AI Teardown">
+  <meta property="og:description" content="What if pending producer tasks, one-way sync gaps, and manual portal verification were collapsed into one mobile exception inbox that lets AgentSync admins resolve blockers in minutes instead of tab-hopping across Salesforce and queue views?">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AgentSync Contracting — AI Teardown">
+  <meta name="twitter:description" content="A mobile exception inbox concept for AgentSync Contracting focused on sync confidence, review speed, and fewer manual follow-ups.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/agentsync_2026-03-30_06-08-32/og-image.jpg">
+  <link rel="icon" href="assets/agentsync-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-30: iOS n/a (no matching US App Store listing found via iTunes Search API), Android n/a (no matching Google Play listing found via google-play-scraper search) -->
+  <style>
+    :root {
+      --bg: #eef2f7;
+      --ink: #10213a;
+      --muted: #59708f;
+      --panel: rgba(255, 255, 255, 0.94);
+      --line: rgba(16, 33, 58, 0.1);
+      --navy: #12284a;
+      --blue: #1568e4;
+      --teal: #00a9a5;
+      --mint: #d7fbf5;
+      --orange: #ff8a3d;
+      --orange-soft: #ffe5d1;
+      --danger: #ef5b56;
+      --success: #1a9a66;
+      --shadow: 0 32px 70px rgba(18, 40, 74, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(21, 104, 228, 0.18), transparent 26%),
+        radial-gradient(circle at 82% 10%, rgba(255, 138, 61, 0.2), transparent 22%),
+        linear-gradient(180deg, #f8fbff 0%, #eef2f7 40%, #e7edf5 100%);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .decor {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(12px);
+      opacity: 0.55;
+      z-index: 0;
+    }
+
+    .decor-one {
+      width: 340px;
+      height: 340px;
+      background: rgba(21, 104, 228, 0.12);
+      top: -90px;
+      right: -80px;
+    }
+
+    .decor-two {
+      width: 300px;
+      height: 300px;
+      background: rgba(255, 138, 61, 0.14);
+      left: -110px;
+      top: 540px;
+    }
+
+    .decor-three {
+      width: 240px;
+      height: 240px;
+      background: rgba(0, 169, 165, 0.14);
+      right: 8%;
+      top: 1220px;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
+    section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 34px 0 44px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .logo-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(16, 33, 58, 0.08);
+      border-radius: 999px;
+      box-shadow: 0 14px 28px rgba(18, 40, 74, 0.08);
+    }
+
+    .logo-chip img {
+      width: 32px;
+      height: 32px;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 16px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(18, 40, 74, 0.88);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(244,248,253,0.96) 100%);
+      border: 1px solid rgba(16, 33, 58, 0.08);
+      border-radius: 36px;
+      padding: 56px 38px 38px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    h1, h2, h3 {
+      font-family: "Space Grotesk", sans-serif;
+      margin: 0;
+      line-height: 1.03;
+      text-align: center;
+    }
+
+    h1 {
+      max-width: 960px;
+      margin: 0 auto 18px;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      letter-spacing: -0.05em;
+    }
+
+    .hero-sub {
+      max-width: 880px;
+      margin: 0 auto 24px;
+      font-size: 1.12rem;
+      line-height: 1.72;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .tag-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 auto 24px;
+    }
+
+    .tag {
+      display: block;
+      padding: 11px 14px;
+      background: #fff;
+      border-radius: 999px;
+      border: 1px solid rgba(16, 33, 58, 0.08);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--navy);
+      box-shadow: 0 10px 20px rgba(18, 40, 74, 0.05);
+      text-align: center;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 170px;
+      padding: 15px 22px;
+      border-radius: 999px;
+      font-weight: 800;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), #0f53b7);
+      box-shadow: 0 18px 28px rgba(21, 104, 228, 0.28);
+    }
+
+    .button-secondary {
+      background: #fff;
+      border: 1px solid rgba(16, 33, 58, 0.1);
+      color: var(--ink);
+      box-shadow: 0 14px 24px rgba(18, 40, 74, 0.06);
+    }
+
+    .hero-note {
+      font-size: 0.92rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .signal {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(16, 33, 58, 0.08);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 16px 30px rgba(18, 40, 74, 0.05);
+      text-align: left;
+    }
+
+    .signal-kicker {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--mint);
+      color: #0d6967;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .signal h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      text-align: left;
+    }
+
+    .signal p {
+      margin: 0;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .section-title {
+      margin-bottom: 16px;
+      font-size: clamp(2rem, 4.2vw, 3.35rem);
+      letter-spacing: -0.04em;
+    }
+
+    .section-copy {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      line-height: 1.8;
+      color: var(--muted);
+      font-size: 1.03rem;
+    }
+
+    .comparison {
+      padding: 74px 0 34px;
+    }
+
+    .phones {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 28px;
+      align-items: start;
+      margin-top: 36px;
+    }
+
+    .phone-wrap {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(16, 33, 58, 0.08);
+      border-radius: 30px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .phone-label {
+      display: inline-flex;
+      padding: 8px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .label-before {
+      background: #ffe9e9;
+      color: #a74444;
+    }
+
+    .label-after {
+      background: var(--mint);
+      color: #0d6967;
+    }
+
+    .phone-title {
+      margin: 0 0 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.65rem;
+      letter-spacing: -0.04em;
+    }
+
+    .phone-desc {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      margin: 0 auto;
+      padding: 10px;
+      background: linear-gradient(180deg, #1a2136, #090d17);
+      border-radius: 34px;
+      box-shadow: 0 28px 40px rgba(8, 15, 28, 0.38);
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      width: 108px;
+      height: 26px;
+      transform: translateX(-50%);
+      border-radius: 0 0 16px 16px;
+      background: #05070d;
+      z-index: 4;
+    }
+
+    .screen {
+      height: 100%;
+      border-radius: 26px;
+      overflow: hidden;
+      background: #f5f8fd;
+      position: relative;
+    }
+
+    .screen-scroll {
+      height: 100%;
+      overflow-y: auto;
+      padding: 36px 14px 14px;
+      background:
+        radial-gradient(circle at top right, rgba(21, 104, 228, 0.18), transparent 30%),
+        linear-gradient(180deg, #f7f9fc 0%, #eef3fa 100%);
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 0.76rem;
+      color: #44556e;
+      font-weight: 700;
+    }
+
+    .app-card {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(16, 33, 58, 0.08);
+      border-radius: 22px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 12px 26px rgba(18, 40, 74, 0.06);
+      display: block;
+    }
+
+    .app-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #173763, #1568e4);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .app-head h4 {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .app-head p {
+      margin: 4px 0 0;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .pill {
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .pill-warn {
+      background: #fff0dd;
+      color: #ad5b18;
+    }
+
+    .pill-danger {
+      background: #ffe6e5;
+      color: #af4944;
+    }
+
+    .pill-safe {
+      background: #def8ef;
+      color: #137c54;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .mini-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px;
+      border-radius: 16px;
+      background: #f4f8fe;
+      border: 1px solid rgba(16, 33, 58, 0.06);
+    }
+
+    .mini-dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 5px;
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+
+    .mini-item strong,
+    .mini-item span,
+    .mini-item small {
+      display: block;
+    }
+
+    .mini-item span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .mini-item small {
+      margin-top: 5px;
+      color: #7b8fa9;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .action-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 11px;
+      border-radius: 14px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .action-chip.alt {
+      background: #e9f0fb;
+      color: var(--navy);
+    }
+
+    .metric-band {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 16px 0 12px;
+    }
+
+    .metric-box {
+      background: #fff;
+      border: 1px solid rgba(16, 33, 58, 0.08);
+      border-radius: 18px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .metric-box strong,
+    .metric-box span {
+      display: block;
+    }
+
+    .metric-box strong {
+      font-size: 1.15rem;
+    }
+
+    .metric-box span {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.73rem;
+      line-height: 1.4;
+    }
+
+    .insight {
+      margin-top: 12px;
+      padding: 16px 18px;
+      background: #10213a;
+      color: #fff;
+      border-radius: 24px;
+      text-align: center;
+      line-height: 1.65;
+    }
+
+    .system {
+      padding: 72px 0 34px;
+    }
+
+    .system-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 36px;
+    }
+
+    .system-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(16, 33, 58, 0.08);
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: 0 18px 30px rgba(18, 40, 74, 0.06);
+    }
+
+    .system-step {
+      display: inline-flex;
+      width: 38px;
+      height: 38px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--orange), #f06f22);
+      color: #fff;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+    }
+
+    .system-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+      text-align: left;
+    }
+
+    .system-card p {
+      margin: 0;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .evidence {
+      padding: 58px 0 36px;
+    }
+
+    .evidence-panel {
+      background: linear-gradient(145deg, #11233d 0%, #152f57 100%);
+      color: #fff;
+      border-radius: 34px;
+      padding: 34px;
+      box-shadow: 0 30px 48px rgba(7, 16, 29, 0.24);
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .evidence-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 20px;
+    }
+
+    .evidence-card strong,
+    .evidence-card span {
+      display: block;
+    }
+
+    .evidence-card strong {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .evidence-card span {
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1.7;
+      font-size: 0.94rem;
+    }
+
+    .cta {
+      padding: 52px 0 84px;
+    }
+
+    .cta-card {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(16, 33, 58, 0.08);
+      border-radius: 34px;
+      padding: 42px 26px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .cta-card p {
+      max-width: 760px;
+      margin: 14px auto 28px;
+      line-height: 1.8;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: #6d819d;
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    @media (max-width: 1080px) {
+      .signal-grid,
+      .system-grid,
+      .evidence-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .phones {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .hero-card,
+      .phone-wrap,
+      .evidence-panel,
+      .cta-card {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .signal-grid,
+      .system-grid,
+      .evidence-grid,
+      .metric-band {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: clamp(2.4rem, 12vw, 3.5rem);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .hero {
+        padding-top: 20px;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="decor decor-one"></div>
+    <div class="decor decor-two"></div>
+    <div class="decor decor-three"></div>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <div class="topbar">
+            <div class="logo-chip">
+              <img src="assets/agentsync-icon.png" alt="AgentSync icon">
+              <span><strong>AgentSync Contracting</strong> x <strong>Elinext mobile concept</strong></span>
+            </div>
+          </div>
+
+          <div class="hero-card">
+            <div class="eyebrow">Producer Onboarding Teardown</div>
+            <h1>What if AgentSync’s slowest onboarding work became a 5-minute mobile review loop?</h1>
+            <p class="hero-sub">
+              Public docs show the hard part is no longer basic compliance logic. It is the cleanup work after data moves between Manage, Contracting, Salesforce, and outside carrier portals. This concept turns that drift into one mobile exception inbox for agency admins and compliance leads.
+            </p>
+
+            <div class="tag-row">
+              <span class="tag">No native app found</span>
+              <span class="tag">Public web product analyzed: Contracting</span>
+              <span class="tag">Focus: one-way sync + pending producer tasks</span>
+            </div>
+
+            <div class="hero-actions">
+              <a class="button button-primary" href="#comparison">See Before / After</a>
+              <a class="button button-secondary" href="#system">See Resolution Flow</a>
+            </div>
+
+            <div class="hero-note">Built for Anna Haas and the AgentSync engineering team as a concrete mobile companion concept, not a generic redesign.</div>
+          </div>
+
+          <div class="signal-grid">
+            <article class="signal">
+              <div class="signal-kicker">Public friction</div>
+              <h3>One-way sync still leaks work</h3>
+              <p>AgentSync’s help center says Producer Data Sync is not bi-directional and may disrupt access if the flow is not managed carefully.</p>
+            </article>
+            <article class="signal">
+              <div class="signal-kicker">Operator reality</div>
+              <h3>Admins still verify outside-portal work</h3>
+              <p>Portal submissions can be completed outside the app, then reviewed manually later. That is where queue time and follow-up noise accumulate.</p>
+            </article>
+            <article class="signal">
+              <div class="signal-kicker">Market proof</div>
+              <h3>Users ask for easier tracking</h3>
+              <p>Review snippets and Reddit market chatter keep circling the same jobs: reminders, renewals, reporting, search, and queue management.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="comparison" id="comparison">
+        <div class="container">
+          <h2 class="section-title">Current Queue vs. Mobile Exception Inbox</h2>
+          <p class="section-copy">
+            The concept does not replace AgentSync Manage or Contracting. It sits on top of them and shortens the time between “something drifted” and “an admin resolved it with audit confidence.”
+          </p>
+
+          <div class="phones">
+            <article class="phone-wrap">
+              <div class="phone-label label-before">Current</div>
+              <h3 class="phone-title">Status spreads across dashboards</h3>
+              <p class="phone-desc">The admin sees open work, but still has to interpret sync state, producer progress, and portal completion across multiple views.</p>
+              <div class="phone">
+                <div class="screen">
+                  <div class="screen-scroll">
+                    <div class="status-row">
+                      <span>9:41</span>
+                      <span>LTE · 89%</span>
+                    </div>
+
+                    <div class="app-card">
+                      <div class="app-head">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                          <div class="avatar">AS</div>
+                          <div>
+                            <h4>Pending contracts</h4>
+                            <p>17 tasks across 4 queue states</p>
+                          </div>
+                        </div>
+                        <span class="pill pill-danger">6 blocked</span>
+                      </div>
+
+                      <div class="mini-list">
+                        <div class="mini-item">
+                          <span class="mini-dot" style="background:#ef5b56;"></span>
+                          <div>
+                            <strong>Megan T. · Ready for Review</strong>
+                            <span>Portal marked complete, but writing number is still missing and producer data differs from Manage.</span>
+                            <small>Needs portal check + producer follow-up</small>
+                          </div>
+                        </div>
+                        <div class="mini-item">
+                          <span class="mini-dot" style="background:#ff8a3d;"></span>
+                          <div>
+                            <strong>Daniel A. · Pending Producer</strong>
+                            <span>Reminder sent at 8:05 AM. No clue whether the producer abandoned the portal or hit a field mismatch.</span>
+                            <small>Another batch reminder due tomorrow</small>
+                          </div>
+                        </div>
+                        <div class="mini-item">
+                          <span class="mini-dot" style="background:#1568e4;"></span>
+                          <div>
+                            <strong>Sarah K. · Sync mismatch</strong>
+                            <span>Created in Contracting, not visible in Manage. Access check needed before approval.</span>
+                            <small>Escalate to platform admin</small>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="action-row">
+                        <span class="action-chip alt">Open dashboard</span>
+                        <span class="action-chip alt">Search producer</span>
+                        <span class="action-chip alt">Email reminder</span>
+                      </div>
+                    </div>
+
+                    <div class="app-card">
+                      <div class="app-head">
+                        <div>
+                          <h4>Review friction</h4>
+                          <p>Where time disappears</p>
+                        </div>
+                      </div>
+
+                      <div class="mini-list">
+                        <div class="mini-item">
+                          <span class="mini-dot" style="background:#10213a;"></span>
+                          <div>
+                            <strong>Queue status is descriptive, not decisive</strong>
+                            <span>The admin still has to infer the next action from multiple fields and side systems.</span>
+                          </div>
+                        </div>
+                        <div class="mini-item">
+                          <span class="mini-dot" style="background:#10213a;"></span>
+                          <div>
+                            <strong>Portal completion is outside the workflow</strong>
+                            <span>Producers finish elsewhere, then the admin comes back to verify manually.</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="phone-wrap">
+              <div class="phone-label label-after">Proposed</div>
+              <h3 class="phone-title">Only the blocked decision reaches mobile</h3>
+              <p class="phone-desc">The admin sees a ranked exception inbox, sync confidence, and the exact next action. One tap resolves the issue or sends a structured nudge.</p>
+              <div class="phone">
+                <div class="screen">
+                  <div class="screen-scroll">
+                    <div class="status-row">
+                      <span>9:41</span>
+                      <span>5G · 89%</span>
+                    </div>
+
+                    <div class="app-card" style="background:linear-gradient(180deg,#10213a 0%,#173763 100%);color:#fff;">
+                      <div class="app-head" style="margin-bottom:10px;">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                          <div class="avatar" style="background:rgba(255,255,255,0.14);">AI</div>
+                          <div>
+                            <h4 style="color:#fff;">Exception Inbox</h4>
+                            <p style="color:rgba(255,255,255,0.72);">3 action-ready blockers right now</p>
+                          </div>
+                        </div>
+                        <span class="pill" style="background:#fff;color:#10213a;">Ranked</span>
+                      </div>
+
+                      <div class="metric-band">
+                        <div class="metric-box">
+                          <strong>2</strong>
+                          <span>stuck in manual verification</span>
+                        </div>
+                        <div class="metric-box">
+                          <strong>1</strong>
+                          <span>sync drift impacting access</span>
+                        </div>
+                        <div class="metric-box">
+                          <strong>14m</strong>
+                          <span>estimated time saved today</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="app-card">
+                      <div class="app-head">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                          <div class="avatar" style="background:linear-gradient(135deg,#ff8a3d,#f06f22);">MT</div>
+                          <div>
+                            <h4>Megan T. needs approval</h4>
+                            <p>Carrier portal complete · review risk score 92</p>
+                          </div>
+                        </div>
+                        <span class="pill pill-warn">Review now</span>
+                      </div>
+
+                      <div class="mini-list">
+                        <div class="mini-item">
+                          <span class="mini-dot" style="background:#1a9a66;"></span>
+                          <div>
+                            <strong>Portal completion received</strong>
+                            <span>Submission timestamp and referral code match expected assignment.</span>
+                          </div>
+                        </div>
+                        <div class="mini-item">
+                          <span class="mini-dot" style="background:#1568e4;"></span>
+                          <div>
+                            <strong>Sync confidence: 97%</strong>
+                            <span>Producer profile, writing number, and product line are aligned between Manage and Contracting.</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="action-row">
+                        <span class="action-chip">Approve</span>
+                        <span class="action-chip alt">Ask producer for missing doc</span>
+                        <span class="action-chip alt">View audit trail</span>
+                      </div>
+                    </div>
+
+                    <div class="app-card">
+                      <div class="app-head">
+                        <div>
+                          <h4>Producer follow-up</h4>
+                          <p>Contextual instead of generic batch reminder</p>
+                        </div>
+                        <span class="pill pill-safe">Ready</span>
+                      </div>
+
+                      <div class="mini-list">
+                        <div class="mini-item">
+                          <span class="mini-dot" style="background:#00a9a5;"></span>
+                          <div>
+                            <strong>Missing NPN validation</strong>
+                            <span>“Your contract is paused because the NPN in the portal does not match the record on file. Tap to correct.”</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="action-row">
+                        <span class="action-chip">Send nudge</span>
+                        <span class="action-chip alt">Schedule retry</span>
+                      </div>
+                    </div>
+
+                    <div class="insight">
+                      Mobile is useful here because admins do not need the entire system on a phone. They need the few decisions that unblock revenue, fast.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="system" id="system">
+        <div class="container">
+          <h2 class="section-title">How The Resolution Loop Works</h2>
+          <p class="section-copy">
+            Instead of making admins browse multiple queue views, the mobile layer subscribes to the moments where workflow trust breaks down and turns each one into an explicit next action.
+          </p>
+
+          <div class="system-grid">
+            <article class="system-card">
+              <div class="system-step">01</div>
+              <h3>Watch for drift</h3>
+              <p>Ingest lifecycle events from Manage, Contracting, and portal updates. Score mismatches like missing writing numbers, stale reminders, or producer records that do not exist in both systems.</p>
+            </article>
+            <article class="system-card">
+              <div class="system-step">02</div>
+              <h3>Rank what matters</h3>
+              <p>Only action-ready blockers surface on mobile. Routine queue noise stays in the desktop product. The app is for exceptions that threaten time-to-ready-to-sell.</p>
+            </article>
+            <article class="system-card">
+              <div class="system-step">03</div>
+              <h3>Resolve in context</h3>
+              <p>Each card shows the missing field, sync confidence, audit trail, and next best action so the admin can approve, escalate, or message the producer immediately.</p>
+            </article>
+            <article class="system-card">
+              <div class="system-step">04</div>
+              <h3>Write back cleanly</h3>
+              <p>Every mobile action updates the underlying workflow with explicit state changes, comment history, and task ownership so support teams can trace what happened later.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="evidence">
+        <div class="container">
+          <div class="evidence-panel">
+            <h2 class="section-title" style="color:#fff;">Why This Is Credible For AgentSync</h2>
+            <p class="section-copy" style="color:rgba(255,255,255,0.78);">
+              This concept is anchored in AgentSync’s own public product and support content, not in guesswork. It targets the exact part of the workflow where automation still falls back to queue-monitoring and follow-up.
+            </p>
+
+            <div class="evidence-grid">
+              <div class="evidence-card">
+                <strong>Help center says sync is not bi-directional</strong>
+                <span>The public Producer Data Sync article states producers must be added via Manage for sync to work correctly, and Contracting-created records will not appear back in Manage.</span>
+              </div>
+              <div class="evidence-card">
+                <strong>Portal work can be “complete” outside the app</strong>
+                <span>The tracking article says portal assignments may need to be verified with the producer even after the producer marks them complete.</span>
+              </div>
+              <div class="evidence-card">
+                <strong>Review snippets show UX strain</strong>
+                <span>Public G2 and AppExchange snippets praise compliance depth but still mention reporting, Salesforce UI complexity, and implementation friction.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="container">
+          <div class="cta-card">
+            <div class="eyebrow" style="margin-bottom:14px;">Elinext POV</div>
+            <h2 class="section-title">The win is not “mobile for everything.” It is mobile for the 20 exceptions that actually slow revenue down.</h2>
+            <p>
+              Elinext can help AgentSync ship a focused operator mobile layer, harden state transitions with QA around sync-heavy workflows, and turn a queue-driven admin experience into a faster decision loop for compliance and contracting teams.
+            </p>
+            <a class="button button-primary" href="https://www.elinext.com/contacts/">Get in Touch</a>
+            <div class="footer-note">Prototype created for AgentSync on 2026-03-30 using only public product, help-center, review, and market signals.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
