@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HoneyBook Mobile - AI Teardown</title>
+  <meta name="description" content="What if HoneyBook's new AI follow-up layer felt quieter, clearer, and confidence-scored on mobile, so independent businesses saw signal instead of distraction?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/honeybook_2026-03-30_06-40-15/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-30_06-40-15/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-30_06-40-15/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="HoneyBook Mobile - AI Teardown">
+  <meta property="og:description" content="What if HoneyBook's AI follow-up suggestions were explainable, confidence-scored, and easy to mute, so the mobile app felt like signal instead of clutter?">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="HoneyBook Mobile - AI Teardown">
+  <meta name="twitter:description" content="A mobile concept for calmer, explainable AI follow-ups inside HoneyBook.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-30_06-40-15/og-image.jpg">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-30: iOS 4.77 (15672 reviews, source: iTunes Search API), Android 4.58 (2249 reviews, source: https://play.google.com/store/apps/details?id=com.honeybook.alfred) -->
+  <style>
+    :root {
+      --ink: #10202a;
+      --ink-2: #1b3342;
+      --paper: #f6f0e7;
+      --paper-2: #fff8ef;
+      --sand: #e7d7c0;
+      --gold: #f0a544;
+      --gold-deep: #d87a1e;
+      --moss: #2e6357;
+      --rose: #d86f5a;
+      --shadow: rgba(16, 32, 42, 0.18);
+      --line: rgba(16, 32, 42, 0.1);
+      --muted: #57656f;
+      --success: #1e8a62;
+      --warning: #d67a11;
+      --danger: #bf5047;
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --container: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(240, 165, 68, 0.22), transparent 28%),
+        radial-gradient(circle at 80% 12%, rgba(216, 111, 90, 0.18), transparent 20%),
+        linear-gradient(180deg, #f5ebdd 0%, #f7f1e8 48%, #fffdf7 100%);
+      min-height: 100vh;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-shell::before,
+    .page-shell::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      border-radius: 999px;
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .page-shell::before {
+      width: 420px;
+      height: 420px;
+      right: -120px;
+      top: 140px;
+      background: rgba(240, 165, 68, 0.16);
+    }
+
+    .page-shell::after {
+      width: 360px;
+      height: 360px;
+      left: -120px;
+      top: 880px;
+      background: rgba(46, 99, 87, 0.12);
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      width: min(var(--container), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 36px 0 56px;
+    }
+
+    .hero-card {
+      position: relative;
+      z-index: 3;
+      background:
+        linear-gradient(140deg, rgba(255, 248, 239, 0.98), rgba(246, 240, 231, 0.96)),
+        var(--paper);
+      border: 1px solid rgba(16, 32, 42, 0.08);
+      border-radius: 36px;
+      box-shadow: 0 24px 70px var(--shadow);
+      padding: 28px;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(115deg, rgba(240, 165, 68, 0.11), transparent 35%),
+        linear-gradient(300deg, rgba(46, 99, 87, 0.11), transparent 35%);
+      z-index: 0;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 18px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(16, 32, 42, 0.08);
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--ink-2);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .hero-copy {
+      text-align: center;
+      padding: 14px 12px 8px;
+    }
+
+    .brand-mark {
+      width: 88px;
+      height: 88px;
+      border-radius: 24px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 18px;
+      background: linear-gradient(160deg, var(--ink-2), #26485d);
+      box-shadow: 0 16px 30px rgba(16, 32, 42, 0.2);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+    }
+
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 18px;
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      font-family: "Fraunces", serif;
+      font-weight: 700;
+      line-height: 1.02;
+    }
+
+    h1 {
+      font-size: clamp(2.65rem, 5vw, 4.9rem);
+      max-width: 12ch;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-copy p {
+      max-width: 60ch;
+      margin: 18px auto 0;
+      font-size: 1.04rem;
+      line-height: 1.7;
+      color: var(--muted);
+      text-align: center;
+      display: block;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(16, 32, 42, 0.08);
+      border-radius: 20px;
+      padding: 16px 14px;
+      text-align: center;
+      display: block;
+      box-shadow: 0 12px 26px rgba(16, 32, 42, 0.06);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.45rem;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .stat span {
+      display: block;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+
+    .signal-panel {
+      position: relative;
+      z-index: 3;
+      background: linear-gradient(180deg, rgba(16, 32, 42, 0.98), rgba(24, 48, 61, 0.96));
+      border-radius: 30px;
+      padding: 22px;
+      color: #edf3f5;
+      box-shadow: 0 26px 60px rgba(16, 32, 42, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .signal-kicker {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(240, 165, 68, 0.14);
+      color: #ffd49f;
+      font-size: 0.82rem;
+      margin-bottom: 16px;
+    }
+
+    .signal-panel h2 {
+      font-size: clamp(1.9rem, 3vw, 2.8rem);
+      max-width: 11ch;
+      margin-bottom: 14px;
+    }
+
+    .signal-panel p {
+      margin: 0 0 20px;
+      color: rgba(237, 243, 245, 0.78);
+      line-height: 1.6;
+    }
+
+    .evidence-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .evidence-item {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 12px;
+      align-items: start;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 14px;
+    }
+
+    .evidence-item span,
+    .evidence-item strong {
+      display: block;
+    }
+
+    .evidence-item span {
+      color: #ffcb87;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .evidence-item strong {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #f8fafc;
+      font-weight: 500;
+    }
+
+    .section {
+      position: relative;
+      z-index: 2;
+      padding: 28px 0 68px;
+    }
+
+    .section-card {
+      background: rgba(255, 253, 247, 0.96);
+      border: 1px solid rgba(16, 32, 42, 0.08);
+      border-radius: 34px;
+      box-shadow: 0 22px 60px rgba(16, 32, 42, 0.1);
+      padding: 32px;
+    }
+
+    .section-head {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 26px;
+    }
+
+    .section-head .tiny {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--gold-deep);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(2rem, 3.6vw, 3.4rem);
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .section-head p {
+      margin: 0 auto;
+      color: var(--muted);
+      line-height: 1.72;
+      text-align: center;
+    }
+
+    .phone-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .phone-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(248,242,233,0.92));
+      border: 1px solid rgba(16, 32, 42, 0.08);
+      border-radius: 28px;
+      padding: 18px;
+      min-height: 100%;
+    }
+
+    .phone-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .phone-meta strong,
+    .phone-meta span {
+      display: block;
+    }
+
+    .phone-meta strong {
+      font-size: 1rem;
+    }
+
+    .phone-meta span {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .status-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .status-pill.current {
+      background: rgba(216, 111, 90, 0.12);
+      color: var(--danger);
+    }
+
+    .status-pill.future {
+      background: rgba(30, 138, 98, 0.12);
+      color: var(--success);
+    }
+
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4px 0 6px;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      border-radius: 38px;
+      background: #182d3b;
+      padding: 10px;
+      box-shadow: 0 20px 48px rgba(16, 32, 42, 0.26);
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 112px;
+      height: 22px;
+      border-radius: 0 0 16px 16px;
+      background: #0f1d27;
+      z-index: 3;
+    }
+
+    .phone-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background:
+        linear-gradient(180deg, #fff9f1 0%, #f8efe3 100%);
+      border-radius: 28px;
+      overflow: auto;
+      padding: 36px 14px 14px;
+      scrollbar-width: none;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .statusbar,
+    .mobile-card,
+    .mobile-title,
+    .mobile-sub,
+    .mobile-row,
+    .quick-actions,
+    .timeline,
+    .action-bar {
+      display: block;
+    }
+
+    .statusbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      color: #55636d;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #96a2aa;
+    }
+
+    .mobile-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      background: rgba(16, 32, 42, 0.06);
+      border: 1px solid rgba(16, 32, 42, 0.08);
+      border-radius: 999px;
+      font-size: 0.73rem;
+      color: var(--ink-2);
+      margin-bottom: 12px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .mobile-title {
+      font-size: 1.5rem;
+      line-height: 1.1;
+      margin: 0 0 8px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .mobile-sub {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 0.91rem;
+    }
+
+    .mobile-card {
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(16, 32, 42, 0.08);
+      border-radius: 20px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 12px 22px rgba(16, 32, 42, 0.05);
+    }
+
+    .mobile-card.noisy {
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,246,242,0.96));
+      border-color: rgba(216, 111, 90, 0.18);
+    }
+
+    .mobile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .badge {
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge.warn {
+      background: rgba(216, 111, 90, 0.14);
+      color: var(--danger);
+    }
+
+    .badge.gold {
+      background: rgba(240, 165, 68, 0.18);
+      color: var(--warning);
+    }
+
+    .badge.green {
+      background: rgba(30, 138, 98, 0.15);
+      color: var(--success);
+    }
+
+    .progress {
+      width: 100%;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(16, 32, 42, 0.08);
+      overflow: hidden;
+      margin: 10px 0;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .progress span.low {
+      width: 36%;
+      background: linear-gradient(90deg, #d86f5a, #f0a544);
+    }
+
+    .progress span.high {
+      width: 91%;
+      background: linear-gradient(90deg, #2e6357, #1e8a62);
+    }
+
+    .mobile-card h3 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+
+    .mobile-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 0.85rem;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .timeline-step {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .timeline-step i {
+      width: 10px;
+      height: 10px;
+      margin: 4px 0 0 4px;
+      border-radius: 999px;
+      background: var(--gold-deep);
+      display: block;
+    }
+
+    .timeline-step strong,
+    .timeline-step span {
+      display: block;
+    }
+
+    .timeline-step strong {
+      font-size: 0.86rem;
+      margin-bottom: 2px;
+    }
+
+    .timeline-step span {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .action {
+      border-radius: 16px;
+      padding: 11px 10px;
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid rgba(16, 32, 42, 0.08);
+      background: #fff;
+    }
+
+    .action.primary {
+      background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+      color: white;
+      border-color: transparent;
+    }
+
+    .action.soft {
+      background: rgba(16, 32, 42, 0.05);
+      color: var(--ink-2);
+    }
+
+    .action-bar {
+      position: sticky;
+      bottom: 0;
+      margin-top: 12px;
+      padding-top: 10px;
+      background: linear-gradient(180deg, rgba(248, 239, 227, 0.18), rgba(248, 239, 227, 0.96) 30%);
+    }
+
+    .action-bar .action {
+      width: 100%;
+    }
+
+    .list-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .insight-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(247,241,232,0.96));
+      border: 1px solid rgba(16, 32, 42, 0.08);
+      border-radius: 24px;
+      padding: 22px;
+      min-height: 100%;
+    }
+
+    .insight-card .num {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: rgba(240, 165, 68, 0.14);
+      color: var(--gold-deep);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .insight-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.06rem;
+      line-height: 1.25;
+    }
+
+    .insight-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.93rem;
+    }
+
+    .footer-cta {
+      padding: 0 0 72px;
+    }
+
+    .footer-card {
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(130deg, #112330, #1b3342 60%, #244353);
+      color: #f6f7f8;
+      border-radius: 34px;
+      padding: 34px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 24px 60px rgba(16, 32, 42, 0.24);
+    }
+
+    .footer-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(240,165,68,0.18), transparent 24%),
+        radial-gradient(circle at 88% 24%, rgba(46,99,87,0.2), transparent 22%);
+      z-index: 0;
+    }
+
+    .footer-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .footer-content h2 {
+      font-size: clamp(2rem, 3vw, 3rem);
+      max-width: 12ch;
+      margin-bottom: 10px;
+    }
+
+    .footer-content p {
+      margin: 0;
+      max-width: 60ch;
+      color: rgba(246, 247, 248, 0.8);
+      line-height: 1.65;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 188px;
+      padding: 16px 24px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 12px 28px rgba(216, 122, 30, 0.3);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    @media (max-width: 1080px) {
+      .hero-inner,
+      .phone-grid,
+      .list-grid,
+      .footer-content {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .footer-content {
+        justify-items: start;
+      }
+
+      .signal-panel h2 {
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hero-card,
+      .section-card,
+      .footer-card {
+        padding: 22px;
+        border-radius: 28px;
+      }
+
+      .hero-grid,
+      .list-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .phone-card {
+        padding: 14px;
+      }
+
+      .evidence-item {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: min(100% - 18px, 100%);
+      }
+
+      .hero {
+        padding-top: 14px;
+      }
+
+      h1 {
+        font-size: 2.7rem;
+      }
+
+      .phone {
+        width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="container">
+        <div class="hero-card">
+          <div class="hero-inner">
+            <div class="hero-copy">
+              <div class="eyebrow">Elinext mobile concept for HoneyBook</div>
+              <div class="brand-mark">
+                <img src="assets/honeybook-icon.jpg" alt="HoneyBook app icon">
+              </div>
+              <h1>What if HoneyBook's AI follow-ups felt like signal, not noise?</h1>
+              <p>
+                HoneyBook is shipping AI deeper into follow-ups, notes, and lead workflows. Public feedback says the opportunity is real, but so is the clutter. This concept turns that same data into a calmer mobile inbox with confidence, reason codes, and an actual off switch.
+              </p>
+              <div class="hero-grid">
+                <div class="stat">
+                  <strong>4.77 iOS</strong>
+                  <span>15,672 US ratings as of March 30, 2026</span>
+                </div>
+                <div class="stat">
+                  <strong>4.58 Android</strong>
+                  <span>2,249 global ratings and 100,000+ installs</span>
+                </div>
+                <div class="stat">
+                  <strong>28M+</strong>
+                  <span>client relationships powered, per HoneyBook</span>
+                </div>
+              </div>
+            </div>
+            <aside class="signal-panel">
+              <div class="signal-kicker">Why this matters now</div>
+              <h2>AI volume is rising faster than user trust.</h2>
+              <p>
+                HoneyBook's own roadmap now includes AI follow-up suggestions, AI Gmail suggestions, and AI notetaking. The public pain signal is not "do less AI." It is "make the AI legible, relevant, and easy to tame."
+              </p>
+              <div class="evidence-list">
+                <div class="evidence-item">
+                  <span>Recent review</span>
+                  <strong>A January 2026 Android user said the new AI feels distracting and asked for a way to turn it off.</strong>
+                </div>
+                <div class="evidence-item">
+                  <span>Roadmap</span>
+                  <strong>HoneyBook's August 2025 update says AI now identifies stale leads and drafts reconnect emails from the Contacts flow.</strong>
+                </div>
+                <div class="evidence-item">
+                  <span>Org signal</span>
+                  <strong>HoneyBook is hiring a Product Support Manager plus data roles, which usually means support load and product telemetry both matter right now.</strong>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section">
+        <div class="container">
+          <div class="section-card">
+            <div class="section-head">
+              <span class="tiny">Before / after</span>
+              <h2>One screen. Same goal. Better trust.</h2>
+              <p>
+                The left side shows how AI can feel when every suggestion lands with equal weight. The right side shows a quieter mobile model: ranked, explainable, and easy to dismiss without breaking the workflow.
+              </p>
+            </div>
+            <div class="phone-grid">
+              <article class="phone-card">
+                <div class="phone-meta">
+                  <div>
+                    <strong>Current mobile pattern</strong>
+                    <span>Feature-rich, but easy to overwhelm</span>
+                  </div>
+                  <div class="status-pill current">Current</div>
+                </div>
+                <div class="phone-wrap">
+                  <div class="phone">
+                    <div class="phone-screen">
+                      <div class="statusbar">
+                        <span>9:41</span>
+                        <div class="icons">
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                        </div>
+                      </div>
+                      <div class="mobile-chip">AI follow-ups</div>
+                      <h3 class="mobile-title">23 suggestions waiting</h3>
+                      <p class="mobile-sub">
+                        Every lead looks urgent. The user has to mentally sort weak nudges from real revenue risk.
+                      </p>
+                      <div class="mobile-card noisy">
+                        <div class="mobile-row">
+                          <span class="label">Possible follow-up</span>
+                          <span class="badge warn">AI draft ready</span>
+                        </div>
+                        <h3>Lead: Nora Photo Co.</h3>
+                        <p>Last reply 11 days ago. Proposal viewed once. No confidence, no reason score, no mute.</p>
+                        <div class="progress"><span class="low"></span></div>
+                        <div class="quick-actions">
+                          <div class="action soft">Edit</div>
+                          <div class="action soft">Send</div>
+                        </div>
+                      </div>
+                      <div class="mobile-card noisy">
+                        <div class="mobile-row">
+                          <span class="label">AI suggestion</span>
+                          <span class="badge gold">Reminder</span>
+                        </div>
+                        <h3>Lead: Bright Bloom</h3>
+                        <p>No explanation beyond "good time to reconnect." User still has to dig through the thread.</p>
+                      </div>
+                      <div class="mobile-card noisy">
+                        <div class="mobile-row">
+                          <span class="label">Invoice</span>
+                          <span class="badge warn">Needs review</span>
+                        </div>
+                        <h3>Project payment stalled</h3>
+                        <p>Billing friction and AI nudges share the same visual weight, which raises the noise floor.</p>
+                      </div>
+                      <div class="mobile-card">
+                        <div class="mobile-row">
+                          <span class="label">What users feel</span>
+                          <span class="badge warn">Support spike</span>
+                        </div>
+                        <p>Confusing automation, clutter at scale, and "AI everywhere" starts reading as product pressure.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="phone-card">
+                <div class="phone-meta">
+                  <div>
+                    <strong>Proposed mobile pattern</strong>
+                    <span>Signal-ranked and explainable</span>
+                  </div>
+                  <div class="status-pill future">Improved</div>
+                </div>
+                <div class="phone-wrap">
+                  <div class="phone">
+                    <div class="phone-screen">
+                      <div class="statusbar">
+                        <span>9:41</span>
+                        <div class="icons">
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                        </div>
+                      </div>
+                      <div class="mobile-chip">Follow-up control center</div>
+                      <h3 class="mobile-title">3 leads need you now</h3>
+                      <p class="mobile-sub">
+                        Suggestions are ranked by revenue risk and behavior change, not just inactivity.
+                      </p>
+                      <div class="mobile-card">
+                        <div class="mobile-row">
+                          <span class="label">Lead score</span>
+                          <span class="badge green">91% confidence</span>
+                        </div>
+                        <h3>Nora Photo Co.</h3>
+                        <p>Proposal viewed 3x in 24h. No reply for 9 days. Contract still unopened.</p>
+                        <div class="progress"><span class="high"></span></div>
+                        <div class="timeline">
+                          <div class="timeline-step">
+                            <i></i>
+                            <div>
+                              <strong>Why this surfaced</strong>
+                              <span>High intent, stale thread, above-average close probability for this segment.</span>
+                            </div>
+                          </div>
+                          <div class="timeline-step">
+                            <i></i>
+                            <div>
+                              <strong>Best next action</strong>
+                              <span>Send a short re-engagement note with scheduler link and open-proposal reminder.</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="quick-actions">
+                          <div class="action primary">Approve + send</div>
+                          <div class="action soft">Edit first</div>
+                          <div class="action soft">Snooze 3 days</div>
+                          <div class="action soft">Mute this signal</div>
+                        </div>
+                      </div>
+                      <div class="mobile-card">
+                        <div class="mobile-row">
+                          <span class="label">Workspace controls</span>
+                          <span class="badge gold">Balanced mode</span>
+                        </div>
+                        <p>Let teams reduce AI frequency for low-confidence nudges while keeping high-intent leads visible.</p>
+                      </div>
+                      <div class="mobile-card">
+                        <div class="mobile-row">
+                          <span class="label">Support trace</span>
+                          <span class="badge green">Event log attached</span>
+                        </div>
+                        <p>Every suggestion stores source events, confidence, and user action so support can diagnose bad recommendations fast.</p>
+                      </div>
+                      <div class="action-bar">
+                        <div class="action primary">Open all high-confidence leads</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-card">
+            <div class="section-head">
+              <span class="tiny">Why Nimrod should care</span>
+              <h2>This is a data problem disguised as a UX problem.</h2>
+              <p>
+                The mobile layer gets calmer only if the scoring, traceability, and feedback loops underneath it are strong. That makes this a natural conversation for a Director of Data Engineering, not just a design review.
+              </p>
+            </div>
+            <div class="list-grid">
+              <div class="insight-card">
+                <div class="num">01</div>
+                <h3>Explainability event model</h3>
+                <p>
+                  Each suggestion should carry reason codes like stale thread, proposal reopened, invoice pending, or repeated scheduler views. That makes the AI legible and measurable.
+                </p>
+              </div>
+              <div class="insight-card">
+                <div class="num">02</div>
+                <h3>Feedback that actually teaches the model</h3>
+                <p>
+                  Approve, edit, snooze, and mute are not just UI actions. They are high-value labels that can reduce weak follow-up spam and improve confidence thresholds over time.
+                </p>
+              </div>
+              <div class="insight-card">
+                <div class="num">03</div>
+                <h3>Support-ready diagnostics</h3>
+                <p>
+                  When users question a suggestion or a payment flow, support should see the full event trail instantly. That reduces handoffs, shortens resolution time, and protects trust.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-cta">
+      <div class="container">
+        <div class="footer-card">
+          <div class="footer-content">
+            <div>
+              <h2>Built for HoneyBook's next AI chapter.</h2>
+              <p>
+                Elinext can help turn high-volume CRM and payments workflows into cleaner mobile surfaces backed by stronger telemetry, faster support loops, and more trustworthy AI behavior.
+              </p>
+            </div>
+            <a class="cta-button" href="https://www.elinext.com/contacts/">Get in Touch</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
