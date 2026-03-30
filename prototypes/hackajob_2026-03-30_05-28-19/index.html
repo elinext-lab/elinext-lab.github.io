@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hackajob Mobile Teardown | Elinext</title>
+  <meta name="description" content="A mobile concept for hackajob that turns Archer’s relevance into candidate confidence with next-step timelines, response expectations, and recruiter rescue flows.">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/hackajob_2026-03-30_05-28-19/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/hackajob_2026-03-30_05-28-19/">
+  <meta property="og:title" content="hackajob Mobile — AI Teardown">
+  <meta property="og:description" content="What if Archer gave every matched candidate a mobile confidence score, next-step timeline, and response ETA so interview conversion rises without changing the ATS workflow?">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/hackajob_2026-03-30_05-28-19/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <!-- Ratings as of 2026-03-30: iOS n/a (no matching US or GB App Store listing for hackajob / Archer, source: iTunes Search API), Android n/a (no matching public Google Play listing for hackajob / Archer, source: google-play-scraper search) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f1e8;
+      --bg-deep: #102521;
+      --bg-moss: #16322d;
+      --ink: #12231e;
+      --muted: #5d6f69;
+      --panel: rgba(255, 251, 244, 0.94);
+      --panel-strong: #fffcf6;
+      --line: rgba(18, 35, 30, 0.12);
+      --green: #14b86a;
+      --green-deep: #0f8e53;
+      --green-soft: #d6f5e6;
+      --sand: #f0dfbf;
+      --amber: #ffb648;
+      --rose: #ef7d6d;
+      --navy: #172b46;
+      --blue-soft: #dde8ff;
+      --shadow: 0 28px 70px rgba(16, 37, 33, 0.12);
+      --radius-xl: 36px;
+      --radius-lg: 28px;
+      --radius-md: 22px;
+      --radius-sm: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Sora", sans-serif;
+      color: var(--ink);
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(20, 184, 106, 0.16), transparent 24%),
+        radial-gradient(circle at 86% 14%, rgba(255, 182, 72, 0.18), transparent 24%),
+        linear-gradient(180deg, #f7f4eb 0%, #efe8da 52%, #efe8da 100%);
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      z-index: 0;
+      pointer-events: none;
+      border-radius: 999px;
+      filter: blur(16px);
+      opacity: 0.72;
+    }
+
+    body::before {
+      width: 320px;
+      height: 320px;
+      top: 3%;
+      right: -100px;
+      background: radial-gradient(circle, rgba(20, 184, 106, 0.18), transparent 70%);
+    }
+
+    body::after {
+      width: 380px;
+      height: 380px;
+      left: -140px;
+      bottom: 10%;
+      background: radial-gradient(circle, rgba(23, 43, 70, 0.14), transparent 68%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(1200px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 26px 0 44px;
+    }
+
+    .panel {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.76);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(130deg, rgba(255, 255, 255, 0.52), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 60%);
+    }
+
+    .panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      padding: 34px;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 22px;
+    }
+
+    .brand-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(18, 35, 30, 0.08);
+      box-shadow: 0 10px 24px rgba(18, 35, 30, 0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-pill img {
+      display: block;
+      height: 28px;
+      width: auto;
+    }
+
+    .brand-pill span {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .hero-copy {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin: 0 auto 18px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green-deep);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Fraunces", serif;
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 0 auto 22px;
+      font-size: clamp(3rem, 7vw, 5.7rem);
+    }
+
+    .hero-copy p {
+      max-width: 760px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 22px;
+      margin-top: 30px;
+      align-items: stretch;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(18, 35, 30, 0.08);
+    }
+
+    .stat strong,
+    .stat span {
+      display: block;
+      text-align: center;
+    }
+
+    .stat strong {
+      margin-bottom: 8px;
+      font-size: 1.45rem;
+      color: var(--bg-deep);
+    }
+
+    .stat span {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .signal-card {
+      padding: 22px;
+      border-radius: var(--radius-lg);
+      color: #f9fff7;
+      background:
+        linear-gradient(160deg, rgba(16, 37, 33, 0.96), rgba(20, 53, 47, 0.94));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .signal-card h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 14px;
+    }
+
+    .signal-card p {
+      margin: 0 0 18px;
+      color: rgba(249, 255, 247, 0.74);
+      line-height: 1.75;
+      font-size: 0.95rem;
+    }
+
+    .signal-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .signal-item {
+      display: grid;
+      grid-template-columns: 86px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .signal-item strong {
+      display: block;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #93e4b6;
+    }
+
+    .signal-item span {
+      display: block;
+      color: rgba(249, 255, 247, 0.84);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .section {
+      margin-top: 20px;
+      padding: 30px;
+    }
+
+    .section-head {
+      max-width: 760px;
+      margin: 0 auto 26px;
+      text-align: center;
+    }
+
+    .section-head p {
+      margin: 14px auto 0;
+      color: var(--muted);
+      line-height: 1.78;
+      font-size: 0.98rem;
+    }
+
+    .phone-stage {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .device {
+      width: 320px;
+    }
+
+    .device-label {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .device-label span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(18, 35, 30, 0.06);
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      margin: 0 auto;
+      padding: 12px;
+      border-radius: 40px;
+      background:
+        linear-gradient(180deg, #223737 0%, #0d1718 100%);
+      box-shadow:
+        0 18px 44px rgba(16, 37, 33, 0.24),
+        inset 0 2px 10px rgba(255, 255, 255, 0.08);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      width: 116px;
+      height: 24px;
+      margin-left: -58px;
+      border-radius: 0 0 16px 16px;
+      background: #050909;
+      z-index: 3;
+    }
+
+    .phone-shell {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      border-radius: 30px;
+      padding: 36px 14px 14px;
+      background: linear-gradient(180deg, #f8f7f1 0%, #f2ede2 100%);
+      border: 1px solid rgba(255, 255, 255, 0.44);
+      scrollbar-width: none;
+    }
+
+    .phone-shell::-webkit-scrollbar {
+      display: none;
+    }
+
+    .statusbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 0.76rem;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .statusbar .dots {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .statusbar .dots i {
+      display: block;
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--ink);
+      opacity: 0.7;
+    }
+
+    .app-card,
+    .tile,
+    .quote-card,
+    .value-card,
+    .cta-band {
+      background: var(--panel-strong);
+      border: 1px solid rgba(18, 35, 30, 0.08);
+      box-shadow: 0 16px 30px rgba(18, 35, 30, 0.07);
+    }
+
+    .app-card {
+      padding: 16px;
+      border-radius: 24px;
+      margin-bottom: 12px;
+    }
+
+    .app-head {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .app-head img {
+      display: block;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+    }
+
+    .app-head strong,
+    .app-head span {
+      display: block;
+    }
+
+    .app-head strong {
+      font-size: 0.92rem;
+    }
+
+    .app-head span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-top: 4px;
+    }
+
+    .subtle-pill,
+    .metric,
+    .tag,
+    .mini-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .subtle-pill {
+      padding: 7px 10px;
+      background: rgba(20, 184, 106, 0.12);
+      color: var(--green-deep);
+    }
+
+    .metric-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .metric {
+      padding: 8px 10px;
+      background: rgba(23, 43, 70, 0.08);
+      color: var(--navy);
+    }
+
+    .headline {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .body-copy {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.65;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .step i {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(20, 184, 106, 0.16);
+      color: var(--green-deep);
+      font-style: normal;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    .step strong,
+    .step span {
+      display: block;
+    }
+
+    .step strong {
+      font-size: 0.78rem;
+      margin-bottom: 4px;
+    }
+
+    .step span {
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.5;
+    }
+
+    .progress {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(18, 35, 30, 0.08);
+      margin: 12px 0 8px;
+    }
+
+    .progress > span {
+      display: block;
+      height: 100%;
+      width: 42%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--amber), var(--green));
+    }
+
+    .stack {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .tile {
+      padding: 14px;
+      border-radius: 20px;
+    }
+
+    .tile h3 {
+      font-size: 1.16rem;
+      margin-bottom: 8px;
+    }
+
+    .tile p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.6;
+    }
+
+    .tile .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .tag {
+      padding: 7px 10px;
+      background: rgba(20, 184, 106, 0.12);
+      color: var(--green-deep);
+    }
+
+    .tile.warning {
+      background: linear-gradient(180deg, #fff7ec 0%, #fff2da 100%);
+    }
+
+    .tile.warning .tag {
+      background: rgba(255, 182, 72, 0.18);
+      color: #946307;
+    }
+
+    .tile.navy {
+      background: linear-gradient(180deg, #edf2ff 0%, #e7edff 100%);
+    }
+
+    .tile.navy .tag {
+      background: rgba(23, 43, 70, 0.12);
+      color: var(--navy);
+    }
+
+    .quote-grid,
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .quote-card,
+    .value-card {
+      padding: 20px;
+      border-radius: 24px;
+    }
+
+    .quote-card strong,
+    .quote-card span,
+    .value-card strong,
+    .value-card span {
+      display: block;
+    }
+
+    .quote-card strong,
+    .value-card strong {
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+
+    .quote-card span,
+    .value-card span {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.9rem;
+    }
+
+    .quote-card em {
+      display: block;
+      margin-top: 12px;
+      color: var(--green-deep);
+      font-style: normal;
+      font-size: 0.77rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .cta-band {
+      margin-top: 20px;
+      padding: 30px;
+      border-radius: 32px;
+      text-align: center;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(247, 255, 250, 0.96));
+    }
+
+    .cta-band h2 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      margin-bottom: 12px;
+    }
+
+    .cta-band p {
+      max-width: 660px;
+      margin: 0 auto 20px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-deep) 100%);
+      color: white;
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 18px 30px rgba(20, 184, 106, 0.22);
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.6;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: rise 0.8s ease forwards;
+    }
+
+    .delay-1 { animation-delay: 0.08s; }
+    .delay-2 { animation-delay: 0.16s; }
+    .delay-3 { animation-delay: 0.24s; }
+    .delay-4 { animation-delay: 0.32s; }
+
+    @keyframes rise {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .hero-grid,
+      .quote-grid,
+      .value-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(100%, calc(100% - 16px));
+        padding-top: 16px;
+      }
+
+      .hero,
+      .section,
+      .cta-band {
+        padding: 22px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .device {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2.55rem;
+      }
+
+      h2 {
+        font-size: 2rem;
+      }
+
+      .hero-copy p,
+      .section-head p {
+        font-size: 0.92rem;
+      }
+
+      .brand-pill {
+        padding: 10px 14px;
+      }
+
+      .phone {
+        width: 300px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="panel hero">
+      <div class="hero-top">
+        <div class="brand-pill reveal">
+          <img src="assets/logo-dark.svg" alt="hackajob">
+          <span>Elinext Mobile Teardown</span>
+        </div>
+      </div>
+      <div class="hero-copy">
+        <div class="eyebrow reveal delay-1">Archer Confidence Queue</div>
+        <h1 class="reveal delay-2">What if Archer fixed the silence after the match?</h1>
+        <p class="reveal delay-3">
+          Public feedback says the relevance is strong, but trust starts leaking once a candidate is matched and then waits for the next signal. This concept adds a mobile confidence layer for candidates and a rescue queue for recruiters without breaking hackajob’s ATS-first workflow.
+        </p>
+      </div>
+      <div class="hero-grid">
+        <div class="stats reveal delay-3">
+          <article class="stat">
+            <strong>4.2 / 5</strong>
+            <span>Trustpilot rating from 1,329 reviews</span>
+          </article>
+          <article class="stat">
+            <strong>4.8 / 5</strong>
+            <span>G2 rating from 123 verified reviews</span>
+          </article>
+          <article class="stat">
+            <strong>1.5M</strong>
+            <span>Vetted knowledge workers on the network</span>
+          </article>
+          <article class="stat">
+            <strong>15x</strong>
+            <span>Higher conversion claim on Archer landing page</span>
+          </article>
+        </div>
+        <aside class="signal-card reveal delay-4">
+          <h2>The real gap</h2>
+          <p>hackajob already sells fit. The product wedge is making that fit feel real after the first touch, especially when candidates are off desktop and recruiters are moving between ATS, email, and interviews.</p>
+          <div class="signal-list">
+            <div class="signal-item">
+              <strong>Trustpilot</strong>
+              <span>Users want a more interactive flow once companies show interest.</span>
+            </div>
+            <div class="signal-item">
+              <strong>G2</strong>
+              <span>Reviewers ask for more frequent updates and notifications when activity starts.</span>
+            </div>
+            <div class="signal-item">
+              <strong>Reddit</strong>
+              <span>Multiple threads describe long quiet periods after signup or outreach.</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-head">
+        <div class="eyebrow">Before / After</div>
+        <h2>From vague matching to visible momentum</h2>
+        <p>The concept keeps Archer’s core promise intact, but makes the next step explicit. Candidates see why they fit and when they should expect movement. Recruiters see who is about to go cold before interview intent collapses.</p>
+      </div>
+
+      <div class="phone-stage">
+        <div class="device reveal">
+          <div class="device-label"><span>Current State</span></div>
+          <div class="phone">
+            <div class="phone-shell">
+              <div class="statusbar">
+                <span>9:41</span>
+                <span class="dots"><i></i><i></i><i></i></span>
+              </div>
+              <div class="app-card">
+                <div class="app-head">
+                  <img src="assets/archer-icon.png" alt="Archer">
+                  <div>
+                    <strong>Archer</strong>
+                    <span>Candidate inbox</span>
+                  </div>
+                </div>
+                <div class="metric-row">
+                  <span class="metric">3 new roles</span>
+                  <span class="metric">1 requested CV</span>
+                </div>
+                <span class="headline">You look like a strong fit for Senior Mobile Engineer</span>
+                <span class="body-copy">A strong company is interested. Complete your profile and wait to hear back.</span>
+                <div class="progress"><span></span></div>
+                <span class="body-copy">No visible reply window. No timeline. No confidence signal.</span>
+              </div>
+
+              <div class="stack">
+                <div class="tile warning">
+                  <h3>What candidates feel</h3>
+                  <p>The match exists, but not much explains whether it is real momentum or just another platform notification.</p>
+                  <div class="tag-row">
+                    <span class="tag">low clarity</span>
+                    <span class="tag">weak status</span>
+                  </div>
+                </div>
+                <div class="tile">
+                  <h3>Quiet after intent</h3>
+                  <p>Once someone replies or uploads details, the next step can disappear into ATS handoffs and recruiter inboxes.</p>
+                  <div class="tag-row">
+                    <span class="tag">drop-off risk</span>
+                    <span class="tag">ghosting perception</span>
+                  </div>
+                </div>
+                <div class="tile navy">
+                  <h3>Mismatched confidence</h3>
+                  <p>Even a relevant role feels generic when fit evidence and expected response timing are hidden.</p>
+                  <div class="tag-row">
+                    <span class="tag">trust leak</span>
+                    <span class="tag">lower conversion</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="device reveal delay-1">
+          <div class="device-label"><span>Candidate Upgrade</span></div>
+          <div class="phone">
+            <div class="phone-shell">
+              <div class="statusbar">
+                <span>9:41</span>
+                <span class="dots"><i></i><i></i><i></i></span>
+              </div>
+
+              <div class="app-card">
+                <div class="app-head">
+                  <img src="assets/archer-icon.png" alt="Archer">
+                  <div>
+                    <strong>Archer Match</strong>
+                    <span>Confidence queue</span>
+                  </div>
+                </div>
+                <span class="subtle-pill">91% match confidence</span>
+                <span class="headline" style="margin-top: 12px;">Senior Mobile Engineer at a listed enterprise client</span>
+                <span class="body-copy">Why you match: shipped React Native features, led interview loops, and meet right-to-work plus hybrid requirements.</span>
+                <div class="metric-row" style="margin-top: 12px;">
+                  <span class="metric">Reply ETA 24h</span>
+                  <span class="metric">2 must-haves met</span>
+                  <span class="metric">1 follow-up needed</span>
+                </div>
+                <div class="timeline">
+                  <div class="step">
+                    <i>1</i>
+                    <div>
+                      <strong>Confirm interest now</strong>
+                      <span>One tap keeps you in the live shortlist and syncs the employer source tag.</span>
+                    </div>
+                  </div>
+                  <div class="step">
+                    <i>2</i>
+                    <div>
+                      <strong>Add one proof point</strong>
+                      <span>Archer asks for the exact experience missing from the brief instead of a full profile rewrite.</span>
+                    </div>
+                  </div>
+                  <div class="step">
+                    <i>3</i>
+                    <div>
+                      <strong>Track next milestone</strong>
+                      <span>A visible timer shows when the recruiter or ATS should update the status.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="stack">
+                <div class="tile">
+                  <h3>Why this feels better</h3>
+                  <p>The candidate sees evidence, not vague optimism. That reduces the “upload and wait” feeling immediately.</p>
+                  <div class="tag-row">
+                    <span class="tag">fit evidence</span>
+                    <span class="tag">clear next step</span>
+                  </div>
+                </div>
+                <div class="tile navy">
+                  <h3>Trust stays owned</h3>
+                  <p>Even if the application finishes in an external ATS, Archer still owns the timeline and mobile nudges.</p>
+                  <div class="tag-row">
+                    <span class="tag">ATS-safe</span>
+                    <span class="tag">status clarity</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="device reveal delay-2">
+          <div class="device-label"><span>Recruiter Rescue Queue</span></div>
+          <div class="phone">
+            <div class="phone-shell">
+              <div class="statusbar">
+                <span>9:41</span>
+                <span class="dots"><i></i><i></i><i></i></span>
+              </div>
+
+              <div class="app-card">
+                <div class="app-head">
+                  <img src="assets/archer-icon.png" alt="Archer">
+                  <div>
+                    <strong>Rescue Queue</strong>
+                    <span>High-intent follow-up</span>
+                  </div>
+                </div>
+                <div class="metric-row">
+                  <span class="metric">8 candidates warming</span>
+                  <span class="metric">3 need reply today</span>
+                </div>
+                <span class="headline">Do not lose the strongest matches to silence</span>
+                <span class="body-copy">Recruiters see which Archer-sourced candidates have strong fit plus expiring intent, with the shortest action path back into the existing workflow.</span>
+              </div>
+
+              <div class="stack">
+                <div class="tile">
+                  <h3>Riya S.</h3>
+                  <p>89% fit. Profile viewed. Waiting 19 hours since interest confirmed.</p>
+                  <div class="tag-row">
+                    <span class="tag">send update</span>
+                    <span class="tag">book screen</span>
+                  </div>
+                </div>
+                <div class="tile warning">
+                  <h3>Alex M.</h3>
+                  <p>91% fit. ATS application incomplete. Archer can prompt for the missing project proof on mobile.</p>
+                  <div class="tag-row">
+                    <span class="tag">rescue now</span>
+                    <span class="tag">1 blocker</span>
+                  </div>
+                </div>
+                <div class="tile navy">
+                  <h3>Why it matters</h3>
+                  <p>hackajob keeps the conversion lift it claims publicly by protecting the moment between sourcing and real recruiter action.</p>
+                  <div class="tag-row">
+                    <span class="tag">better yield</span>
+                    <span class="tag">less admin</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-head">
+        <div class="eyebrow">Evidence</div>
+        <h2>Why this concept is plausible</h2>
+        <p>The prototype is anchored in public signals, not guesswork. The goal is to increase confidence and conversion without replacing the existing web platform or ATS integrations.</p>
+      </div>
+
+      <div class="quote-grid">
+        <article class="quote-card reveal">
+          <strong>Strong product, thin follow-through</strong>
+          <span>Trustpilot and Reddit both point to the same issue: people like the idea and sometimes the outcomes, but they want more visible motion after interest is shown.</span>
+          <em>Trustpilot + Reddit</em>
+        </article>
+        <article class="quote-card reveal delay-1">
+          <strong>Notifications are part of the value</strong>
+          <span>G2 feedback explicitly asks for more frequent updates when companies start searching or interacting, which makes a mobile layer a direct product response.</span>
+          <em>G2 reviews</em>
+        </article>
+        <article class="quote-card reveal delay-2">
+          <strong>ATS remains the operating system</strong>
+          <span>Archer already routes into existing employer workflows. The right mobile product is an engagement shell, not a workflow rewrite.</span>
+          <em>Official Archer + integrations pages</em>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-head">
+        <div class="eyebrow">Executive Angle</div>
+        <h2>Why this matters for Mark Chaffey</h2>
+        <p>The company story is relevance, quality, and lower recruiter admin. A mobile confidence layer sharpens all three without making hackajob look like it is abandoning the ATS-first architecture that helps it sell.</p>
+      </div>
+
+      <div class="value-grid">
+        <article class="value-card reveal">
+          <strong>Protect the brand promise</strong>
+          <span>If Archer says “you genuinely match,” the product should keep proving that after the match, not stop at the first notification.</span>
+        </article>
+        <article class="value-card reveal delay-1">
+          <strong>Increase interview yield</strong>
+          <span>High-fit candidates are most valuable when their intent stays warm. Mobile nudges and visible response windows reduce passive drop-off.</span>
+        </article>
+        <article class="value-card reveal delay-2">
+          <strong>Stay ATS compatible</strong>
+          <span>The concept adds a mobile engagement shell on top of current routing, source tracking, and recruiter workflows instead of replacing them.</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta-band panel">
+      <div class="eyebrow">Elinext Point Of View</div>
+      <h2>Mobile is the missing trust layer</h2>
+      <p>Archer already knows how to match. The next gain is showing candidates and recruiters exactly what happens next, on a device they actually react to in real time.</p>
+      <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+      <div class="footer-note">Concept built for hackajob by Elinext. Public signals used: hackajob product pages, Trustpilot, G2, and Reddit discussions reviewed on 2026-03-30.</div>
+    </section>
+  </main>
+</body>
+</html>
