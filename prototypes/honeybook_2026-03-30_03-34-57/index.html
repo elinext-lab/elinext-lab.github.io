@@ -1,0 +1,1048 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HoneyBook Mobile — AI Teardown</title>
+  <meta name="description" content="What if HoneyBook turned slow, buried mobile lead work into one instant control center that surfaces silent leads, proposal risk, and next actions before users bounce back to desktop?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/honeybook_2026-03-30_03-34-57/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-30_03-34-57/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-30_03-34-57/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="HoneyBook Mobile — AI Teardown">
+  <meta property="og:description" content="What if HoneyBook turned slow, buried mobile lead work into one instant control center that surfaces silent leads, proposal risk, and next actions before users bounce back to desktop?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="HoneyBook Mobile — AI Teardown">
+  <meta name="twitter:description" content="A mobile Lead Pulse concept for HoneyBook that reduces menu hunting and brings revenue-critical actions into one AI-assisted screen.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-30_03-34-57/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Ratings as of 2026-03-30: iOS 4.77 (15672 reviews, source: iTunes API), Android 4.58 (2249 reviews, source: Google Play scraper for https://play.google.com/store/apps/details?id=com.honeybook.alfred&hl=en_US&gl=US) -->
+  <style>
+    :root {
+      --bg: #120f0a;
+      --bg-soft: #20180f;
+      --panel: #f8f1e5;
+      --panel-dark: #1b1914;
+      --ink: #1c1711;
+      --ink-soft: #61523c;
+      --line: rgba(28, 23, 17, 0.1);
+      --gold: #f1b74a;
+      --gold-deep: #d38b0d;
+      --copper: #c9653b;
+      --sage: #7f9476;
+      --alert: #d14f3f;
+      --cream: #fffaf2;
+      --white: #ffffff;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.22);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Instrument Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(241, 183, 74, 0.18), transparent 28%),
+        radial-gradient(circle at 85% 18%, rgba(201, 101, 59, 0.16), transparent 24%),
+        linear-gradient(180deg, #0f0d09 0%, #17120d 34%, #20180f 100%);
+      min-height: 100vh;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      z-index: 0;
+      border-radius: 999px;
+      filter: blur(40px);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    body::before {
+      width: 360px;
+      height: 360px;
+      top: -120px;
+      right: -100px;
+      background: rgba(241, 183, 74, 0.24);
+    }
+
+    body::after {
+      width: 280px;
+      height: 280px;
+      bottom: 10%;
+      left: -80px;
+      background: rgba(127, 148, 118, 0.18);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    .surface {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 30px;
+      background:
+        linear-gradient(135deg, rgba(255, 248, 237, 0.96), rgba(245, 232, 209, 0.98)),
+        var(--panel);
+    }
+
+    .topline {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.84);
+      border-radius: 999px;
+      border: 1px solid rgba(28, 23, 17, 0.08);
+      font-size: 13px;
+      color: var(--ink-soft);
+      letter-spacing: 0.02em;
+      margin: 0 auto 18px;
+    }
+
+    .topline strong {
+      color: var(--ink);
+    }
+
+    .hero-copy {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .brandmark {
+      width: 78px;
+      height: 78px;
+      margin: 0 auto 18px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #ffe8a6, #f1b74a);
+      box-shadow: 0 18px 40px rgba(211, 139, 13, 0.22);
+      padding: 10px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2.2rem, 4vw, 4.6rem);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+      color: var(--ink);
+    }
+
+    .hero h1 span {
+      color: var(--gold-deep);
+    }
+
+    .hero p {
+      max-width: 690px;
+      margin: 18px auto 0;
+      font-size: clamp(1rem, 1.6vw, 1.2rem);
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 24px auto 12px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(28, 23, 17, 0.08);
+      font-size: 14px;
+      color: var(--ink-soft);
+    }
+
+    .chip strong {
+      color: var(--ink);
+    }
+
+    .phones-stage {
+      margin-top: 32px;
+      padding: 30px 18px 14px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(241, 183, 74, 0.16), transparent 42%),
+        #17120f;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .phones-intro {
+      text-align: center;
+      color: rgba(255, 250, 242, 0.76);
+      max-width: 620px;
+      margin: 0 auto 24px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .phone-grid {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .phone-wrap {
+      width: min-content;
+      text-align: center;
+    }
+
+    .phone-kicker {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 250, 242, 0.84);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .phone-title {
+      margin: 0 0 12px;
+      color: var(--white);
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      padding: 10px;
+      border-radius: 42px;
+      background: linear-gradient(180deg, #38322a, #0d0c0b);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 26px 54px rgba(0, 0, 0, 0.34);
+      position: relative;
+      isolation: isolate;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 9px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(10, 10, 10, 0.96);
+      z-index: 3;
+    }
+
+    .screen {
+      position: relative;
+      height: 100%;
+      padding: 36px 14px 14px;
+      border-radius: 32px;
+      overflow: auto;
+      text-align: left;
+      scrollbar-width: none;
+    }
+
+    .screen::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .screen.current {
+      background:
+        linear-gradient(180deg, #fff8ef 0%, #f4ebe0 100%);
+      color: var(--ink);
+    }
+
+    .screen.future {
+      background:
+        linear-gradient(180deg, #1b1610 0%, #282016 100%);
+      color: var(--white);
+    }
+
+    .statusbar {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      z-index: 2;
+      opacity: 0.8;
+    }
+
+    .app-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .app-head img {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+    }
+
+    .app-head h3,
+    .app-head p {
+      margin: 0;
+    }
+
+    .app-head h3 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .app-head p {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    .subtabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      overflow: auto;
+      scrollbar-width: none;
+    }
+
+    .subtabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .pill {
+      padding: 8px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+      font-size: 12px;
+      border: 1px solid transparent;
+    }
+
+    .current .pill {
+      background: rgba(28, 23, 17, 0.06);
+      color: var(--ink-soft);
+    }
+
+    .current .pill.active {
+      background: var(--white);
+      color: var(--ink);
+      border-color: rgba(28, 23, 17, 0.08);
+      box-shadow: 0 10px 24px rgba(52, 38, 18, 0.08);
+    }
+
+    .future .pill {
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .future .pill.active {
+      background: linear-gradient(180deg, #f3bf5a, #dfa039);
+      color: #1a140d;
+      font-weight: 700;
+    }
+
+    .stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .card {
+      display: block;
+      border-radius: 20px;
+      padding: 14px;
+    }
+
+    .current .card {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(28, 23, 17, 0.08);
+      box-shadow: 0 12px 28px rgba(72, 50, 21, 0.08);
+    }
+
+    .future .card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .card h4,
+    .card p {
+      margin: 0;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.68;
+      margin-bottom: 8px;
+    }
+
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .metric strong {
+      font-size: 15px;
+      letter-spacing: -0.02em;
+    }
+
+    .metric span {
+      font-size: 12px;
+      opacity: 0.72;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .current .badge.warn {
+      background: rgba(209, 79, 63, 0.12);
+      color: var(--alert);
+    }
+
+    .current .badge.soft {
+      background: rgba(127, 148, 118, 0.14);
+      color: #5d7354;
+    }
+
+    .future .badge.warn {
+      background: rgba(241, 183, 74, 0.16);
+      color: #ffd888;
+    }
+
+    .future .badge.soft {
+      background: rgba(127, 148, 118, 0.18);
+      color: #cad7c4;
+    }
+
+    .muted-line {
+      margin-top: 10px;
+      font-size: 12px;
+      line-height: 1.55;
+      opacity: 0.74;
+    }
+
+    .skeleton {
+      display: grid;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .skeleton span {
+      display: block;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(28, 23, 17, 0.08), rgba(28, 23, 17, 0.16), rgba(28, 23, 17, 0.08));
+    }
+
+    .skeleton span:nth-child(1) { width: 82%; }
+    .skeleton span:nth-child(2) { width: 100%; }
+    .skeleton span:nth-child(3) { width: 64%; }
+
+    .future .hero-card {
+      background:
+        linear-gradient(180deg, rgba(241, 183, 74, 0.2), rgba(201, 101, 59, 0.14)),
+        rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(241, 183, 74, 0.28);
+    }
+
+    .hero-card .big {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.6rem;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 10px;
+    }
+
+    .split {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 12px;
+    }
+
+    .mini {
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      min-height: 78px;
+    }
+
+    .mini strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .mini span {
+      font-size: 11px;
+      line-height: 1.5;
+      opacity: 0.78;
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .current .btn {
+      background: rgba(28, 23, 17, 0.08);
+      color: var(--ink-soft);
+    }
+
+    .future .btn.primary {
+      background: linear-gradient(180deg, #f3bf5a, #dea039);
+      color: #1a140d;
+    }
+
+    .future .btn.secondary {
+      background: rgba(255, 255, 255, 0.09);
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .proof {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 26px;
+    }
+
+    .proof-card,
+    .system-card,
+    .cta-card {
+      display: block;
+      background: var(--panel);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .proof-card {
+      padding: 20px;
+    }
+
+    .proof-card .num {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(241, 183, 74, 0.16);
+      color: var(--gold-deep);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .proof-card h3,
+    .system-card h3,
+    .cta-card h2 {
+      margin: 0 0 10px;
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: -0.03em;
+    }
+
+    .proof-card p,
+    .system-card p,
+    .cta-card p {
+      margin: 0;
+      line-height: 1.7;
+      color: var(--ink-soft);
+    }
+
+    .section-title {
+      margin: 42px 0 18px;
+      padding: 0 2px;
+      color: var(--white);
+    }
+
+    .section-title span {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 250, 242, 0.84);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(1.8rem, 2.8vw, 3rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .section-title p {
+      max-width: 700px;
+      margin: 12px 0 0;
+      line-height: 1.7;
+      color: rgba(255, 250, 242, 0.76);
+    }
+
+    .system-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 1fr;
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .system-card {
+      padding: 22px;
+    }
+
+    .system-card.dark {
+      background: #17120f;
+      color: var(--white);
+      border-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .system-card.dark p {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .bullet-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .bullet {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: inherit;
+    }
+
+    .bullet::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-top: 8px;
+      flex: none;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #f3bf5a, #dea039);
+      box-shadow: 0 0 0 5px rgba(241, 183, 74, 0.12);
+    }
+
+    .cta-card {
+      margin-top: 24px;
+      padding: 28px;
+      background:
+        linear-gradient(135deg, rgba(255, 248, 237, 0.98), rgba(244, 232, 214, 0.98)),
+        var(--panel);
+    }
+
+    .cta-layout {
+      display: grid;
+      grid-template-columns: 1.1fr auto;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px 24px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #f3bf5a, #dea039);
+      color: #1a140d;
+      font-weight: 700;
+      box-shadow: 0 16px 34px rgba(211, 139, 13, 0.26);
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 13px;
+      color: rgba(255, 250, 242, 0.64);
+    }
+
+    @media (max-width: 1024px) {
+      .proof,
+      .system-grid,
+      .cta-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(100% - 22px, 1180px);
+        padding-top: 16px;
+      }
+
+      .hero {
+        padding: 22px;
+      }
+
+      .phones-stage {
+        padding: 22px 10px 10px;
+      }
+
+      .proof-card,
+      .system-card,
+      .cta-card {
+        border-radius: 22px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .hero h1 {
+        font-size: 2.4rem;
+      }
+
+      .chip {
+        justify-content: center;
+        width: 100%;
+      }
+
+      .topline {
+        display: block;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="surface hero">
+      <div class="hero-copy">
+        <div class="topline"><strong>For Yoav Porat</strong> Director of Engineering at HoneyBook</div>
+        <div class="brandmark">
+          <img src="assets/app-icon.jpg" alt="HoneyBook app icon">
+        </div>
+        <h1>What if HoneyBook made <span>mobile action</span> feel as strong as its AI story?</h1>
+        <p>Public feedback says the value is already there. Users love the all-in-one workflow, but the phone experience still breaks trust when lead follow-up, proposal work, or invoice completion gets slow, buried, or pushed back to desktop.</p>
+        <div class="chip-row">
+          <div class="chip"><strong>15,672</strong> US iOS ratings at 4.77</div>
+          <div class="chip"><strong>2,249</strong> Google Play ratings at 4.58</div>
+          <div class="chip"><strong>25M</strong> client relationships powered</div>
+        </div>
+      </div>
+
+      <div class="phones-stage">
+        <p class="phones-intro">This concept narrows in on one problem instead of redesigning everything: mobile users should be able to see silent leads, proposal risk, and next actions in one place, with AI removing taps instead of adding noise.</p>
+
+        <div class="phone-grid">
+          <div class="phone-wrap">
+            <div class="phone-kicker">Current Friction</div>
+            <h2 class="phone-title">Revenue-critical work is still too easy to lose</h2>
+            <div class="phone">
+              <div class="screen current">
+                <div class="statusbar"><span>9:41</span><span>5G 92%</span></div>
+                <div class="app-head">
+                  <img src="assets/app-icon.jpg" alt="HoneyBook">
+                  <div>
+                    <h3>HoneyBook</h3>
+                    <p>Dashboard</p>
+                  </div>
+                </div>
+                <div class="subtabs">
+                  <div class="pill active">Overview</div>
+                  <div class="pill">Leads</div>
+                  <div class="pill">Projects</div>
+                  <div class="pill">Invoices</div>
+                </div>
+
+                <div class="stack">
+                  <div class="card">
+                    <div class="eyebrow">Loading one more screen...</div>
+                    <div class="metric">
+                      <strong>New inquiry needs follow-up</strong>
+                      <span>Seen 1h ago</span>
+                    </div>
+                    <div class="skeleton">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                    <div class="row">
+                      <span class="badge warn">3 taps away</span>
+                      <span class="badge soft">menu > project > thread</span>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="metric">
+                      <strong>Proposal waiting</strong>
+                      <span>2 days</span>
+                    </div>
+                    <p class="muted-line">The user can see risk, but the next action still feels buried. Public reviews keep repeating the same theme: slow, clunky, incomplete when away from desktop.</p>
+                    <div class="action-bar">
+                      <div class="btn">Open project</div>
+                      <div class="btn">Find file</div>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="eyebrow">Public pain pattern</div>
+                    <div class="metric">
+                      <strong>Mobile still feels partial</strong>
+                      <span>support cost</span>
+                    </div>
+                    <p class="muted-line">Current complaints cluster around lag, crashes, weak tablet support, and key tasks like editing files or invoices not feeling fully closed on mobile.</p>
+                  </div>
+
+                  <div class="card">
+                    <div class="metric">
+                      <strong>AI is visible</strong>
+                      <span>Trust is mixed</span>
+                    </div>
+                    <p class="muted-line">HoneyBook is shipping AI follow-ups and suggestions. That raises expectations: if users still get stuck on the phone, the AI layer can feel louder than the core workflow.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="phone-wrap">
+            <div class="phone-kicker">Proposed Flow</div>
+            <h2 class="phone-title">Lead Pulse: one mobile screen for the next best action</h2>
+            <div class="phone">
+              <div class="screen future">
+                <div class="statusbar"><span>9:41</span><span>5G 92%</span></div>
+                <div class="app-head">
+                  <img src="assets/app-icon.jpg" alt="HoneyBook">
+                  <div>
+                    <h3>HoneyBook AI</h3>
+                    <p>Lead Pulse</p>
+                  </div>
+                </div>
+                <div class="subtabs">
+                  <div class="pill active">Priority</div>
+                  <div class="pill">Pipeline</div>
+                  <div class="pill">Proposals</div>
+                  <div class="pill">Payments</div>
+                </div>
+
+                <div class="stack">
+                  <div class="card hero-card">
+                    <div class="eyebrow">This morning</div>
+                    <div class="big">2 silent leads. 1 proposal at risk. 1 payment blocker.</div>
+                    <p class="muted-line">Instead of another dashboard, HoneyBook starts with what could slip revenue today and gives the user one-tap ways to move each item.</p>
+                  </div>
+
+                  <div class="card">
+                    <div class="metric">
+                      <strong>Jo + Mason photography</strong>
+                      <span>Lead cooling down</span>
+                    </div>
+                    <div class="row">
+                      <span class="badge warn">AI follow-up ready</span>
+                      <span class="badge soft">last touch 46h</span>
+                    </div>
+                    <div class="split">
+                      <div class="mini">
+                        <strong>Suggested reply</strong>
+                        <span>Re-engage with availability and one gentle urgency cue.</span>
+                      </div>
+                      <div class="mini">
+                        <strong>Next action</strong>
+                        <span>Send draft, call now, or schedule reminder without leaving the screen.</span>
+                      </div>
+                    </div>
+                    <div class="action-bar">
+                      <div class="btn primary">Send AI draft</div>
+                      <div class="btn secondary">Call lead</div>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="metric">
+                      <strong>Proposal needs a tiny edit</strong>
+                      <span>inline fix</span>
+                    </div>
+                    <p class="muted-line">Instead of forcing a desktop fallback, the screen exposes a compact edit path for dates, fees, and message copy right where risk is flagged.</p>
+                    <div class="action-bar">
+                      <div class="btn primary">Open smart edit</div>
+                      <div class="btn secondary">Ping client</div>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="metric">
+                      <strong>Payment blocker</strong>
+                      <span>Tap to resolve</span>
+                    </div>
+                    <p class="muted-line">Invoice issues, expiring cards, or stalled approvals stay attached to the lead timeline so users do not have to hunt through modules to finish the job.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-title">
+      <span>Why This Direction</span>
+      <h2>Public feedback points to a mobile execution gap, not a demand gap.</h2>
+      <p>Users already want HoneyBook to be their operating system. The opportunity is to remove friction from the exact phone flows that keep bookings, proposals, and payments moving.</p>
+    </div>
+
+    <section class="proof">
+      <article class="proof-card">
+        <div class="num">Pain 01</div>
+        <h3>Speed and stability still get in the way</h3>
+        <p>Recent App Store and Play feedback calls out slow screens, crashes, glitches, and lag during core actions. When the phone stops feeling dependable, users bounce back to desktop or stop acting in the moment.</p>
+      </article>
+
+      <article class="proof-card">
+        <div class="num">Pain 02</div>
+        <h3>Mobile completion is still inconsistent</h3>
+        <p>Public reviews specifically mention editing gaps, invoice friction, weak iPad behavior, and proposal workflows that do not feel fully finishable on mobile. That is support debt, not just UX polish work.</p>
+      </article>
+
+      <article class="proof-card">
+        <div class="num">Pain 03</div>
+        <h3>AI now has to earn trust in the core flow</h3>
+        <p>HoneyBook is leaning harder into AI follow-ups, meeting notes, and suggestions. That only compounds value if the mobile app surfaces the right action instantly and keeps the rest of the experience calm.</p>
+      </article>
+    </section>
+
+    <div class="section-title">
+      <span>Execution Lens</span>
+      <h2>A tighter mobile surface can support both product velocity and support efficiency.</h2>
+      <p>This is intentionally framed as an engineering-friendly improvement: compress the path to action, expose small inline edits where they matter most, and make AI feel embedded instead of bolted on.</p>
+    </div>
+
+    <section class="system-grid">
+      <article class="system-card dark">
+        <h3>What changes in the product shape</h3>
+        <div class="bullet-list">
+          <div class="bullet">Lead Pulse becomes the mobile entry point instead of a broad dashboard.</div>
+          <div class="bullet">Silent leads, proposal risk, and payment blockers are ranked by urgency.</div>
+          <div class="bullet">AI creates the next action only when it removes typing, search, or context switching.</div>
+        </div>
+      </article>
+
+      <article class="system-card">
+        <h3>Why engineering should care</h3>
+        <p>It reduces the number of mobile surfaces users need to trust. Fewer screen transitions and fewer dead-end flows means less room for lag, state bugs, and frustrated support tickets.</p>
+      </article>
+
+      <article class="system-card">
+        <h3>Why the business should care</h3>
+        <p>HoneyBook already owns the workflow. Making mobile action feel instantaneous is how that workflow turns into higher adoption, fewer workarounds, and stronger belief in the AI roadmap.</p>
+      </article>
+    </section>
+
+    <section class="cta-card">
+      <div class="cta-layout">
+        <div>
+          <h2>Want the build-ready version of this concept?</h2>
+          <p>This prototype is meant to open a sharper product conversation: not “add more AI,” but “make revenue-critical mobile moments faster, calmer, and easier to finish.”</p>
+        </div>
+        <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Get in Touch</a>
+      </div>
+    </section>
+
+    <p class="footer-note">Concept by Elinext for HoneyBook mobile product exploration.</p>
+  </main>
+</body>
+</html>
