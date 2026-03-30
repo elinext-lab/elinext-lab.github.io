@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cypress HCM Mobile Teardown | Elinext</title>
+  <meta name="description" content="What if Cypress HCM turned separate jobs, onboarding, and time-entry steps into one mobile contractor workspace so enterprise accounts saw fewer support loops and faster worker follow-through?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/cypress-hcm_2026-03-30_05-54-13/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/cypress-hcm_2026-03-30_05-54-13/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/cypress-hcm_2026-03-30_05-54-13/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Cypress HCM Mobile — AI Teardown">
+  <meta property="og:description" content="What if Cypress HCM gave contractors one mobile home for jobs, onboarding, timecards, and pay status instead of a fragmented portal stack with login and code friction?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cypress HCM Mobile — AI Teardown">
+  <meta name="twitter:description" content="What if Cypress HCM gave contractors one mobile home for jobs, onboarding, timecards, and pay status instead of a fragmented portal stack with login and code friction?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/cypress-hcm_2026-03-30_05-54-13/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-30: official Cypress iOS n/a (no matching official US app listing found, source: iTunes Search API search for "Cypress HCM"), official Cypress Android n/a (no matching official listing found, source: google-play-scraper search for "Cypress HCM"); proxy mobile layer used in Cypress's public workflow: Bullhorn Time & Expense Mobile iOS 1.93 (56 ratings, source: iTunes API / trackId 1119323814), Android 3.03 (344 ratings, source: google-play-scraper / com.peoplenet.mobilepunch) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --night: #08121c;
+      --night-2: #102131;
+      --panel: rgba(10, 21, 34, 0.94);
+      --panel-strong: rgba(11, 18, 29, 0.98);
+      --paper: #eef4f9;
+      --paper-2: #f7fafc;
+      --ink: #ecf4fb;
+      --ink-soft: #adc0d2;
+      --text: #122334;
+      --line: rgba(155, 177, 196, 0.18);
+      --orange: #f58235;
+      --orange-soft: #ffb37b;
+      --cyan: #74d8e9;
+      --mint: #9ce6d7;
+      --danger: #ff8585;
+      --shadow: 0 32px 88px rgba(2, 10, 19, 0.28);
+      --shell: min(1180px, calc(100% - 28px));
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Sora", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(245, 130, 53, 0.16), transparent 22%),
+        radial-gradient(circle at top right, rgba(116, 216, 233, 0.16), transparent 20%),
+        linear-gradient(180deg, #09121d 0%, #102031 34%, #eef4f9 34%, #eef4f9 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.2;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 42px 42px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .shell {
+      width: var(--shell);
+      margin: 0 auto;
+    }
+
+    .hero,
+    .section,
+    .cta {
+      position: relative;
+      z-index: 1;
+      padding: 28px 0 42px;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 28px;
+      background:
+        radial-gradient(circle at 14% 18%, rgba(245, 130, 53, 0.16), transparent 24%),
+        radial-gradient(circle at 84% 15%, rgba(116, 216, 233, 0.16), transparent 24%),
+        linear-gradient(155deg, rgba(7, 15, 26, 0.98), rgba(14, 28, 44, 0.98));
+    }
+
+    .section-card,
+    .cta-card {
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--text);
+      border: 1px solid rgba(18, 35, 52, 0.08);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+      padding: 14px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(8, 18, 29, 0.7);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      padding: 10px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, rgba(245, 130, 53, 0.18), rgba(116, 216, 233, 0.14));
+      border: 1px solid rgba(245, 130, 53, 0.2);
+      object-fit: contain;
+    }
+
+    .brand-copy strong,
+    .brand-copy span {
+      display: block;
+    }
+
+    .brand-copy strong {
+      font-size: 0.96rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-copy span {
+      margin-top: 2px;
+      color: var(--ink-soft);
+      font-size: 0.82rem;
+    }
+
+    .top-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--orange-soft), var(--orange));
+      color: #08121c;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .hero-center,
+    .hero-center .eyebrow,
+    .hero-center h1,
+    .hero-center .lede,
+    .hero-center .hero-actions,
+    .hero-center .hero-metrics {
+      display: block;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 auto 18px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(245, 130, 53, 0.1);
+      border: 1px solid rgba(245, 130, 53, 0.22);
+      color: var(--orange-soft);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Chakra Petch", sans-serif;
+      line-height: 0.94;
+      letter-spacing: 0.01em;
+    }
+
+    h1 {
+      max-width: 980px;
+      font-size: clamp(3rem, 6vw, 5.45rem);
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: #102131;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      color: inherit;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.72;
+    }
+
+    .lede {
+      max-width: 860px;
+      margin-top: 18px;
+      color: var(--ink-soft);
+      font-size: 1.04rem;
+    }
+
+    .hero-actions {
+      margin-top: 20px;
+      max-width: 860px;
+      color: #dbe7f3;
+      font-size: 0.94rem;
+    }
+
+    .hero-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .metric {
+      min-width: 180px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .metric strong,
+    .metric span {
+      display: block;
+    }
+
+    .metric strong {
+      font-family: "Chakra Petch", sans-serif;
+      font-size: 1.55rem;
+      color: white;
+    }
+
+    .metric span {
+      margin-top: 4px;
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+      margin-top: 36px;
+    }
+
+    .compare-panel {
+      position: relative;
+      padding: 22px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .compare-panel h3 {
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .compare-panel p {
+      color: var(--ink-soft);
+    }
+
+    .compare-points {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .compare-point {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(8, 17, 28, 0.64);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 8px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 0 0 0 5px rgba(245, 130, 53, 0.14);
+    }
+
+    .phones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      justify-content: center;
+    }
+
+    .phone-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .phone-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #08121c;
+      background: linear-gradient(135deg, var(--orange-soft), var(--orange));
+    }
+
+    .phone-label.alt {
+      background: linear-gradient(135deg, #c7faf0, #6ed8c3);
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      padding: 16px;
+      border-radius: 34px;
+      background: linear-gradient(180deg, #182533, #0b121c);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 26px 60px rgba(0, 0, 0, 0.34);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      width: 108px;
+      height: 18px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: rgba(5, 10, 16, 0.88);
+      z-index: 3;
+    }
+
+    .phone-screen {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #f8fbfd 0%, #eef5fa 100%);
+    }
+
+    .phone-scroll {
+      height: 100%;
+      overflow: auto;
+      padding: 36px 14px 14px;
+      color: #15263a;
+      scrollbar-width: none;
+    }
+
+    .phone-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .statusbar,
+    .screen-title,
+    .screen-subtitle,
+    .screen-chip,
+    .screen-grid,
+    .screen-card,
+    .screen-pill {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #4d6275;
+    }
+
+    .status-right {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #7edcc4;
+    }
+
+    .screen-title {
+      font-family: "Chakra Petch", sans-serif;
+      font-size: 1.7rem;
+      line-height: 0.92;
+    }
+
+    .screen-subtitle {
+      margin-top: 10px;
+      color: #5a6f83;
+      font-size: 0.86rem;
+      line-height: 1.55;
+    }
+
+    .screen-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: #e7f5fb;
+      color: #126a8a;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .screen-card {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 20px;
+      background: white;
+      border: 1px solid rgba(18, 35, 52, 0.08);
+      box-shadow: 0 14px 26px rgba(26, 49, 72, 0.08);
+    }
+
+    .screen-card.dark {
+      background: linear-gradient(160deg, #102131, #18304b);
+      color: white;
+    }
+
+    .screen-card h4 {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .screen-card p {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      line-height: 1.55;
+      color: inherit;
+      opacity: 0.88;
+    }
+
+    .screen-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .mini {
+      padding: 12px;
+      border-radius: 16px;
+      background: #f3f7fb;
+      border: 1px solid rgba(18, 35, 52, 0.08);
+    }
+
+    .mini strong,
+    .mini span {
+      display: block;
+    }
+
+    .mini strong {
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .mini span {
+      margin-top: 4px;
+      font-size: 0.72rem;
+      color: #6a7e90;
+    }
+
+    .alert {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: #fff2ed;
+      border: 1px solid rgba(245, 130, 53, 0.18);
+      color: #913d10;
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .alert.bad {
+      background: #fff2f2;
+      border-color: rgba(255, 133, 133, 0.22);
+      color: #8f2e2e;
+    }
+
+    .primary-btn,
+    .ghost-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-top: 14px;
+      padding: 13px 16px;
+      border-radius: 16px;
+      font-size: 0.83rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, var(--orange-soft), var(--orange));
+      color: #08121c;
+    }
+
+    .ghost-btn {
+      background: #edf3f8;
+      color: #16314b;
+    }
+
+    .section-head {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(245, 130, 53, 0.1);
+      color: #a94d16;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .insight-grid,
+    .opportunity-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .insight,
+    .opportunity {
+      padding: 18px;
+      border-radius: 22px;
+      background: var(--paper-2);
+      border: 1px solid rgba(18, 35, 52, 0.08);
+    }
+
+    .insight strong,
+    .opportunity strong {
+      display: block;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #102131;
+    }
+
+    .insight p,
+    .opportunity p {
+      margin-top: 10px;
+      color: #53687c;
+      font-size: 0.9rem;
+    }
+
+    .evidence-strip {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .evidence-box {
+      padding: 20px;
+      border-radius: 24px;
+      background: linear-gradient(160deg, #102131, #15314c);
+      color: white;
+      border: 1px solid rgba(16, 33, 49, 0.08);
+    }
+
+    .evidence-box p {
+      color: #dce7f1;
+    }
+
+    .evidence-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .evidence-item {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #eff6fb;
+      font-size: 0.86rem;
+    }
+
+    .quote-box {
+      padding: 20px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #fff4eb, #fffdf9);
+      border: 1px solid rgba(245, 130, 53, 0.14);
+    }
+
+    .quote-box p {
+      color: #5a4437;
+    }
+
+    .quote-box strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #9a4612;
+      font-size: 0.88rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .cta-card {
+      background:
+        radial-gradient(circle at 15% 18%, rgba(245, 130, 53, 0.16), transparent 22%),
+        radial-gradient(circle at 84% 16%, rgba(116, 216, 233, 0.16), transparent 22%),
+        linear-gradient(155deg, rgba(7, 15, 26, 0.98), rgba(13, 27, 43, 0.98));
+      color: white;
+    }
+
+    .cta-card p {
+      color: #d4e3ef;
+    }
+
+    .cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .cta-link,
+    .cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 18px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .cta-link {
+      background: linear-gradient(135deg, var(--orange-soft), var(--orange));
+      color: #08121c;
+    }
+
+    .cta-secondary {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      color: white;
+    }
+
+    @media (max-width: 1040px) {
+      .hero-grid,
+      .evidence-strip,
+      .insight-grid,
+      .opportunity-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 780px) {
+      .hero-card,
+      .section-card,
+      .cta-card {
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: clamp(2.45rem, 10vw, 3.8rem);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .hero,
+      .section,
+      .cta {
+        padding: 18px 0 28px;
+      }
+
+      .shell {
+        width: min(100% - 16px, 1180px);
+      }
+
+      .metric {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="shell">
+        <div class="card hero-card">
+          <div class="topbar">
+            <div class="brand">
+              <img class="brand-mark" src="assets/cypress-logo.png" alt="Cypress HCM logo">
+              <div class="brand-copy">
+                <strong>Cypress HCM</strong>
+                <span>AI teardown for Delivery &amp; Enterprise Accounts</span>
+              </div>
+            </div>
+            <div class="top-pill">No Official App Found</div>
+          </div>
+
+          <div class="hero-center">
+            <div class="eyebrow">Mobile Opportunity</div>
+            <h1>What if Cypress turned jobs, onboarding, and timecards into one mobile contractor workspace?</h1>
+            <p class="lede">
+              Cypress already exposes the right building blocks publicly: a career portal, payroll and compliance services,
+              new hire portals, and web-based time and expense management. The gap is the mobile handoff between them.
+            </p>
+            <p class="hero-actions">
+              This concept focuses on the real friction public users can feel today: portal switching, login/code confusion, and low trust in time-entry flows.
+            </p>
+            <div class="hero-metrics">
+              <div class="metric">
+                <strong>1.93</strong>
+                <span>Bullhorn iOS rating proxy from 56 US ratings</span>
+              </div>
+              <div class="metric">
+                <strong>3.03</strong>
+                <span>Bullhorn Android rating proxy from 344 global ratings</span>
+              </div>
+              <div class="metric">
+                <strong>2009</strong>
+                <span>Cypress launched payroll employment support services</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-grid">
+            <div class="compare-panel">
+              <h3>Why this matters for Chris Murphy</h3>
+              <p>
+                Chris owns delivery quality and enterprise account experience. The risk is not missing features. It is letting a fragmented worker journey create avoidable support loops.
+              </p>
+              <div class="compare-points">
+                <div class="compare-point">
+                  <div class="dot"></div>
+                  <div>
+                    <strong>Public flow is split</strong>
+                    <p>Marketing site, job portal, Bullhorn login, onboarding portals, and time-entry all appear as separate steps.</p>
+                  </div>
+                </div>
+                <div class="compare-point">
+                  <div class="dot"></div>
+                  <div>
+                    <strong>Review signal is weak</strong>
+                    <p>Recent Bullhorn complaints still focus on broken login, missing codes, and unreliable punch workflows.</p>
+                  </div>
+                </div>
+                <div class="compare-point">
+                  <div class="dot"></div>
+                  <div>
+                    <strong>Enterprise accounts feel the cost</strong>
+                    <p>Every avoidable onboarding or timecard issue becomes delivery overhead for recruiters, support, and account teams.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phones">
+              <div class="phone-stack">
+                <div class="phone-label">Current Stack</div>
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="phone-scroll">
+                      <div class="statusbar">
+                        <span>9:41</span>
+                        <div class="status-right">
+                          <span>5G</span>
+                          <div class="status-dot"></div>
+                        </div>
+                      </div>
+                      <div class="screen-title">Too many handoffs</div>
+                      <div class="screen-subtitle">Job search, onboarding, login, and time entry look like separate products.</div>
+                      <div class="screen-chip">Portal Hopping</div>
+                      <div class="screen-card">
+                        <h4>Search Opportunities</h4>
+                        <p>Apply through the career portal, then leave the flow for onboarding and time capture.</p>
+                      </div>
+                      <div class="screen-card">
+                        <h4>Bullhorn Login</h4>
+                        <p>Users get pushed into a separate auth layer before they can handle time and expense tasks.</p>
+                      </div>
+                      <div class="alert">Missing 4-digit staffing ID. Please contact support before you can continue.</div>
+                      <div class="alert bad">Check internet connection. Login failed. Try again later.</div>
+                      <div class="screen-grid">
+                        <div class="mini">
+                          <strong>Web Time</strong>
+                          <span>Desktop-first</span>
+                        </div>
+                        <div class="mini">
+                          <strong>Docs</strong>
+                          <span>Separate portal</span>
+                        </div>
+                      </div>
+                      <div class="ghost-btn">Re-enter Credentials</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="phone-stack">
+                <div class="phone-label alt">Improved Flow</div>
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="phone-scroll">
+                      <div class="statusbar">
+                        <span>9:41</span>
+                        <div class="status-right">
+                          <span>5G</span>
+                          <div class="status-dot"></div>
+                        </div>
+                      </div>
+                      <div class="screen-title">Cypress Workspace</div>
+                      <div class="screen-subtitle">One mobile home for jobs, onboarding, timecards, pay status, and recruiter help.</div>
+                      <div class="screen-chip">Magic Link Access</div>
+                      <div class="screen-card dark">
+                        <h4>Today's shift confirmed</h4>
+                        <p>Acme Construction • 8:00 AM to 4:30 PM • Site B</p>
+                      </div>
+                      <div class="screen-grid">
+                        <div class="mini">
+                          <strong>3 Tasks</strong>
+                          <span>Finish onboarding</span>
+                        </div>
+                        <div class="mini">
+                          <strong>Fri Pay</strong>
+                          <span>$1,240 pending</span>
+                        </div>
+                      </div>
+                      <div class="screen-card">
+                        <h4>Punch in with one tap</h4>
+                        <p>No code hunting. Account-aware entry uses the assignment already tied to the worker.</p>
+                      </div>
+                      <div class="primary-btn">Start Shift</div>
+                      <div class="screen-card">
+                        <h4>Need help?</h4>
+                        <p>Chat with your Cypress recruiter, confirm missing docs, or resolve a pay question without leaving the app.</p>
+                      </div>
+                      <div class="ghost-btn">Open Recruiter Chat</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="card section-card">
+          <div class="section-head">
+            <div class="kicker">Public Signals</div>
+            <h2>Where the friction shows up</h2>
+            <p>
+              The opportunity is supported by Cypress's own product language plus the proxy mobile feedback around Bullhorn time and expense.
+            </p>
+          </div>
+
+          <div class="insight-grid">
+            <div class="insight">
+              <strong>No clear official app</strong>
+              <p>US App Store and Google Play checks did not surface a clear Cypress-owned mobile app. The current experience is web-first.</p>
+            </div>
+            <div class="insight">
+              <strong>Payroll flow is portal-based</strong>
+              <p>Cypress explicitly advertises new hire portals and web-based time and expense management, which is functional but easy to fragment on mobile.</p>
+            </div>
+            <div class="insight">
+              <strong>Bullhorn proxy reviews are weak</strong>
+              <p>Public complaints center on login failure, 4-digit code confusion, false internet errors, and low trust during payroll-sensitive tasks.</p>
+            </div>
+          </div>
+
+          <div class="evidence-strip">
+            <div class="evidence-box">
+              <h3>What public evidence suggests</h3>
+              <div class="evidence-list">
+                <div class="evidence-item">Cypress homepage links directly to a Bullhorn universal login.</div>
+                <div class="evidence-item">The jobs entry point is a separate `career-portal/#/` SPA.</div>
+                <div class="evidence-item">Payroll and compliance copy still frames time and expense as web-based.</div>
+                <div class="evidence-item">Bullhorn Android reviews repeatedly mention code confusion and unstable access.</div>
+              </div>
+            </div>
+
+            <div class="quote-box">
+              <strong>Prototype Goal</strong>
+              <p>
+                Reduce delivery drag by unifying the contractor journey. The point is not to replace Cypress's stack overnight. The point is to give workers and account teams one dependable mobile front door.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="card section-card">
+          <div class="section-head">
+            <div class="kicker">Concept Focus</div>
+            <h2>A mobile layer built for enterprise delivery</h2>
+            <p>
+              This concept targets the narrowest high-value wedge: better worker follow-through with less support intervention.
+            </p>
+          </div>
+
+          <div class="opportunity-grid">
+            <div class="opportunity">
+              <strong>Passwordless entry</strong>
+              <p>Use assignment-aware access so contractors never guess which staffing ID, branch code, or tenant they need.</p>
+            </div>
+            <div class="opportunity">
+              <strong>One action queue</strong>
+              <p>Surface job status, onboarding tasks, missing documents, and timesheet deadlines in one prioritized home screen.</p>
+            </div>
+            <div class="opportunity">
+              <strong>Pay clarity by default</strong>
+              <p>Let workers see shift history, approved time, and upcoming pay status without calling support.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="shell">
+        <div class="card cta-card">
+          <div class="section-head">
+            <div class="kicker">Next Step</div>
+            <h2>Show Chris a delivery win, not a design exercise</h2>
+            <p>
+              The strongest angle for Cypress is simple: fewer onboarding and timecard breakdowns across enterprise accounts, with a mobile experience workers can trust.
+            </p>
+          </div>
+          <div class="cta-actions">
+            <a class="cta-link" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Get in Touch</a>
+            <a class="cta-secondary" href="https://www.cypresshcm.com/career-portal/#/" target="_blank" rel="noopener noreferrer">View Public Portal</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
