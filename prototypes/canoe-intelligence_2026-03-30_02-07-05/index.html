@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canoe Intelligence Mobile Teardown | Elinext</title>
+  <meta name="description" content="What if Canoe’s support and operations teams could resolve missing documents, low-confidence extractions, and delivery blockers from mobile before an institutional client ever had to ask for status?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/canoe-intelligence_2026-03-30_02-07-05/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/canoe-intelligence_2026-03-30_02-07-05/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/canoe-intelligence_2026-03-30_02-07-05/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Canoe Intelligence Mobile — AI Teardown">
+  <meta property="og:description" content="What if Canoe could turn real-time document alerts into a mobile exception command center for missing docs, low-confidence extractions, and client-ready updates before support queues pile up?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Canoe Intelligence Mobile — AI Teardown">
+  <meta name="twitter:description" content="What if Canoe could turn real-time document alerts into a mobile exception command center for missing docs, low-confidence extractions, and client-ready updates before support queues pile up?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/canoe-intelligence_2026-03-30_02-07-05/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-30: iOS n/a (no matching official US app listing found, source: iTunes Search API), Android n/a (no matching official listing found, source: google-play-scraper search for "Canoe Intelligence") -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #f4f8fc;
+      --muted: #9ab2c9;
+      --muted-strong: #67819b;
+      --deep: #081220;
+      --deep-alt: #0d1b2f;
+      --panel: rgba(9, 24, 42, 0.94);
+      --panel-2: rgba(12, 31, 53, 0.92);
+      --panel-light: #f5f8fb;
+      --line: rgba(123, 162, 197, 0.22);
+      --cyan: #63dcff;
+      --teal: #69d4bc;
+      --amber: #ffb36d;
+      --rose: #ff7a7a;
+      --slate: #112842;
+      --shadow: 0 28px 72px rgba(3, 10, 20, 0.34);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "IBM Plex Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(99, 220, 255, 0.12), transparent 26%),
+        radial-gradient(circle at top right, rgba(255, 179, 109, 0.12), transparent 24%),
+        linear-gradient(180deg, #07111d 0%, #0b1b2e 26%, #eef4f8 26%, #eef4f8 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 44px 44px;
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 28px 0 64px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 28px;
+      padding: 16px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(7, 17, 29, 0.62);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);
+      flex: 0 0 auto;
+    }
+
+    .brand-copy strong,
+    .brand-copy span {
+      display: block;
+    }
+
+    .brand-copy strong {
+      font-size: 0.98rem;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-copy span {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(15, 35, 58, 0.88);
+      border: 1px solid rgba(99, 220, 255, 0.24);
+      color: var(--cyan);
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .hero-card,
+    .section-card,
+    .final-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 42px 38px;
+      background:
+        radial-gradient(circle at 18% 16%, rgba(99, 220, 255, 0.16), transparent 24%),
+        radial-gradient(circle at 84% 18%, rgba(255, 179, 109, 0.14), transparent 20%),
+        linear-gradient(180deg, rgba(10, 25, 43, 0.98), rgba(6, 14, 24, 0.97));
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      bottom: -120px;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99, 220, 255, 0.16), transparent 66%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero-copy,
+    .hero-copy img,
+    .hero-copy h1,
+    .hero-copy p {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 16px;
+      margin: 0 auto 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(99, 220, 255, 0.25);
+      background: rgba(14, 35, 58, 0.8);
+      color: var(--cyan);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .wordmark {
+      width: 86px;
+      margin-bottom: 20px;
+    }
+
+    .hero-copy h1 {
+      max-width: 980px;
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2.5rem, 5vw, 5.2rem);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+    }
+
+    .hero-copy p {
+      max-width: 780px;
+      margin-top: 0;
+      margin-bottom: 30px;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.8vw, 1.18rem);
+      line-height: 1.72;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .button,
+    .button-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .button {
+      background: linear-gradient(135deg, var(--cyan), #b5f3ff);
+      color: #062033;
+      box-shadow: 0 16px 32px rgba(99, 220, 255, 0.2);
+    }
+
+    .button-secondary {
+      background: rgba(15, 35, 58, 0.9);
+      border: 1px solid rgba(123, 162, 197, 0.28);
+      color: var(--ink);
+    }
+
+    .button:hover,
+    .button-secondary:hover {
+      transform: translateY(-1px);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      background: rgba(11, 27, 46, 0.86);
+      border: 1px solid rgba(123, 162, 197, 0.16);
+      min-height: 120px;
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.48rem;
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: -0.04em;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.93rem;
+    }
+
+    section {
+      padding-bottom: 36px;
+    }
+
+    .section-card {
+      padding: 34px;
+      background: rgba(245, 248, 251, 0.98);
+      color: #10223b;
+      isolation: isolate;
+    }
+
+    .section-heading {
+      margin: 0 0 18px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(1.8rem, 3vw, 3rem);
+      line-height: 1.04;
+      letter-spacing: -0.05em;
+      color: #0d1f35;
+    }
+
+    .section-intro {
+      margin: 0 0 28px;
+      max-width: 760px;
+      color: var(--muted-strong);
+      font-size: 1rem;
+      line-height: 1.72;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .proof {
+      padding: 22px;
+      border-radius: var(--radius-lg);
+      background: #ffffff;
+      border: 1px solid rgba(17, 40, 66, 0.08);
+      box-shadow: 0 16px 36px rgba(10, 24, 40, 0.08);
+    }
+
+    .proof-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(99, 220, 255, 0.12);
+      color: #0f5b78;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .proof h3 {
+      margin: 0 0 12px;
+      font-size: 1.15rem;
+      line-height: 1.32;
+      color: #0d1f35;
+    }
+
+    .proof p,
+    .proof li {
+      color: #4e647c;
+      line-height: 1.64;
+      font-size: 0.94rem;
+    }
+
+    .proof ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .blueprint {
+      display: grid;
+      grid-template-columns: 0.95fr 1.25fr;
+      gap: 26px;
+      align-items: start;
+    }
+
+    .blueprint-copy {
+      padding: 4px 0;
+    }
+
+    .priority-stack {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .priority {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, #0e2340, #112a4a);
+      color: var(--ink);
+      border: 1px solid rgba(123, 162, 197, 0.18);
+    }
+
+    .priority strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    .priority span {
+      display: block;
+      color: #b7c8d9;
+      line-height: 1.55;
+      font-size: 0.92rem;
+    }
+
+    .phones {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      justify-items: center;
+    }
+
+    .phone-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      padding: 14px;
+      border-radius: 36px;
+      background: linear-gradient(180deg, #0a1018, #161e28);
+      box-shadow: 0 24px 60px rgba(10, 18, 28, 0.32);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      width: 108px;
+      height: 20px;
+      margin-left: -54px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 2;
+    }
+
+    .screen {
+      position: relative;
+      height: 100%;
+      border-radius: 28px;
+      overflow-y: auto;
+      padding: 36px 14px 14px;
+      background:
+        radial-gradient(circle at top, rgba(99, 220, 255, 0.12), transparent 20%),
+        linear-gradient(180deg, #eef4fa 0%, #ddeaf4 100%);
+      color: #10223b;
+      scrollbar-width: none;
+    }
+
+    .screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screen-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      color: #506b87;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .screen-title {
+      margin: 0 0 12px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.5rem;
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .screen-sub {
+      margin: 0 0 16px;
+      color: #58718b;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .chip-row,
+    .mini-grid,
+    .queue {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .chip-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .mini-card,
+    .queue-item,
+    .timeline-item,
+    .update-card {
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(20, 39, 61, 0.08);
+      box-shadow: 0 10px 24px rgba(16, 33, 52, 0.08);
+      padding: 14px;
+    }
+
+    .mini-card strong,
+    .queue-item strong,
+    .timeline-item strong,
+    .update-card strong {
+      display: block;
+      color: #10223b;
+      font-size: 0.88rem;
+      margin-bottom: 4px;
+    }
+
+    .mini-card span,
+    .queue-item span,
+    .timeline-item span,
+    .update-card span {
+      display: block;
+      color: #5d7288;
+      font-size: 0.77rem;
+      line-height: 1.45;
+    }
+
+    .metric {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(15, 34, 56, 0.08);
+      color: #274766;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    .queue-item {
+      background: linear-gradient(180deg, #ffffff, #f3f8fc);
+    }
+
+    .severity {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .severity.high {
+      background: rgba(255, 122, 122, 0.14);
+      color: #b44a4a;
+    }
+
+    .severity.medium {
+      background: rgba(255, 179, 109, 0.18);
+      color: #9a5e15;
+    }
+
+    .severity.good {
+      background: rgba(105, 212, 188, 0.18);
+      color: #0d7664;
+    }
+
+    .action-bar {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .action {
+      display: block;
+      text-align: center;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .action.primary {
+      background: #10263f;
+      color: #f2f8fd;
+    }
+
+    .action.secondary {
+      background: rgba(16, 38, 63, 0.08);
+      color: #17314f;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .footnote {
+      margin-top: 16px;
+      color: #5d7288;
+      font-size: 0.78rem;
+      line-height: 1.55;
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .flow-step {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      background: #ffffff;
+      border: 1px solid rgba(17, 40, 66, 0.08);
+      box-shadow: 0 14px 32px rgba(10, 24, 40, 0.06);
+    }
+
+    .flow-step strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      color: #0d1f35;
+    }
+
+    .flow-step span {
+      display: block;
+      color: #506b87;
+      font-size: 0.92rem;
+      line-height: 1.58;
+    }
+
+    .final-card {
+      padding: 34px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 179, 109, 0.14), transparent 24%),
+        linear-gradient(180deg, rgba(11, 26, 45, 0.98), rgba(6, 14, 24, 0.98));
+    }
+
+    .final-card h2 {
+      margin: 0 0 12px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(1.8rem, 3vw, 3.1rem);
+      letter-spacing: -0.05em;
+      line-height: 1.02;
+      text-align: center;
+    }
+
+    .final-card p {
+      max-width: 760px;
+      margin: 0 auto 24px;
+      color: var(--muted);
+      line-height: 1.72;
+      text-align: center;
+    }
+
+    .final-card .button {
+      margin: 0 auto;
+      display: inline-flex;
+    }
+
+    .cta-wrap {
+      text-align: center;
+    }
+
+    @media (max-width: 1080px) {
+      .stats,
+      .proof-grid,
+      .flow-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .blueprint {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+        border-radius: 28px;
+      }
+
+      .phones {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-card,
+      .section-card,
+      .final-card {
+        padding: 26px 22px;
+      }
+
+      .stats,
+      .proof-grid,
+      .flow-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chip-row,
+      .action-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: rise 700ms ease forwards;
+    }
+
+    .reveal.delay-1 { animation-delay: 100ms; }
+    .reveal.delay-2 { animation-delay: 180ms; }
+    .reveal.delay-3 { animation-delay: 260ms; }
+    .reveal.delay-4 { animation-delay: 340ms; }
+
+    @keyframes rise {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="shell">
+        <div class="topbar reveal">
+          <div class="brand">
+            <img src="./assets/canoe-mark.svg" alt="Canoe mark">
+            <div class="brand-copy">
+              <strong>Canoe Intelligence</strong>
+              <span>Mobile workflow concept for exception resolution</span>
+            </div>
+          </div>
+          <div class="status-pill">No official mobile app found in US stores on 2026-03-30</div>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-copy">
+            <div class="eyebrow reveal delay-1">AI teardown for Lukas Lozovski</div>
+            <img class="wordmark reveal delay-1" src="./assets/canoe-mark.svg" alt="Canoe concept mark">
+            <h1 class="reveal delay-2">What if Canoe resolved missing docs and extraction exceptions before clients asked?</h1>
+            <p class="reveal delay-2">
+              Canoe already sells real-time tracking, proactive alerts, validated-data previews, and downstream delivery. The gap is the human control loop: support, ops, and engineering owners still need a fast way to act when a workflow breaks away from a desk.
+            </p>
+            <div class="hero-actions reveal delay-3">
+              <a class="button" href="#prototype">See the mobile concept</a>
+              <a class="button-secondary" href="#evidence">Why this fits Canoe</a>
+            </div>
+            <div class="stats reveal delay-4">
+              <div class="stat">
+                <strong>0 official apps</strong>
+                <span>US App Store and Google Play checks surfaced no official Canoe Intelligence listing.</span>
+              </div>
+              <div class="stat">
+                <strong>500+ portals</strong>
+                <span>Homepage claims 500+ connections across upstream and downstream workflows.</span>
+              </div>
+              <div class="stat">
+                <strong>44K+ funds</strong>
+                <span>Public scale signal showing how much exception-handling surface Canoe already owns.</span>
+              </div>
+              <div class="stat">
+                <strong>20x faster</strong>
+                <span>Canoe claims major reporting acceleration, but human-in-the-loop triage is still visible.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="evidence">
+        <div class="shell">
+          <div class="section-card">
+            <h2 class="section-heading">Why the mobile gap is real</h2>
+            <p class="section-intro">
+              Canoe’s public materials already map the exact problem: real-time dashboards, alerts, hybrid extraction, previews, and human expertise are all in the loop. The product feels operationally dense, but the action surface is still web-first.
+            </p>
+            <div class="proof-grid">
+              <article class="proof">
+                <div class="proof-tag">Public product</div>
+                <h3>Real-time alerts exist, but the resolution path still looks desk-bound.</h3>
+                <ul>
+                  <li>Canoe says users can track document receipt in real time.</li>
+                  <li>Collection workflows include configurable alerts and downstream delivery.</li>
+                  <li>The only visible official entry point is a web login.</li>
+                </ul>
+              </article>
+              <article class="proof">
+                <div class="proof-tag">Operating model</div>
+                <h3>Human-in-the-loop work is still core to the value chain.</h3>
+                <ul>
+                  <li>Asset Data materials explicitly call out human review for completeness.</li>
+                  <li>Workflow-ops and data-delivery roles describe constant cross-team unblocking.</li>
+                  <li>That means exceptions are product work, not edge noise.</li>
+                </ul>
+              </article>
+              <article class="proof">
+                <div class="proof-tag">Market reality</div>
+                <h3>Private-markets teams still fall back to spreadsheets and fragmented systems.</h3>
+                <ul>
+                  <li>Reddit operators describe Excel-heavy family office and fund-of-funds workflows.</li>
+                  <li>Integration complexity remains a trust bottleneck.</li>
+                  <li>Canoe wins when response time is as good as extraction quality.</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="prototype">
+        <div class="shell">
+          <div class="section-card" style="background: linear-gradient(180deg, #f5f8fb 0%, #edf3f8 100%);">
+            <div class="blueprint">
+              <div class="blueprint-copy">
+                <h2 class="section-heading">Prototype: Exception Command Center</h2>
+                <p class="section-intro">
+                  This is not a generic “mobile dashboard.” It is a narrow command loop for the people Canoe depends on when automation meets ambiguity: support, client ops, data delivery, and engineering owners.
+                </p>
+
+                <div class="priority-stack">
+                  <div class="priority">
+                    <strong>1. Prioritize what will hurt a client first</strong>
+                    <span>Missing docs, validation failures, and downstream delivery blockers are ranked by SLA risk and exposure.</span>
+                  </div>
+                  <div class="priority">
+                    <strong>2. Show enough source context to act immediately</strong>
+                    <span>Confidence, raw fields, doc receipts, and suggested next steps are visible without the full web stack.</span>
+                  </div>
+                  <div class="priority">
+                    <strong>3. Close the loop with a client-ready update</strong>
+                    <span>Owners can resolve, escalate, or send a concise status message in the same mobile flow.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="phones">
+                <div class="phone-wrap">
+                  <div class="phone">
+                    <div class="screen">
+                      <div class="screen-header">
+                        <span>Current state</span>
+                        <span>07:42</span>
+                      </div>
+                      <h3 class="screen-title">Support scramble</h3>
+                      <p class="screen-sub">Alerts exist, but the owner still has to bounce between inbox, web UI, and client follow-up.</p>
+                      <div class="chip-row">
+                        <div class="mini-card">
+                          <strong>7 missing docs</strong>
+                          <span>Northern Trust + GP inboxes still waiting on receipt.</span>
+                        </div>
+                        <div class="mini-card">
+                          <strong>3 delivery fails</strong>
+                          <span>Addepar and Orion handoffs need manual review.</span>
+                        </div>
+                      </div>
+                      <div class="queue">
+                        <div class="queue-item">
+                          <div class="severity high">High risk</div>
+                          <strong>Capital call not delivered</strong>
+                          <span>Client update due in 37 min. Raw data is split across Slack and desktop tools.</span>
+                        </div>
+                        <div class="queue-item">
+                          <div class="severity medium">Medium</div>
+                          <strong>Low-confidence extraction</strong>
+                          <span>Commitment amount mismatch. Needs context before the analyst escalates.</span>
+                        </div>
+                      </div>
+                      <div class="timeline">
+                        <div class="timeline-item">
+                          <strong>09:10 AM</strong>
+                          <span>Manual doc chase sent by email.</span>
+                        </div>
+                        <div class="timeline-item">
+                          <strong>11:36 AM</strong>
+                          <span>Client asks for status. Owner is away from desktop.</span>
+                        </div>
+                      </div>
+                      <div class="footnote">Today’s problem is not lack of data. It is fragmented action.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="phone-wrap">
+                  <div class="phone">
+                    <div class="screen">
+                      <div class="screen-header">
+                        <span>Proposed app</span>
+                        <span>07:42</span>
+                      </div>
+                      <h3 class="screen-title">AI queue</h3>
+                      <p class="screen-sub">One ranked exception list, with source evidence and the next best action pre-composed.</p>
+                      <div class="mini-grid">
+                        <div class="metric">SLA at risk: 3</div>
+                        <div class="metric">Confidence drift: 2</div>
+                      </div>
+                      <div class="queue">
+                        <div class="queue-item">
+                          <div class="severity high">1. Immediate</div>
+                          <strong>KKR Capital Call / Q2</strong>
+                          <span>Document received, delivery blocked. Addepar payload missing bank-detail field.</span>
+                          <div class="action-bar">
+                            <span class="action primary">Resolve now</span>
+                            <span class="action secondary">Escalate</span>
+                          </div>
+                        </div>
+                        <div class="queue-item">
+                          <div class="severity medium">2. Review</div>
+                          <strong>Commitment amount mismatch</strong>
+                          <span>Model confidence 72%. Raw values, prior history, and owner notes are attached inline.</span>
+                          <div class="action-bar">
+                            <span class="action primary">Open evidence</span>
+                            <span class="action secondary">Assign</span>
+                          </div>
+                        </div>
+                        <div class="queue-item">
+                          <div class="severity good">3. Safe</div>
+                          <strong>Doc chase auto-ready</strong>
+                          <span>Portal inactive for 18h. Suggested outreach and due date already drafted.</span>
+                        </div>
+                      </div>
+                      <div class="footnote">The app is narrow on purpose: triage, evidence, owner, action, audit trail.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="phone-wrap">
+                  <div class="phone">
+                    <div class="screen">
+                      <div class="screen-header">
+                        <span>Client loop</span>
+                        <span>07:42</span>
+                      </div>
+                      <h3 class="screen-title">Close the loop</h3>
+                      <p class="screen-sub">After resolution, the owner can push an accurate update instead of creating another support thread.</p>
+                      <div class="update-card">
+                        <strong>Client-ready summary</strong>
+                        <span>“We received the capital call, corrected the bank-detail field, and re-sent the file to Addepar. Delivery confirmed at 11:51 AM ET.”</span>
+                      </div>
+                      <div class="queue">
+                        <div class="queue-item">
+                          <div class="severity good">Resolved</div>
+                          <strong>Delivery health</strong>
+                          <span>Addepar, Orion, and internal archive all green. Audit log attached.</span>
+                        </div>
+                        <div class="queue-item">
+                          <div class="severity medium">Next action</div>
+                          <strong>Root cause captured</strong>
+                          <span>Field mapping patch suggested for the next similar notice. Owner can create follow-up work.</span>
+                        </div>
+                      </div>
+                      <div class="timeline">
+                        <div class="timeline-item">
+                          <strong>11:44 AM</strong>
+                          <span>Owner reviewed raw document context on mobile.</span>
+                        </div>
+                        <div class="timeline-item">
+                          <strong>11:47 AM</strong>
+                          <span>Fallback delivery sent and integration retry queued.</span>
+                        </div>
+                        <div class="timeline-item">
+                          <strong>11:51 AM</strong>
+                          <span>Client-ready update approved and dispatched.</span>
+                        </div>
+                      </div>
+                      <div class="footnote">The result is fewer interruptions for engineering and less waiting for clients.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-card">
+            <h2 class="section-heading">Why this fits Canoe’s roadmap</h2>
+            <p class="section-intro">
+              Canoe is already moving from raw extraction into richer product intelligence: hybrid extraction, validated-data previews, asset-level transparency, and managed-service support. A mobile exception layer sharpens that story instead of distracting from it.
+            </p>
+            <div class="flow-grid">
+              <div class="flow-step">
+                <strong>Collect</strong>
+                <span>Portal and inbox events already exist. The app simply turns them into a ranked mobile queue.</span>
+              </div>
+              <div class="flow-step">
+                <strong>Validate</strong>
+                <span>Confidence, raw source evidence, and rules output travel with the alert so the owner can act.</span>
+              </div>
+              <div class="flow-step">
+                <strong>Deliver</strong>
+                <span>Integration failures become explicit tasks instead of buried support context.</span>
+              </div>
+              <div class="flow-step">
+                <strong>Explain</strong>
+                <span>Every resolution produces a short, client-ready update that reinforces trust without extra work.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="final-card">
+            <h2>Mobile is the missing control surface, not a side project.</h2>
+            <p>
+              For Canoe, the highest-value mobile move is not replicating the web app. It is reducing the gap between alert and action for the teams who keep document, data, and delivery workflows moving under pressure.
+            </p>
+            <div class="cta-wrap">
+              <a class="button" href="https://www.elinext.com/contacts/">Get in Touch</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
