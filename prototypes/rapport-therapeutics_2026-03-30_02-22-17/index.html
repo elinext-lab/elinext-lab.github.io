@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rapport Therapeutics Mobile Teardown | Elinext</title>
+    <meta
+      name="description"
+      content="A mobile-first concept for Rapport Therapeutics: replace password-heavy RAP-219 trial onboarding, QR rescue, and dense training screens with a guided participant activation flow built for Phase 3 scale."
+    />
+    <link
+      rel="canonical"
+      href="https://elinext-lab.github.io/prototypes/rapport-therapeutics_2026-03-30_02-22-17/"
+    />
+    <meta
+      property="og:url"
+      content="https://elinext-lab.github.io/prototypes/rapport-therapeutics_2026-03-30_02-22-17/"
+    />
+    <meta
+      property="og:image"
+      content="https://elinext-lab.github.io/prototypes/rapport-therapeutics_2026-03-30_02-22-17/og-image.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:title" content="Rapport Therapeutics Mobile - AI Teardown" />
+    <meta
+      property="og:description"
+      content="What if Rapport's RAP-219 trial app replaced password-heavy onboarding, QR rescue, and dense training screens with a guided participant activation flow built for Phase 3 scale?"
+    />
+    <meta name="author" content="Yauheni Shauchenka, Elinext" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image"
+      content="https://elinext-lab.github.io/prototypes/rapport-therapeutics_2026-03-30_02-22-17/og-image.jpg"
+    />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-ZR415HX0B2");
+    </script>
+    <!-- Ratings as of 2026-03-30: iOS 0.00 (0 reviews, source: iTunes API US + app-store-scraper), Android 0.00 (0 public ratings, 0 reviews, source: google-play-scraper US histogram and reviews) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0b0c16;
+        --bg-2: #171428;
+        --panel: #151829;
+        --panel-2: #fbf8f5;
+        --panel-3: #111420;
+        --line: rgba(255, 255, 255, 0.11);
+        --line-dark: rgba(19, 22, 32, 0.1);
+        --text: #f9f7ff;
+        --muted: #c7c0d8;
+        --ink: #1f2434;
+        --ink-soft: #666c7f;
+        --rose: #ff4f9a;
+        --rose-soft: #ffc6df;
+        --green: #8ff279;
+        --gold: #ffd37a;
+        --plum: #5a184c;
+        --shadow: 0 34px 90px rgba(0, 0, 0, 0.35);
+        --radius-xl: 34px;
+        --radius-lg: 26px;
+        --radius-md: 20px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(255, 79, 154, 0.22), transparent 28%),
+          radial-gradient(circle at 85% 10%, rgba(143, 242, 121, 0.16), transparent 24%),
+          linear-gradient(180deg, #0a0c14 0%, #130f23 43%, #0a0d15 100%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .page {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .grid-glow,
+      .grid-glow-2 {
+        position: absolute;
+        border-radius: 999px;
+        filter: blur(18px);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .grid-glow {
+        width: 320px;
+        height: 320px;
+        top: 90px;
+        left: -90px;
+        background: rgba(255, 79, 154, 0.18);
+      }
+
+      .grid-glow-2 {
+        width: 380px;
+        height: 380px;
+        right: -110px;
+        top: 380px;
+        background: rgba(143, 242, 121, 0.14);
+      }
+
+      .shell {
+        position: relative;
+        z-index: 1;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .hero {
+        padding: 34px 0 24px;
+      }
+
+      .hero-card,
+      .section-card,
+      .cta-card {
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+      }
+
+      .hero-card {
+        padding: 44px;
+        background:
+          linear-gradient(160deg, rgba(255, 255, 255, 0.06), transparent 44%),
+          linear-gradient(180deg, rgba(90, 24, 76, 0.94), rgba(17, 20, 32, 0.98));
+        border: 1px solid var(--line);
+      }
+
+      .hero-copy {
+        text-align: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .hero-icon {
+        width: 86px;
+        height: 86px;
+        margin: 24px auto 18px;
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.3);
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: "Newsreader", serif;
+        line-height: 0.96;
+      }
+
+      h1 {
+        max-width: 920px;
+        margin: 0 auto 18px;
+        font-size: clamp(3rem, 6.2vw, 5.5rem);
+      }
+
+      .hero-copy p {
+        display: block;
+        max-width: 820px;
+        margin: 0 auto;
+        color: var(--muted);
+        font-size: 1.07rem;
+        line-height: 1.75;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin: 30px 0 36px;
+      }
+
+      .chip {
+        padding: 12px 15px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 0.92rem;
+        color: #f4efff;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+        gap: 24px;
+        align-items: start;
+      }
+
+      .analysis-panel,
+      .phones-panel,
+      .section-card,
+      .mini-card,
+      .timeline-card {
+        background: rgba(12, 14, 24, 0.92);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+      }
+
+      .analysis-panel {
+        padding: 28px;
+      }
+
+      .analysis-panel h2,
+      .section-card h2,
+      .cta-card h2 {
+        font-size: clamp(2rem, 3.3vw, 3rem);
+        margin-bottom: 14px;
+      }
+
+      .analysis-panel p,
+      .analysis-panel li,
+      .section-card p,
+      .section-card li,
+      .footnote,
+      .source-list a,
+      .timeline-card p,
+      .mini-card p {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .analysis-panel ul,
+      .section-card ul {
+        margin: 16px 0 0;
+        padding-left: 18px;
+      }
+
+      .signal-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 22px;
+      }
+
+      .mini-card {
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.045);
+      }
+
+      .mini-card strong,
+      .stat strong {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text);
+        font-size: 0.96rem;
+      }
+
+      .phones-panel {
+        padding: 26px;
+      }
+
+      .phones-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: end;
+        margin-bottom: 22px;
+      }
+
+      .phones-head p {
+        max-width: 520px;
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .kicker {
+        color: var(--rose-soft);
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .phone-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .phone-block {
+        text-align: center;
+      }
+
+      .phone-label {
+        display: inline-flex;
+        justify-content: center;
+        margin-bottom: 14px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .phone-label.improved {
+        background: rgba(143, 242, 121, 0.12);
+        color: #d8ffd1;
+      }
+
+      .phone {
+        position: relative;
+        width: 280px;
+        height: 580px;
+        margin: 0 auto;
+        padding: 14px;
+        border-radius: 38px;
+        background: linear-gradient(180deg, #f8e8f0, #f4d6e4);
+        box-shadow: 0 22px 50px rgba(0, 0, 0, 0.28);
+      }
+
+      .phone::before {
+        content: "";
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        width: 104px;
+        height: 20px;
+        transform: translateX(-50%);
+        border-radius: 0 0 16px 16px;
+        background: #20131d;
+        z-index: 3;
+      }
+
+      .phone::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 38px;
+        border: 1px solid rgba(44, 18, 39, 0.18);
+        pointer-events: none;
+      }
+
+      .screen {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 28px;
+        overflow: hidden;
+        background: #ffffff;
+        color: var(--ink);
+      }
+
+      .screen-frame {
+        height: 100%;
+        padding: 36px 14px 14px;
+      }
+
+      .screen-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center;
+        border-radius: 20px;
+      }
+
+      .screen-ui {
+        height: 100%;
+        overflow-y: auto;
+        padding: 36px 14px 14px;
+        background:
+          radial-gradient(circle at top right, rgba(255, 79, 154, 0.12), transparent 28%),
+          linear-gradient(180deg, #fffdfb 0%, #fff6fb 100%);
+        scrollbar-width: none;
+      }
+
+      .screen-ui::-webkit-scrollbar {
+        display: none;
+      }
+
+      .ui-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #6f627c;
+      }
+
+      .ui-title {
+        margin: 16px 0 10px;
+        font-size: 1.55rem;
+        line-height: 1.04;
+      }
+
+      .ui-copy {
+        margin: 0 0 14px;
+        font-size: 0.84rem;
+        line-height: 1.55;
+        color: #5f6779;
+      }
+
+      .progress {
+        height: 8px;
+        border-radius: 999px;
+        background: #efe7ef;
+        overflow: hidden;
+        margin-bottom: 16px;
+      }
+
+      .progress span {
+        display: block;
+        width: 68%;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #ff4f9a, #8ff279);
+      }
+
+      .ui-pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .ui-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: #f4edf5;
+        color: #55384c;
+        font-size: 0.74rem;
+        font-weight: 700;
+      }
+
+      .ui-card {
+        margin-bottom: 12px;
+        padding: 14px;
+        border-radius: 20px;
+        background: #ffffff;
+        border: 1px solid rgba(76, 53, 73, 0.08);
+        box-shadow: 0 16px 24px rgba(54, 35, 53, 0.07);
+      }
+
+      .ui-card.accent {
+        background: linear-gradient(140deg, #5c184a, #2f2141);
+        color: #fff;
+      }
+
+      .ui-card.accent p,
+      .ui-card.accent .task,
+      .ui-card.accent .ui-note {
+        color: rgba(255, 255, 255, 0.82);
+      }
+
+      .ui-card h3 {
+        font-size: 1.1rem;
+        line-height: 1.05;
+        margin-bottom: 8px;
+      }
+
+      .ui-note {
+        margin: 0;
+        font-size: 0.79rem;
+        line-height: 1.5;
+        color: #5c6477;
+      }
+
+      .task-list {
+        display: grid;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .task {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px 11px;
+        border-radius: 14px;
+        background: #faf5fa;
+        font-size: 0.76rem;
+        color: #4e5163;
+      }
+
+      .task span {
+        flex: 1;
+        text-align: left;
+      }
+
+      .task strong {
+        color: #2b3042;
+      }
+
+      .task-mark {
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        background: #dff9d9;
+        color: #2c6a1d;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.74rem;
+      }
+
+      .help-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .help-actions span {
+        display: block;
+        padding: 10px 8px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.12);
+        text-align: center;
+        font-size: 0.74rem;
+        font-weight: 700;
+      }
+
+      .cta-strip {
+        margin-top: 12px;
+        display: block;
+        width: 100%;
+        padding: 14px;
+        border-radius: 18px;
+        background: linear-gradient(90deg, #ff4f9a, #ff8dc1);
+        color: #fff;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .phone-caption {
+        margin: 14px auto 0;
+        max-width: 250px;
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.55;
+      }
+
+      .section {
+        padding: 18px 0;
+      }
+
+      .section-card {
+        padding: 34px;
+        background: rgba(17, 21, 33, 0.94);
+      }
+
+      .stats-grid,
+      .ops-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 20px;
+      }
+
+      .stat {
+        padding: 18px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .stat .number {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #fff0f8;
+      }
+
+      .dual-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+        gap: 22px;
+        align-items: start;
+        margin-top: 18px;
+      }
+
+      .timeline-card {
+        padding: 22px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .timeline {
+        display: grid;
+        gap: 14px;
+      }
+
+      .timeline-item {
+        padding-left: 18px;
+        border-left: 2px solid rgba(255, 255, 255, 0.16);
+      }
+
+      .timeline-item strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--text);
+      }
+
+      .timeline-date {
+        color: var(--rose-soft);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .solution {
+        padding: 24px;
+        border-radius: 28px;
+        background: linear-gradient(180deg, #fffaf6, #fffefb);
+        color: var(--ink);
+      }
+
+      .solution .kicker {
+        color: #7a4162;
+      }
+
+      .solution h2 {
+        color: #231d2e;
+      }
+
+      .solution p,
+      .solution li,
+      .solution .source-list a {
+        color: var(--ink-soft);
+      }
+
+      .solution-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .solution-card {
+        padding: 16px;
+        border-radius: 22px;
+        background: #fff;
+        border: 1px solid var(--line-dark);
+        box-shadow: 0 16px 26px rgba(22, 20, 33, 0.06);
+      }
+
+      .solution-card strong {
+        display: block;
+        margin-bottom: 8px;
+        color: #251d31;
+      }
+
+      .source-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .source-list a {
+        padding: 10px 12px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(22, 24, 33, 0.08);
+        font-size: 0.82rem;
+      }
+
+      .footer {
+        padding: 18px 0 32px;
+      }
+
+      .cta-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 22px;
+        padding: 28px 30px;
+        background:
+          linear-gradient(135deg, rgba(255, 79, 154, 0.16), transparent 35%),
+          linear-gradient(180deg, rgba(17, 21, 33, 0.98), rgba(10, 13, 21, 0.98));
+        border: 1px solid var(--line);
+      }
+
+      .cta-card p {
+        max-width: 760px;
+        margin: 10px 0 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .cta-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 170px;
+        padding: 15px 22px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #ff4f9a, #ff93c5);
+        color: #fff;
+        font-size: 0.95rem;
+        font-weight: 700;
+        white-space: nowrap;
+        box-shadow: 0 18px 28px rgba(255, 79, 154, 0.24);
+      }
+
+      .footnote {
+        margin: 14px auto 0;
+        max-width: 960px;
+        text-align: center;
+        font-size: 0.88rem;
+      }
+
+      @media (max-width: 1100px) {
+        .hero-grid,
+        .dual-grid,
+        .ops-grid,
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .phone-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          justify-items: center;
+        }
+
+        .cta-card {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+
+      @media (max-width: 820px) {
+        .hero-card,
+        .section-card {
+          padding: 24px;
+        }
+
+        .phones-head {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .signal-grid,
+        .solution-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .phone-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .phone {
+          width: 300px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="grid-glow"></div>
+      <div class="grid-glow-2"></div>
+
+      <main>
+        <section class="hero">
+          <div class="shell">
+            <div class="hero-card">
+              <div class="hero-copy">
+                <div class="eyebrow">Rapport Therapeutics / RAP-219-FOS-901</div>
+                <img
+                  class="hero-icon"
+                  src="./assets/icon.png"
+                  alt="RAP-219-FOS-901 app icon"
+                />
+                <h1>
+                  What if RAP-219 onboarding felt like a guided check-in, not a
+                  help-desk ticket?
+                </h1>
+                <p>
+                  Rapport's live trial app still starts with site-issued accounts,
+                  password gating, and dense training screens. That is workable at
+                  small volume. It becomes an operations problem when Phase 3 in
+                  focal onset seizures is due to start in Q2 2026.
+                </p>
+                <div class="chips">
+                  <span class="chip">US App Store: 0 ratings / 0 reviews</span>
+                  <span class="chip">US Google Play: 1+ installs / 0 public ratings</span>
+                  <span class="chip">Clario eCOA Reddit: QR failures + slow escalation</span>
+                  <span class="chip">Greenhouse: live IT Infrastructure and Ops hire</span>
+                </div>
+              </div>
+
+              <div class="hero-grid">
+                <article class="analysis-panel">
+                  <div class="kicker">Lead Angle</div>
+                  <h2>Fix the first five minutes.</h2>
+                  <p>
+                    The current study app is not broken because the diary is too
+                    complicated. It is fragile because the first-run flow asks
+                    participants to coordinate site codes, passwords, training, and
+                    support at the same time.
+                  </p>
+                  <ul>
+                    <li>
+                      Store copy confirms patients cannot self-start without a
+                      participating-site account.
+                    </li>
+                    <li>
+                      Public screenshots show login and training are still
+                      credential-heavy and text-heavy.
+                    </li>
+                    <li>
+                      Live hiring shows Rapport is already investing in scalable,
+                      compliant support infrastructure.
+                    </li>
+                  </ul>
+
+                  <div class="signal-grid">
+                    <div class="mini-card">
+                      <strong>March 10, 2026</strong>
+                      <p>
+                        Rapport reaffirmed RAP-219 Phase 3 start in Q2 2026 and
+                        said cash runway extends into 2H 2029.
+                      </p>
+                    </div>
+                    <div class="mini-card">
+                      <strong>February 11, 2026</strong>
+                      <p>
+                        The IT Infrastructure and Operations role was still live and
+                        focused on cloud, site support, cybersecurity, and scale.
+                      </p>
+                    </div>
+                    <div class="mini-card">
+                      <strong>Reddit complaint</strong>
+                      <p>
+                        Clario eCOA users described QR-code failures that forced
+                        subject rescheduling and long support escalations.
+                      </p>
+                    </div>
+                    <div class="mini-card">
+                      <strong>Prototype thesis</strong>
+                      <p>
+                        Add a sponsor-side activation layer that rescues onboarding
+                        before the first missed entry and gives ops better visibility.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="phones-panel">
+                  <div class="phones-head">
+                    <div>
+                      <div class="kicker">Current Vs Improved</div>
+                      <h2>From credential friction to guided activation</h2>
+                    </div>
+                    <p>
+                      The live app already proves the study exists. The opportunity
+                      is to wrap that clinical workflow in a much better first-run
+                      experience for participants and coordinators.
+                    </p>
+                  </div>
+
+                  <div class="phone-grid">
+                    <div class="phone-block">
+                      <div class="phone-label">Current login</div>
+                      <div class="phone">
+                        <div class="screen">
+                          <div class="screen-frame">
+                            <img
+                              src="./assets/current-login.png"
+                              alt="Current RAP-219-FOS-901 login screen"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <p class="phone-caption">
+                        Site 300, patient account selection, password field, and a
+                        single forgot-password escape hatch.
+                      </p>
+                    </div>
+
+                    <div class="phone-block">
+                      <div class="phone-label">Current training</div>
+                      <div class="phone">
+                        <div class="screen">
+                          <div class="screen-frame">
+                            <img
+                              src="./assets/current-training.png"
+                              alt="Current RAP-219-FOS-901 training module screen"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <p class="phone-caption">
+                        The handheld trainer relies on dense instructions and manual
+                        next/back progression before real study work begins.
+                      </p>
+                    </div>
+
+                    <div class="phone-block">
+                      <div class="phone-label improved">Improved rapid start</div>
+                      <div class="phone">
+                        <div class="screen">
+                          <div class="screen-ui">
+                            <div class="ui-top">
+                              <span>Rapid Start</span>
+                              <span>Site 300</span>
+                            </div>
+                            <h3 class="ui-title">
+                              Finish setup in 2 minutes, then start today's check-in.
+                            </h3>
+                            <p class="ui-copy">
+                              The participant sees one clear path, one recovery path,
+                              and one live support path.
+                            </p>
+                            <div class="progress"><span></span></div>
+                            <div class="ui-pill-row">
+                              <span class="ui-pill">Device ready</span>
+                              <span class="ui-pill">Large text on</span>
+                              <span class="ui-pill">Invite matched</span>
+                            </div>
+
+                            <div class="ui-card">
+                              <h3>Activation checklist</h3>
+                              <p class="ui-note">
+                                Every step is saved automatically so the participant
+                                never loses progress.
+                              </p>
+                              <div class="task-list">
+                                <div class="task">
+                                  <span><strong>1.</strong> Confirm participant identity</span>
+                                  <span class="task-mark">OK</span>
+                                </div>
+                                <div class="task">
+                                  <span><strong>2.</strong> Check brightness, reminders, and font size</span>
+                                  <span class="task-mark">OK</span>
+                                </div>
+                                <div class="task">
+                                  <span><strong>3.</strong> Complete the 45-second guided walkthrough</span>
+                                  <span class="task-mark">GO</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="ui-card accent">
+                              <h3>Need help right now?</h3>
+                              <p class="ui-note">
+                                If QR, password, or account matching fails, the user
+                                can recover without leaving the flow.
+                              </p>
+                              <div class="help-actions">
+                                <span>Text me a link</span>
+                                <span>Call site</span>
+                                <span>Reset invite</span>
+                                <span>Live support</span>
+                              </div>
+                            </div>
+
+                            <div class="ui-card">
+                              <h3>Coordinator visibility</h3>
+                              <p class="ui-note">
+                                If the participant stalls before the first diary
+                                entry, the site sees it immediately instead of
+                                learning about it after missing data.
+                              </p>
+                            </div>
+
+                            <a class="cta-strip" href="#contact">Open first diary entry</a>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="phone-caption">
+                        Same regulated workflow, but with device preflight, invite
+                        rescue, shorter training, and coordinator visibility.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="shell">
+            <div class="section-card">
+              <div class="kicker">Operational Stakes</div>
+              <h2>Phase 3 scale will amplify every failed first-run session.</h2>
+              <p>
+                Rapport is not operating in a steady-state support environment. The
+                public signals point to more patients, more sites, more internal
+                tooling complexity, and tighter expectations around visibility and
+                compliance.
+              </p>
+
+              <div class="stats-grid">
+                <div class="stat">
+                  <span class="number">Q2 2026</span>
+                  <strong>Phase 3 start target</strong>
+                  <p>RAP-219 focal onset seizure program is scheduled to begin in Q2 2026.</p>
+                </div>
+                <div class="stat">
+                  <span class="number">$490.5M</span>
+                  <strong>Cash at year-end 2025</strong>
+                  <p>Rapport has the runway to invest in better operational plumbing now.</p>
+                </div>
+                <div class="stat">
+                  <span class="number">2 sites</span>
+                  <strong>Boston + San Diego</strong>
+                  <p>The live IT role is explicitly responsible for both physical locations.</p>
+                </div>
+                <div class="stat">
+                  <span class="number">0 public reviews</span>
+                  <strong>No public rating signal</strong>
+                  <p>That makes internal activation and support telemetry more important, not less.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="shell">
+            <div class="section-card">
+              <div class="dual-grid">
+                <article class="timeline-card">
+                  <div class="kicker">Evidence Stack</div>
+                  <h2>Why this is credible right now</h2>
+                  <div class="timeline">
+                    <div class="timeline-item">
+                      <div class="timeline-date">January 7, 2026</div>
+                      <strong>Rapport accelerated RAP-219 Phase 3 timing.</strong>
+                      <p>
+                        Investor communications moved focal onset seizure Phase 3 to
+                        Q2 2026 and positioned RAP-219 as the core of a broader
+                        epilepsy portfolio.
+                      </p>
+                    </div>
+                    <div class="timeline-item">
+                      <div class="timeline-date">February 11, 2026</div>
+                      <strong>IT ops scaling was still a live hiring need.</strong>
+                      <p>
+                        The Greenhouse role calls for cloud-first infrastructure,
+                        site support, collaboration tooling, cybersecurity, GxP, and
+                        practical scaling across research, development, clinical, and
+                        business operations.
+                      </p>
+                    </div>
+                    <div class="timeline-item">
+                      <div class="timeline-date">March 30, 2026</div>
+                      <strong>The app listings still show a thin public signal.</strong>
+                      <p>
+                        U.S. iOS and Android checks show zero public ratings and zero
+                        reviews, so the real pain likely surfaces through support and
+                        site operations rather than store feedback.
+                      </p>
+                    </div>
+                    <div class="timeline-item">
+                      <div class="timeline-date">Public eCOA discussion</div>
+                      <strong>QR rescue and slow escalation are already known pain.</strong>
+                      <p>
+                        Clinical-research users on Reddit describe QR-code failures,
+                        frustrating support, and a need for much better participant UX.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="solution">
+                  <div class="kicker">Prototype Direction</div>
+                  <h2>Build a sponsor-side activation layer, not a full rewrite.</h2>
+                  <p>
+                    This concept sits around the existing regulated study app. It
+                    reduces rescue work for coordinators while giving operations a
+                    cleaner view of who is stalled, why they stalled, and what support
+                    already happened.
+                  </p>
+
+                  <div class="solution-grid">
+                    <div class="solution-card">
+                      <strong>Participant preflight</strong>
+                      <p>
+                        Confirm invite, device readiness, reminder settings, and
+                        accessibility preferences before login failure becomes a ticket.
+                      </p>
+                    </div>
+                    <div class="solution-card">
+                      <strong>Invite recovery</strong>
+                      <p>
+                        Replace dead-end QR or password loops with text-link resend,
+                        one-tap reset, and visible site contact paths.
+                      </p>
+                    </div>
+                    <div class="solution-card">
+                      <strong>Shorter guided training</strong>
+                      <p>
+                        Convert dense trainer copy into progressive, saveable, visual
+                        coaching that gets participants to first entry faster.
+                      </p>
+                    </div>
+                    <div class="solution-card">
+                      <strong>Ops and compliance visibility</strong>
+                      <p>
+                        Show stalled activations, rescue attempts, and first-entry
+                        status to coordinators and sponsor-side operations.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="source-list">
+                    <a href="https://apps.apple.com/us/app/rap-219-fos-901/id6753101018" target="_blank" rel="noreferrer">App Store</a>
+                    <a href="https://play.google.com/store/apps/details?id=com.ert.RAP219FOS901HHSYN.hh&hl=en_US&gl=US" target="_blank" rel="noreferrer">Google Play</a>
+                    <a href="https://investors.rapportrx.com/news-releases/news-release-details/rapport-therapeutics-reports-fourth-quarter-and-full-year-2025" target="_blank" rel="noreferrer">2025 results</a>
+                    <a href="https://boards-api.greenhouse.io/v1/boards/rapporttherapeutics/jobs?content=true" target="_blank" rel="noreferrer">Greenhouse role</a>
+                    <a href="https://reddit.com/r/clinicalresearch/comments/1j8c9gc/thoughts_on_clario_ecoa/" target="_blank" rel="noreferrer">Reddit signal</a>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer" id="contact">
+        <div class="shell">
+          <div class="cta-card">
+            <div>
+              <div class="kicker">Elinext Fit</div>
+              <h2>Turn participant activation into an ops asset.</h2>
+              <p>
+                The strongest entry point here is a secure mobile/web layer that
+                improves first-run success, shortens support loops, and gives Karina's
+                team better visibility without forcing a risky platform replacement.
+              </p>
+            </div>
+            <a
+              class="cta-button"
+              href="https://www.elinext.com/contacts/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Get in Touch
+            </a>
+          </div>
+          <p class="footnote">
+            Built from public app-store listings, Google Play screenshots, Rapport
+            investor updates, live hiring data, and clinical-research discussion
+            threads.
+          </p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
