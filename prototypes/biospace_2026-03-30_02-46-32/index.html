@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BioSpace Jobs Mobile Match Teardown</title>
+  <meta name="description" content="What if BioSpace turned its split job-board experience into a mobile match feed with fit score, salary confidence, and apply-readiness so candidates do less blind scrolling and employers get higher-signal applications?">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/biospace_2026-03-30_02-46-32/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/biospace_2026-03-30_02-46-32/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/biospace_2026-03-30_02-46-32/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="BioSpace Mobile — AI Teardown">
+  <meta property="og:description" content="What if BioSpace Jobs replaced generic biotech-job scrolling with a mobile match feed that layers fit score, salary confidence, freshness, and apply-readiness on top of the current board?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="theme-color" content="#0f1625">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-30: iOS N/A (no attributable BioSpace app found, source: iTunes Search API US), Android N/A (no attributable BioSpace app found, source: Google Play scraper search) -->
+  <style>
+    :root {
+      --ink: #11223b;
+      --night: #0f1625;
+      --paper: #f6f2eb;
+      --panel: rgba(249, 246, 240, 0.96);
+      --panel-strong: #fffdf9;
+      --line: rgba(17, 34, 59, 0.12);
+      --muted: #617086;
+      --brand: #d02c24;
+      --brand-soft: #ffe3dd;
+      --teal: #0f7f7c;
+      --teal-soft: #daf2ef;
+      --gold: #c58a26;
+      --gold-soft: #f8ead2;
+      --shadow: 0 30px 70px rgba(10, 19, 33, 0.12);
+      --phone-shadow: 0 28px 70px rgba(6, 14, 26, 0.28);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --mono: "IBM Plex Mono", monospace;
+      --display: "Sora", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--display);
+      background:
+        radial-gradient(circle at top left, rgba(208, 44, 36, 0.14), transparent 30%),
+        radial-gradient(circle at 80% 12%, rgba(15, 127, 124, 0.18), transparent 28%),
+        linear-gradient(180deg, #f5efe6 0%, #f1ebe2 38%, #f8f5ef 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      overflow: hidden;
+      padding-bottom: 48px;
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page::before {
+      width: 420px;
+      height: 420px;
+      left: -160px;
+      top: 440px;
+      background: rgba(208, 44, 36, 0.10);
+      filter: blur(24px);
+    }
+
+    .page::after {
+      width: 380px;
+      height: 380px;
+      right: -120px;
+      top: 120px;
+      background: rgba(15, 127, 124, 0.10);
+      filter: blur(18px);
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero,
+    .section-card,
+    .cta-card {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero {
+      margin-top: 28px;
+      border-radius: 36px;
+      padding: 28px;
+      display: grid;
+      gap: 28px;
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .eyebrow,
+    .mini-label,
+    .chip,
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 0 6px rgba(208, 44, 36, 0.12);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 430px);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-copy {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 680px;
+    }
+
+    .brand-lockup {
+      display: block;
+      width: 180px;
+      margin: 0 auto 18px;
+    }
+
+    .hero-copy h1 {
+      margin: 0;
+      font-size: clamp(2.5rem, 5vw, 4.9rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-copy p {
+      margin: 18px auto 0;
+      max-width: 640px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .button,
+    .button-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 50px;
+      padding: 0 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .button {
+      color: #fff;
+      background: linear-gradient(135deg, #d02c24 0%, #f05b40 100%);
+      box-shadow: 0 16px 30px rgba(208, 44, 36, 0.24);
+    }
+
+    .button-secondary {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--line);
+    }
+
+    .button:hover,
+    .button-secondary:hover {
+      transform: translateY(-1px);
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .stat {
+      display: block;
+      text-align: center;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(17, 34, 59, 0.08);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.55rem;
+      letter-spacing: -0.04em;
+      margin-bottom: 6px;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 14px;
+      justify-items: center;
+    }
+
+    .mini-board {
+      width: 100%;
+      padding: 18px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #10182b 0%, #141f38 100%);
+      color: #f3f7ff;
+      box-shadow: var(--phone-shadow);
+    }
+
+    .mini-board h2 {
+      margin: 10px 0 6px;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+    }
+
+    .mini-board p {
+      margin: 0;
+      color: rgba(243, 247, 255, 0.72);
+      font-size: 0.96rem;
+      line-height: 1.6;
+    }
+
+    .mini-board-grid {
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .mini-role {
+      display: grid;
+      gap: 6px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .mini-role-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+    }
+
+    .mini-role strong {
+      font-size: 0.95rem;
+    }
+
+    .badge-row,
+    .source-row,
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(15, 127, 124, 0.10);
+      color: var(--teal);
+    }
+
+    .mini-tag,
+    .pill,
+    .micro-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .mini-tag {
+      padding: 7px 10px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #d7e4ff;
+    }
+
+    .pill {
+      padding: 7px 10px;
+      background: var(--teal-soft);
+      color: var(--teal);
+    }
+
+    .pill.warm {
+      background: var(--gold-soft);
+      color: #8c5d10;
+    }
+
+    .pill.hot {
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+
+    .micro-pill {
+      padding: 6px 8px;
+      background: rgba(17, 34, 59, 0.06);
+      color: var(--muted);
+    }
+
+    .section-card,
+    .cta-card {
+      margin-top: 22px;
+      border-radius: 30px;
+      padding: 28px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .section-head h2 {
+      margin: 6px 0 0;
+      font-size: clamp(1.8rem, 3vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p {
+      max-width: 640px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .signal-grid,
+    .insight-grid,
+    .source-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .signal-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .signal-card,
+    .insight-card,
+    .source-card {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border-radius: 22px;
+      background: var(--panel-strong);
+      border: 1px solid rgba(17, 34, 59, 0.09);
+    }
+
+    .signal-card strong,
+    .insight-card strong,
+    .source-card strong {
+      font-size: 1.02rem;
+      letter-spacing: -0.02em;
+    }
+
+    .signal-card p,
+    .insight-card p,
+    .source-card p,
+    .source-card li,
+    .note {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.96rem;
+    }
+
+    .compare-wrap {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      align-items: start;
+    }
+
+    .compare-card {
+      display: grid;
+      gap: 16px;
+      justify-items: center;
+      padding: 22px 18px;
+      border-radius: 28px;
+      background: var(--panel-strong);
+      border: 1px solid rgba(17, 34, 59, 0.08);
+    }
+
+    .compare-card h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      text-align: center;
+    }
+
+    .compare-card p {
+      margin: 0;
+      text-align: center;
+      max-width: 420px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      padding: 12px;
+      border-radius: 38px;
+      background:
+        linear-gradient(180deg, #1a2337 0%, #101726 100%);
+      box-shadow: var(--phone-shadow);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 94px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(5, 9, 18, 0.84);
+      z-index: 2;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      border-radius: 28px;
+      background: linear-gradient(180deg, #fbfaf7 0%, #f3efe8 100%);
+      padding: 36px 14px 14px;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .phone-top,
+    .feed-title,
+    .feed-copy,
+    .feed-search,
+    .role-card,
+    .role-card > * {
+      display: block;
+    }
+
+    .phone-top {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .phone-top img {
+      display: block;
+      width: 86px;
+      margin: 0 auto 10px;
+    }
+
+    .feed-title {
+      margin: 0;
+      text-align: center;
+      font-size: 1.1rem;
+      letter-spacing: -0.03em;
+    }
+
+    .feed-copy {
+      margin: 8px auto 16px;
+      max-width: 230px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+
+    .feed-search {
+      width: 100%;
+      padding: 12px 13px;
+      border-radius: 16px;
+      border: 1px solid rgba(17, 34, 59, 0.08);
+      background: #fff;
+      margin-bottom: 12px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      overflow: auto;
+      margin-bottom: 12px;
+      padding-bottom: 2px;
+    }
+
+    .filter-row::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .role-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .role-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(17, 34, 59, 0.08);
+      box-shadow: 0 14px 28px rgba(10, 17, 30, 0.06);
+    }
+
+    .role-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .role-head strong {
+      font-size: 0.9rem;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+    }
+
+    .role-meta,
+    .role-note {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.55;
+    }
+
+    .role-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .action {
+      flex: 1;
+      min-height: 36px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .action.primary {
+      color: #fff;
+      background: linear-gradient(135deg, #d02c24 0%, #f05b40 100%);
+    }
+
+    .action.secondary {
+      color: var(--ink);
+      background: rgba(17, 34, 59, 0.06);
+    }
+
+    .match-score {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #0f7f7c;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .metric-band {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .metric {
+      padding: 10px;
+      border-radius: 14px;
+      background: rgba(17, 34, 59, 0.04);
+    }
+
+    .metric strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.78rem;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      line-height: 1.45;
+    }
+
+    .insight-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .source-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .source-card ul {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .cta-card {
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .cta-card h2 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.3rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .cta-card p {
+      margin: 0;
+      max-width: 720px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.65;
+    }
+
+    .rise {
+      animation: rise 700ms ease both;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .signal-grid,
+      .compare-wrap,
+      .insight-grid,
+      .source-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero,
+      .section-card,
+      .cta-card {
+        padding: 22px;
+      }
+
+      .container {
+        width: min(100% - 18px, 1180px);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main class="container">
+      <section class="hero rise">
+        <div class="hero-top">
+          <span class="eyebrow">Prepared for Joshua Goodwin</span>
+          <span class="chip">Web-product fallback: BioSpace Jobs</span>
+        </div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <img class="brand-lockup" src="assets/biospace-logo.png" alt="BioSpace">
+            <h1>What if BioSpace Jobs felt like a match feed, not a black hole?</h1>
+            <p>
+              BioSpace already has the audience, the salary data, and the employer demand. The missing layer is mobile decision support:
+              fit score, salary confidence, freshness, and apply-readiness on every role card.
+            </p>
+            <div class="hero-actions">
+              <a class="button" href="#prototype">See the mobile concept</a>
+              <a class="button-secondary" href="#signals">Why this matters</a>
+            </div>
+            <div class="hero-stats">
+              <span class="stat">
+                <strong>3,491</strong>
+                <span class="stat-label">Live jobs seen</span>
+              </span>
+              <span class="stat">
+                <strong>21%</strong>
+                <span class="stat-label">Applications / job in 2025</span>
+              </span>
+              <span class="stat">
+                <strong>2/3</strong>
+                <span class="stat-label">U.S. workforce reach</span>
+              </span>
+            </div>
+          </div>
+          <div class="hero-side">
+            <div class="mini-board">
+              <span class="mini-label">Why now</span>
+              <h2>BioSpace already owns the signal.</h2>
+              <p>
+                The public product stack spans content, salary reports, and a large specialist job board. This concept simply moves that intelligence into the mobile apply moment.
+              </p>
+              <div class="mini-board-grid">
+                <div class="mini-role">
+                  <div class="mini-role-top">
+                    <strong>Candidate trust</strong>
+                    <span class="mini-tag">Pain</span>
+                  </div>
+                  <span class="note">Reddit feedback calls applications a black hole and recruiter leads noisy.</span>
+                </div>
+                <div class="mini-role">
+                  <div class="mini-role-top">
+                    <strong>Market pressure</strong>
+                    <span class="mini-tag">Signal</span>
+                  </div>
+                  <span class="note">BioSpace's own report shows higher application pressure per job in 2025.</span>
+                </div>
+                <div class="mini-role">
+                  <div class="mini-role-top">
+                    <strong>Clear wedge</strong>
+                    <span class="mini-tag">Product</span>
+                  </div>
+                  <span class="note">Fit score plus salary confidence is a better differentiator than more listings.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card rise" id="signals">
+        <div class="section-head">
+          <div>
+            <span class="mini-label">Public Signals</span>
+            <h2>The gap is not reach. It is confidence.</h2>
+          </div>
+          <p>
+            BioSpace's public data already shows scale, pressure, and user trust friction. That combination makes a mobile relevance layer more valuable than another surface redesign.
+          </p>
+        </div>
+        <div class="signal-grid">
+          <article class="signal-card">
+            <span class="pill">Official scale</span>
+            <strong>BioSpace says it reaches two-thirds of the U.S. life sciences workforce.</strong>
+            <p>
+              The 2025 Employment Outlook report also says BioSpace adds thousands of new site registrations every month, which means small product wins can compound quickly.
+            </p>
+          </article>
+          <article class="signal-card">
+            <span class="pill warm">Official pressure</span>
+            <strong>Applications per posted job increased from 15% in 2024 to 21% in 2025.</strong>
+            <p>
+              More interest is useful, but without better triage and fit guidance it can also mean more noise for employers and more uncertainty for candidates.
+            </p>
+          </article>
+          <article class="signal-card">
+            <span class="pill hot">User trust gap</span>
+            <strong>Reddit feedback describes BioSpace applications as a "black hole" and recruiter leads as low-fit.</strong>
+            <p>
+              That is exactly the kind of problem a mobile readiness layer can shrink by showing why a role fits before the candidate commits.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card rise" id="prototype">
+        <div class="section-head">
+          <div>
+            <span class="mini-label">Prototype</span>
+            <h2>Current flow vs. a match-first mobile flow</h2>
+          </div>
+          <p>
+            The goal is not to replace Madgex or rebuild the marketplace. It is to wrap the current BioSpace Jobs experience in a smarter mobile layer that reduces guesswork for specialized life-science roles.
+          </p>
+        </div>
+        <div class="compare-wrap">
+          <article class="compare-card">
+            <span class="pill warm">Current state</span>
+            <h3>Filter, scroll, and hope the click is worth it</h3>
+            <p>
+              Lots of roles, light guidance, and too much effort before the candidate knows whether the role is fresh, relevant, or realistically paid.
+            </p>
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="phone-top">
+                  <img src="assets/biospace-icon.png" alt="BioSpace icon">
+                  <span class="micro-pill">Current BioSpace Jobs</span>
+                  <h4 class="feed-title">Search biotech jobs</h4>
+                  <p class="feed-copy">3,491 roles live. Keyword search and generic filters do most of the work.</p>
+                </div>
+                <div class="feed-search">Search title, keyword, or company</div>
+                <div class="filter-row">
+                  <span class="micro-pill">Remote</span>
+                  <span class="micro-pill">Clinical</span>
+                  <span class="micro-pill">Operations</span>
+                  <span class="micro-pill">California</span>
+                </div>
+                <div class="role-stack">
+                  <article class="role-card">
+                    <div class="role-head">
+                      <strong>Associate Director, Transformation</strong>
+                      <span class="micro-pill">2d</span>
+                    </div>
+                    <div class="role-meta">Hybrid · Boston, MA · Salary not shown</div>
+                    <div class="pill-row">
+                      <span class="micro-pill">Process change</span>
+                      <span class="micro-pill">Ops</span>
+                    </div>
+                    <div class="role-note">Candidate still has to open the role to learn fit, freshness, and whether comp is likely in range.</div>
+                    <div class="role-actions">
+                      <span class="action secondary">Save</span>
+                      <span class="action primary">Open</span>
+                    </div>
+                  </article>
+                  <article class="role-card">
+                    <div class="role-head">
+                      <strong>GRA CMC Medical Device Lead</strong>
+                      <span class="micro-pill">1w</span>
+                    </div>
+                    <div class="role-meta">Remote · U.S./EU · Salary not shown</div>
+                    <div class="pill-row">
+                      <span class="micro-pill">Regulatory</span>
+                      <span class="micro-pill">Medical device</span>
+                    </div>
+                    <div class="role-note">High-specialty role, but the visible job card still looks almost identical to lower-complexity searches.</div>
+                  </article>
+                  <article class="role-card">
+                    <div class="role-head">
+                      <strong>Senior Manager, Global Trial Optimization</strong>
+                      <span class="micro-pill">3d</span>
+                    </div>
+                    <div class="role-meta">Chicago, IL · Apply off-site</div>
+                    <div class="pill-row">
+                      <span class="micro-pill">Clinical ops</span>
+                      <span class="micro-pill">Vendor mix</span>
+                    </div>
+                    <div class="role-note">The candidate knows the title, not whether the role is actually a strong match.</div>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="compare-card">
+            <span class="pill">Improved state</span>
+            <h3>Fit score, salary confidence, and apply-readiness on every card</h3>
+            <p>
+              BioSpace's existing salary and market intelligence become part of the mobile decision layer, not separate content the user has to hunt down later.
+            </p>
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="phone-top">
+                  <img src="assets/biospace-icon.png" alt="BioSpace icon">
+                  <span class="micro-pill">Concept: Match Feed</span>
+                  <h4 class="feed-title">Good morning, Joshua's market</h4>
+                  <p class="feed-copy">Mobile role cards rank specialty jobs by fit, pay confidence, freshness, and apply readiness.</p>
+                </div>
+                <div class="feed-search">Transformation, MES, trial ops, med device</div>
+                <div class="filter-row">
+                  <span class="pill">Best fit</span>
+                  <span class="micro-pill">Pay confidence</span>
+                  <span class="micro-pill">New this week</span>
+                </div>
+                <div class="role-stack">
+                  <article class="role-card">
+                    <div class="role-head">
+                      <strong>Associate Director, Transformation</strong>
+                      <span class="match-score">92% fit</span>
+                    </div>
+                    <div class="role-meta">Hybrid · Boston, MA</div>
+                    <div class="metric-band">
+                      <div class="metric">
+                        <strong>Salary confidence</strong>
+                        <span>High for Boston market</span>
+                      </div>
+                      <div class="metric">
+                        <strong>Readiness</strong>
+                        <span>Profile missing only MES detail</span>
+                      </div>
+                    </div>
+                    <div class="pill-row">
+                      <span class="pill">Why matched: transformation + ops</span>
+                      <span class="pill warm">Fresh: 2 days</span>
+                    </div>
+                    <div class="role-actions">
+                      <span class="action secondary">Prep profile</span>
+                      <span class="action primary">Apply with context</span>
+                    </div>
+                  </article>
+                  <article class="role-card">
+                    <div class="role-head">
+                      <strong>Business Process Architecture (MES)</strong>
+                      <span class="match-score">88% fit</span>
+                    </div>
+                    <div class="role-meta">Remote · Pharma manufacturing stack</div>
+                    <div class="metric-band">
+                      <div class="metric">
+                        <strong>Role confidence</strong>
+                        <span>Strong match to manufacturing transformation cluster</span>
+                      </div>
+                      <div class="metric">
+                        <strong>Competition</strong>
+                        <span>Moderate, rising this week</span>
+                      </div>
+                    </div>
+                    <div class="pill-row">
+                      <span class="pill">MES</span>
+                      <span class="pill">Process architecture</span>
+                      <span class="pill warm">Market pay aligned</span>
+                    </div>
+                  </article>
+                  <article class="role-card">
+                    <div class="role-head">
+                      <strong>Global Trial Optimization</strong>
+                      <span class="match-score">85% fit</span>
+                    </div>
+                    <div class="role-meta">Chicago, IL · Employer quality signal available</div>
+                    <div class="metric-band">
+                      <div class="metric">
+                        <strong>Why now</strong>
+                        <span>Fast response pattern from similar employers</span>
+                      </div>
+                      <div class="metric">
+                        <strong>Apply friction</strong>
+                        <span>Low: 2 missing fields</span>
+                      </div>
+                    </div>
+                    <div class="pill-row">
+                      <span class="pill">Trial ops</span>
+                      <span class="pill hot">High employer intent</span>
+                    </div>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card rise">
+        <div class="section-head">
+          <div>
+            <span class="mini-label">Why it works</span>
+            <h2>A narrow product wedge with real revenue logic</h2>
+          </div>
+          <p>
+            This concept uses BioSpace's existing strengths instead of asking for a reinvention. The product logic is straightforward: better candidate decisions create better employer outcomes.
+          </p>
+        </div>
+        <div class="insight-grid">
+          <article class="insight-card">
+            <span class="pill">Candidate side</span>
+            <strong>Less blind scrolling</strong>
+            <p>
+              Specialized job seekers get a clear explanation of why a role matches, whether the pay range is believable for their market, and how much effort the apply flow will take.
+            </p>
+          </article>
+          <article class="insight-card">
+            <span class="pill warm">Employer side</span>
+            <strong>Higher-intent applications</strong>
+            <p>
+              Fit score and readiness push better-qualified candidates deeper into the funnel, which matters more than inflating raw application volume.
+            </p>
+          </article>
+          <article class="insight-card">
+            <span class="pill hot">BioSpace moat</span>
+            <strong>Salary + insight + jobs in one loop</strong>
+            <p>
+              Horizontal boards can show jobs. BioSpace can show jobs with niche life-science context, market confidence, and employer-quality signal built directly into the card.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card rise">
+        <div class="section-head">
+          <div>
+            <span class="mini-label">Source Map</span>
+            <h2>The concept is grounded in public evidence</h2>
+          </div>
+          <p>
+            No LinkedIn scraping was used. Person data came from CRM context, and the product thesis comes from BioSpace's own market reports, public site inspection, store discovery, BuiltWith, and Reddit.
+          </p>
+        </div>
+        <div class="source-grid">
+          <article class="source-card">
+            <strong>Official BioSpace signals</strong>
+            <ul>
+              <li>BioSpace says it is the digital hub for life sciences news and jobs.</li>
+              <li>The 2025 outlook report says BioSpace has a relationship with two-thirds of the U.S. life sciences workforce.</li>
+              <li>The same report says BioSpace adds thousands of registrations every month.</li>
+            </ul>
+          </article>
+          <article class="source-card">
+            <strong>Product evidence</strong>
+            <ul>
+              <li>The browse page exposed 3,491 returned roles during this run.</li>
+              <li>Public markup shows Madgex on the jobs product and Brightspot on the media side.</li>
+              <li>No attributable BioSpace mobile app was found in Apple or Google store discovery.</li>
+            </ul>
+          </article>
+          <article class="source-card">
+            <strong>User and market evidence</strong>
+            <ul>
+              <li>Reddit users described applications as a black hole and recruiter leads as irrelevant.</li>
+              <li>Reddit discussion around BioSpace salary data showed market-value questions vary sharply by geography.</li>
+              <li>BioSpace's own report shows application pressure per job is rising.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="cta-card rise">
+        <span class="chip">Elinext concept direction</span>
+        <h2>Keep the board. Upgrade the mobile decision layer.</h2>
+        <p>
+          This is the kind of product move that can ship incrementally: a mobile match feed on top of the current BioSpace Jobs workflow, using fit score, salary confidence, and apply-readiness to turn more of the existing audience into higher-signal outcomes.
+        </p>
+        <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+      </section>
+
+      <p class="footer-note">
+        Prototype prepared for BioSpace on 2026-03-30. Public-product fallback used because no attributable first-party mobile app listing was found.
+      </p>
+    </main>
+  </div>
+</body>
+</html>
