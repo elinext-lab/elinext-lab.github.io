@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Entrada Therapeutics Mobile - AI Teardown</title>
+    <meta
+      name="description"
+      content="A focused mobile teardown for Entrada Therapeutics: what if biomarker visits, sample chain-of-custody, home-visit logistics, and vendor escalations lived in one mobile study-ops hub?"
+    />
+    <link
+      rel="canonical"
+      href="https://elinext-lab.github.io/prototypes/entrada-therapeutics_2026-03-29_23-52-00/"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Entrada Therapeutics Mobile - AI Teardown" />
+    <meta
+      property="og:description"
+      content="What if Entrada had a mobile biomarker ops layer that kept DMD visit windows, sample handoffs, home visits, and vendor blockers in one place instead of across email, portals, and spreadsheets?"
+    />
+    <meta
+      property="og:url"
+      content="https://elinext-lab.github.io/prototypes/entrada-therapeutics_2026-03-29_23-52-00/"
+    />
+    <meta
+      property="og:image"
+      content="https://elinext-lab.github.io/prototypes/entrada-therapeutics_2026-03-29_23-52-00/og-image.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="author" content="Yauheni Shauchenka, Elinext" />
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-ZR415HX0B2");
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Ratings as of 2026-03-29: iOS n/a (no relevant first-party listing, source: iTunes Search API US), Android n/a (no relevant first-party listing, source: google-play-scraper search) -->
+
+    <style>
+      :root {
+        --night: #0d1730;
+        --night-2: #142347;
+        --ink: #16233d;
+        --ink-soft: #375178;
+        --paper: #f5efe6;
+        --paper-2: #fff9f2;
+        --line: rgba(22, 35, 61, 0.12);
+        --line-strong: rgba(22, 35, 61, 0.22);
+        --orange: #ef7d3a;
+        --orange-soft: #ffc68f;
+        --teal: #58cdbd;
+        --teal-soft: #dbf7f2;
+        --rose: #ffe5d8;
+        --green: #1f9d75;
+        --green-soft: #dcf6eb;
+        --red: #d25438;
+        --red-soft: #ffe1d7;
+        --yellow: #f3be50;
+        --yellow-soft: #fff3cf;
+        --white: #ffffff;
+        --shadow: 0 30px 80px rgba(13, 23, 48, 0.16);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: "Space Grotesk", "Avenir Next", sans-serif;
+        letter-spacing: -0.04em;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .page {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .section {
+        position: relative;
+        z-index: 1;
+        background: var(--paper);
+      }
+
+      .container {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at top left, rgba(239, 125, 58, 0.28), transparent 32%),
+          radial-gradient(circle at bottom right, rgba(88, 205, 189, 0.16), transparent 26%),
+          linear-gradient(180deg, #132040 0%, #0d1730 100%);
+        color: var(--paper-2);
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 60px 60px;
+        opacity: 0.22;
+        z-index: 0;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        width: 440px;
+        height: 440px;
+        right: -120px;
+        top: 60px;
+        border-radius: 999px;
+        background: rgba(239, 125, 58, 0.12);
+        filter: blur(24px);
+        z-index: 0;
+      }
+
+      .hero-inner {
+        position: relative;
+        z-index: 1;
+        padding: 34px 0 88px;
+      }
+
+      .hero-topline,
+      .hero-kicker,
+      .hero-copy p,
+      .hero-copy h1,
+      .hero-note,
+      .hero-actions {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+      }
+
+      .hero-topline {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 auto 18px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.08);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 12px;
+      }
+
+      .hero-topline img {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+      }
+
+      .hero-copy {
+        max-width: 940px;
+        margin: 0 auto;
+      }
+
+      .hero-kicker {
+        margin-bottom: 16px;
+        color: #ffd7b7;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-size: clamp(2.8rem, 5.8vw, 5.1rem);
+        line-height: 0.94;
+      }
+
+      .lede {
+        max-width: 820px;
+        margin-top: 22px;
+        font-size: clamp(1rem, 1.8vw, 1.2rem);
+        line-height: 1.72;
+        color: rgba(255, 249, 242, 0.84);
+      }
+
+      .hero-note {
+        max-width: 760px;
+        margin-top: 24px;
+        font-size: 0.95rem;
+        line-height: 1.62;
+        color: rgba(255, 249, 242, 0.7);
+      }
+
+      .hero-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 18px;
+        border-radius: 999px;
+        font-size: 0.93rem;
+        font-weight: 600;
+      }
+
+      .pill-primary {
+        background: var(--orange);
+        color: var(--white);
+      }
+
+      .pill-secondary {
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--paper-2);
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        max-width: 980px;
+        margin: 38px auto 0;
+      }
+
+      .metric {
+        padding: 18px 16px;
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(12px);
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 1.9rem;
+        font-family: "Space Grotesk", "Avenir Next", sans-serif;
+      }
+
+      .metric span {
+        display: block;
+        margin-top: 6px;
+        line-height: 1.45;
+        color: rgba(255, 249, 242, 0.8);
+      }
+
+      .content-band {
+        position: relative;
+        z-index: 1;
+        margin-top: -42px;
+      }
+
+      .band-card {
+        background: var(--paper-2);
+        border: 1px solid var(--line);
+        border-radius: 34px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+      }
+
+      .band-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: var(--teal-soft);
+        color: #157167;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .band-card h2 {
+        margin-top: 16px;
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1;
+      }
+
+      .band-card p {
+        margin-top: 14px;
+        max-width: 58ch;
+        color: var(--ink-soft);
+        line-height: 1.7;
+      }
+
+      .signal-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .signal {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: #f8f2e9;
+        border: 1px solid var(--line);
+      }
+
+      .signal strong {
+        display: block;
+        font-size: 0.95rem;
+      }
+
+      .signal span {
+        display: block;
+        margin-top: 3px;
+        font-size: 0.92rem;
+        line-height: 1.5;
+        color: var(--ink-soft);
+      }
+
+      .signal-mark {
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        background: var(--orange-soft);
+        color: #8f4816;
+      }
+
+      .band-side {
+        display: grid;
+        gap: 14px;
+      }
+
+      .stat-card {
+        padding: 18px;
+        border-radius: 22px;
+        background: linear-gradient(180deg, #fff 0%, #f8efe3 100%);
+        border: 1px solid var(--line);
+      }
+
+      .stat-card strong {
+        display: block;
+        font-size: 1.35rem;
+        font-family: "Space Grotesk", "Avenir Next", sans-serif;
+      }
+
+      .stat-card span {
+        display: block;
+        margin-top: 8px;
+        line-height: 1.55;
+        color: var(--ink-soft);
+      }
+
+      .comparison {
+        padding: 72px 0 34px;
+      }
+
+      .section-head {
+        max-width: 760px;
+        margin: 0 auto 34px;
+        text-align: center;
+      }
+
+      .section-head span {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: var(--rose);
+        color: var(--red);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .section-head h2 {
+        margin-top: 16px;
+        font-size: clamp(2rem, 4.4vw, 3.5rem);
+      }
+
+      .section-head p {
+        margin-top: 14px;
+        line-height: 1.7;
+        color: var(--ink-soft);
+      }
+
+      .phone-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        align-items: start;
+      }
+
+      .phone-column {
+        background: var(--paper-2);
+        border: 1px solid var(--line);
+        border-radius: 32px;
+        padding: 24px;
+        box-shadow: 0 22px 52px rgba(13, 23, 48, 0.08);
+      }
+
+      .phone-column-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+
+      .phone-column-head h3 {
+        font-size: 1.55rem;
+      }
+
+      .phone-column-head p {
+        margin-top: 8px;
+        line-height: 1.55;
+        color: var(--ink-soft);
+      }
+
+      .state-badge {
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .state-badge.before {
+        background: var(--red-soft);
+        color: var(--red);
+      }
+
+      .state-badge.after {
+        background: var(--green-soft);
+        color: var(--green);
+      }
+
+      .phone-shell {
+        width: fit-content;
+        margin: 0 auto;
+        padding: 12px;
+        border-radius: 42px;
+        background: linear-gradient(180deg, #243556 0%, #0f1a31 100%);
+        box-shadow: 0 30px 70px rgba(13, 23, 48, 0.24);
+      }
+
+      .phone {
+        position: relative;
+        width: 280px;
+        height: 580px;
+        border-radius: 30px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(180deg, #fffaf2 0%, #f2ede3 100%);
+      }
+
+      .phone::before {
+        content: "";
+        position: absolute;
+        top: 11px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 104px;
+        height: 18px;
+        border-radius: 999px;
+        background: rgba(13, 23, 48, 0.94);
+        z-index: 2;
+      }
+
+      .phone-screen {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        overflow: auto;
+        padding: 36px 14px 14px;
+        scrollbar-width: none;
+      }
+
+      .phone-screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      .screen-head {
+        padding: 14px;
+        border-radius: 22px;
+        background: var(--night);
+        color: var(--paper-2);
+      }
+
+      .screen-head-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .screen-head strong {
+        display: block;
+        margin-top: 10px;
+        font-size: 1.15rem;
+        line-height: 1.2;
+      }
+
+      .screen-head span {
+        display: block;
+        margin-top: 7px;
+        color: rgba(255, 249, 242, 0.72);
+        line-height: 1.45;
+        font-size: 0.92rem;
+      }
+
+      .screen-stack {
+        display: grid;
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .screen-card {
+        padding: 14px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid var(--line);
+      }
+
+      .screen-card.dark {
+        background: linear-gradient(180deg, #18284c 0%, #13203b 100%);
+        border-color: rgba(255, 255, 255, 0.08);
+        color: var(--paper-2);
+      }
+
+      .screen-card.rose {
+        background: #fff0ea;
+      }
+
+      .screen-card.teal {
+        background: #ebfaf7;
+      }
+
+      .screen-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(22, 35, 61, 0.08);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .screen-card.dark .screen-label {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .screen-card h4 {
+        margin: 12px 0 0;
+        font-size: 1rem;
+        line-height: 1.3;
+      }
+
+      .screen-card p {
+        margin-top: 7px;
+        font-size: 0.9rem;
+        line-height: 1.55;
+        color: var(--ink-soft);
+      }
+
+      .screen-card.dark p {
+        color: rgba(255, 249, 242, 0.76);
+      }
+
+      .screen-list {
+        display: grid;
+        gap: 9px;
+        margin-top: 12px;
+      }
+
+      .screen-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 14px;
+        background: rgba(22, 35, 61, 0.05);
+      }
+
+      .screen-card.dark .screen-item {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .screen-item strong {
+        display: block;
+        font-size: 0.9rem;
+      }
+
+      .screen-item span {
+        display: block;
+        margin-top: 3px;
+        font-size: 0.78rem;
+        color: var(--ink-soft);
+      }
+
+      .screen-card.dark .screen-item span {
+        color: rgba(255, 249, 242, 0.72);
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 72px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .tag.red {
+        background: var(--red-soft);
+        color: var(--red);
+      }
+
+      .tag.yellow {
+        background: var(--yellow-soft);
+        color: #8a5c04;
+      }
+
+      .tag.green {
+        background: var(--green-soft);
+        color: var(--green);
+      }
+
+      .tag.teal {
+        background: var(--teal-soft);
+        color: #157167;
+      }
+
+      .signal-cards {
+        padding: 34px 0 54px;
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .info-card {
+        padding: 22px;
+        border-radius: 28px;
+        background: var(--paper-2);
+        border: 1px solid var(--line);
+      }
+
+      .info-card strong {
+        display: block;
+        font-size: 1.25rem;
+        font-family: "Space Grotesk", "Avenir Next", sans-serif;
+      }
+
+      .info-card p {
+        margin-top: 10px;
+        line-height: 1.65;
+        color: var(--ink-soft);
+      }
+
+      .info-icon {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border-radius: 16px;
+        background: var(--orange-soft);
+        color: #884114;
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+
+      .flow {
+        padding: 18px 0 74px;
+      }
+
+      .flow-box {
+        padding: 28px;
+        border-radius: 32px;
+        background: linear-gradient(180deg, #fff 0%, #f8f2e8 100%);
+        border: 1px solid var(--line);
+        box-shadow: 0 18px 46px rgba(13, 23, 48, 0.08);
+      }
+
+      .flow-box h2 {
+        font-size: clamp(1.8rem, 4vw, 3rem);
+      }
+
+      .flow-box p {
+        margin-top: 12px;
+        max-width: 64ch;
+        line-height: 1.7;
+        color: var(--ink-soft);
+      }
+
+      .flow-rail {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 26px;
+      }
+
+      .flow-step {
+        position: relative;
+        padding: 18px 16px;
+        border-radius: 22px;
+        background: var(--paper-2);
+        border: 1px solid var(--line);
+      }
+
+      .flow-step strong {
+        display: block;
+        font-size: 1rem;
+      }
+
+      .flow-step span {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.9rem;
+        line-height: 1.55;
+        color: var(--ink-soft);
+      }
+
+      .cta {
+        padding: 0 0 78px;
+      }
+
+      .cta-box {
+        position: relative;
+        overflow: hidden;
+        padding: 34px;
+        border-radius: 34px;
+        background:
+          radial-gradient(circle at left center, rgba(239, 125, 58, 0.22), transparent 30%),
+          linear-gradient(180deg, #132040 0%, #0d1730 100%);
+        color: var(--paper-2);
+      }
+
+      .cta-box::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 54px 54px;
+        z-index: 0;
+      }
+
+      .cta-inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .cta-box h2 {
+        font-size: clamp(2rem, 4vw, 3rem);
+      }
+
+      .cta-box p {
+        margin-top: 12px;
+        max-width: 58ch;
+        line-height: 1.7;
+        color: rgba(255, 249, 242, 0.76);
+      }
+
+      .cta-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 22px;
+        border-radius: 999px;
+        background: var(--orange);
+        color: var(--white);
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .footer-note {
+        margin-top: 18px;
+        font-size: 0.9rem;
+        color: rgba(255, 249, 242, 0.7);
+      }
+
+      @media (max-width: 1080px) {
+        .metrics,
+        .flow-rail,
+        .card-grid,
+        .phone-grid,
+        .band-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .cta-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .hero-inner {
+          padding-bottom: 72px;
+        }
+
+        .band-card,
+        .phone-column,
+        .flow-box,
+        .cta-box {
+          padding: 22px;
+          border-radius: 28px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          width: min(100%, calc(100% - 24px));
+        }
+
+        .phone {
+          width: 280px;
+        }
+
+        .hero-actions {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <section class="hero">
+        <div class="container hero-inner">
+          <div class="hero-topline">
+            <img src="assets/entrada-icon.png" alt="Entrada Therapeutics icon" />
+            <span>Entrada Therapeutics x Elinext</span>
+          </div>
+
+          <div class="hero-copy">
+            <span class="hero-kicker">Mobile Concept For Clinical Execution</span>
+            <h1>What if biomarker ops lived in one pocket-sized control room?</h1>
+            <p class="lede">
+              Entrada is activating DMD studies across the U.K., EU, and U.S. while biomarker
+              workflows run through coordinators, home-visit teams, CROs, specialty labs, EDC,
+              PROs, and patient travel support. This concept shows a mobile layer that keeps those
+              handoffs visible instead of scattered.
+            </p>
+            <p class="hero-note">
+              Built around public signals from Entrada's clinical-studies and hiring pages: active
+              DMD studies, biomarker assay delivery, vendor oversight, EDC and PRO reconciliation,
+              and a patient-support model that already includes travel coverage and home visits.
+            </p>
+
+            <div class="hero-actions">
+              <a class="pill pill-primary" href="#prototype">See The Prototype</a>
+              <a class="pill pill-secondary" href="#contact">Why This Matters In 2026</a>
+            </div>
+          </div>
+
+          <div class="metrics">
+            <div class="metric">
+              <strong>4</strong>
+              <span>DMD clinical-stage programs expected by year-end 2026</span>
+            </div>
+            <div class="metric">
+              <strong>$354M</strong>
+              <span>Cash as of 2025-06-30, with runway guided into Q2 2027</span>
+            </div>
+            <div class="metric">
+              <strong>Home Visits</strong>
+              <span>Publicly prioritized whenever possible to reduce family burden</span>
+            </div>
+            <div class="metric">
+              <strong>Multi-Region</strong>
+              <span>U.K., EU, and U.S. study activation raises coordination complexity</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="content-band">
+        <div class="container">
+          <div class="band-card">
+            <div class="band-grid">
+              <div>
+                <span class="eyebrow">No Public App Found</span>
+                <h2>We used `Entrada Clinical Studies` as the digital anchor instead.</h2>
+                <p>
+                  Public store checks found no credible first-party Entrada app, so the best
+                  digital surface to inspect was the clinical-studies experience. That page proves
+                  Entrada already treats logistics as part of patient experience. The next step is
+                  an operational layer for coordinators, biomarker teams, and home-visit support.
+                </p>
+
+                <div class="signal-list">
+                  <div class="signal">
+                    <div class="signal-mark">01</div>
+                    <div>
+                      <strong>Biomarker work spans CROs and specialty labs</strong>
+                      <span
+                        >Public roles call out assay transfer, validation, result delivery, and
+                        vendor coordination.</span
+                      >
+                    </div>
+                  </div>
+                  <div class="signal">
+                    <div class="signal-mark">02</div>
+                    <div>
+                      <strong>Study data already lives across EDC, PROs, and lab systems</strong>
+                      <span
+                        >Clinical data management and trial operations postings explicitly mention
+                        reconciliation across those channels.</span
+                      >
+                    </div>
+                  </div>
+                  <div class="signal">
+                    <div class="signal-mark">03</div>
+                    <div>
+                      <strong>Patient burden is visible on the public site</strong>
+                      <span
+                        >Entrada already highlights travel support and home visits, which means
+                        logistics are a real operational concern.</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="band-side">
+                <div class="stat-card">
+                  <strong>Web Product</strong>
+                  <span
+                    >`Entrada Clinical Studies` is useful for discovery and education, but it
+                    stops before live study execution, sample tracking, and vendor escalation.</span
+                  >
+                </div>
+                <div class="stat-card">
+                  <strong>Prototype Wedge</strong>
+                  <span
+                    >A mobile `Biomarker Ops Hub` for site coordinators and field teams keeps
+                    visit windows, sample custody, and support steps in one timeline.</span
+                  >
+                </div>
+                <div class="stat-card">
+                  <strong>Buyer Relevance</strong>
+                  <span
+                    >For Dipal, the value is execution compression during a readout-heavy DMD
+                    period, not a speculative patient-consumer app.</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="section comparison" id="prototype">
+        <div class="container">
+          <div class="section-head">
+            <span>Before / After</span>
+            <h2>Current friction vs. a unified mobile ops layer</h2>
+            <p>
+              The concept below shows how Entrada could move from fragmented study coordination to
+              one mobile timeline for DMD visits, biomarker kits, lab handoffs, travel support, and
+              blockers that actually need escalation.
+            </p>
+          </div>
+
+          <div class="phone-grid">
+            <div class="phone-column">
+              <div class="phone-column-head">
+                <div>
+                  <h3>Current State</h3>
+                  <p>Key signals exist, but they live across portals, inboxes, and manual follow-up.</p>
+                </div>
+                <span class="state-badge before">Before</span>
+              </div>
+
+              <div class="phone-shell">
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="screen-head">
+                      <div class="screen-head-top">
+                        <span>Study Ops</span>
+                        <span>07:48</span>
+                      </div>
+                      <strong>Visit week is approaching, but the thread is scattered.</strong>
+                      <span
+                        >ENTR-601-45 / Site BRI-07 / family travel, biomarker kit, and ePRO follow-up
+                        all need different systems.</span
+                      >
+                    </div>
+
+                    <div class="screen-stack">
+                      <div class="screen-card rose">
+                        <span class="screen-label">Visit Window</span>
+                        <h4>Participant 045-018 is 2 days from dosing.</h4>
+                        <p>
+                          Travel is approved, but the hotel is still pending and the family has
+                          emailed patient advocacy for an update.
+                        </p>
+                        <div class="screen-list">
+                          <div class="screen-item">
+                            <div>
+                              <strong>Travel support</strong>
+                              <span>Separate reimbursement thread</span>
+                            </div>
+                            <span class="tag yellow">Waiting</span>
+                          </div>
+                          <div class="screen-item">
+                            <div>
+                              <strong>Home nurse backup</strong>
+                              <span>No shared status with site</span>
+                            </div>
+                            <span class="tag red">Unknown</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="screen-card">
+                        <span class="screen-label">Biomarker Kit</span>
+                        <h4>Specialty lab manifest arrived by email only.</h4>
+                        <p>
+                          Kit IDs were forwarded to the site, but no mobile confirmation exists
+                          once samples leave the room.
+                        </p>
+                        <div class="screen-list">
+                          <div class="screen-item">
+                            <div>
+                              <strong>Sample labels</strong>
+                              <span>PDF attachment from CRO</span>
+                            </div>
+                            <span class="tag red">Manual</span>
+                          </div>
+                          <div class="screen-item">
+                            <div>
+                              <strong>Courier pickup</strong>
+                              <span>No shared timestamp for handoff</span>
+                            </div>
+                            <span class="tag yellow">Pending</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="screen-card dark">
+                        <span class="screen-label">Data Readiness</span>
+                        <h4>EDC is mostly green, but one ePRO and one lab status are missing.</h4>
+                        <p>
+                          Coordinators still have to reconcile what lives in EDC, the lab portal,
+                          and a vendor email before they know whether the visit is truly clean.
+                        </p>
+                        <div class="screen-list">
+                          <div class="screen-item">
+                            <div>
+                              <strong>ePRO reminder</strong>
+                              <span>Sent separately by vendor</span>
+                            </div>
+                            <span class="tag yellow">Open</span>
+                          </div>
+                          <div class="screen-item">
+                            <div>
+                              <strong>Lab receipt</strong>
+                              <span>No proof in one place</span>
+                            </div>
+                            <span class="tag red">Missing</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phone-column">
+              <div class="phone-column-head">
+                <div>
+                  <h3>Proposed State</h3>
+                  <p>One mobile timeline for visit readiness, sample custody, and support actions.</p>
+                </div>
+                <span class="state-badge after">After</span>
+              </div>
+
+              <div class="phone-shell">
+                <div class="phone">
+                  <div class="phone-screen">
+                    <div class="screen-head">
+                      <div class="screen-head-top">
+                        <span>Biomarker Ops Hub</span>
+                        <span>07:48</span>
+                      </div>
+                      <strong>Everyone sees the same study thread before the visit slips.</strong>
+                      <span
+                        >Site, home-visit support, biomarker team, and patient operations get one
+                        operational source of truth.</span
+                      >
+                    </div>
+
+                    <div class="screen-stack">
+                      <div class="screen-card teal">
+                        <span class="screen-label">Live Visit Card</span>
+                        <h4>Participant 045-018 is ready for Friday dosing.</h4>
+                        <p>
+                          Travel booked, caregiver ETA confirmed, and backup home-visit plan
+                          attached to the participant timeline.
+                        </p>
+                        <div class="screen-list">
+                          <div class="screen-item">
+                            <div>
+                              <strong>Travel + lodging</strong>
+                              <span>Booked via patient-support workflow</span>
+                            </div>
+                            <span class="tag green">Locked</span>
+                          </div>
+                          <div class="screen-item">
+                            <div>
+                              <strong>Site prep</strong>
+                              <span>Room, staff, and protocol checklist ready</span>
+                            </div>
+                            <span class="tag teal">Ready</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="screen-card">
+                        <span class="screen-label">Sample Chain</span>
+                        <h4>Barcode scan creates a visible handoff trail.</h4>
+                        <p>
+                          Collection time, freezer handoff, courier pickup, and lab receipt are
+                          captured as status events instead of hidden in side channels.
+                        </p>
+                        <div class="screen-list">
+                          <div class="screen-item">
+                            <div>
+                              <strong>Tube set B-13</strong>
+                              <span>Collected 08:12 / nurse initials logged</span>
+                            </div>
+                            <span class="tag green">Captured</span>
+                          </div>
+                          <div class="screen-item">
+                            <div>
+                              <strong>Courier handoff</strong>
+                              <span>ETA 16:05 / temp logger active</span>
+                            </div>
+                            <span class="tag teal">En Route</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="screen-card dark">
+                        <span class="screen-label">Unified Timeline</span>
+                        <h4>Only blockers stay loud.</h4>
+                        <p>
+                          EDC, ePRO, vendor, and lab events roll into one operational feed, so
+                          coordinators see what needs action rather than re-checking three systems.
+                        </p>
+                        <div class="screen-list">
+                          <div class="screen-item">
+                            <div>
+                              <strong>ePRO completion</strong>
+                              <span>Family reminder auto-sent and confirmed</span>
+                            </div>
+                            <span class="tag green">Done</span>
+                          </div>
+                          <div class="screen-item">
+                            <div>
+                              <strong>Vendor blocker</strong>
+                              <span>One kit consumable low at Site BRI-07</span>
+                            </div>
+                            <span class="tag yellow">Escalate</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section signal-cards">
+        <div class="container">
+          <div class="card-grid">
+            <div class="info-card">
+              <div class="info-icon">01</div>
+              <strong>Protect Biomarker Fidelity</strong>
+              <p>
+                Sample timing, handoff logging, and lab receipt become visible events, which is
+                especially useful when biomarker work spans CROs, specialty labs, and internal
+                program teams.
+              </p>
+            </div>
+            <div class="info-card">
+              <div class="info-icon">02</div>
+              <strong>Reduce Coordinator Context Switching</strong>
+              <p>
+                Public roles already reference EDC, PROs, third-party labs, vendor management, and
+                TMF-linked documentation. The mobile layer does not replace those systems; it
+                clarifies operational state across them.
+              </p>
+            </div>
+            <div class="info-card">
+              <div class="info-icon">03</div>
+              <strong>Lower Family And Site Burden</strong>
+              <p>
+                Entrada already highlights travel coverage and home visits. A better mobile ops
+                flow helps teams deliver on that promise with fewer timing errors, reimbursement
+                questions, and last-minute surprises.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section flow" id="contact">
+        <div class="container">
+          <div class="flow-box">
+            <h2>How the concept plugs into existing trial operations</h2>
+            <p>
+              The right implementation pattern is lightweight: sit above existing study systems,
+              pull operational status into one mobile workflow, and push timestamped actions back
+              into the right compliance and data channels.
+            </p>
+
+            <div class="flow-rail">
+              <div class="flow-step">
+                <strong>Site + Patient Ops</strong>
+                <span>Visit readiness, travel status, caregiver logistics, home-visit planning.</span>
+              </div>
+              <div class="flow-step">
+                <strong>Biomarker Collection</strong>
+                <span>Barcode confirmation, chain-of-custody, freezer and courier events.</span>
+              </div>
+              <div class="flow-step">
+                <strong>EDC + ePRO Status</strong>
+                <span>Surface only missing steps, overdue forms, and unresolved data blockers.</span>
+              </div>
+              <div class="flow-step">
+                <strong>Lab + CRO Visibility</strong>
+                <span>Specialty-lab receipt, assay-progress cues, vendor escalation routing.</span>
+              </div>
+              <div class="flow-step">
+                <strong>Audit Trail</strong>
+                <span>Event log for TMF-linked documentation and study-team review.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section cta">
+        <div class="container">
+          <div class="cta-box">
+            <div class="cta-inner">
+              <div>
+                <h2>Elinext can help turn this into a study-ready mobile layer.</h2>
+                <p>
+                  The strongest wedge is not a broad patient app. It is a focused operations
+                  companion for coordinators, field teams, and biomarker stakeholders that makes
+                  DMD study execution easier during a readout-heavy growth period.
+                </p>
+                <p class="footer-note">
+                  Concept based on public Entrada materials retrieved on 2026-03-29.
+                </p>
+              </div>
+
+              <a class="cta-button" href="https://www.elinext.com/contacts/">Get in Touch</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
