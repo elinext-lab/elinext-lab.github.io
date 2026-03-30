@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Humacyte Mobile Teardown | Elinext</title>
+    <meta
+      name="description"
+      content="A mobile-first concept for Humacyte's Symvess commercialization workflow: unify VAC approvals, surgeon education, reimbursement guidance, and support routing in one launch companion."
+    />
+    <link
+      rel="canonical"
+      href="https://elinext-lab.github.io/prototypes/humacyte_2026-03-30_01-07-22/"
+    />
+    <meta
+      property="og:url"
+      content="https://elinext-lab.github.io/prototypes/humacyte_2026-03-30_01-07-22/"
+    />
+    <meta
+      property="og:image"
+      content="https://elinext-lab.github.io/prototypes/humacyte_2026-03-30_01-07-22/og-image.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:title" content="Humacyte Mobile - AI Teardown" />
+    <meta
+      property="og:description"
+      content="What if Symvess hospital onboarding, surgeon education, reimbursement support, and VAC status all lived in one mobile launch hub instead of scattered pages, PDFs, forms, and calls?"
+    />
+    <meta name="author" content="Yauheni Shauchenka, Elinext" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image"
+      content="https://elinext-lab.github.io/prototypes/humacyte_2026-03-30_01-07-22/og-image.jpg"
+    />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-ZR415HX0B2");
+    </script>
+    <!-- Ratings as of 2026-03-30: iOS N/A (no matching Humacyte or Symvess public app in U.S. App Store search), Android N/A (no matching Humacyte or Symvess public app in Google Play scraper results) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #06101d;
+        --bg-mid: #0d1c34;
+        --panel: rgba(10, 20, 38, 0.92);
+        --panel-2: rgba(13, 26, 46, 0.96);
+        --card: rgba(255, 255, 255, 0.06);
+        --line: rgba(255, 255, 255, 0.12);
+        --line-soft: rgba(15, 22, 34, 0.08);
+        --text: #edf3ff;
+        --muted: #b3c2df;
+        --ink: #102039;
+        --ink-soft: #60718a;
+        --light: #f6f8fe;
+        --accent: #ff7a3d;
+        --accent-soft: #ffb17d;
+        --teal: #8de1d9;
+        --lavender: #b4bdfc;
+        --shadow: 0 30px 80px rgba(0, 0, 0, 0.34);
+        --radius-xl: 32px;
+        --radius-lg: 24px;
+        --radius-md: 18px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Manrope", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(141, 225, 217, 0.16), transparent 28%),
+          radial-gradient(circle at 85% 18%, rgba(255, 122, 61, 0.2), transparent 24%),
+          linear-gradient(180deg, #050d18 0%, #081426 38%, #091220 100%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .orb {
+        position: absolute;
+        border-radius: 999px;
+        filter: blur(14px);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .orb.one {
+        width: 360px;
+        height: 360px;
+        left: -120px;
+        top: 90px;
+        background: rgba(141, 225, 217, 0.12);
+      }
+
+      .orb.two {
+        width: 420px;
+        height: 420px;
+        right: -100px;
+        top: 280px;
+        background: rgba(255, 122, 61, 0.1);
+      }
+
+      main,
+      footer {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero {
+        padding: 36px 20px 28px;
+      }
+
+      .shell {
+        max-width: 1180px;
+        margin: 0 auto;
+      }
+
+      .hero-card,
+      .section-card,
+      .cta-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        border-radius: var(--radius-xl);
+      }
+
+      .hero-card {
+        padding: 42px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .hero-copy {
+        text-align: center;
+      }
+
+      .hero-copy img {
+        display: block;
+        margin: 22px auto 14px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: "Fraunces", serif;
+        line-height: 1.04;
+      }
+
+      h1 {
+        max-width: 900px;
+        margin: 16px auto;
+        font-size: clamp(2.7rem, 6vw, 5rem);
+      }
+
+      .hero-copy p {
+        display: block;
+        max-width: 860px;
+        margin: 0 auto;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.75;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin: 28px 0 36px;
+      }
+
+      .chip {
+        padding: 12px 16px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        color: #dce6fb;
+        font-size: 0.94rem;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.04fr);
+        gap: 24px;
+        align-items: start;
+      }
+
+      .story-panel,
+      .phone-panel,
+      .section-card,
+      .mini-card,
+      .timeline-card {
+        background: var(--panel-2);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+      }
+
+      .story-panel,
+      .phone-panel {
+        min-height: 100%;
+      }
+
+      .story-panel {
+        padding: 28px;
+      }
+
+      .story-panel h2 {
+        font-size: clamp(1.8rem, 3vw, 2.7rem);
+        margin-bottom: 16px;
+      }
+
+      .story-panel p,
+      .story-panel li,
+      .section-copy p,
+      .footer-note,
+      .source-list a,
+      .timeline-card p,
+      .mini-card p,
+      .mini-card li {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .kicker {
+        display: inline-block;
+        margin-bottom: 14px;
+        color: var(--accent-soft);
+        font-size: 0.84rem;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .stack {
+        display: grid;
+        gap: 14px;
+        margin-top: 22px;
+      }
+
+      .stack-card {
+        padding: 18px;
+        border-radius: var(--radius-md);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .stack-card strong,
+      .mini-card strong,
+      .phone-card strong,
+      .timeline-step strong {
+        display: block;
+        margin-bottom: 6px;
+        color: #f5f8ff;
+        font-size: 1rem;
+      }
+
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 22px;
+      }
+
+      .stat {
+        padding: 18px;
+        border-radius: var(--radius-md);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.04));
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .stat span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .stat strong {
+        display: block;
+        margin-top: 4px;
+        font-size: 1.65rem;
+      }
+
+      .phone-panel {
+        padding: 22px;
+      }
+
+      .phone-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .phone-head h3 {
+        font-size: 1.55rem;
+      }
+
+      .phone-head p {
+        margin: 6px 0 0;
+        color: var(--muted);
+      }
+
+      .tiny-pill {
+        padding: 10px 12px;
+        border-radius: 999px;
+        background: rgba(141, 225, 217, 0.08);
+        border: 1px solid rgba(141, 225, 217, 0.18);
+        color: #c8fbf4;
+        font-size: 0.82rem;
+        white-space: nowrap;
+      }
+
+      .phones {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        justify-items: center;
+      }
+
+      .phone-card {
+        width: 100%;
+        padding: 18px 16px 16px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+      }
+
+      .phone-card > * {
+        display: block;
+      }
+
+      .phone-tag {
+        display: inline-block;
+        padding: 8px 12px;
+        border-radius: 999px;
+        margin-bottom: 14px;
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--muted);
+        font-size: 0.76rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .phone {
+        position: relative;
+        width: 280px;
+        height: 580px;
+        margin: 0 auto;
+        padding: 10px;
+        border-radius: 40px;
+        background: linear-gradient(180deg, #2e3f5f 0%, #08111f 100%);
+        box-shadow: 0 22px 50px rgba(0, 0, 0, 0.4);
+      }
+
+      .phone::before {
+        content: "";
+        position: absolute;
+        top: 13px;
+        left: 50%;
+        z-index: 3;
+        width: 100px;
+        height: 22px;
+        transform: translateX(-50%);
+        border-radius: 0 0 18px 18px;
+        background: #030911;
+      }
+
+      .phone-inner {
+        position: relative;
+        height: 100%;
+        overflow: hidden;
+        border-radius: 31px;
+        background: var(--light);
+        box-shadow: inset 0 0 0 1px rgba(10, 20, 38, 0.1);
+      }
+
+      .phone-scroll {
+        height: 100%;
+        overflow: auto;
+        padding: 36px 14px 14px;
+        color: var(--ink);
+        text-align: left;
+      }
+
+      .phone-scroll > * {
+        display: block;
+      }
+
+      .phone-status {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        color: var(--ink-soft);
+        font-size: 0.74rem;
+        font-weight: 700;
+      }
+
+      .phone-screen-title {
+        font-size: 1.24rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+
+      .phone-screen-copy {
+        margin: 8px 0 14px;
+        color: var(--ink-soft);
+        font-size: 0.88rem;
+        line-height: 1.55;
+      }
+
+      .ui-card,
+      .ui-strip,
+      .ui-row {
+        border-radius: 20px;
+        background: #ffffff;
+        border: 1px solid rgba(16, 32, 57, 0.08);
+        box-shadow: 0 12px 25px rgba(16, 32, 57, 0.06);
+      }
+
+      .ui-card {
+        padding: 14px;
+        margin-bottom: 12px;
+      }
+
+      .ui-strip {
+        padding: 12px 14px;
+        margin-bottom: 10px;
+      }
+
+      .ui-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        margin-bottom: 10px;
+      }
+
+      .label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: rgba(16, 32, 57, 0.06);
+        color: var(--ink-soft);
+        font-size: 0.76rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+      }
+
+      .dot.orange {
+        background: var(--accent);
+      }
+
+      .dot.teal {
+        background: #2fbcab;
+      }
+
+      .dot.lavender {
+        background: #7c86ff;
+      }
+
+      .dot.red {
+        background: #ff5e5e;
+      }
+
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 10px 0 0;
+      }
+
+      .mini-pill {
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: #eef3ff;
+        color: #52627b;
+        font-size: 0.74rem;
+        font-weight: 700;
+      }
+
+      .ui-row strong,
+      .ui-card strong,
+      .ui-strip strong {
+        color: var(--ink);
+      }
+
+      .ui-note {
+        margin-top: 8px;
+        color: var(--ink-soft);
+        font-size: 0.8rem;
+        line-height: 1.45;
+      }
+
+      .progress {
+        height: 10px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: #e7edf8;
+        margin-top: 10px;
+      }
+
+      .progress span {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--accent), #ffb56c);
+      }
+
+      .section {
+        padding: 0 20px 28px;
+      }
+
+      .section-card {
+        padding: 34px;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+        gap: 24px;
+        align-items: end;
+        margin-bottom: 24px;
+      }
+
+      .section-head h2 {
+        font-size: clamp(1.9rem, 3vw, 3rem);
+      }
+
+      .section-copy p {
+        margin: 0;
+      }
+
+      .evidence-grid,
+      .solution-grid,
+      .timeline-grid,
+      .source-list {
+        display: grid;
+        gap: 18px;
+      }
+
+      .evidence-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .solution-grid {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        align-items: start;
+      }
+
+      .timeline-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .mini-card,
+      .timeline-card {
+        padding: 22px;
+      }
+
+      .mini-card ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .timeline-step {
+        padding: 12px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .timeline-step:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .timeline-step span {
+        display: inline-block;
+        margin-bottom: 6px;
+        color: var(--accent-soft);
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .cta {
+        padding: 0 20px 44px;
+      }
+
+      .cta-card {
+        padding: 34px;
+        text-align: center;
+      }
+
+      .cta-card h2 {
+        max-width: 760px;
+        margin: 10px auto 12px;
+        font-size: clamp(2rem, 4vw, 3.4rem);
+      }
+
+      .cta-card p {
+        max-width: 740px;
+        margin: 0 auto 22px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .cta-actions {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 14px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 180px;
+        padding: 15px 22px;
+        border-radius: 999px;
+        font-weight: 800;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .button.primary {
+        background: linear-gradient(135deg, var(--accent), #ff9c5e);
+        color: #101722;
+        box-shadow: 0 16px 30px rgba(255, 122, 61, 0.24);
+      }
+
+      .button.secondary {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--text);
+      }
+
+      .button:hover {
+        transform: translateY(-2px);
+      }
+
+      .source-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 20px;
+      }
+
+      .source-list a {
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 0.94rem;
+      }
+
+      .footer-note {
+        margin-top: 18px;
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 1040px) {
+        .hero-grid,
+        .section-head,
+        .solution-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .evidence-grid,
+        .timeline-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 840px) {
+        .hero-card,
+        .section-card,
+        .cta-card {
+          padding: 24px;
+        }
+
+        .phones,
+        .source-list,
+        .stat-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero,
+        .section,
+        .cta {
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+
+        .phone {
+          width: 300px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="orb one"></div>
+      <div class="orb two"></div>
+      <main>
+        <section class="hero">
+          <div class="shell">
+            <div class="hero-card">
+              <div class="hero-copy">
+                <span class="eyebrow">Elinext x Humacyte</span>
+                <img src="assets/symvess-logo.svg" alt="Symvess" width="190" />
+                <h1>What if Symvess launch support lived in one mobile workspace?</h1>
+                <p>
+                  Humacyte is scaling a first commercial product, with 27 VAC approvals, 43 more in
+                  review, and 27 hospitals already ordering as of March 27, 2026. Publicly, the
+                  journey still depends on cross-domain handoffs, PDF guides, phone support, and
+                  static forms instead of one account-aware workflow.
+                </p>
+                <div class="chips">
+                  <span class="chip">No public mobile app found</span>
+                  <span class="chip">27 VAC approvals</span>
+                  <span class="chip">43 more VAC reviews live</span>
+                  <span class="chip">32 recruiting trial sites</span>
+                  <span class="chip">$1.475M Saudi outreach commitment</span>
+                </div>
+              </div>
+
+              <div class="hero-grid">
+                <article class="story-panel">
+                  <span class="kicker">Why this hits now</span>
+                  <h2>Commercial traction is growing faster than the public support tooling.</h2>
+                  <p>
+                    Humacyte already exposes the right jobs to be done on its site: medical
+                    information, clinical education, reimbursement support, trial lookup, and
+                    adverse-event routing. The missing layer is workflow. That is where a mobile/web
+                    companion makes the rollout feel operational instead of fragmented.
+                  </p>
+
+                  <div class="stack">
+                    <div class="stack-card">
+                      <strong>Current bottleneck</strong>
+                      Hospital teams and reps bounce between `humacyte.com`, `symvess.com`, PDFs,
+                      calls, and forms. Good content exists, but the path is not coordinated.
+                    </div>
+                    <div class="stack-card">
+                      <strong>Product thesis</strong>
+                      Replace scattered launch touchpoints with one secure workspace for VAC status,
+                      training, coding guidance, support escalation, and trial/account lookup.
+                    </div>
+                    <div class="stack-card">
+                      <strong>Why Elinext fits</strong>
+                      This is a product-operations build, not a brochure redesign. It needs mobile UX,
+                      field-ready workflows, role-aware dashboards, and fast implementation.
+                    </div>
+                  </div>
+
+                  <div class="stat-grid">
+                    <div class="stat">
+                      <span>Full-year 2025 Symvess sales</span>
+                      <strong>$1.4M</strong>
+                    </div>
+                    <div class="stat">
+                      <span>Hospitals already ordering</span>
+                      <strong>27</strong>
+                    </div>
+                    <div class="stat">
+                      <span>Minimum Saudi commitment</span>
+                      <strong>$1.475M</strong>
+                    </div>
+                    <div class="stat">
+                      <span>Visible trial locations</span>
+                      <strong>32</strong>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="phone-panel">
+                  <div class="phone-head">
+                    <div>
+                      <span class="kicker">Before / After</span>
+                      <h3>Static support flow vs. launch companion</h3>
+                      <p>
+                        Same evidence. Different software layer.
+                      </p>
+                    </div>
+                    <span class="tiny-pill">Prototype concept</span>
+                  </div>
+
+                  <div class="phones">
+                    <div class="phone-card">
+                      <span class="phone-tag">Current public flow</span>
+                      <div class="phone">
+                        <div class="phone-inner">
+                          <div class="phone-scroll">
+                            <div class="phone-status">
+                              <span>9:41</span>
+                              <span>LTE</span>
+                            </div>
+                            <div class="label"><span class="dot orange"></span>Fragmented support</div>
+                            <div class="phone-screen-title">Symvess resources</div>
+                            <div class="phone-screen-copy">
+                              Helpful content, but the next step depends on where you click and who
+                              you call.
+                            </div>
+
+                            <div class="ui-card">
+                              <strong>Support &amp; Resources</strong>
+                              <div class="pill-row">
+                                <span class="mini-pill">Clinical trials</span>
+                                <span class="mini-pill">Medical info</span>
+                                <span class="mini-pill">Reimbursement</span>
+                              </div>
+                              <div class="ui-note">
+                                Jump from corporate support page to product site or call center.
+                              </div>
+                            </div>
+
+                            <div class="ui-row">
+                              <div>
+                                <strong>Exit modal</strong>
+                                <div class="ui-note">Proceed to `symvess.com` first</div>
+                              </div>
+                              <span class="label"><span class="dot red"></span>Extra click</span>
+                            </div>
+
+                            <div class="ui-row">
+                              <div>
+                                <strong>Coding guide</strong>
+                                <div class="ui-note">Download PDF, then follow up manually</div>
+                              </div>
+                              <span class="label"><span class="dot lavender"></span>Static</span>
+                            </div>
+
+                            <div class="ui-row">
+                              <div>
+                                <strong>Clinical support</strong>
+                                <div class="ui-note">Call 833-591-0081 or submit a form</div>
+                              </div>
+                              <span class="label"><span class="dot orange"></span>Phone-led</span>
+                            </div>
+
+                            <div class="ui-card">
+                              <strong>Clinical trials</strong>
+                              <div class="ui-note">
+                                32 recruiting locations listed on one long page with no visible
+                                filtering.
+                              </div>
+                            </div>
+
+                            <div class="ui-card">
+                              <strong>What falls between pages</strong>
+                              <div class="pill-row">
+                                <span class="mini-pill">VAC next step</span>
+                                <span class="mini-pill">Role handoff</span>
+                                <span class="mini-pill">Follow-up owner</span>
+                                <span class="mini-pill">Activity log</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="phone-card">
+                      <span class="phone-tag">Elinext prototype</span>
+                      <div class="phone">
+                        <div class="phone-inner">
+                          <div class="phone-scroll">
+                            <div class="phone-status">
+                              <span>9:41</span>
+                              <span>Secure</span>
+                            </div>
+                            <div class="label"><span class="dot teal"></span>Launch companion</div>
+                            <div class="phone-screen-title">Humacyte account cockpit</div>
+                            <div class="phone-screen-copy">
+                              One place for hospital readiness, education progress, reimbursement
+                              assets, and escalations.
+                            </div>
+
+                            <div class="ui-card">
+                              <strong>Wake Forest Baptist</strong>
+                              <div class="ui-note">VAC review in legal sign-off. Surgeon education at 82%.</div>
+                              <div class="progress"><span style="width: 82%"></span></div>
+                              <div class="pill-row">
+                                <span class="mini-pill">VAC packet sent</span>
+                                <span class="mini-pill">Peer call booked</span>
+                              </div>
+                            </div>
+
+                            <div class="ui-strip">
+                              <strong>Next best action</strong>
+                              <div class="ui-note">
+                                Push coding playbook to buyer and confirm case-support contact before
+                                committee meeting.
+                              </div>
+                            </div>
+
+                            <div class="ui-row">
+                              <div>
+                                <strong>Education</strong>
+                                <div class="ui-note">Implant guide, storage steps, patient booklet</div>
+                              </div>
+                              <span class="label"><span class="dot teal"></span>Personalized</span>
+                            </div>
+
+                            <div class="ui-row">
+                              <div>
+                                <strong>Reimbursement</strong>
+                                <div class="ui-note">Contextual coding guide and payer notes</div>
+                              </div>
+                              <span class="label"><span class="dot lavender"></span>Role-based</span>
+                            </div>
+
+                            <div class="ui-row">
+                              <div>
+                                <strong>Escalations</strong>
+                                <div class="ui-note">Adverse event, medical info, and customer care</div>
+                              </div>
+                              <span class="label"><span class="dot orange"></span>Tracked</span>
+                            </div>
+
+                            <div class="ui-card">
+                              <strong>Field visibility</strong>
+                              <div class="pill-row">
+                                <span class="mini-pill">27 approved</span>
+                                <span class="mini-pill">43 in review</span>
+                                <span class="mini-pill">27 ordering</span>
+                              </div>
+                              <div class="ui-note">Commercial, medical, and ops see the same state.</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="shell">
+            <div class="section-card">
+              <div class="section-head">
+                <div>
+                  <span class="kicker">Evidence</span>
+                  <h2>The public web flow already exposes the problem.</h2>
+                </div>
+                <div class="section-copy">
+                  <p>
+                    Humacyte’s current sites are strong on product education but weak on orchestration.
+                    That is exactly the gap a mobile-first workflow layer can close during Symvess
+                    commercialization.
+                  </p>
+                </div>
+              </div>
+
+              <div class="evidence-grid">
+                <article class="mini-card">
+                  <strong>Support is split by destination</strong>
+                  <p>
+                    `humacyte.com/support-resources/` routes users into medical information, clinical
+                    support, reimbursement help, contact forms, and external Symvess pages instead of
+                    one connected journey.
+                  </p>
+                </article>
+                <article class="mini-card">
+                  <strong>Commercial rollout now has real volume</strong>
+                  <p>
+                    On March 27, 2026, Humacyte reported 27 VAC approvals, 43 more VAC reviews in
+                    progress, and 27 hospitals already ordering Symvess. That is enough complexity to
+                    justify account-level launch software.
+                  </p>
+                </article>
+                <article class="mini-card">
+                  <strong>Trial and education content are static</strong>
+                  <p>
+                    Symvess resources rely on PDFs and phone support, while Humacyte’s clinical-trials
+                    page lists 32 sites in a long-form page without visible filtering or workflow.
+                  </p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="shell">
+            <div class="section-card">
+              <div class="section-head">
+                <div>
+                  <span class="kicker">Build scope</span>
+                  <h2>What Elinext would actually ship</h2>
+                </div>
+                <div class="section-copy">
+                  <p>
+                    The right product is a secure mobile/web companion for reps and hospital teams,
+                    not a generic brochure app. It should make launch execution visible, accountable,
+                    and much faster.
+                  </p>
+                </div>
+              </div>
+
+              <div class="solution-grid">
+                <article class="mini-card">
+                  <strong>Core workflow modules</strong>
+                  <ul>
+                    <li>Hospital account board with VAC stage, blockers, owners, and dates</li>
+                    <li>Role-aware education center for surgeons, buyers, and clinical staff</li>
+                    <li>Coding and reimbursement playbooks tied to each account</li>
+                    <li>Support and adverse-event routing with audit trail</li>
+                    <li>Trial-site finder with location filters and referral handoffs</li>
+                  </ul>
+                </article>
+
+                <article class="timeline-card">
+                  <span class="kicker">Suggested rollout</span>
+                  <div class="timeline-step">
+                    <span>Phase 1</span>
+                    <strong>Launch command center</strong>
+                    <p>VAC board, activity feed, document hub, stakeholder roles, and reminders.</p>
+                  </div>
+                  <div class="timeline-step">
+                    <span>Phase 2</span>
+                    <strong>Clinician enablement</strong>
+                    <p>Education bundles, peer-call scheduling, case-support workflows, and acknowledgements.</p>
+                  </div>
+                  <div class="timeline-step">
+                    <span>Phase 3</span>
+                    <strong>Operational intelligence</strong>
+                    <p>Rep dashboards, site conversion analytics, escalation trends, and pipeline visibility.</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="shell">
+            <div class="section-card">
+              <div class="section-head">
+                <div>
+                  <span class="kicker">Research inputs</span>
+                  <h2>Public evidence used for this teardown</h2>
+                </div>
+                <div class="section-copy">
+                  <p>
+                    No public mobile app was found, so this concept is grounded in Humacyte’s live web
+                    experience, Symvess resources, current commercialization updates, and public Reddit
+                    discussion around onboarding friction.
+                  </p>
+                </div>
+              </div>
+
+              <div class="source-list">
+                <a href="https://humacyte.com/support-resources/">Humacyte Support &amp; Resources</a>
+                <a href="https://symvess.com/resources/">Symvess Resources</a>
+                <a href="https://humacyte.com/clinical-trials/">Humacyte Clinical Trials</a>
+                <a href="https://investors.humacyte.com/news-releases/news-release-details/humacyte-announces-fourth-quarter-and-year-end-2025-financial">Humacyte Mar 27, 2026 business update</a>
+                <a href="https://investors.humacyte.com/news-releases/news-release-details/humacyte-receives-symvessr-purchase-commitment-clinical">Humacyte Mar 19, 2026 Saudi outreach commitment</a>
+                <a href="https://www.reddit.com/r/HUMACYTE/comments/1ovpm8j/my_opinion_piece_as_a_healthcare_professional/">Reddit discussion: device-market adoption friction</a>
+              </div>
+
+              <p class="footer-note">
+                Prototype created on March 30, 2026 from public sources and CRM context supplied in
+                the brief.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="cta">
+        <div class="shell">
+          <div class="cta-card">
+            <span class="eyebrow">Next step</span>
+            <h2>Turn Symvess commercialization into a trackable mobile workflow.</h2>
+            <p>
+              The value is not a prettier website. It is faster hospital onboarding, cleaner internal
+              coordination, and fewer launch steps disappearing into PDFs, forms, and phone calls.
+            </p>
+            <div class="cta-actions">
+              <a class="button primary" href="https://www.elinext.com/contacts/">Get in Touch</a>
+              <a class="button secondary" href="mailto:niklason@humacyte.com">Email Laura</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
