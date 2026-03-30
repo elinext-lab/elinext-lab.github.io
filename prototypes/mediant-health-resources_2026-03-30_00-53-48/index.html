@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mediant Health Resources Mobile Hiring Teardown</title>
+  <meta name="description" content="What if Mediant turned its public job board into a secure mobile candidate-ops layer so cybersecurity and Epic/FHIR candidates could qualify faster, upload documents safely, and always see the next step?">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/mediant-health-resources_2026-03-30_00-53-48/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/mediant-health-resources_2026-03-30_00-53-48/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/mediant-health-resources_2026-03-30_00-53-48/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Mediant Health Resources Mobile — AI Teardown">
+  <meta property="og:description" content="What if Mediant turned its public jobs flow into a secure mobile candidate-ops layer for cybersecurity and Epic/FHIR hiring, with clearer status, safer handoff, and faster recruiter shortlists?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="theme-color" content="#0f1629">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-30: iOS N/A (no attributable Mediant-owned app found, source: iTunes Search API US), Android N/A (no attributable Mediant-owned app found, source: Google Play scraper search US) -->
+  <style>
+    :root {
+      --ink: #0e2447;
+      --ink-soft: #42597d;
+      --paper: #f5f8fc;
+      --shell: #ffffff;
+      --line: rgba(14, 36, 71, 0.12);
+      --brand: #0047bb;
+      --brand-deep: #0f1629;
+      --brand-soft: #dfeafb;
+      --accent: #f7921e;
+      --accent-soft: #fff0db;
+      --teal: #0d9f93;
+      --teal-soft: #dff7f3;
+      --danger: #d95f4b;
+      --shadow: 0 28px 70px rgba(8, 25, 52, 0.12);
+      --phone-shadow: 0 25px 50px rgba(5, 14, 31, 0.24);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --display: "Space Grotesk", sans-serif;
+      --body: "IBM Plex Sans", sans-serif;
+      --mono: "IBM Plex Sans", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--body);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(247, 146, 30, 0.18), transparent 26%),
+        radial-gradient(circle at top right, rgba(0, 71, 187, 0.16), transparent 32%),
+        linear-gradient(180deg, #edf4ff 0%, #f7fbff 38%, #f4f7fb 100%);
+      min-height: 100vh;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-shell::before,
+    .page-shell::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-shell::before {
+      width: 24rem;
+      height: 24rem;
+      top: 2rem;
+      right: -7rem;
+      background: rgba(247, 146, 30, 0.12);
+      filter: blur(12px);
+    }
+
+    .page-shell::after {
+      width: 20rem;
+      height: 20rem;
+      left: -6rem;
+      top: 52rem;
+      background: rgba(13, 159, 147, 0.14);
+      filter: blur(18px);
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero,
+    .section-card,
+    .cta-card {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero {
+      margin-top: 28px;
+      padding: 28px;
+      border-radius: 36px;
+      display: grid;
+      gap: 26px;
+    }
+
+    .hero-top,
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+
+    .eyebrow,
+    .chip,
+    .micro-label {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(247, 146, 30, 0.16);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-copy {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 690px;
+    }
+
+    .brand-mark {
+      width: 180px;
+      margin: 0 auto 16px;
+      filter: drop-shadow(0 10px 20px rgba(0, 71, 187, 0.08));
+    }
+
+    .hero-copy h1 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(2.4rem, 5vw, 4.9rem);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+      text-wrap: balance;
+    }
+
+    .hero-copy p {
+      margin: 18px auto 0;
+      max-width: 60ch;
+      font-size: 1.06rem;
+      line-height: 1.7;
+      color: var(--ink-soft);
+    }
+
+    .hero-copy .accent {
+      color: var(--accent);
+    }
+
+    .hero-facts {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .fact {
+      display: block;
+      min-height: 120px;
+      padding: 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      background: #ffffff;
+      text-align: left;
+    }
+
+    .fact strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1.8rem;
+      line-height: 1;
+      font-family: var(--display);
+    }
+
+    .fact span {
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+
+    .signal-panel {
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(15, 22, 41, 0.96), rgba(12, 58, 117, 0.9)),
+        url("assets/mediant-share.jpg") center/cover no-repeat;
+      color: #f6f9ff;
+      padding: 22px;
+      min-height: 100%;
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+
+    .signal-panel h2,
+    .section-copy h2,
+    .cta-card h2 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .signal-panel p,
+    .section-copy p,
+    .cta-card p,
+    .evidence-card p {
+      margin: 0;
+      line-height: 1.65;
+      color: inherit;
+    }
+
+    .signal-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .signal-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .signal-card strong,
+    .evidence-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+
+    .signal-card span,
+    .evidence-card span,
+    .chip-row span {
+      color: rgba(246, 249, 255, 0.86);
+      font-size: 0.96rem;
+      line-height: 1.55;
+    }
+
+    .hero-note {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(247, 146, 30, 0.16);
+      border: 1px solid rgba(247, 146, 30, 0.24);
+      color: #fff4ea;
+    }
+
+    .section-card {
+      margin-top: 24px;
+      border-radius: 30px;
+      padding: 28px;
+      display: grid;
+      gap: 24px;
+    }
+
+    .section-head {
+      display: grid;
+      gap: 14px;
+      text-align: center;
+      justify-items: center;
+    }
+
+    .micro-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #a54f00;
+    }
+
+    .section-copy {
+      max-width: 760px;
+      text-align: center;
+      color: var(--ink-soft);
+    }
+
+    .phones {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      align-items: start;
+      justify-items: center;
+    }
+
+    .phone-wrap {
+      display: grid;
+      gap: 12px;
+      width: 100%;
+      justify-items: center;
+    }
+
+    .phone-label {
+      text-align: center;
+      max-width: 300px;
+    }
+
+    .phone-label strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .phone-label span {
+      color: var(--ink-soft);
+      line-height: 1.55;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      padding: 10px;
+      border-radius: 36px;
+      background: linear-gradient(180deg, #18294c, #0b1321);
+      box-shadow: var(--phone-shadow);
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      width: 112px;
+      height: 24px;
+      transform: translateX(-50%);
+      border-radius: 0 0 16px 16px;
+      background: #070b13;
+      z-index: 3;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 28px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 36px 14px 14px;
+      background: #f8fbff;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .app-topbar,
+    .app-section,
+    .job-card,
+    .status-card,
+    .queue-card,
+    .mini-card {
+      display: block;
+    }
+
+    .app-topbar {
+      margin-bottom: 14px;
+      padding: 14px;
+      border-radius: 18px;
+      color: #fff;
+      background: linear-gradient(135deg, #0f1629, #0047bb);
+    }
+
+    .app-topbar strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .app-topbar span {
+      display: block;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+
+    .search-box,
+    .metric-row,
+    .chip-row,
+    .task-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #eef4ff;
+      color: var(--brand);
+      border: 1px solid rgba(0, 71, 187, 0.14);
+    }
+
+    .chip.warn {
+      background: #fff2ed;
+      border-color: rgba(217, 95, 75, 0.2);
+      color: var(--danger);
+    }
+
+    .chip.ok {
+      background: #e7faf6;
+      border-color: rgba(13, 159, 147, 0.18);
+      color: #0a7e76;
+    }
+
+    .job-card,
+    .status-card,
+    .queue-card,
+    .mini-card {
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    .job-card strong,
+    .status-card strong,
+    .queue-card strong,
+    .mini-card strong {
+      display: block;
+      margin-bottom: 8px;
+      line-height: 1.4;
+      font-size: 0.96rem;
+    }
+
+    .job-card p,
+    .status-card p,
+    .queue-card p,
+    .mini-card p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+
+    .metric-pill {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #eef6ff;
+      color: var(--brand);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .metric-pill strong {
+      display: block;
+      margin-bottom: 4px;
+      font-family: var(--display);
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 22px;
+    }
+
+    .evidence-grid,
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .evidence-card,
+    .workflow-card {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .evidence-card strong,
+    .workflow-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      line-height: 1.35;
+    }
+
+    .evidence-card span,
+    .workflow-card span {
+      color: var(--ink-soft);
+      line-height: 1.55;
+    }
+
+    .workflow-card {
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
+    }
+
+    .workflow-card em {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-style: normal;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .cta-card {
+      margin: 24px 0 28px;
+      padding: 28px;
+      border-radius: 30px;
+      text-align: center;
+      display: grid;
+      gap: 16px;
+      justify-items: center;
+    }
+
+    .cta-card p {
+      max-width: 62ch;
+      color: var(--ink-soft);
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-width: 220px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), #f16a2a);
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 20px 40px rgba(241, 106, 42, 0.24);
+    }
+
+    .cta-button::after {
+      content: "→";
+      font-size: 1.1rem;
+    }
+
+    .footnote {
+      color: var(--ink-soft);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .section-grid,
+      .evidence-grid,
+      .workflow-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .phones {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .hero,
+      .section-card,
+      .cta-card {
+        padding: 22px;
+      }
+
+      .hero-facts,
+      .phones {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        width: min(1180px, calc(100% - 20px));
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      .hero-copy h1 {
+        font-size: 2.35rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <main class="container">
+      <section class="hero">
+        <div class="hero-top">
+          <span class="eyebrow">AI teardown for Jon Karas</span>
+          <span class="chip warn">No first-party app found, using web product fallback</span>
+        </div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <img class="brand-mark" src="assets/mediant-logo.svg" alt="Mediant Health Resources">
+            <h1>What if Mediant's <span class="accent">job board</span> behaved like a secure mobile hiring product?</h1>
+            <p>
+              The public site already proves demand. It is carrying live cybersecurity and Epic/FHIR roles.
+              What it does not do yet is help the right candidates qualify quickly, upload the right materials safely,
+              and move through a visible next-step flow without disappearing into recruiter handoffs.
+            </p>
+            <div class="hero-facts">
+              <div class="fact">
+                <strong>51</strong>
+                <span>Live public job posts exposed through Mediant's WordPress jobs API on March 30, 2026.</span>
+              </div>
+              <div class="fact">
+                <strong>2</strong>
+                <span>Public roles that directly signal security-sensitive and Epic/FHIR-heavy hiring demand right now.</span>
+              </div>
+              <div class="fact">
+                <strong>4-step</strong>
+                <span>Consultant QA process Jon publicly says he helped create, which makes workflow clarity an operations problem.</span>
+              </div>
+            </div>
+          </div>
+          <aside class="signal-panel">
+            <h2>Why this angle is worth building</h2>
+            <p>The opportunity is not another careers reskin. It is a candidate-ops layer that makes trust, qualification, and shortlist speed visible on mobile.</p>
+            <div class="signal-stack">
+              <div class="signal-card">
+                <strong>Live public signal: Healthcare Cybersecurity PM</strong>
+                <span>Patch management, firewall cleanup, Cisco ISE or Workspace ONE, VLAN segmentation, ServiceNow CMDB.</span>
+              </div>
+              <div class="signal-card">
+                <strong>Live public signal: AI Engineer for Epic FHIR</strong>
+                <span>Homegrown scheduling app, two-way Epic FHIR integration, PHI and HIPAA-compliant backend services.</span>
+              </div>
+              <div class="signal-card">
+                <strong>Market baseline is already mobile</strong>
+                <span>Category apps like Aya still get punished for login, filter, and status problems. Mediant has no mobile layer at all yet.</span>
+              </div>
+            </div>
+            <div class="hero-note">
+              Jon's public bio says he runs day-to-day operations and leads recruiting. This is why the prototype focuses on candidate operations, not just page design.
+            </div>
+          </aside>
+        </div>
+        <div class="hero-meta">
+          <span class="chip ok">Current surface: `medianthealthcare.com/open-positions/`</span>
+          <span class="chip">Prototype concept: Secure Candidate Ops</span>
+          <span class="chip">Built for healthcare IT staffing</span>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <div class="section-head">
+          <span class="micro-label">Current vs Improved</span>
+          <div class="section-copy">
+            <h2>From a job list to a candidate-operations flow</h2>
+            <p>The current product helps candidates find roles. The proposed mobile layer helps them qualify, trust the process, and keep moving through security-heavy healthcare hiring workflows.</p>
+          </div>
+        </div>
+        <div class="phones">
+          <div class="phone-wrap">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="app-topbar">
+                  <strong>Mediant Open Positions</strong>
+                  <span>Search jobs. View listing. Start again somewhere else.</span>
+                </div>
+                <div class="search-box">Search open positions</div>
+                <div class="chip-row" style="margin-bottom:12px;">
+                  <span class="chip">Epic</span>
+                  <span class="chip">Project Manager</span>
+                  <span class="chip">All specialties</span>
+                </div>
+                <div class="job-card">
+                  <strong>Healthcare Cybersecurity and Infrastructure Project Manager</strong>
+                  <p>Posted March 26, 2026. Strong role, but the mobile surface still ends at a generic listing view.</p>
+                </div>
+                <div class="job-card">
+                  <strong>AI Application Engineer – Epic FHIR Integrations</strong>
+                  <p>Posted March 25, 2026. High-complexity work, but no visible fit scoring or secure checklist.</p>
+                </div>
+                <div class="mini-card">
+                  <strong>What is missing in the current mobile experience?</strong>
+                  <p>No saved progress, no secure document vault, no visible recruiter owner, no candidate timeline, no shortlist signal.</p>
+                </div>
+                <div class="chip-row">
+                  <span class="chip warn">No status</span>
+                  <span class="chip warn">No fit summary</span>
+                  <span class="chip warn">No secure handoff</span>
+                </div>
+              </div>
+            </div>
+            <div class="phone-label">
+              <strong>Current state</strong>
+              <span>The page works as a directory, but it does not behave like a candidate product for security-sensitive healthcare IT roles.</span>
+            </div>
+          </div>
+
+          <div class="phone-wrap">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="app-topbar" style="background:linear-gradient(135deg, #0f1629, #0d9f93);">
+                  <strong>Mediant Candidate Ops</strong>
+                  <span>For candidates: fit clarity, secure uploads, and a visible next step.</span>
+                </div>
+                <div class="status-card">
+                  <strong>Healthcare Cybersecurity PM</strong>
+                  <p>94% fit match based on patching, firewall cleanup, NAC rollout, VLAN segmentation, and CMDB work.</p>
+                </div>
+                <div class="metric-row" style="margin-bottom:12px;">
+                  <div class="metric-pill">
+                    <strong>12 min</strong>
+                    Guided secure intake
+                  </div>
+                  <div class="metric-pill">
+                    <strong>3 docs</strong>
+                    Resume, certs, security project proof
+                  </div>
+                </div>
+                <div class="job-card">
+                  <strong>Role-fit summary</strong>
+                  <div class="chip-row">
+                    <span class="chip ok">Cisco ISE</span>
+                    <span class="chip ok">Workspace ONE</span>
+                    <span class="chip ok">ServiceNow CMDB</span>
+                    <span class="chip ok">Medical-device VLANs</span>
+                  </div>
+                </div>
+                <div class="status-card">
+                  <strong>Secure checklist</strong>
+                  <div class="task-row">
+                    <span class="chip ok">Resume uploaded</span>
+                    <span class="chip ok">Certifications verified</span>
+                    <span class="chip">Client summary pending</span>
+                  </div>
+                </div>
+                <div class="job-card">
+                  <strong>Next step</strong>
+                  <p>Recruiter review scheduled for today. Candidate sees the owner, stage, and expected response window instead of waiting in silence.</p>
+                </div>
+              </div>
+            </div>
+            <div class="phone-label">
+              <strong>Improved candidate view</strong>
+              <span>A mobile layer that turns a job listing into a structured, secure intake for cybersecurity and Epic/FHIR candidates.</span>
+            </div>
+          </div>
+
+          <div class="phone-wrap">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="app-topbar" style="background:linear-gradient(135deg, #0f1629, #f7921e);">
+                  <strong>Mediant Shortlist Queue</strong>
+                  <span>For ops and recruiting: act on the right people faster.</span>
+                </div>
+                <div class="queue-card">
+                  <strong>Cybersecurity PM shortlist</strong>
+                  <p>3 high-fit candidates surfaced today. 1 blocked on client summary, 2 ready for outreach.</p>
+                </div>
+                <div class="mini-card">
+                  <strong>Candidate A</strong>
+                  <p>Score 94. NAC rollout, firewall rationalization, SCCM and Workspace ONE, remote-ready.</p>
+                </div>
+                <div class="mini-card">
+                  <strong>Candidate B</strong>
+                  <p>Score 88. Strong network segmentation and medical device isolation, needs CMDB depth check.</p>
+                </div>
+                <div class="mini-card">
+                  <strong>Candidate C</strong>
+                  <p>Score 85. ServiceNow and endpoint data integration strong, certification upload incomplete.</p>
+                </div>
+                <div class="chip-row">
+                  <span class="chip ok">Swipe shortlist</span>
+                  <span class="chip">Escalate to recruiter</span>
+                  <span class="chip">Flag missing proof</span>
+                </div>
+              </div>
+            </div>
+            <div class="phone-label">
+              <strong>Improved recruiter view</strong>
+              <span>Jon's team gets a mobile-ready shortlist instead of rebuilding fit signals manually from resumes and emails.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <div class="section-grid">
+          <div class="section-copy" style="text-align:left;max-width:none;">
+            <span class="micro-label">Public Evidence</span>
+            <h2>Why this prototype is anchored in Mediant's current reality</h2>
+            <p>Everything below comes from Mediant's live public surface, public leadership copy, public Reddit discussion, and a staffing-app benchmark collected on March 30, 2026.</p>
+          </div>
+          <div class="section-copy" style="text-align:left;max-width:none;">
+            <span class="micro-label">Solution Thesis</span>
+            <p>The best wedge is not an ATS replacement. It is a secure mobile layer that captures the right candidate data earlier, exposes status clearly, and gives recruiters a cleaner shortlist for security and Epic/FHIR work.</p>
+          </div>
+        </div>
+        <div class="evidence-grid">
+          <article class="evidence-card">
+            <strong>Live demand is visible</strong>
+            <span>Mediant's jobs API exposes 51 live listings, with cybersecurity and AI or Epic FHIR roles posted on March 25-27, 2026.</span>
+          </article>
+          <article class="evidence-card">
+            <strong>Jon owns the workflow</strong>
+            <span>Mediant's leadership page says Jon manages day-to-day operations, leads recruiting, and helped create the firm's consultant QA process.</span>
+          </article>
+          <article class="evidence-card">
+            <strong>Trust matters in public sentiment</strong>
+            <span>Reddit commentary is limited but directionally useful: professional outreach on one side, opaque middleman concerns on the other.</span>
+          </article>
+          <article class="evidence-card">
+            <strong>Category leaders already teach mobile expectations</strong>
+            <span>Aya's recent reviews still complain about login, filters, and status. Candidates now expect better than a static listing page.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <div class="section-head">
+          <span class="micro-label">How It Works</span>
+          <div class="section-copy">
+            <h2>Three moves, no replatform story</h2>
+            <p>This concept keeps Mediant's existing public site in place and adds a mobile candidate-ops product where the value is actually created.</p>
+          </div>
+        </div>
+        <div class="workflow-grid">
+          <article class="workflow-card">
+            <em>1. Capture</em>
+            <strong>Role-fit intake built for healthcare IT</strong>
+            <span>Candidates see what matters for the role immediately: Epic module depth, FHIR workflow experience, NAC or CMDB exposure, and compliance-sensitive project signals.</span>
+          </article>
+          <article class="workflow-card">
+            <em>2. Secure</em>
+            <strong>Safer credential and document handoff</strong>
+            <span>Instead of loose recruiter follow-up, Mediant gets a guided mobile checklist for resumes, certifications, client summaries, and next-step tasks.</span>
+          </article>
+          <article class="workflow-card">
+            <em>3. Shortlist</em>
+            <strong>Mobile recruiter queue for Jon's team</strong>
+            <span>Recruiters and ops leads can park, escalate, or shortlist candidates quickly, with the strongest profiles rising first for security-heavy roles.</span>
+          </article>
+          <article class="workflow-card">
+            <em>4. Trust</em>
+            <strong>Visible status instead of silence</strong>
+            <span>The candidate sees the stage, owner, and expected next action. That is operationally simple and brand-protective at the same time.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="cta-card">
+        <span class="micro-label">Elinext Mobile Concept</span>
+        <h2>Mediant does not need another brochure page. It needs a candidate-ops product.</h2>
+        <p>This prototype shows how a mobile layer could help Mediant move high-fit cybersecurity and Epic/FHIR candidates through a more trusted, secure, and measurable hiring path without replacing the public site.</p>
+        <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Get in Touch</a>
+        <div class="footnote">
+          Public product analyzed: `medianthealthcare.com/open-positions/` • No attributable first-party mobile app found in US stores on 2026-03-30.
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
