@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Forsyth Barnes Mobile Teardown</title>
+    <meta
+      name="description"
+      content="A mobile-first concept for Forsyth Barnes showing how candidate timelines, recruiter SLAs, and sector-aware follow-up could close the trust gap between job alerts and actual communication."
+    />
+    <link
+      rel="canonical"
+      href="https://elinext-lab.github.io/prototypes/forsyth-barnes_2026-03-30_00-07-51/"
+    />
+    <meta
+      property="og:url"
+      content="https://elinext-lab.github.io/prototypes/forsyth-barnes_2026-03-30_00-07-51/"
+    />
+    <meta
+      property="og:image"
+      content="https://elinext-lab.github.io/prototypes/forsyth-barnes_2026-03-30_00-07-51/og-image.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:title" content="Forsyth Barnes Mobile — AI Teardown" />
+    <meta
+      property="og:description"
+      content="What if Forsyth Barnes turned its portal promise into a mobile-first status layer, so every candidate could see the next step, the recruiter owner, and the timeline instead of waiting in silence?"
+    />
+    <meta name="author" content="Yauheni Shauchenka, Elinext" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Forsyth Barnes Mobile — AI Teardown" />
+    <meta
+      name="twitter:description"
+      content="A candidate-first mobile concept for Forsyth Barnes focused on clearer application status, follow-up, and faster repeat engagement."
+    />
+    <meta
+      name="twitter:image"
+      content="https://elinext-lab.github.io/prototypes/forsyth-barnes_2026-03-30_00-07-51/og-image.jpg"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-ZR415HX0B2");
+    </script>
+    <!-- Ratings as of 2026-03-30: iOS N/A (0 first-party results, source: iTunes Search API query "Forsyth Barnes"), Android N/A (0 first-party matches, source: google-play-scraper search "Forsyth Barnes") -->
+    <style>
+      :root {
+        --ink: #0b1020;
+        --ink-2: #141a30;
+        --panel: #171d33;
+        --panel-2: #1c2440;
+        --mist: #f3f4ff;
+        --muted: #b4b9d6;
+        --line: rgba(255, 255, 255, 0.12);
+        --brand: #8f66ff;
+        --brand-soft: #c4b3ff;
+        --accent: #ff9d4e;
+        --accent-soft: #ffd4b0;
+        --good: #75e0a7;
+        --bad: #ff8f8f;
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Manrope", "Segoe UI", sans-serif;
+        color: var(--mist);
+        background:
+          radial-gradient(circle at top left, rgba(143, 102, 255, 0.18), transparent 30%),
+          radial-gradient(circle at 80% 15%, rgba(255, 157, 78, 0.16), transparent 24%),
+          linear-gradient(180deg, #0a0f1c 0%, #0d1323 44%, #11182d 100%);
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: auto;
+        width: 34vw;
+        height: 34vw;
+        border-radius: 50%;
+        filter: blur(30px);
+        opacity: 0.16;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      body::before {
+        top: 10%;
+        right: -8%;
+        background: var(--brand);
+      }
+
+      body::after {
+        bottom: 8%;
+        left: -10%;
+        background: var(--accent);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      main {
+        position: relative;
+        z-index: 1;
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 56px;
+      }
+
+      .panel {
+        position: relative;
+        z-index: 1;
+        background: rgba(14, 19, 34, 0.94);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .hero {
+        padding: 28px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        gap: 28px;
+        align-items: start;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--accent-soft);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-copy {
+        text-align: center;
+        padding-top: 18px;
+      }
+
+      .hero-copy h1 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(2.6rem, 5vw, 4.8rem);
+        line-height: 0.98;
+        margin: 20px auto 18px;
+        max-width: 11ch;
+        letter-spacing: -0.05em;
+      }
+
+      .hero-copy p {
+        margin: 0 auto;
+        max-width: 58ch;
+        font-size: 1.08rem;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .hero-bar {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 24px;
+      }
+
+      .metric {
+        display: block;
+        padding: 16px;
+        border-radius: 20px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 1.7rem;
+        line-height: 1;
+        margin-bottom: 8px;
+        font-family: "Space Grotesk", sans-serif;
+      }
+
+      .metric span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.45;
+      }
+
+      .brand-card {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 22px;
+        border-radius: 24px;
+        margin-top: 20px;
+        min-height: 150px;
+        background:
+          linear-gradient(180deg, rgba(10, 14, 28, 0.3), rgba(10, 14, 28, 0.8)),
+          url("assets/logo-og.png") center/cover no-repeat;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .brand-card strong {
+        display: block;
+        max-width: 18ch;
+        font-size: 1.1rem;
+        line-height: 1.4;
+      }
+
+      .brand-card span {
+        display: block;
+        margin-top: 6px;
+        color: var(--brand-soft);
+        font-size: 0.9rem;
+      }
+
+      .phone-stage {
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        padding: 12px 4px 4px;
+        flex-wrap: wrap;
+      }
+
+      .phone-stack-note {
+        margin-top: 16px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .phone {
+        position: relative;
+        width: 280px;
+        height: 580px;
+        padding: 10px;
+        border-radius: 36px;
+        background: linear-gradient(180deg, #05070d, #121a2f 65%, #0a0e19);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.38);
+      }
+
+      .phone::before {
+        content: "";
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 34%;
+        height: 24px;
+        border-radius: 14px;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 3;
+      }
+
+      .phone-screen {
+        position: relative;
+        height: 100%;
+        border-radius: 28px;
+        overflow: auto;
+        padding: 36px 14px 14px;
+        background: linear-gradient(180deg, #f6f0ff 0%, #fbfafc 52%, #ffffff 100%);
+        color: #20253d;
+        scrollbar-width: none;
+      }
+
+      .phone-screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      .home-indicator {
+        position: absolute;
+        left: 50%;
+        bottom: 9px;
+        width: 34%;
+        height: 4px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.36);
+      }
+
+      .status-row,
+      .phone-title,
+      .phone-chip,
+      .job-card,
+      .alert,
+      .timeline,
+      .coach-card,
+      .summary-strip,
+      .note-card {
+        display: block;
+      }
+
+      .status-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        color: #6f7592;
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+
+      .status-row img {
+        width: 22px;
+        height: 30px;
+        object-fit: contain;
+      }
+
+      .phone-title {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.55rem;
+        line-height: 1.02;
+        margin-bottom: 12px;
+      }
+
+      .phone-subtitle {
+        display: block;
+        color: #5a627f;
+        line-height: 1.5;
+        font-size: 0.92rem;
+      }
+
+      .phone-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 800;
+        margin-top: 16px;
+        margin-bottom: 14px;
+      }
+
+      .phone-chip.bad {
+        background: rgba(255, 96, 96, 0.11);
+        color: #b14d4d;
+      }
+
+      .phone-chip.good {
+        background: rgba(117, 224, 167, 0.18);
+        color: #0c7b51;
+      }
+
+      .job-card,
+      .alert,
+      .coach-card,
+      .note-card {
+        padding: 14px;
+        border-radius: 20px;
+        margin-bottom: 12px;
+        background: #ffffff;
+        box-shadow: 0 12px 22px rgba(67, 52, 112, 0.08);
+      }
+
+      .job-card h3,
+      .alert h3,
+      .coach-card h3,
+      .note-card h3 {
+        margin: 0 0 8px;
+        font-size: 0.96rem;
+        line-height: 1.35;
+      }
+
+      .tiny {
+        display: block;
+        color: #66708e;
+        font-size: 0.8rem;
+        line-height: 1.45;
+      }
+
+      .job-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .job-meta span,
+      .summary-strip span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        padding: 7px 10px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        background: #f1ecff;
+        color: #6447ca;
+      }
+
+      .summary-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 12px 0;
+      }
+
+      .alert {
+        background: linear-gradient(180deg, #fff5ec, #fff1e4);
+        border: 1px solid rgba(255, 157, 78, 0.18);
+      }
+
+      .alert .tiny strong {
+        color: #20112b;
+      }
+
+      .timeline {
+        margin-top: 8px;
+      }
+
+      .timeline-item {
+        display: grid;
+        grid-template-columns: 18px minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+        margin-bottom: 14px;
+      }
+
+      .timeline-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        margin-top: 2px;
+        background: #d6d9e7;
+        box-shadow: inset 0 0 0 4px #f7f8fc;
+      }
+
+      .timeline-dot.active {
+        background: linear-gradient(180deg, #8f66ff, #ff9d4e);
+      }
+
+      .timeline-item strong {
+        display: block;
+        font-size: 0.87rem;
+        margin-bottom: 4px;
+      }
+
+      .timeline-item span {
+        display: block;
+        color: #64708a;
+        font-size: 0.8rem;
+        line-height: 1.45;
+      }
+
+      .cta-mini {
+        display: flex;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .cta-mini a,
+      .cta-mini span {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        border-radius: 14px;
+        font-size: 0.82rem;
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      .cta-mini a {
+        background: #1b2240;
+        color: #fff;
+      }
+
+      .cta-mini span {
+        background: #f1ecff;
+        color: #6447ca;
+      }
+
+      .section {
+        margin-top: 24px;
+        padding: 28px;
+      }
+
+      .section h2 {
+        margin: 0 0 14px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(1.7rem, 3vw, 2.4rem);
+        letter-spacing: -0.04em;
+      }
+
+      .section p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .proof-grid,
+      .solution-grid,
+      .impact-grid {
+        display: grid;
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .solution-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .impact-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .proof-card,
+      .solution-card,
+      .impact-card {
+        display: block;
+        padding: 20px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+      }
+
+      .proof-card span,
+      .solution-card span,
+      .impact-card span {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--accent-soft);
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+
+      .proof-card strong,
+      .solution-card strong,
+      .impact-card strong {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 1.06rem;
+        line-height: 1.45;
+      }
+
+      .proof-card p,
+      .solution-card p,
+      .impact-card p {
+        font-size: 0.95rem;
+      }
+
+      .quote-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .quote {
+        flex: 1 1 220px;
+        display: block;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--mist);
+      }
+
+      .quote strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+      }
+
+      .quote span {
+        display: block;
+        color: var(--muted);
+        line-height: 1.6;
+        font-size: 0.92rem;
+      }
+
+      .cta-block {
+        margin-top: 24px;
+        text-align: center;
+      }
+
+      .cta-block a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 56px;
+        padding: 0 28px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--accent) 0%, #ffb65c 100%);
+        color: #1b1321;
+        text-decoration: none;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        box-shadow: 0 16px 32px rgba(255, 157, 78, 0.28);
+      }
+
+      .footer-note {
+        margin-top: 16px;
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.7;
+        text-align: center;
+      }
+
+      .source-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+        justify-content: center;
+      }
+
+      .source-row a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 14px;
+        border-radius: 999px;
+        text-decoration: none;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--mist);
+        font-size: 0.85rem;
+      }
+
+      [data-reveal] {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: rise 0.8s ease forwards;
+      }
+
+      [data-reveal="2"] {
+        animation-delay: 0.12s;
+      }
+
+      [data-reveal="3"] {
+        animation-delay: 0.24s;
+      }
+
+      [data-reveal="4"] {
+        animation-delay: 0.36s;
+      }
+
+      @keyframes rise {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 1024px) {
+        .hero-grid,
+        .proof-grid,
+        .solution-grid,
+        .impact-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-bar {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 720px) {
+        main {
+          width: min(100% - 20px, 1180px);
+          padding-top: 18px;
+        }
+
+        .hero,
+        .section {
+          padding: 22px;
+        }
+
+        .hero-copy h1 {
+          max-width: none;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-bar {
+          grid-template-columns: 1fr;
+        }
+
+        .phone {
+          width: 300px;
+        }
+
+        .brand-card {
+          min-height: 180px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="panel hero" data-reveal="1">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">Elinext x Forsyth Barnes</div>
+            <h1>What if every candidate saw the next step?</h1>
+            <p>
+              Forsyth Barnes already promises alerts, profile saving, CV upload,
+              and application history. The missing layer is confidence. This
+              mobile-first concept turns the existing portal into a live status
+              experience for specialist hiring across energy, telecom, and
+              infrastructure.
+            </p>
+            <div class="hero-bar">
+              <div class="metric">
+                <strong>70+</strong>
+                <span>people on the company site, signaling scale beyond boutique recruiting</span>
+              </div>
+              <div class="metric">
+                <strong>0</strong>
+                <span>first-party App Store or Google Play matches found on 2026-03-30</span>
+              </div>
+              <div class="metric">
+                <strong>2.8</strong>
+                <span>Trustpilot score in the surfaced public snippet, with follow-up as the pain</span>
+              </div>
+              <div class="metric">
+                <strong>2026</strong>
+                <span>salary guide and specialist hiring signals already pushing the brand upmarket</span>
+              </div>
+            </div>
+            <div class="brand-card">
+              <div>
+                <strong>Current promise: alerts, history, and fast-track applications.</strong>
+                <span>Prototype focus: make that promise visible on mobile.</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="phone-stage">
+              <article class="phone" data-reveal="2">
+                <div class="phone-screen">
+                  <div class="status-row">
+                    <span>9:41</span>
+                    <img src="assets/favicon.png" alt="Forsyth Barnes mark" />
+                  </div>
+                  <div class="phone-title">Current portal</div>
+                  <span class="phone-subtitle">
+                    The mechanics exist, but the status story still feels thin.
+                  </span>
+                  <span class="phone-chip bad">Candidate trust at risk</span>
+                  <div class="job-card">
+                    <h3>Senior Client Partner</h3>
+                    <span class="tiny">Utilities &amp; Energy Practice</span>
+                    <div class="job-meta">
+                      <span>Saved profile</span>
+                      <span>CV uploaded</span>
+                    </div>
+                  </div>
+                  <div class="alert">
+                    <h3>Application sent</h3>
+                    <span class="tiny">
+                      Last visible event was <strong>8 days ago</strong>. No owner,
+                      no ETA, no next action.
+                    </span>
+                  </div>
+                  <div class="note-card">
+                    <h3>What candidates feel</h3>
+                    <span class="tiny">
+                      "I applied" is clear. "What happens now?" is not.
+                    </span>
+                  </div>
+                  <div class="summary-strip">
+                    <span>Email only</span>
+                    <span>No live timeline</span>
+                    <span>No mobile home</span>
+                  </div>
+                  <div class="note-card">
+                    <h3>Portal promise</h3>
+                    <span class="tiny">
+                      Alerts, application history, and faster repeat applications
+                      are already on the page. The trust layer is still missing.
+                    </span>
+                  </div>
+                </div>
+                <div class="home-indicator"></div>
+              </article>
+
+              <article class="phone" data-reveal="3">
+                <div class="phone-screen">
+                  <div class="status-row">
+                    <span>9:41</span>
+                    <img src="assets/favicon.png" alt="Forsyth Barnes mark" />
+                  </div>
+                  <div class="phone-title">Candidate timeline</div>
+                  <span class="phone-subtitle">
+                    A mobile-first status layer for specialist searches.
+                  </span>
+                  <span class="phone-chip good">Status-first experience</span>
+                  <div class="job-card">
+                    <h3>Senior Client Partner</h3>
+                    <span class="tiny">German energy and telecom account</span>
+                    <div class="job-meta">
+                      <span>Owner: Alex H.</span>
+                      <span>ETA: Tue</span>
+                    </div>
+                  </div>
+                  <div class="timeline">
+                    <div class="timeline-item">
+                      <div class="timeline-dot active"></div>
+                      <div>
+                        <strong>Applied successfully</strong>
+                        <span>CV, notice period, and sector fit captured.</span>
+                      </div>
+                    </div>
+                    <div class="timeline-item">
+                      <div class="timeline-dot active"></div>
+                      <div>
+                        <strong>Recruiter review completed</strong>
+                        <span>Matched to energy portfolio growth on 29 Mar.</span>
+                      </div>
+                    </div>
+                    <div class="timeline-item">
+                      <div class="timeline-dot active"></div>
+                      <div>
+                        <strong>Client shortlist pending</strong>
+                        <span>Auto-update scheduled if no movement by Tuesday.</span>
+                      </div>
+                    </div>
+                    <div class="timeline-item">
+                      <div class="timeline-dot"></div>
+                      <div>
+                        <strong>Interview prep unlocks next</strong>
+                        <span>Salary guide and company notes appear once shortlisted.</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="cta-mini">
+                    <a href="#contact">Book screening</a>
+                    <span>Ask recruiter</span>
+                  </div>
+                </div>
+                <div class="home-indicator"></div>
+              </article>
+
+            </div>
+            <div class="phone-stack-note">
+              Before: job mechanics. After: visible progress, named ownership, and a candidate reason to come back on mobile.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel section" data-reveal="2">
+        <h2>Why this product direction is defensible</h2>
+        <p>
+          Forsyth Barnes does not need a generic consumer app. It needs a mobile
+          layer for recurring candidate behavior: checking status, preparing for
+          the next step, and staying warm during slow client review windows.
+        </p>
+        <div class="proof-grid">
+          <div class="proof-card">
+            <span>Website promise</span>
+            <strong>The portal already sells alerts, saved profiles, and application history.</strong>
+            <p>
+              That means the business has already framed recruiting as a repeat
+              product interaction, not just a one-time form submit.
+            </p>
+          </div>
+          <div class="proof-card">
+            <span>Public signal</span>
+            <strong>Review snippets call out responsiveness and weak follow-through.</strong>
+            <p>
+              The trust issue is not top-of-funnel awareness. It is the silent
+              period after interest becomes intent.
+            </p>
+          </div>
+          <div class="proof-card">
+            <span>Growth context</span>
+            <strong>Utilities, renewable energy, telecom, and infrastructure roles increase process complexity.</strong>
+            <p>
+              Longer cycles and more stakeholders make a status-first mobile
+              experience more valuable, not less.
+            </p>
+          </div>
+        </div>
+        <div class="quote-strip">
+          <div class="quote">
+            <strong>Gap spotted</strong>
+            <span>Forsyth Barnes promises visibility. The prototype makes that promise tactile.</span>
+          </div>
+          <div class="quote">
+            <strong>Why mobile</strong>
+            <span>Candidates check progress from phones long before they revisit a desktop portal.</span>
+          </div>
+          <div class="quote">
+            <strong>Why now</strong>
+            <span>Specialist growth into energy and infrastructure raises the cost of every missed update.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel section" data-reveal="3">
+        <h2>What Elinext would actually build</h2>
+        <p>
+          Start with a PWA or hybrid mobile shell that sits on top of the current
+          portal. The goal is fast delivery and measurable trust improvements,
+          not a long native rewrite.
+        </p>
+        <div class="solution-grid">
+          <div class="solution-card">
+            <span>Module 01</span>
+            <strong>Candidate timeline and status center</strong>
+            <p>
+              Every application gets a live stage, named owner, expected update
+              date, and self-serve next action.
+            </p>
+          </div>
+          <div class="solution-card">
+            <span>Module 02</span>
+            <strong>Recruiter SLA and auto-follow-up</strong>
+            <p>
+              Trigger nudges when a role stalls, and let recruiters send approved
+              progress notes in one tap instead of reactive email chasing.
+            </p>
+          </div>
+          <div class="solution-card">
+            <span>Module 03</span>
+            <strong>Content and application journey in one flow</strong>
+            <p>
+              Connect the salary guide and sector content to live candidate
+              journeys so engagement keeps moving even while clients deliberate.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel section" data-reveal="4" id="contact">
+        <h2>What this changes for the business</h2>
+        <p>
+          The payoff is practical: fewer anxious follow-up emails, better repeat
+          mobile engagement, clearer recruiter accountability, and a stronger
+          product story for a firm that already positions itself around AI and
+          technology.
+        </p>
+        <div class="impact-grid">
+          <div class="impact-card">
+            <span>Outcome</span>
+            <strong>Reduce ghosting perception</strong>
+            <p>Silence becomes visible progress, even when clients are slow.</p>
+          </div>
+          <div class="impact-card">
+            <span>Outcome</span>
+            <strong>Improve recruiter efficiency</strong>
+            <p>Give teams a structured way to manage follow-up instead of inbox triage.</p>
+          </div>
+          <div class="impact-card">
+            <span>Outcome</span>
+            <strong>Strengthen mobile retention</strong>
+            <p>Create a repeat product surface instead of relying on email alone.</p>
+          </div>
+          <div class="impact-card">
+            <span>Outcome</span>
+            <strong>Support specialist sector growth</strong>
+            <p>Utilities and energy searches benefit from longer-cycle status clarity.</p>
+          </div>
+        </div>
+        <div class="source-row">
+          <a href="https://www.forsythbarnes.com/login" target="_blank" rel="noreferrer">Portal</a>
+          <a href="https://www.forsythbarnes.com/jobs" target="_blank" rel="noreferrer">Jobs</a>
+          <a href="https://resources.forsythbarnes.com/" target="_blank" rel="noreferrer">Salary Guide</a>
+          <a href="https://builtwith.com/detailed/forsythbarnes.com" target="_blank" rel="noreferrer">BuiltWith</a>
+          <a href="https://www.trustpilot.com/review/forsythbarnes.com" target="_blank" rel="noreferrer">Trustpilot</a>
+        </div>
+        <div class="cta-block">
+          <a href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">
+            Get in Touch
+          </a>
+        </div>
+        <div class="footer-note">
+          Prototype created for Roheel Ahmad, CEO at Forsyth Barnes. Product
+          angle selected from CRM profile context plus public website, tech-stack,
+          and reputation signals collected on 2026-03-30.
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
