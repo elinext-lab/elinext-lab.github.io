@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentry Mobile — AI Teardown</title>
+  <meta name="description" content="A concept for Sentry's mobile workflow: one release-readiness score that validates source maps, flags bundle-size regressions, and filters alert noise before rollout.">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="theme-color" content="#0f1629">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/sentry_2026-03-30_05-41-41/">
+  <link rel="icon" href="./assets/sentry-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/sentry_2026-03-30_05-41-41/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/sentry_2026-03-30_05-41-41/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Sentry Mobile — AI Teardown">
+  <meta property="og:description" content="What if Sentry gave mobile teams one release-readiness score that validates source maps, flags bundle-size regressions, and filters alert noise before rollout goes live?">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sentry Mobile — AI Teardown">
+  <meta name="twitter:description" content="A concept for turning mobile alert noise, source-map friction, and release drift into one confident ship-or-hold decision.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/sentry_2026-03-30_05-41-41/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Ratings as of 2026-03-30: iOS N/A (no official US App Store app found for Sentry / Functional Software, source: iTunes Search API), Android N/A (no official Google Play app found for Sentry / Functional Software, source: google-play-scraper search) -->
+  <style>
+    :root {
+      --bg: #08101f;
+      --bg-soft: rgba(12, 18, 39, 0.9);
+      --bg-card: rgba(17, 24, 49, 0.92);
+      --line: rgba(158, 171, 220, 0.18);
+      --text: #f6f8ff;
+      --muted: #a7afcb;
+      --accent: #ff8e64;
+      --accent-soft: rgba(255, 142, 100, 0.15);
+      --violet: #7887ff;
+      --teal: #6fd6cf;
+      --green: #98f2b7;
+      --shadow: 0 28px 60px rgba(0, 0, 0, 0.42);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --container: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 15%, rgba(120, 135, 255, 0.23), transparent 28%),
+        radial-gradient(circle at 87% 10%, rgba(111, 214, 207, 0.18), transparent 24%),
+        linear-gradient(180deg, #070d19 0%, #0d1730 55%, #07101d 100%);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      width: 42vw;
+      height: 42vw;
+      border-radius: 999px;
+      filter: blur(60px);
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+
+    body::before {
+      top: -14vw;
+      right: -10vw;
+      background: rgba(120, 135, 255, 0.18);
+    }
+
+    body::after {
+      bottom: -20vw;
+      left: -14vw;
+      background: rgba(255, 142, 100, 0.12);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(calc(100% - 32px), var(--container));
+      margin: 0 auto;
+      padding: 28px 0 60px;
+    }
+
+    .panel {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(120, 135, 255, 0.08), transparent 34%),
+        linear-gradient(320deg, rgba(255, 142, 100, 0.08), transparent 28%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      padding: 28px 28px 32px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+    }
+
+    .brand-mark,
+    .phone-brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(140deg, #8e9cff 0%, #6b5fc4 58%, #1d274f 100%);
+      color: white;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
+
+    .brand-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-copy strong {
+      font-size: 0.98rem;
+      font-weight: 800;
+    }
+
+    .brand-copy span {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .tagline {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 142, 100, 0.1);
+      border: 1px solid rgba(255, 142, 100, 0.2);
+      color: #ffc2a9;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .hero-copy {
+      padding: 10px 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(120, 135, 255, 0.12);
+      border: 1px solid rgba(120, 135, 255, 0.2);
+      color: #d5ddff;
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 {
+      font-family: "Space Grotesk", sans-serif;
+      line-height: 1.02;
+      margin: 0;
+      letter-spacing: -0.04em;
+    }
+
+    h1 {
+      font-size: clamp(2.7rem, 6vw, 5.1rem);
+      max-width: 11ch;
+      margin-top: 18px;
+    }
+
+    .lead {
+      max-width: 62ch;
+      margin-top: 18px;
+      font-size: 1.07rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #d8def6;
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 0 18px;
+      border-radius: 999px;
+      font-weight: 800;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, #ff8e64, #ffb062);
+      color: #180d08;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 16px 30px rgba(255, 142, 100, 0.24);
+    }
+
+    .button-secondary {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      color: var(--text);
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 14px;
+    }
+
+    .mini-card {
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      min-height: 0;
+    }
+
+    .mini-card strong,
+    .stat-card strong,
+    .builder-card strong {
+      display: block;
+      font-size: 0.84rem;
+      color: #cfd7f6;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    .mini-card h3 {
+      font-size: 1.45rem;
+      margin-bottom: 10px;
+    }
+
+    .mini-card p,
+    .stat-card p,
+    .builder-card p,
+    .source-item p,
+    .footer-note,
+    .phone-copy,
+    .phone-list li,
+    .insight-list li {
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .mini-card ul,
+    .phone-list,
+    .insight-list {
+      margin: 14px 0 0;
+      padding-left: 18px;
+      color: var(--text);
+    }
+
+    .metrics {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 12px;
+    }
+
+    .metric {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-bottom: 6px;
+    }
+
+    .metric b {
+      font-size: 1.3rem;
+      letter-spacing: -0.03em;
+    }
+
+    .evidence,
+    .builder,
+    .sources {
+      margin-top: 22px;
+      padding: 24px 28px 28px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: end;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      margin: 8px 0 0;
+      max-width: 60ch;
+      line-height: 1.6;
+    }
+
+    .cards {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .stat-card,
+    .builder-card,
+    .source-item {
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      min-height: 100%;
+    }
+
+    .stat-card h3,
+    .builder-card h3 {
+      font-size: 1.24rem;
+      margin-bottom: 10px;
+    }
+
+    .prototype {
+      margin-top: 22px;
+      padding: 24px 28px 30px;
+    }
+
+    .prototype-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .phones {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      justify-items: center;
+      align-items: start;
+    }
+
+    .phone-wrap {
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .phone-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 auto 12px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      margin: 0 auto;
+      padding: 12px;
+      border-radius: 36px;
+      background:
+        linear-gradient(180deg, #1d2748 0%, #0c1429 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 34px 50px rgba(0, 0, 0, 0.34);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      width: 122px;
+      height: 24px;
+      transform: translateX(-50%);
+      background: #080d18;
+      border-radius: 0 0 18px 18px;
+      z-index: 4;
+    }
+
+    .phone-screen {
+      height: 100%;
+      padding: 36px 14px 14px;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(120, 135, 255, 0.18), transparent 30%),
+        linear-gradient(180deg, rgba(9, 14, 27, 0.98), rgba(15, 22, 41, 0.98));
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+      position: relative;
+    }
+
+    .screen-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      color: #d4ddfb;
+      margin-bottom: 12px;
+      opacity: 0.9;
+    }
+
+    .screen-hero {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .screen-hero .phone-brand-mark {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 12px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+    }
+
+    .screen-kicker {
+      display: block;
+      margin: 0 auto 10px;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fcbca6;
+    }
+
+    .screen-hero h3 {
+      font-size: 1.45rem;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      max-width: 11ch;
+    }
+
+    .screen-hero p {
+      margin: 10px auto 0;
+      max-width: 22ch;
+      text-align: center;
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.72rem;
+      color: #dbe3ff;
+    }
+
+    .feed-card,
+    .score-card,
+    .signal-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 12px;
+    }
+
+    .feed-card:last-child,
+    .signal-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .feed-head,
+    .signal-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .feed-head b,
+    .signal-head b {
+      font-size: 0.88rem;
+    }
+
+    .pill {
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .pill-bad {
+      background: rgba(255, 122, 122, 0.12);
+      color: #ffadad;
+    }
+
+    .pill-warn {
+      background: rgba(255, 194, 84, 0.12);
+      color: #ffd97c;
+    }
+
+    .pill-good {
+      background: rgba(152, 242, 183, 0.12);
+      color: #bff7cf;
+    }
+
+    .feed-card p,
+    .signal-card p {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .score-card {
+      background:
+        linear-gradient(180deg, rgba(255, 142, 100, 0.11), rgba(120, 135, 255, 0.09)),
+        rgba(255, 255, 255, 0.035);
+    }
+
+    .score-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .score-top h3 {
+      font-size: 2.6rem;
+    }
+
+    .score-top span {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .progress-group {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .progress-item span {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.78rem;
+      color: #dce3fb;
+      margin-bottom: 6px;
+    }
+
+    .bar {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .bar > i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #6fd6cf 0%, #98f2b7 45%, #ffb062 100%);
+    }
+
+    .insight-panel {
+      padding: 22px;
+      border-radius: var(--radius-lg);
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      position: sticky;
+      top: 20px;
+    }
+
+    .insight-panel h2 {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .insight-list {
+      margin-top: 18px;
+    }
+
+    .insight-list li {
+      margin-bottom: 10px;
+    }
+
+    .source-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .source-item h3 {
+      font-size: 1.08rem;
+      margin-bottom: 10px;
+    }
+
+    .source-item a {
+      color: #cfd7ff;
+      text-decoration: underline;
+      text-decoration-color: rgba(207, 215, 255, 0.28);
+      text-underline-offset: 3px;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1120px) {
+      .hero-grid,
+      .prototype-grid,
+      .source-grid,
+      .cards {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .prototype-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .insight-panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(calc(100% - 20px), var(--container));
+        padding-top: 12px;
+      }
+
+      .hero,
+      .evidence,
+      .prototype,
+      .builder,
+      .sources {
+        padding: 22px 18px 22px;
+      }
+
+      .hero-grid,
+      .cards,
+      .metrics,
+      .source-grid,
+      .phones {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: clamp(2.4rem, 12vw, 4.2rem);
+      }
+
+      .topbar,
+      .section-head {
+        align-items: start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="panel hero">
+      <div class="topbar">
+        <div class="brand">
+          <span class="brand-mark">S</span>
+          <span class="brand-copy">
+            <strong>Sentry</strong>
+            <span>Mobile release-readiness concept</span>
+          </span>
+        </div>
+        <span class="tagline">Built for Jason Swartz</span>
+      </div>
+
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">AI teardown • mobile workflow</span>
+          <h1>What if Sentry acted like a release manager?</h1>
+          <p class="lead">
+            Public feedback points to the same friction cluster: strong capture depth, but too much alert noise, brittle source-map plumbing, and too little clarity on whether a mobile release is actually safe to ship.
+          </p>
+          <div class="note">
+            No official App Store or Google Play listing was verified for <strong>Sentry / Functional Software</strong>, so this teardown targets Sentry's actual product for mobile teams: crash reporting, release health, logs, replay, and profiling inside the web/SaaS experience.
+          </div>
+          <div class="hero-actions">
+            <a class="button button-primary" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+            <a class="button button-secondary" href="#prototype">See the Concept</a>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="mini-card">
+            <strong>Public signals</strong>
+            <h3>Release noise is the workflow problem.</h3>
+            <ul>
+              <li>Alert overload is showing up in Reddit threads.</li>
+              <li>G2 snippets mention ineffective alerting and wrong grouping.</li>
+              <li>Expo / React Native users still surface source-map setup friction.</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <strong>Why this fits Jason</strong>
+            <p>CRM context points toward internal tooling, CI/CD optimization, and QA automation. A release-readiness layer lands directly on that management surface.</p>
+            <div class="metrics">
+              <div class="metric">
+                <span>Main angle</span>
+                <b>Release gating</b>
+              </div>
+              <div class="metric">
+                <span>Delivery lever</span>
+                <b>QA + CI/CD</b>
+              </div>
+              <div class="metric">
+                <span>Target user</span>
+                <b>Eng managers</b>
+              </div>
+              <div class="metric">
+                <span>Outcome</span>
+                <b>Faster triage</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel evidence">
+      <div class="section-head">
+        <div>
+          <h2>Where the friction shows up</h2>
+          <p>These are the most credible public pain clusters around Sentry's mobile workflow and adjacent developer experience.</p>
+        </div>
+      </div>
+      <div class="cards">
+        <article class="stat-card">
+          <strong>01 • Prioritization</strong>
+          <h3>Too many alerts, weak ship/no-ship framing.</h3>
+          <p>Developers describe getting flooded with issues without a clean way to separate true release blockers from background noise.</p>
+        </article>
+        <article class="stat-card">
+          <strong>02 • CI/CD friction</strong>
+          <h3>Source maps still break the moment you need them.</h3>
+          <p>Public Expo / React Native threads keep pointing to confusing setup and Android-specific artifact upload gaps.</p>
+        </article>
+        <article class="stat-card">
+          <strong>03 • Mobile cost</strong>
+          <h3>SDK footprint and replay overhead stay top-of-mind.</h3>
+          <p>Review snippets and competitor threads keep talking about app-size growth and performance sensitivity on mobile builds.</p>
+        </article>
+        <article class="stat-card">
+          <strong>04 • Trust</strong>
+          <h3>Governance concerns can trigger replacement talks fast.</h3>
+          <p>Privacy discussions turned into public vendor-comparison threads almost immediately, which means trust UX matters as much as logging depth.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel prototype" id="prototype">
+      <div class="section-head">
+        <div>
+          <h2>Prototype: Mobile Release Readiness</h2>
+          <p>A before/after concept that turns Sentry's existing signals into one opinionated workflow for mobile teams and engineering managers.</p>
+        </div>
+      </div>
+
+      <div class="prototype-grid">
+        <div class="phones">
+          <div class="phone-wrap">
+            <div class="phone-label">Current state</div>
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="screen-status">
+                  <span>9:41</span>
+                  <span>5G • 100%</span>
+                </div>
+                <div class="screen-hero">
+                  <span class="phone-brand-mark">S</span>
+                  <span class="screen-kicker">Mobile release</span>
+                  <h3>24.9.3 needs triage</h3>
+                  <p>Capture is rich, but the release owner still has to guess what matters.</p>
+                </div>
+                <div class="chip-row">
+                  <span class="chip">217 alerts</span>
+                  <span class="chip">4 environments</span>
+                  <span class="chip">Owner unclear</span>
+                </div>
+                <article class="feed-card">
+                  <div class="feed-head">
+                    <b>Android prod crash</b>
+                    <span class="pill pill-bad">High</span>
+                  </div>
+                  <p>Stack trace is shallow because source maps failed for one variant. Release confidence drops immediately.</p>
+                </article>
+                <article class="feed-card">
+                  <div class="feed-head">
+                    <b>Replay cost spike</b>
+                    <span class="pill pill-warn">Review</span>
+                  </div>
+                  <p>Sampling drift pushed replay volume up, but the impact is buried next to lower-value issue noise.</p>
+                </article>
+                <article class="feed-card">
+                  <div class="feed-head">
+                    <b>Bundle size regression</b>
+                    <span class="pill pill-warn">+2.1 MB</span>
+                  </div>
+                  <p>The app got heavier, but there is no preflight budget gate tying the drift back to this release owner.</p>
+                </article>
+                <article class="feed-card">
+                  <div class="feed-head">
+                    <b>Issue grouping drift</b>
+                    <span class="pill pill-warn">14 groups</span>
+                  </div>
+                  <p>One crash pattern fragmented into multiple clusters, making the release look worse and harder to action.</p>
+                </article>
+              </div>
+            </div>
+          </div>
+
+          <div class="phone-wrap">
+            <div class="phone-label">Improved state</div>
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="screen-status">
+                  <span>9:41</span>
+                  <span>5G • 100%</span>
+                </div>
+                <div class="screen-hero">
+                  <span class="phone-brand-mark">S</span>
+                  <span class="screen-kicker">Release readiness</span>
+                  <h3>Ship with guardrails</h3>
+                  <p>One score turns capture, artifacts, and user impact into a real release decision.</p>
+                </div>
+                <article class="score-card">
+                  <div class="score-top">
+                    <div>
+                      <span>Readiness score</span>
+                      <h3>84</h3>
+                    </div>
+                    <span>1 blocker left</span>
+                  </div>
+                  <div class="progress-group">
+                    <div class="progress-item">
+                      <span><em>Source-map coverage</em><b>100%</b></span>
+                      <div class="bar"><i style="width:100%"></i></div>
+                    </div>
+                    <div class="progress-item">
+                      <span><em>Crash-free target</em><b>99.7%</b></span>
+                      <div class="bar"><i style="width:93%"></i></div>
+                    </div>
+                    <div class="progress-item">
+                      <span><em>Bundle-size budget</em><b>+0.2 MB</b></span>
+                      <div class="bar"><i style="width:78%"></i></div>
+                    </div>
+                  </div>
+                </article>
+                <article class="signal-card">
+                  <div class="signal-head">
+                    <b>Only blocker that matters</b>
+                    <span class="pill pill-bad">Fix now</span>
+                  </div>
+                  <p>Android checkout crash affects 2.4% of release sessions. Routed to `mobile-payments` with suspect commit already attached.</p>
+                </article>
+                <article class="signal-card">
+                  <div class="signal-head">
+                    <b>Auto-resolved noise</b>
+                    <span class="pill pill-good">Collapsed</span>
+                  </div>
+                  <p>Duplicate alerts, low-risk replays, and non-blocking regressions are folded into a release summary instead of the main queue.</p>
+                </article>
+                <article class="signal-card">
+                  <div class="signal-head">
+                    <b>CI preflight</b>
+                    <span class="pill pill-good">Passed</span>
+                  </div>
+                  <p>Artifacts verified, performance budget checked, rollback path ready, and rollout can stay below a defined blast-radius threshold.</p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="insight-panel">
+          <strong>Concept summary</strong>
+          <h2>Turn Sentry into the last mile of mobile delivery.</h2>
+          <p class="phone-copy">
+            Sentry already owns the richest debugging context in the stack. The opportunity is to convert that context into one release-level decision system instead of a broader issue feed.
+          </p>
+          <ul class="insight-list">
+            <li>Validate source maps and symbols before rollout, not after the first blind crash lands.</li>
+            <li>Attach bundle-size budgets and replay-cost guardrails directly to each release.</li>
+            <li>Collapse duplicate issue noise into one human-readable release brief for the lead engineer.</li>
+            <li>Route likely owners from suspect commits and team topology without another manual triage hop.</li>
+            <li>Expose privacy and redaction posture as a visible readiness check for enterprise buyers.</li>
+          </ul>
+          <div class="hero-actions">
+            <a class="button button-primary" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel builder">
+      <div class="section-head">
+        <div>
+          <h2>What Elinext could build</h2>
+          <p>Not a redesign sprint. A focused delivery track around release confidence, mobile CI/CD hardening, and QA automation.</p>
+        </div>
+      </div>
+      <div class="cards">
+        <article class="builder-card">
+          <strong>Preflight layer</strong>
+          <h3>Artifact validation before rollout</h3>
+          <p>Check source maps, symbols, replay sampling, and bundle budgets in CI so broken release metadata never reaches production unnoticed.</p>
+        </article>
+        <article class="builder-card">
+          <strong>Triage model</strong>
+          <h3>Release-first prioritization</h3>
+          <p>Rank issues by user impact, release adoption, and ownership certainty so the queue reflects shipping risk instead of raw event count.</p>
+        </article>
+        <article class="builder-card">
+          <strong>Platform automation</strong>
+          <h3>Route fixes automatically</h3>
+          <p>Map suspect commits, teams, and environments into one action path so engineering managers spend less time coordinating handoffs.</p>
+        </article>
+        <article class="builder-card">
+          <strong>Governance UX</strong>
+          <h3>Make trust visible</h3>
+          <p>Show redaction, residency, and replay-policy state as part of release readiness for customers with sharper compliance expectations.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel sources">
+      <div class="section-head">
+        <div>
+          <h2>Research trail</h2>
+          <p>The concept is grounded in public product positioning plus community and review signals, not in LinkedIn scraping.</p>
+        </div>
+      </div>
+      <div class="source-grid">
+        <article class="source-item">
+          <h3>Official product context</h3>
+          <p><a href="https://sentry.io/solutions/mobile-developers/" target="_blank" rel="noreferrer">Sentry mobile developers page</a> highlights crash reporting, release health, replay, logs, profiling, and broad SDK coverage.</p>
+        </article>
+        <article class="source-item">
+          <h3>Company signal</h3>
+          <p><a href="https://blog.sentry.io/" target="_blank" rel="noreferrer">Sentry's blog</a> highlights the Emerge Tools acquisition and Size Analysis rollout; <a href="https://sentry.io/careers/" target="_blank" rel="noreferrer">careers</a> currently lists a Head of Technical Program Management role.</p>
+        </article>
+        <article class="source-item">
+          <h3>User pain evidence</h3>
+          <p><a href="https://reddit.com/r/devops/comments/190sf1s/alternatives_to_sentryio/" target="_blank" rel="noreferrer">Reddit replacement thread</a>, <a href="https://reddit.com/r/expo/comments/11xaaor/sentry_expo_a_very_confusing_documented_love_story/" target="_blank" rel="noreferrer">Expo setup thread</a>, and <a href="https://reddit.com/r/reactnative/comments/zreq6d/i_am_configuring_sentry_for_react_native_i_dont/" target="_blank" rel="noreferrer">React Native docs-feedback thread</a> all point to prioritization and setup friction.</p>
+        </article>
+        <article class="source-item">
+          <h3>Store verification</h3>
+          <p>No official App Store / Play Store listing was verified for Sentry. The teardown therefore targets the SaaS/mobile monitoring product rather than a consumer app listing.</p>
+        </article>
+      </div>
+      <p class="footer-note">Prototype URL target: <strong>https://elinext-lab.github.io/prototypes/sentry_2026-03-30_05-41-41/</strong></p>
+    </section>
+  </main>
+</body>
+</html>
