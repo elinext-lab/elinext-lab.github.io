@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HoneyBook Mobile — AI Teardown</title>
+    <meta
+      name="description"
+      content="What if HoneyBook could rescue slow, stuck mobile smart files, client follow-ups, and portal handoffs before users bounced to desktop or churned to alternatives?"
+    />
+    <meta name="author" content="Yauheni Shauchenka, Elinext" />
+    <meta name="theme-color" content="#2a1718" />
+    <meta
+      name="keywords"
+      content="HoneyBook, mobile app, AI teardown, smart files, client portal, Elinext"
+    />
+    <link
+      rel="canonical"
+      href="https://elinext-lab.github.io/prototypes/honeybook_2026-03-30_04-24-19/"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-30_04-24-19/"
+    />
+    <meta
+      property="og:image"
+      content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-30_04-24-19/og-image.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:title" content="HoneyBook Mobile — AI Teardown" />
+    <meta
+      property="og:description"
+      content="What if HoneyBook could rescue slow, stuck mobile smart files, client follow-ups, and portal handoffs before users bounced to desktop or churned to alternatives?"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image"
+      content="https://elinext-lab.github.io/prototypes/honeybook_2026-03-30_04-24-19/og-image.jpg"
+    />
+
+    <link rel="icon" type="image/jpeg" href="./assets/app-icon.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-ZR415HX0B2");
+    </script>
+
+    <!-- Ratings as of 2026-03-30: iOS 4.77 (15672 reviews, source: iTunes API), Android 4.58 (2249 reviews, source: https://play.google.com/store/apps/details?id=com.honeybook.alfred via google-play-scraper) -->
+
+    <style>
+      :root {
+        --ink: #241416;
+        --ink-soft: #5f4a4b;
+        --paper: #fff8f0;
+        --paper-2: #f7ecdf;
+        --paper-3: #f2e3d3;
+        --panel: rgba(255, 249, 241, 0.97);
+        --panel-dark: #2a1718;
+        --line: rgba(73, 45, 40, 0.14);
+        --amber: #f4b15e;
+        --amber-strong: #d8832f;
+        --rose: #d66b63;
+        --rose-soft: #fff0ed;
+        --leaf: #4f8d66;
+        --leaf-soft: #eef8ef;
+        --sky: #72a9d8;
+        --shadow: 0 30px 80px rgba(72, 36, 24, 0.16);
+        --radius-xl: 34px;
+        --radius-lg: 24px;
+        --radius-md: 18px;
+        --radius-sm: 12px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: "Space Grotesk", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(244, 177, 94, 0.22), transparent 28%),
+          radial-gradient(circle at 85% 15%, rgba(214, 107, 99, 0.14), transparent 24%),
+          linear-gradient(180deg, #f6ead9 0%, #f8f1e8 42%, #f0e1d2 100%);
+        overflow-x: hidden;
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        width: 30rem;
+        height: 30rem;
+        border-radius: 999px;
+        filter: blur(80px);
+        opacity: 0.25;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      body::before {
+        top: -10rem;
+        left: -8rem;
+        background: rgba(244, 177, 94, 0.7);
+      }
+
+      body::after {
+        right: -10rem;
+        bottom: -16rem;
+        background: rgba(114, 169, 216, 0.4);
+      }
+
+      img {
+        max-width: 100%;
+        display: block;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        position: relative;
+        z-index: 1;
+        padding: 18px 0 52px;
+      }
+
+      .section {
+        position: relative;
+        z-index: 1;
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto 24px;
+        padding: 28px;
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--line);
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      .hero {
+        background:
+          linear-gradient(135deg, rgba(27, 14, 16, 0.98), rgba(58, 33, 24, 0.98) 54%, rgba(114, 61, 27, 0.96) 100%);
+        color: #fff7ef;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background:
+          radial-gradient(circle at 50% 0%, rgba(244, 177, 94, 0.16), transparent 28%),
+          linear-gradient(140deg, rgba(255, 255, 255, 0.05), transparent 32%);
+        pointer-events: none;
+      }
+
+      .hero-copy,
+      .hero-copy * {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-copy,
+      .hero-phones,
+      .hero-stats {
+        position: relative;
+        z-index: 1;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(244, 177, 94, 0.34);
+        background: rgba(255, 250, 242, 0.09);
+        color: #ffe8cf;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, #ffd18d, var(--amber-strong));
+        box-shadow: 0 0 18px rgba(244, 177, 94, 0.7);
+      }
+
+      .brand-row {
+        display: block;
+        width: fit-content;
+        margin-bottom: 18px;
+      }
+
+      .brand-row img {
+        width: 84px;
+        border-radius: 20px;
+        box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: "Fraunces", serif;
+        line-height: 1;
+      }
+
+      .hero h1 {
+        max-width: 980px;
+        font-size: clamp(2.8rem, 7vw, 5.7rem);
+        letter-spacing: -0.045em;
+      }
+
+      .hero p {
+        max-width: 820px;
+        margin-top: 18px;
+        color: rgba(255, 245, 235, 0.82);
+        font-size: 1.06rem;
+        line-height: 1.7;
+      }
+
+      .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 28px;
+      }
+
+      .stat-card {
+        padding: 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 240, 227, 0.12);
+        background: rgba(255, 248, 240, 0.09);
+        backdrop-filter: blur(10px);
+      }
+
+      .stat-label {
+        display: block;
+        color: rgba(255, 230, 205, 0.72);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .stat-value {
+        display: block;
+        margin-top: 8px;
+        font-size: 1.55rem;
+        font-weight: 700;
+      }
+
+      .hero-phones {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 18px;
+        margin-top: 30px;
+      }
+
+      .phone {
+        position: relative;
+        width: 280px;
+        height: 580px;
+        padding: 12px;
+        border-radius: 38px;
+        border: 1px solid rgba(255, 247, 241, 0.16);
+        background: linear-gradient(180deg, #110c0d 0%, #241416 100%);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.06),
+          0 24px 56px rgba(0, 0, 0, 0.35);
+        overflow: hidden;
+      }
+
+      .phone::before {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        width: 108px;
+        height: 24px;
+        border-radius: 999px;
+        background: #0a0808;
+        transform: translateX(-50%);
+        z-index: 3;
+      }
+
+      .phone-screen {
+        position: relative;
+        height: 100%;
+        padding: 36px 14px 14px;
+        border-radius: 28px;
+        overflow: auto;
+        background: linear-gradient(180deg, #fcfaf6 0%, #f5ecdf 52%, #f2e1cf 100%);
+        color: var(--ink);
+      }
+
+      .phone-screen::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+      }
+
+      .phone-screen > * {
+        display: block;
+      }
+
+      .phone-screen::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at top right, rgba(244, 177, 94, 0.16), transparent 26%),
+          radial-gradient(circle at bottom left, rgba(114, 169, 216, 0.1), transparent 24%);
+        pointer-events: none;
+      }
+
+      .phone-content {
+        position: relative;
+        z-index: 1;
+      }
+
+      .phone-mini-brand,
+      .phone-title,
+      .phone-kicker {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .phone-mini-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(67, 43, 39, 0.08);
+        box-shadow: 0 8px 20px rgba(55, 34, 22, 0.08);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .phone-mini-brand img {
+        width: 18px;
+        height: 18px;
+        border-radius: 6px;
+      }
+
+      .phone-kicker {
+        margin-top: 14px;
+        color: var(--ink-soft);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .phone-title {
+        margin-top: 10px;
+        font-size: 1.55rem;
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+      }
+
+      .phone-subtitle {
+        margin-top: 10px;
+        color: var(--ink-soft);
+        font-size: 13px;
+        line-height: 1.5;
+        text-align: center;
+      }
+
+      .stack {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .ui-card {
+        position: relative;
+        padding: 14px;
+        border-radius: 18px;
+        border: 1px solid rgba(73, 45, 40, 0.1);
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 10px 24px rgba(60, 35, 24, 0.08);
+      }
+
+      .ui-card h4,
+      .ui-card p,
+      .ui-card ul,
+      .ui-card li {
+        margin: 0;
+      }
+
+      .ui-card h4 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .ui-card p,
+      .ui-card li {
+        margin-top: 8px;
+        color: var(--ink-soft);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .ui-card ul {
+        padding-left: 16px;
+      }
+
+      .warning-card {
+        background: linear-gradient(180deg, #fff4f1, #ffe8e2);
+        border-color: rgba(214, 107, 99, 0.18);
+      }
+
+      .success-card {
+        background: linear-gradient(180deg, #f2fbf4, #e7f6eb);
+        border-color: rgba(79, 141, 102, 0.18);
+      }
+
+      .quote-strip {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+
+      .quote-pill {
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: rgba(42, 23, 24, 0.08);
+        color: var(--ink);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .step-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        gap: 10px;
+        align-items: start;
+        padding: 10px 12px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(73, 45, 40, 0.08);
+      }
+
+      .step-index {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #ffe0a7, #f4b15e);
+        color: #5a3517;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .step strong {
+        display: block;
+        font-size: 12px;
+      }
+
+      .step span {
+        display: block;
+        margin-top: 5px;
+        color: var(--ink-soft);
+        font-size: 11px;
+        line-height: 1.45;
+      }
+
+      .portal-card {
+        position: relative;
+        overflow: hidden;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(253, 246, 238, 0.95)),
+          url("./assets/store-shot-1.png") center top / cover no-repeat;
+      }
+
+      .portal-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 248, 241, 0.84);
+      }
+
+      .portal-card > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .section-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 20px;
+      }
+
+      .section-title {
+        font-size: clamp(2rem, 4vw, 3.4rem);
+        letter-spacing: -0.04em;
+      }
+
+      .lede {
+        margin-top: 14px;
+        color: var(--ink-soft);
+        font-size: 1rem;
+        line-height: 1.75;
+      }
+
+      .evidence-grid,
+      .signal-grid,
+      .source-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .evidence-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-top: 20px;
+      }
+
+      .signal-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 20px;
+      }
+
+      .source-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 18px;
+      }
+
+      .evidence-card,
+      .signal-card,
+      .source-card {
+        padding: 18px;
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        background: rgba(255, 252, 247, 0.98);
+      }
+
+      .evidence-card h3,
+      .signal-card h3,
+      .source-card h3 {
+        font-size: 1.25rem;
+        letter-spacing: -0.03em;
+      }
+
+      .evidence-card p,
+      .signal-card p,
+      .source-card p,
+      .source-card li {
+        margin: 10px 0 0;
+        color: var(--ink-soft);
+        font-size: 0.96rem;
+        line-height: 1.7;
+      }
+
+      .source-card ul {
+        margin: 10px 0 0;
+        padding-left: 18px;
+      }
+
+      .label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--paper-2);
+        color: #654227;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      .label-dark {
+        background: rgba(42, 23, 24, 0.08);
+        color: #5b3220;
+      }
+
+      .note-panel {
+        padding: 20px;
+        border-radius: 24px;
+        background: linear-gradient(180deg, #fff9f1, #f7ebdf);
+        border: 1px solid rgba(73, 45, 40, 0.09);
+      }
+
+      .note-panel p {
+        margin: 12px 0 0;
+        color: var(--ink-soft);
+        line-height: 1.7;
+      }
+
+      .mini-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .mini-item {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.82);
+      }
+
+      .mini-bullet {
+        width: 10px;
+        height: 10px;
+        margin-top: 6px;
+        flex: 0 0 10px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, var(--amber), var(--amber-strong));
+      }
+
+      .mini-item span {
+        color: var(--ink-soft);
+        font-size: 0.95rem;
+        line-height: 1.55;
+      }
+
+      .roadmap {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .roadmap-card {
+        padding: 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(73, 45, 40, 0.1);
+        background: rgba(255, 255, 255, 0.86);
+      }
+
+      .roadmap-card strong {
+        display: block;
+        font-size: 0.98rem;
+      }
+
+      .roadmap-card span {
+        display: block;
+        margin-top: 8px;
+        color: var(--ink-soft);
+        font-size: 0.92rem;
+        line-height: 1.55;
+      }
+
+      .cta {
+        text-align: center;
+        background:
+          linear-gradient(135deg, rgba(42, 23, 24, 0.98), rgba(87, 49, 26, 0.98)),
+          var(--panel-dark);
+        color: #fff6ee;
+      }
+
+      .cta p {
+        max-width: 720px;
+        margin: 16px auto 0;
+        color: rgba(255, 244, 231, 0.8);
+        line-height: 1.8;
+      }
+
+      .cta-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 26px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 180px;
+        padding: 15px 22px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        transition: transform 180ms ease, box-shadow 180ms ease;
+      }
+
+      .button:hover {
+        transform: translateY(-2px);
+      }
+
+      .button-primary {
+        background: linear-gradient(180deg, #ffd48f, #f2aa53);
+        color: #4e2f1a;
+        box-shadow: 0 16px 30px rgba(242, 170, 83, 0.28);
+      }
+
+      .button-secondary {
+        border: 1px solid rgba(255, 246, 236, 0.18);
+        background: rgba(255, 246, 236, 0.08);
+        color: #fff6ee;
+      }
+
+      .sources {
+        font-size: 0.92rem;
+      }
+
+      .sources a {
+        color: #6d4421;
+        text-decoration: underline;
+        text-underline-offset: 0.18em;
+      }
+
+      @media (max-width: 980px) {
+        .hero-stats,
+        .signal-grid,
+        .evidence-grid,
+        .source-grid,
+        .section-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .section {
+          padding: 22px;
+        }
+
+        .hero h1,
+        .section-title {
+          line-height: 1.03;
+        }
+
+        .stat-value {
+          font-size: 1.3rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .phone {
+          width: 300px;
+        }
+
+        .page {
+          padding-top: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <section class="section hero">
+        <div class="hero-copy">
+          <div class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            HoneyBook Mobile Teardown for Dror Shimoni
+          </div>
+          <a class="brand-row" href="https://apps.apple.com/us/app/honeybook-small-business-crm/id1104772757">
+            <img src="./assets/app-icon.jpg" alt="HoneyBook app icon" />
+          </a>
+          <h1>HoneyBook's next AI win is rescuing stuck mobile work, not adding another panel.</h1>
+          <p>
+            Store ratings are still healthy. The real problem appears when a smart file, invoice,
+            or client handoff gets messy on the phone. At that point, users still describe a hard
+            bounce to desktop, browser, or support. This prototype shows how an AI-powered mobile
+            rescue layer could preserve momentum instead.
+          </p>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-card">
+            <span class="stat-label">iOS US Rating</span>
+            <span class="stat-value">4.77</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Android Rating</span>
+            <span class="stat-value">4.58</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Recent Reviews Scanned</span>
+            <span class="stat-value">99</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Core Signal</span>
+            <span class="stat-value">Desktop Fallback</span>
+          </div>
+        </div>
+
+        <div class="hero-phones">
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="phone-content">
+                <div class="phone-mini-brand">
+                  <img src="./assets/app-icon.jpg" alt="" />
+                  Current Mobile
+                </div>
+                <div class="phone-kicker">Today</div>
+                <div class="phone-title">Project work stalls at the worst moment</div>
+                <p class="phone-subtitle">
+                  When a smart file breaks on mobile, the user is still asked to improvise.
+                </p>
+
+                <div class="stack">
+                  <div class="ui-card warning-card">
+                    <h4>Autumn Brand Shoot</h4>
+                    <p>Smart file contains brochure blocks not editable on mobile.</p>
+                    <div class="quote-strip">
+                      <span class="quote-pill">"Still can't edit files on mobile."</span>
+                    </div>
+                  </div>
+
+                  <div class="ui-card warning-card">
+                    <h4>Email Follow-up</h4>
+                    <p>Client update drafted, but send action hangs on iPad and the user loses trust.</p>
+                    <div class="quote-strip">
+                      <span class="quote-pill">"clicking on send does nothing"</span>
+                    </div>
+                  </div>
+
+                  <div class="ui-card warning-card">
+                    <h4>Fallback Path</h4>
+                    <p>Open desktop draft, rebuild the step in browser, then explain the delay to the client.</p>
+                    <div class="quote-strip">
+                      <span class="quote-pill">"much better to just use the browser"</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="phone-content">
+                <div class="phone-mini-brand">
+                  <img src="./assets/app-icon.jpg" alt="" />
+                  AI Rescue Mode
+                </div>
+                <div class="phone-kicker">Proposed</div>
+                <div class="phone-title">Recover the job before the user abandons mobile</div>
+                <p class="phone-subtitle">
+                  Detect unsupported content, prepare the safe next step, and keep the client in motion.
+                </p>
+
+                <div class="step-list">
+                  <div class="step">
+                    <div class="step-index">01</div>
+                    <div>
+                      <strong>Scan the file</strong>
+                      <span>Find desktop-only blocks, missing vendor fields, and risky send states instantly.</span>
+                    </div>
+                  </div>
+
+                  <div class="step">
+                    <div class="step-index">02</div>
+                    <div>
+                      <strong>Generate a mobile-safe action</strong>
+                      <span>Convert the next required step into an editable contract, invoice, or approval flow.</span>
+                    </div>
+                  </div>
+
+                  <div class="step">
+                    <div class="step-index">03</div>
+                    <div>
+                      <strong>Write the client update</strong>
+                      <span>Draft the explanation and follow-up so the business owner never loses momentum.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="ui-card success-card" style="margin-top: 16px">
+                  <h4>Rescue output ready</h4>
+                  <p>Mobile-safe proposal link, revised message, payment reminder, and activity log.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="phone-content">
+                <div class="phone-mini-brand">
+                  <img src="./assets/app-icon.jpg" alt="" />
+                  Client Pocket Portal
+                </div>
+                <div class="phone-kicker">Companion Surface</div>
+                <div class="phone-title">Keep the client moving without a separate native app</div>
+                <p class="phone-subtitle">
+                  A clean mobile handoff for approvals, files, reminders, and payment status.
+                </p>
+
+                <div class="ui-card portal-card">
+                  <h4>Autumn Brand Shoot</h4>
+                  <p>Proposal refreshed 2 min ago</p>
+                  <div class="quote-strip">
+                    <span class="quote-pill">Mobile-friendly approval</span>
+                    <span class="quote-pill">Pay deposit</span>
+                  </div>
+                </div>
+
+                <div class="stack">
+                  <div class="ui-card">
+                    <h4>What the business owner sees</h4>
+                    <p>One-tap share link, AI-generated note, and a confidence check before send.</p>
+                  </div>
+                  <div class="ui-card">
+                    <h4>What the client sees</h4>
+                    <p>A lightweight portal experience optimized for phone instead of a desktop-style fallback.</p>
+                  </div>
+                  <div class="ui-card">
+                    <h4>What HoneyBook learns</h4>
+                    <p>Exactly which block, state, or device pattern triggered the rescue path.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-grid">
+          <div>
+            <div class="label">The Breakpoint</div>
+            <h2 class="section-title" style="margin-top: 14px">
+              HoneyBook's problem is not adoption. It is trust when mobile work stops being simple.
+            </h2>
+            <p class="lede">
+              HoneyBook already covers a broad business workflow: leads, contracts, payments,
+              projects, and AI-powered follow-ups. The breakdown happens when a user tries to
+              finish real work from a phone and gets trapped between limited mobile editing, slow
+              states, or a browser detour.
+            </p>
+
+            <div class="mini-list">
+              <div class="mini-item">
+                <div class="mini-bullet"></div>
+                <span>
+                  HoneyBook's smart-file help article says mobile-created files can only add text,
+                  images, contracts, and invoices. Richer drafts still rely on desktop prep.
+                </span>
+              </div>
+              <div class="mini-item">
+                <div class="mini-bullet"></div>
+                <span>
+                  Recent iOS reviews call out file-edit limits, slow navigation, and iPad send
+                  failures.
+                </span>
+              </div>
+              <div class="mini-item">
+                <div class="mini-bullet"></div>
+                <span>
+                  Recent Android reviews call out invoice editing issues, crashes, sign-in
+                  friction, and explicit browser fallback.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="note-panel">
+            <div class="label label-dark">Why It Matters To Dror</div>
+            <p>
+              HoneyBook is already shipping AI into its mobile-adjacent workflows. That changes the
+              bar. If AI shows up before the core workflow feels dependable, users do not read it as
+              leverage. They read it as clutter.
+            </p>
+            <p>
+              The stronger CTO-level story is not "more AI." It is AI that reduces failed sends,
+              preserves payment momentum, and lowers the number of times mobile users have to reopen
+              the same job on desktop.
+            </p>
+
+            <div class="roadmap">
+              <div class="roadmap-card">
+                <strong>Release-note proof</strong>
+                <span>
+                  HoneyBook's latest App Store release notes already mention AI Notetaker, AI
+                  Follow-Ups, and AI Gmail Suggestions.
+                </span>
+              </div>
+              <div class="roadmap-card">
+                <strong>Telemetry proof</strong>
+                <span>
+                  BuiltWith exposed Segment, FullStory, Datadog RUM, Pingdom RUM, and Intellimize on
+                  HoneyBook's public stack.
+                </span>
+              </div>
+              <div class="roadmap-card">
+                <strong>Market proof</strong>
+                <span>
+                  Reddit discussions show users re-evaluating HoneyBook when price and friction stop
+                  feeling proportional.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="label">Evidence</div>
+        <h2 class="section-title" style="margin-top: 14px">The pain is specific enough to productize.</h2>
+
+        <div class="evidence-grid">
+          <div class="evidence-card">
+            <h3>App Store</h3>
+            <p>
+              Recent iOS feedback says the quiet part out loud: file editing on mobile still feels
+              incomplete, the app can feel clunky, and send actions can fail on iPad.
+            </p>
+            <p>
+              The most revealing complaints are not aesthetic. They are about blocked work in the
+              middle of client communication.
+            </p>
+          </div>
+
+          <div class="evidence-card">
+            <h3>Google Play</h3>
+            <p>
+              Recent Android feedback clusters around invoice creation, contract edits, crashes,
+              endless loading, and users saying the browser is a better recovery surface.
+            </p>
+            <p>
+              That is a workflow-completion problem, not just a bug list.
+            </p>
+          </div>
+
+          <div class="evidence-card">
+            <h3>Official Docs</h3>
+            <p>
+              HoneyBook's own help center still frames mobile smart-file creation as narrower than
+              desktop. That gives the prototype a credible wedge: rescue the work instead of asking
+              the user to switch surfaces.
+            </p>
+          </div>
+        </div>
+
+        <div class="signal-grid">
+          <div class="signal-card">
+            <h3>11</h3>
+            <p>sampled recent iOS reviews with file / edit / completion friction</p>
+          </div>
+          <div class="signal-card">
+            <h3>9</h3>
+            <p>sampled recent Android reviews with contract / invoice / edit friction</p>
+          </div>
+          <div class="signal-card">
+            <h3>9</h3>
+            <p>sampled recent Android reviews with glitch / crash / slow language</p>
+          </div>
+          <div class="signal-card">
+            <h3>12</h3>
+            <p>sampled recent iOS reviews touching portal / client mobile access language</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-grid">
+          <div>
+            <div class="label">Prototype Wedge</div>
+            <h2 class="section-title" style="margin-top: 14px">
+              Turn AI into a recovery layer that protects revenue momentum from the phone.
+            </h2>
+            <p class="lede">
+              The prototype does not ask HoneyBook to build a whole new app strategy. It asks for a
+              smarter fallback at the moment work fails.
+            </p>
+
+            <div class="roadmap">
+              <div class="roadmap-card">
+                <strong>1. Detect the failure</strong>
+                <span>
+                  Unsupported block, broken send state, slow-loading project, or missing mobile-safe
+                  action.
+                </span>
+              </div>
+              <div class="roadmap-card">
+                <strong>2. Generate the safe next step</strong>
+                <span>
+                  Translate the desktop-only task into a mobile action the user can actually finish.
+                </span>
+              </div>
+              <div class="roadmap-card">
+                <strong>3. Keep the client loop alive</strong>
+                <span>
+                  Draft the update, refresh the link, and open a clean portal handoff without losing
+                  context.
+                </span>
+              </div>
+              <div class="roadmap-card">
+                <strong>4. Log the pattern</strong>
+                <span>
+                  Capture exactly what failed so product, support, and growth teams can see the real
+                  drag on mobile trust.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="note-panel">
+            <div class="label label-dark">Why This Is Better Than Another Feature</div>
+            <p>
+              HoneyBook already offers a lot. More surface area is not the win if users still lose
+              confidence at the exact point where they need to send, invoice, or close.
+            </p>
+            <p>
+              A rescue layer improves:
+            </p>
+            <div class="mini-list">
+              <div class="mini-item">
+                <div class="mini-bullet"></div>
+                <span>support deflection</span>
+              </div>
+              <div class="mini-item">
+                <div class="mini-bullet"></div>
+                <span>mobile-to-desktop parity</span>
+              </div>
+              <div class="mini-item">
+                <div class="mini-bullet"></div>
+                <span>client-response speed</span>
+              </div>
+              <div class="mini-item">
+                <div class="mini-bullet"></div>
+                <span>the perceived value of HoneyBook AI</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section sources">
+        <div class="label">Sources Behind This Teardown</div>
+        <div class="source-grid">
+          <div class="source-card">
+            <h3>Store + Product Sources</h3>
+            <ul>
+              <li><a href="https://apps.apple.com/us/app/honeybook-small-business-crm/id1104772757">App Store listing</a></li>
+              <li><a href="https://play.google.com/store/apps/details?id=com.honeybook.alfred">Google Play listing</a></li>
+              <li><a href="https://help.honeybook.com/en/articles/5422899-how-to-use-smart-files-from-the-mobile-app">HoneyBook mobile smart-files help article</a></li>
+              <li><a href="https://www.honeybook.com/company/contact-us">HoneyBook contact / feature summary</a></li>
+            </ul>
+          </div>
+
+          <div class="source-card">
+            <h3>Market + Company Sources</h3>
+            <ul>
+              <li><a href="https://techcrunch.com/2021/05/04/honeybook-raises-155m-at-1b-valuation-to-help-smbs-freelancers-manage-their-businesses/">TechCrunch funding report</a></li>
+              <li><a href="https://builtwith.com/detailed/honeybook.com">BuiltWith technology profile</a></li>
+              <li><a href="https://www.reddit.com/r/smallbusiness/comments/1qirfps/if_youve_used_honeybook_would_you_recommend_it/">Reddit recommendation thread</a></li>
+              <li><a href="https://www.reddit.com/r/smallbusiness/comments/1pnefvv/honeybook_alternatives/">Reddit alternatives thread</a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section cta">
+        <div class="label" style="background: rgba(255, 245, 232, 0.12); color: #ffe8cf">
+          Elinext POV
+        </div>
+        <h2 class="section-title" style="margin-top: 14px; color: #fff8f1">
+          HoneyBook does not need more AI surface area on mobile. It needs AI that saves the job.
+        </h2>
+        <p>
+          The strongest near-term wedge is a mobile rescue layer for smart files, invoices, and
+          client handoffs. That lands as product trust, support deflection, and better perceived
+          value from the AI HoneyBook is already shipping.
+        </p>
+        <div class="cta-actions">
+          <a class="button button-primary" href="https://www.elinext.com/contacts/">Get in Touch</a>
+          <a class="button button-secondary" href="https://apps.apple.com/us/app/honeybook-small-business-crm/id1104772757">See the Live App</a>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
