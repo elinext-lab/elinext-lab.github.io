@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AD Mortgage Mobile Teardown | Elinext</title>
+  <meta name="description" content="What if AD Home Borrower Portal removed payment anxiety by showing autopay certainty, posting ETA, escrow impact, and support ownership in one borrower-safe mobile flow?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/ad-mortgage_2026-03-30_01-52-59/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/ad-mortgage_2026-03-30_01-52-59/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/ad-mortgage_2026-03-30_01-52-59/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="AD Mortgage Mobile — AI Teardown">
+  <meta property="og:description" content="What if AD Home Borrower Portal turned a brand-new mortgage app into a confidence-first servicing flow with autopay certainty, issue ownership, and support memory before borrowers ever pick up the phone?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AD Mortgage Mobile — AI Teardown">
+  <meta name="twitter:description" content="What if AD Home Borrower Portal turned a brand-new mortgage app into a confidence-first servicing flow with autopay certainty, issue ownership, and support memory before borrowers ever pick up the phone?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/ad-mortgage_2026-03-30_01-52-59/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-03-30: iOS 0.00 (0 reviews, source: iTunes API), Android 0.00 (0 reviews, source: https://play.google.com/store/apps/details?id=com.admortgage.adhome.twa&hl=en_US&gl=US) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fff6e8;
+      --paper: #fffdf7;
+      --paper-strong: #fff7ef;
+      --ink: #11203b;
+      --ink-soft: #53627b;
+      --line: rgba(17, 32, 59, 0.1);
+      --line-strong: rgba(17, 32, 59, 0.2);
+      --peach: #ffb27d;
+      --peach-deep: #ef8555;
+      --lavender: #d8d3f8;
+      --navy: #1f2d53;
+      --mint: #89d7c2;
+      --red: #ef6d67;
+      --gold: #ffd37d;
+      --shadow: 0 24px 70px rgba(21, 29, 49, 0.13);
+      --shell: min(1180px, calc(100% - 28px));
+      --radius-xl: 36px;
+      --radius-lg: 26px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(255, 178, 125, 0.48), transparent 22%),
+        radial-gradient(circle at 88% 12%, rgba(137, 215, 194, 0.4), transparent 18%),
+        linear-gradient(180deg, #fff7eb 0%, #fff3e2 30%, #fff8f1 66%, #fffdfa 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.2;
+      background-image:
+        linear-gradient(rgba(17, 32, 59, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(17, 32, 59, 0.045) 1px, transparent 1px);
+      background-size: 46px 46px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .shell {
+      width: var(--shell);
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 28px 0 48px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 16px 18px;
+      background: rgba(255, 253, 247, 0.88);
+      border: 1px solid rgba(17, 32, 59, 0.08);
+      border-radius: 999px;
+      box-shadow: 0 16px 36px rgba(17, 32, 59, 0.06);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      box-shadow: 0 12px 28px rgba(31, 45, 83, 0.18);
+      flex: 0 0 auto;
+    }
+
+    .brand strong,
+    .brand span {
+      display: block;
+    }
+
+    .brand strong {
+      font-size: 0.98rem;
+    }
+
+    .brand span {
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ffd99e, #ffb27d);
+      color: var(--navy);
+      font-size: 0.84rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .hero-card,
+    .section-card,
+    .cta-card {
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 253, 247, 0.96);
+      border: 1px solid rgba(17, 32, 59, 0.08);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
+    }
+
+    .hero-card {
+      padding: 38px;
+      background:
+        radial-gradient(circle at 12% 14%, rgba(255, 178, 125, 0.3), transparent 22%),
+        radial-gradient(circle at 86% 10%, rgba(216, 211, 248, 0.35), transparent 18%),
+        linear-gradient(150deg, rgba(255, 252, 247, 0.98), rgba(255, 247, 239, 0.96));
+    }
+
+    .hero-copy,
+    .hero-copy h1,
+    .hero-copy p,
+    .hero-copy .hero-badges,
+    .hero-copy .hero-actions {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 auto 18px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 243, 233, 0.96);
+      border: 1px solid rgba(239, 133, 85, 0.18);
+      color: var(--peach-deep);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2 {
+      margin-top: 0;
+      font-family: "Fraunces", serif;
+      letter-spacing: -0.04em;
+      color: var(--navy);
+    }
+
+    .hero-copy h1 {
+      max-width: 900px;
+      margin-bottom: 18px;
+      font-size: clamp(2.7rem, 5.1vw, 5.5rem);
+      line-height: 0.97;
+    }
+
+    .hero-copy p {
+      max-width: 760px;
+      margin-top: 0;
+      margin-bottom: 24px;
+      font-size: clamp(1rem, 1.9vw, 1.16rem);
+      line-height: 1.8;
+      color: var(--ink-soft);
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(17, 32, 59, 0.09);
+      color: var(--ink);
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, #243866, #1b294a);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(31, 45, 83, 0.26);
+    }
+
+    .button-secondary {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(17, 32, 59, 0.12);
+      color: var(--ink);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(17, 32, 59, 0.08);
+    }
+
+    .stat strong,
+    .stat span {
+      display: block;
+    }
+
+    .stat strong {
+      margin-bottom: 8px;
+      font-size: 1.3rem;
+      color: var(--navy);
+    }
+
+    .stat span {
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    section {
+      padding: 0 0 26px;
+    }
+
+    .section-card {
+      padding: 34px;
+      background: var(--paper);
+    }
+
+    .section-head {
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .section-head h2 {
+      margin-bottom: 10px;
+      font-size: clamp(2rem, 3vw, 3.1rem);
+      line-height: 1.02;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 24px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(17, 32, 59, 0.09);
+    }
+
+    .panel-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .label-current {
+      background: rgba(239, 109, 103, 0.12);
+      color: #c04743;
+    }
+
+    .label-future {
+      background: rgba(137, 215, 194, 0.18);
+      color: #1f7f66;
+    }
+
+    .panel h3 {
+      margin: 0 0 10px;
+      font-size: 1.3rem;
+      color: var(--navy);
+    }
+
+    .panel > p {
+      margin: 0 0 18px;
+      color: var(--ink-soft);
+      line-height: 1.7;
+    }
+
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      padding: 12px;
+      border-radius: 38px;
+      background:
+        linear-gradient(180deg, #27375f 0%, #192340 100%);
+      box-shadow: 0 28px 60px rgba(20, 29, 49, 0.28);
+      border: 1px solid rgba(17, 32, 59, 0.18);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      inset: 9px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .phone::after {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      width: 116px;
+      height: 24px;
+      margin-left: -58px;
+      border-radius: 999px;
+      background: rgba(6, 12, 26, 0.88);
+      z-index: 5;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .screen {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 36px 14px 14px;
+      border-radius: 28px;
+      background: #fbfaf8;
+      scrollbar-width: none;
+    }
+
+    .screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screen img,
+    .screen > div,
+    .screen > section,
+    .screen > article {
+      display: block;
+    }
+
+    .current-shot {
+      min-height: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #cfc8f1;
+    }
+
+    .current-shot img {
+      width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .prototype-screen {
+      background:
+        radial-gradient(circle at top right, rgba(255, 211, 125, 0.36), transparent 24%),
+        linear-gradient(180deg, #fffdfa 0%, #fff7ef 100%);
+    }
+
+    .screen-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .screen-top small,
+    .confidence,
+    .mini-card span,
+    .task-card span,
+    .timeline-item span,
+    .assistant span {
+      display: block;
+    }
+
+    .screen-top small {
+      color: var(--ink-soft);
+      font-size: 0.78rem;
+      margin-bottom: 4px;
+    }
+
+    .screen-top strong {
+      display: block;
+      font-size: 1.05rem;
+      line-height: 1.2;
+      color: var(--navy);
+    }
+
+    .confidence {
+      padding: 9px 12px;
+      border-radius: 16px;
+      background: rgba(137, 215, 194, 0.18);
+      color: #1b7c63;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .payment-card,
+    .task-card,
+    .assistant,
+    .mini-card {
+      border-radius: 20px;
+      border: 1px solid rgba(17, 32, 59, 0.08);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 12px 30px rgba(31, 45, 83, 0.08);
+    }
+
+    .payment-card {
+      padding: 18px;
+      margin-bottom: 14px;
+      background:
+        radial-gradient(circle at 82% 8%, rgba(255, 211, 125, 0.25), transparent 28%),
+        linear-gradient(140deg, #27375f 0%, #1b294a 100%);
+      color: #fff;
+    }
+
+    .payment-card small,
+    .payment-card span,
+    .payment-card strong {
+      display: block;
+    }
+
+    .payment-card small {
+      opacity: 0.8;
+      font-size: 0.74rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .payment-card strong {
+      font-size: 1.8rem;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .payment-card span {
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .payment-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .mini-card {
+      padding: 12px;
+    }
+
+    .mini-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.86rem;
+      color: var(--navy);
+    }
+
+    .mini-card span {
+      font-size: 0.73rem;
+      line-height: 1.45;
+      color: var(--ink-soft);
+    }
+
+    .task-card {
+      padding: 14px;
+      margin-bottom: 14px;
+      background: linear-gradient(180deg, rgba(255, 250, 245, 0.98), rgba(255, 246, 236, 0.98));
+    }
+
+    .task-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: var(--navy);
+    }
+
+    .task-card span {
+      font-size: 0.76rem;
+      color: var(--ink-soft);
+      line-height: 1.55;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 16px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(17, 32, 59, 0.07);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 6px;
+      border-radius: 999px;
+      background: var(--peach-deep);
+      box-shadow: 0 0 0 4px rgba(239, 133, 85, 0.16);
+    }
+
+    .timeline-item strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 0.82rem;
+      color: var(--navy);
+    }
+
+    .timeline-item span {
+      font-size: 0.74rem;
+      line-height: 1.5;
+      color: var(--ink-soft);
+    }
+
+    .assistant {
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(216, 211, 248, 0.2), rgba(255, 255, 255, 0.96));
+    }
+
+    .assistant strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.88rem;
+      color: var(--navy);
+    }
+
+    .assistant span {
+      font-size: 0.75rem;
+      line-height: 1.55;
+      color: var(--ink-soft);
+    }
+
+    .panel ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--ink-soft);
+      line-height: 1.7;
+    }
+
+    .panel li + li {
+      margin-top: 8px;
+    }
+
+    .evidence-grid,
+    .build-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .evidence-card,
+    .build-card {
+      padding: 22px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(17, 32, 59, 0.09);
+    }
+
+    .evidence-card strong,
+    .build-card strong,
+    .evidence-card span,
+    .build-card span {
+      display: block;
+    }
+
+    .evidence-card strong,
+    .build-card strong {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: var(--navy);
+    }
+
+    .evidence-card span,
+    .build-card span {
+      color: var(--ink-soft);
+      line-height: 1.7;
+      font-size: 0.94rem;
+    }
+
+    .cta-card {
+      padding: 34px;
+      margin-bottom: 34px;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255, 178, 125, 0.22), transparent 20%),
+        radial-gradient(circle at 88% 18%, rgba(137, 215, 194, 0.2), transparent 20%),
+        linear-gradient(155deg, rgba(255, 252, 247, 0.98), rgba(255, 247, 239, 0.97));
+    }
+
+    .cta-card p {
+      max-width: 760px;
+      margin: 0 0 18px;
+      color: var(--ink-soft);
+      line-height: 1.8;
+    }
+
+    .footer-note {
+      padding-bottom: 48px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 0.84rem;
+    }
+
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (max-width: 980px) {
+      .stats,
+      .compare-grid,
+      .evidence-grid,
+      .build-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        border-radius: 26px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-card,
+      .section-card,
+      .cta-card {
+        padding: 24px;
+      }
+
+      .section-head h2 {
+        font-size: 2.2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="shell">
+        <div class="topbar reveal">
+          <div class="brand">
+            <img src="assets/app-icon.jpg" alt="AD Home Borrower Portal icon">
+            <div>
+              <strong>AD Home Borrower Portal</strong>
+              <span>Prototype built for Max Slyusarchuk, CEO at AD Mortgage</span>
+            </div>
+          </div>
+          <div class="pill">AI-powered mobile teardown by Elinext</div>
+        </div>
+        <div class="hero-card reveal">
+          <div class="hero-copy">
+            <div class="eyebrow">Borrower Confidence Layer</div>
+            <h1>What if AD Home made every payment feel locked in before a borrower ever calls support?</h1>
+            <p>
+              AD Mortgage already has the right feature surface: payments, documents, reminders, and AI support.
+              The gap is confidence. A brand-new mortgage app with zero public ratings has to remove doubt fast,
+              especially around autopay, posting timing, escrow changes, and issue ownership.
+            </p>
+            <div class="hero-badges">
+              <div class="hero-badge">iOS launched March 9, 2026</div>
+              <div class="hero-badge">Android launched February 2, 2026</div>
+              <div class="hero-badge">0 public ratings across both stores</div>
+              <div class="hero-badge">50+ Android installs</div>
+            </div>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#solution">See The Fix</a>
+              <a class="button button-secondary" href="#contact">Why It Matters</a>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <strong>0.00 / 0</strong>
+              <span>US iOS rating signal as of March 30, 2026 from iTunes Lookup</span>
+            </div>
+            <div class="stat">
+              <strong>50+</strong>
+              <span>Android install base means every confusing moment still hits trust disproportionately hard</span>
+            </div>
+            <div class="stat">
+              <strong>4.86 / 162,673</strong>
+              <span>Rocket Mortgage iOS benchmark shows how much polish category leaders already teach borrowers to expect</span>
+            </div>
+            <div class="stat">
+              <strong>AIM + AD Home</strong>
+              <span>AD Mortgage is already betting on digital differentiation across broker and borrower experiences</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="solution">
+        <div class="shell">
+          <div class="section-card reveal">
+            <div class="section-head">
+              <h2>Current launch vs. confidence-first servicing</h2>
+              <p>
+                The current product already gets borrowers to payment screens. The opportunity is to remove the
+                uncertainty that still drives support calls: is autopay set, when will it post, why did the amount
+                change, and who owns the next action if something is off?
+              </p>
+            </div>
+            <div class="compare-grid">
+              <article class="panel">
+                <div class="panel-label label-current">Current launch signal</div>
+                <h3>Useful, but still easy to doubt</h3>
+                <p>
+                  Public screenshots show payment access and due details, but not enough reassurance for a mortgage
+                  moment that borrowers treat as high-risk.
+                </p>
+                <div class="phone-wrap">
+                  <div class="phone">
+                    <div class="screen">
+                      <div class="current-shot">
+                        <img src="assets/current-screen-1.png" alt="Current AD Home Borrower Portal screenshot">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <ul>
+                  <li>Due amount is visible, but autopay state and funding source are not surfaced as the main reassurance layer.</li>
+                  <li>There is no clear payment-posting ETA, which is where borrower anxiety usually spikes.</li>
+                  <li>Escrow, insurance, and support status appear disconnected from the primary payment action.</li>
+                </ul>
+              </article>
+
+              <article class="panel">
+                <div class="panel-label label-future">Elinext concept</div>
+                <h3>One screen that ends the guessing</h3>
+                <p>
+                  A `Payment Confidence Center` turns AD Home into a self-service flow that answers the borrower’s next
+                  question before it becomes a support ticket.
+                </p>
+                <div class="phone-wrap">
+                  <div class="phone">
+                    <div class="screen prototype-screen">
+                      <div class="screen-top">
+                        <div>
+                          <small>Borrower confidence</small>
+                          <strong>Next payment is protected</strong>
+                        </div>
+                        <div class="confidence">96% confidence<br>for April 1</div>
+                      </div>
+
+                      <div class="payment-card">
+                        <small>Next due</small>
+                        <strong>$1,752.94</strong>
+                        <span>Autopay is locked to Chase Checking ending in 4142. Posting window: within 2 hours of cutoff.</span>
+                        <div class="payment-actions">
+                          <div class="chip">Posted by 6:00 PM ET</div>
+                          <div class="chip">Escrow update in May: +$38</div>
+                        </div>
+                      </div>
+
+                      <div class="mini-grid">
+                        <div class="mini-card">
+                          <strong>Insurance</strong>
+                          <span>Renewal proof needed by April 3. Upload once, tracked across support.</span>
+                        </div>
+                        <div class="mini-card">
+                          <strong>Loan health</strong>
+                          <span>No payment holds. No delinquency risk. Reminder cadence reduced automatically.</span>
+                        </div>
+                      </div>
+
+                      <div class="task-card">
+                        <strong>Borrower-safe action queue</strong>
+                        <span>
+                          If a document or escrow exception could affect the next payment, it shows here with an owner,
+                          deadline, and direct action instead of forcing the borrower into phone support.
+                        </span>
+                      </div>
+
+                      <div class="timeline">
+                        <div class="timeline-item">
+                          <div class="dot"></div>
+                          <div>
+                            <strong>Payment scheduled</strong>
+                            <span>Confirmed March 30, 2026 at 9:42 AM UTC. AD Home will push a posted notification and receipt.</span>
+                          </div>
+                        </div>
+                        <div class="timeline-item">
+                          <div class="dot"></div>
+                          <div>
+                            <strong>Escrow change preview</strong>
+                            <span>Your May statement will reflect a projected $38 increase tied to insurance renewal timing.</span>
+                          </div>
+                        </div>
+                        <div class="timeline-item">
+                          <div class="dot"></div>
+                          <div>
+                            <strong>Support owns the exception</strong>
+                            <span>Case #AD-24571 is already linked. No need to re-explain the missing insurance document in chat.</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="assistant">
+                        <strong>AI assistant with memory</strong>
+                        <span>
+                          “I found the insurance upload you started on March 28. Finish the last page here and I’ll attach it to Case #AD-24571.”
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <ul>
+                  <li>Payment status becomes a certainty layer, not just a button.</li>
+                  <li>Escrow and document issues sit next to the payment moment they affect.</li>
+                  <li>Support history is remembered, which lowers repeat-contact frustration immediately.</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <div class="shell">
+          <div class="section-card reveal">
+            <div class="section-head">
+              <h2>Why this matters for AD Mortgage now</h2>
+              <p>
+                AD Mortgage is already signaling AI ambition through AIM and operational scale through large 2026
+                securitization activity. The borrower app is the public trust layer underneath that strategy.
+              </p>
+            </div>
+            <div class="evidence-grid">
+              <article class="evidence-card">
+                <strong>Launch trust gap</strong>
+                <span>
+                  The app is live, but the public validation loop has not started yet. Zero ratings and tiny install
+                  volume mean the product still needs to prove reliability before borrowers depend on it.
+                </span>
+              </article>
+              <article class="evidence-card">
+                <strong>Category risk is unforgiving</strong>
+                <span>
+                  Mortgage borrowers already complain publicly when account access breaks, chats disconnect, or a
+                  servicing error is only discovered after a delinquent notice. They do not grant extra patience to a new app.
+                </span>
+              </article>
+              <article class="evidence-card">
+                <strong>Vendor and platform pressure</strong>
+                <span>
+                  CRM context points to vendor-management demand while AD Mortgage operates across marketing, partner,
+                  borrower, and support surfaces. Confidence-focused UX reduces support noise without adding new product sprawl.
+                </span>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="section-card reveal">
+            <div class="section-head">
+              <h2>How Elinext would make this real</h2>
+              <p>
+                This is not a full rebuild pitch. It is a high-leverage servicing layer that can sit on top of the
+                systems AD Mortgage already owns.
+              </p>
+            </div>
+            <div class="build-grid">
+              <article class="build-card">
+                <strong>1. Normalize payment state</strong>
+                <span>
+                  Pull autopay, posting windows, cutoff logic, and exception status into one borrower-readable model so the UI can say what actually happens next.
+                </span>
+              </article>
+              <article class="build-card">
+                <strong>2. Attach issues to the due moment</strong>
+                <span>
+                  Escrow changes, insurance tasks, and missing documents should appear where they affect borrower trust most: next payment certainty.
+                </span>
+              </article>
+              <article class="build-card">
+                <strong>3. Give AI context memory</strong>
+                <span>
+                  Keep support from resetting the conversation. The assistant should know prior uploads, existing cases, and recent borrower actions.
+                </span>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shell">
+          <div class="cta-card reveal">
+            <h2>AD Mortgage already built the app. The next step is making it feel impossible to mistrust.</h2>
+            <p>
+              That is the difference between a feature-complete launch and a servicing product borrowers actually rely on.
+              If you want, we can turn this prototype into a scoped mobile delivery plan around payment confidence, document
+              resolution, and support-memory flows.
+            </p>
+            <a class="button button-primary" href="https://www.elinext.com/contacts/">Get in Touch</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="footer-note">Built as a targeted concept for AD Mortgage's borrower mobile experience.</div>
+  </div>
+
+</body>
+</html>
