@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cypress HCM Mobile Teardown | Elinext</title>
+  <meta name="description" content="What if Cypress HCM turned Avionte jobs, Bullhorn login, onboarding tasks, and pay-sensitive time entry into one mobile contractor workspace that Sales could actually use in an enterprise pitch?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/cypress-hcm_2026-04-07_07-55-17/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/cypress-hcm_2026-04-07_07-55-17/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/cypress-hcm_2026-04-07_07-55-17/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Cypress HCM Mobile — AI Teardown">
+  <meta property="og:description" content="What if Cypress HCM replaced code-heavy portal handoffs with one mobile contractor workspace for jobs, onboarding, timecards, pay status, and recruiter help?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cypress HCM Mobile — AI Teardown">
+  <meta name="twitter:description" content="What if Cypress HCM replaced code-heavy portal handoffs with one mobile contractor workspace for jobs, onboarding, timecards, pay status, and recruiter help?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/cypress-hcm_2026-04-07_07-55-17/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Ratings as of 2026-04-07: proxy app Bullhorn Time & Expense Mobile iOS 1.93 (56 ratings, source: iTunes Search API / trackId 1119323814, US), Android 3.03 (344 ratings, source: google-play-scraper / https://play.google.com/store/apps/details?id=com.peoplenet.mobilepunch, global) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #09111d;
+      --bg-mid: #112033;
+      --bg-soft: #edf3f7;
+      --card-dark: rgba(9, 17, 29, 0.9);
+      --card-light: rgba(255, 255, 255, 0.96);
+      --ink: #ebf3fa;
+      --ink-muted: #a9bdcf;
+      --text: #132638;
+      --line: rgba(19, 38, 56, 0.1);
+      --line-light: rgba(255, 255, 255, 0.12);
+      --orange: #f58235;
+      --sand: #ffbf8b;
+      --teal: #9be3de;
+      --blue: #7fc7ff;
+      --danger: #ff8b8b;
+      --ok: #7de6a2;
+      --shadow: 0 26px 80px rgba(5, 11, 20, 0.22);
+      --shell: min(1180px, calc(100% - 28px));
+      --radius-xl: 32px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Sora", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(245, 130, 53, 0.16), transparent 26%),
+        radial-gradient(circle at 88% 10%, rgba(127, 199, 255, 0.14), transparent 22%),
+        linear-gradient(180deg, #08111b 0%, #102131 35%, #edf3f7 35%, #edf3f7 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .shell {
+      width: var(--shell);
+      margin: 0 auto;
+    }
+
+    .hero,
+    .section,
+    .cta {
+      position: relative;
+      z-index: 1;
+      padding: 28px 0 42px;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 28px;
+      border: 1px solid var(--line-light);
+      background:
+        radial-gradient(circle at 16% 18%, rgba(245, 130, 53, 0.14), transparent 24%),
+        radial-gradient(circle at 85% 14%, rgba(127, 199, 255, 0.14), transparent 22%),
+        linear-gradient(160deg, rgba(8, 17, 29, 0.98), rgba(16, 33, 49, 0.98));
+    }
+
+    .section-card,
+    .cta-card {
+      padding: 30px;
+      background: var(--card-light);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+      padding: 14px 16px;
+      border-radius: 999px;
+      background: rgba(7, 15, 26, 0.68);
+      border: 1px solid var(--line-light);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 54px;
+      height: 54px;
+      padding: 9px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, rgba(245, 130, 53, 0.18), rgba(127, 199, 255, 0.14));
+      border: 1px solid rgba(245, 130, 53, 0.22);
+      object-fit: contain;
+    }
+
+    .brand-copy strong,
+    .brand-copy span {
+      display: block;
+    }
+
+    .brand-copy strong {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-copy span {
+      margin-top: 3px;
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+    }
+
+    .top-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--sand), var(--orange));
+      color: #08111b;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .hero-center,
+    .hero-center .eyebrow,
+    .hero-center h1,
+    .hero-center .lede,
+    .hero-center .hero-actions,
+    .hero-center .hero-metrics {
+      display: block;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 auto 18px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(245, 130, 53, 0.1);
+      border: 1px solid rgba(245, 130, 53, 0.22);
+      color: var(--sand);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      line-height: 0.95;
+      letter-spacing: 0.01em;
+    }
+
+    h1 {
+      max-width: 980px;
+      font-size: clamp(3rem, 6vw, 5.2rem);
+    }
+
+    h2 {
+      font-size: clamp(2rem, 3.8vw, 2.9rem);
+      color: #102131;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      color: inherit;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .lede {
+      max-width: 860px;
+      margin-top: 18px;
+      color: var(--ink-muted);
+      font-size: 1.04rem;
+    }
+
+    .hero-actions {
+      margin-top: 24px;
+    }
+
+    .button-row {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-width: 180px;
+      padding: 15px 20px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, var(--sand), var(--orange));
+      color: #08111b;
+      box-shadow: 0 14px 30px rgba(245, 130, 53, 0.28);
+    }
+
+    .button.secondary {
+      color: var(--ink);
+      border: 1px solid var(--line-light);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 26px;
+      width: 100%;
+      max-width: 980px;
+    }
+
+    .metric {
+      padding: 18px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line-light);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .metric strong,
+    .metric span {
+      display: block;
+    }
+
+    .metric strong {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.8rem;
+    }
+
+    .metric span {
+      margin-top: 4px;
+      color: var(--ink-muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .section-head {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .section-head p {
+      max-width: 760px;
+      color: #4b6278;
+    }
+
+    .compare-grid,
+    .insight-grid,
+    .rollout-grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    .compare-grid {
+      grid-template-columns: 1.08fr 0.92fr;
+      align-items: center;
+    }
+
+    .insight-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .rollout-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .bullet-box {
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: #f7fbfe;
+    }
+
+    .bullet-box ul {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .bullet-box li {
+      line-height: 1.55;
+    }
+
+    .mini-note {
+      margin-top: 12px;
+      font-size: 0.84rem;
+      color: #61788d;
+    }
+
+    .callout {
+      padding: 22px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, #102131, #173149);
+      color: var(--ink);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .callout strong,
+    .callout span {
+      display: block;
+    }
+
+    .callout strong {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 2.1rem;
+    }
+
+    .callout span {
+      margin-top: 6px;
+      color: var(--ink-muted);
+    }
+
+    .phone-zone {
+      display: flex;
+      gap: 22px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .phone-wrap {
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+    }
+
+    .phone-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #526a7f;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      padding: 12px;
+      border-radius: 40px;
+      background: linear-gradient(180deg, #10161d, #202935);
+      box-shadow: 0 34px 70px rgba(7, 14, 24, 0.28);
+    }
+
+    .phone-shell {
+      width: 100%;
+      height: 100%;
+      border-radius: 30px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #eef4f7;
+    }
+
+    .phone-screen {
+      height: 100%;
+      overflow: auto;
+      padding: 36px 14px 14px;
+      background:
+        radial-gradient(circle at top right, rgba(245, 130, 53, 0.16), transparent 22%),
+        linear-gradient(180deg, #f6fafc 0%, #edf3f7 100%);
+      color: #102131;
+    }
+
+    .screen-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .status-pill.warn {
+      background: rgba(245, 130, 53, 0.14);
+      color: #b45e1f;
+    }
+
+    .status-pill.ok {
+      background: rgba(72, 184, 112, 0.14);
+      color: #1b7d44;
+    }
+
+    .hero-tile {
+      padding: 16px;
+      border-radius: 24px;
+      background: linear-gradient(160deg, #102131, #19334a);
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .hero-tile small,
+    .hero-tile strong,
+    .hero-tile span {
+      display: block;
+    }
+
+    .hero-tile small {
+      color: var(--ink-muted);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .hero-tile strong {
+      margin-top: 8px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.35rem;
+      line-height: 1.05;
+    }
+
+    .hero-tile span {
+      margin-top: 8px;
+      color: #d5e7f5;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .mock-card {
+      padding: 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(16, 33, 49, 0.08);
+      box-shadow: 0 12px 26px rgba(16, 33, 49, 0.06);
+      margin-bottom: 10px;
+    }
+
+    .mock-card.dark {
+      background: linear-gradient(160deg, #12283a, #1c3b54);
+      color: var(--ink);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .mock-card h4 {
+      margin: 0;
+      font-size: 0.93rem;
+      line-height: 1.35;
+    }
+
+    .mock-card p {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      line-height: 1.55;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .mini-chip {
+      padding: 10px;
+      border-radius: 16px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      line-height: 1.4;
+      background: #edf4f9;
+      border: 1px solid rgba(16, 33, 49, 0.06);
+    }
+
+    .mini-chip.alert {
+      background: rgba(255, 139, 139, 0.12);
+      color: #8c3131;
+    }
+
+    .mini-chip.safe {
+      background: rgba(125, 230, 162, 0.14);
+      color: #17693d;
+    }
+
+    .task {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 18px;
+      background: #f7fafc;
+      border: 1px solid rgba(16, 33, 49, 0.06);
+    }
+
+    .task-dot {
+      flex: 0 0 12px;
+      width: 12px;
+      height: 12px;
+      margin-top: 4px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--sand), var(--orange));
+    }
+
+    .task strong,
+    .task span {
+      display: block;
+    }
+
+    .task strong {
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .task span {
+      margin-top: 4px;
+      font-size: 0.76rem;
+      color: #5c7286;
+      line-height: 1.5;
+    }
+
+    .dark .task {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .dark .task span {
+      color: #bdd0e0;
+    }
+
+    .impact-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .impact-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: #f6fafc;
+      border: 1px solid rgba(16, 33, 49, 0.07);
+    }
+
+    .impact-row strong,
+    .impact-row span {
+      display: block;
+    }
+
+    .impact-row strong {
+      font-size: 0.92rem;
+      line-height: 1.4;
+    }
+
+    .impact-row span {
+      color: #5e758a;
+      font-size: 0.79rem;
+    }
+
+    .impact-row b {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.1rem;
+      color: #102131;
+      white-space: nowrap;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .timeline-step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(16, 33, 49, 0.08);
+      background: #f8fbfd;
+    }
+
+    .timeline-step b {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--sand), var(--orange));
+      color: #08111b;
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    .timeline-step strong,
+    .timeline-step span {
+      display: block;
+    }
+
+    .timeline-step strong {
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .timeline-step span {
+      margin-top: 4px;
+      color: #5f768a;
+      font-size: 0.8rem;
+      line-height: 1.55;
+    }
+
+    .cta-card {
+      padding: 34px 30px;
+      background:
+        radial-gradient(circle at top left, rgba(245, 130, 53, 0.12), transparent 28%),
+        linear-gradient(145deg, #ffffff, #f3f8fb);
+    }
+
+    .cta-copy {
+      display: grid;
+      gap: 14px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      font-size: 0.82rem;
+      color: #60778b;
+    }
+
+    @media (max-width: 1080px) {
+      .hero-metrics,
+      .compare-grid,
+      .insight-grid,
+      .rollout-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .brand {
+        justify-content: center;
+      }
+
+      .top-pill {
+        width: 100%;
+      }
+
+      .hero-card,
+      .section-card,
+      .cta-card {
+        padding: 24px 18px;
+      }
+
+      .hero-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .button-row {
+        width: 100%;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="shell">
+        <div class="card hero-card">
+          <div class="topbar">
+            <div class="brand">
+              <img class="brand-mark" src="./assets/app-icon.jpg" alt="Bullhorn Time & Expense Mobile icon">
+              <div class="brand-copy">
+                <strong>Cypress HCM Mobile Teardown</strong>
+                <span>Proxy app signal: Bullhorn Time &amp; Expense Mobile</span>
+              </div>
+            </div>
+            <div class="top-pill">Built for Vinnie Levine</div>
+          </div>
+
+          <div class="hero-center">
+            <div class="eyebrow">AI-Powered Mobile Teardown</div>
+            <h1>What if Cypress sold one mobile workforce experience instead of three disconnected handoffs?</h1>
+            <p class="lede">
+              Cypress already has the ingredients: jobs, onboarding, payroll, compliance, and time entry. The public problem is the handoff between them. Avionte handles jobs, Bullhorn handles login and time, and the worker is left carrying the confusion.
+            </p>
+            <div class="hero-actions">
+              <div class="button-row">
+                <a class="button primary" href="#prototype">See the Prototype</a>
+                <a class="button secondary" href="https://www.elinext.com/contacts/">Get in Touch</a>
+              </div>
+            </div>
+            <div class="hero-metrics">
+              <div class="metric">
+                <strong>0</strong>
+                <span>official Cypress mobile app listings found in US stores</span>
+              </div>
+              <div class="metric">
+                <strong>3</strong>
+                <span>public workflow surfaces: Avionte jobs, Cypress portal, Bullhorn login</span>
+              </div>
+              <div class="metric">
+                <strong>1.93 / 3.03</strong>
+                <span>proxy app ratings on iOS US and Android global</span>
+              </div>
+              <div class="metric">
+                <strong>439</strong>
+                <span>open jobs visible on Cypress's LinkedIn company page</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="prototype">
+      <div class="shell">
+        <div class="card section-card">
+          <div class="section-head">
+            <h2>Current Flow vs. Cypress Flow</h2>
+            <p>
+              The strongest commercial fix is not a full rebuild. It is one contractor workspace that sits above the existing stack and removes the moments where users get lost, logged out, or forced to guess which code belongs to which system.
+            </p>
+          </div>
+
+          <div class="compare-grid">
+            <div class="stack">
+              <div class="bullet-box">
+                <h3>Why this matters to Sales</h3>
+                <ul>
+                  <li>Strategic clients hear one story in the pitch but workers feel another in the product handoff.</li>
+                  <li>Login and timecard friction becomes support cost, slower starts, and softer account confidence.</li>
+                  <li>A branded mobile layer gives Cypress a cleaner enterprise narrative without replacing every backend system.</li>
+                </ul>
+              </div>
+
+              <div class="callout">
+                <strong>Make process quality visible.</strong>
+                <span>That is easier to sell than a stack of portals and vendor logins.</span>
+              </div>
+
+              <div class="bullet-box">
+                <h3>Public signals behind this concept</h3>
+                <ul>
+                  <li>Cypress's payroll page promises new hire portals and web-based time and expense management.</li>
+                  <li>The homepage links straight into Bullhorn universal login.</li>
+                  <li>Recent proxy-app reviews mention 4-digit codes, failed login, force closes, and repeated credential entry.</li>
+                </ul>
+                <p class="mini-note">No substantive Reddit conversation surfaced around Cypress itself, which points to operational friction rather than a public brand issue.</p>
+              </div>
+            </div>
+
+            <div class="phone-zone">
+              <div class="phone-wrap">
+                <div class="phone-label">Current State</div>
+                <div class="phone">
+                  <div class="phone-shell">
+                    <div class="phone-screen">
+                      <div class="screen-top">
+                        <span>9:41</span>
+                        <span class="status-pill warn">Fragmented</span>
+                      </div>
+                      <div class="hero-tile">
+                        <small>Contractor Journey</small>
+                        <strong>Jobs, onboarding, and time entry all live in different places.</strong>
+                        <span>Workers keep switching tools before they can complete the boring but critical steps.</span>
+                      </div>
+                      <div class="mock-card">
+                        <h4>Apply for role</h4>
+                        <p>Avionte jobs widget opens a separate job-search experience.</p>
+                        <div class="mini-grid">
+                          <div class="mini-chip">New search context</div>
+                          <div class="mini-chip alert">No shared status</div>
+                        </div>
+                      </div>
+                      <div class="mock-card">
+                        <h4>Complete onboarding</h4>
+                        <p>Worker is pushed into portal-style document and compliance steps.</p>
+                        <div class="mini-grid">
+                          <div class="mini-chip">Documents elsewhere</div>
+                          <div class="mini-chip alert">No mobile task list</div>
+                        </div>
+                      </div>
+                      <div class="mock-card dark">
+                        <h4>Bullhorn time and expense</h4>
+                        <p>Recent public reviews mention missing 4-digit codes, login failures, and false internet errors.</p>
+                        <div class="task">
+                          <div class="task-dot"></div>
+                          <div>
+                            <strong>Proxy app signal</strong>
+                            <span>“Website login works, app asks for a four digit code that does not exist.”</span>
+                          </div>
+                        </div>
+                        <div class="task">
+                          <div class="task-dot"></div>
+                          <div>
+                            <strong>Payroll risk feeling</strong>
+                            <span>“How am I supposed to get paid if I can't put in the time I've worked?”</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="mock-card">
+                        <h4>Support overhead</h4>
+                        <p>Recruiters and payroll teams end up translating the system map back to the worker.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="phone-wrap">
+                <div class="phone-label">Improved State</div>
+                <div class="phone">
+                  <div class="phone-shell">
+                    <div class="phone-screen">
+                      <div class="screen-top">
+                        <span>9:41</span>
+                        <span class="status-pill ok">Unified</span>
+                      </div>
+                      <div class="hero-tile">
+                        <small>Cypress Flow</small>
+                        <strong>One mobile home for job status, onboarding, timecards, and pay.</strong>
+                        <span>Keep the existing systems. Remove the worker confusion between them.</span>
+                      </div>
+                      <div class="mock-card">
+                        <h4>Single sign-in</h4>
+                        <p>Passwordless access tied to the worker and account, so there is no tenant-code guessing.</p>
+                        <div class="mini-grid">
+                          <div class="mini-chip safe">Verified device</div>
+                          <div class="mini-chip safe">One account context</div>
+                        </div>
+                      </div>
+                      <div class="mock-card">
+                        <h4>Today's next actions</h4>
+                        <div class="task">
+                          <div class="task-dot"></div>
+                          <div>
+                            <strong>Finish I-9 and direct deposit</strong>
+                            <span>2 steps left before first shift at client account.</span>
+                          </div>
+                        </div>
+                        <div class="task">
+                          <div class="task-dot"></div>
+                          <div>
+                            <strong>Submit week 1 timecard</strong>
+                            <span>Saved draft, manager approval pending, pay date already visible.</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="mock-card dark">
+                        <h4>Trust layer</h4>
+                        <p>Clear status for hours received, payroll queued, and recruiter support in the same thread.</p>
+                        <div class="task">
+                          <div class="task-dot"></div>
+                          <div>
+                            <strong>Hours received</strong>
+                            <span>24.0 hours captured. Payroll review closes Friday at 5:00 PM.</span>
+                          </div>
+                        </div>
+                        <div class="task">
+                          <div class="task-dot"></div>
+                          <div>
+                            <strong>Need help?</strong>
+                            <span>Chat with recruiter or payroll without leaving the app.</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="mock-card">
+                        <h4>Client-ready story</h4>
+                        <p>Sales and Delivery can show one branded experience instead of explaining multiple vendors.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="card section-card">
+          <div class="section-head">
+            <h2>What the Public Data Actually Says</h2>
+            <p>
+              The opportunity is not speculative. It is visible across Cypress's own site, its jobs stack, and the mobile app feedback around the time-and-expense layer workers are likely pushed into.
+            </p>
+          </div>
+
+          <div class="insight-grid">
+            <div class="bullet-box">
+              <h3>Store Signal</h3>
+              <ul>
+                <li>No official Cypress app surfaced in US App Store or Google Play search.</li>
+                <li>Bullhorn Time &amp; Expense Mobile holds weak public ratings despite being a payroll-sensitive workflow.</li>
+                <li>Android reviews still mention login, code, crash, and connection problems.</li>
+              </ul>
+            </div>
+
+            <div class="bullet-box">
+              <h3>Website Signal</h3>
+              <ul>
+                <li>Jobs page embeds Avionte.</li>
+                <li>Homepage links into Bullhorn universal login.</li>
+                <li>Payroll page sells new hire portals, online tools, and web-based time and expense management.</li>
+              </ul>
+            </div>
+
+            <div class="bullet-box">
+              <h3>Commercial Signal</h3>
+              <ul>
+                <li>Vinnie leads sales, so cleaner product handoff supports account growth.</li>
+                <li>LinkedIn shows Cypress hiring across program-heavy people-tech work.</li>
+                <li>Cypress's best-account story gets stronger if the worker flow feels intentional.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="impact-list">
+            <div class="impact-row">
+              <div>
+                <strong>Fewer support loops around login and codes</strong>
+                <span>Remove the moments where recruiters explain how to use the system instead of delivering the account.</span>
+              </div>
+              <b>Support ↓</b>
+            </div>
+            <div class="impact-row">
+              <div>
+                <strong>Faster worker completion after placement</strong>
+                <span>One mobile checklist keeps onboarding, first shift, and first timecard in sequence.</span>
+              </div>
+              <b>Ramp ↑</b>
+            </div>
+            <div class="impact-row">
+              <div>
+                <strong>Cleaner enterprise pitch for strategic clients</strong>
+                <span>Sales can demo a product story instead of describing a tool chain.</span>
+              </div>
+              <b>Trust ↑</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="card section-card">
+          <div class="section-head">
+            <h2>How Elinext Would Stage It</h2>
+            <p>
+              The pragmatic path is an overlay, not a rewrite. Keep the systems that already exist and make the mobile layer responsible for clarity, task orchestration, and trust.
+            </p>
+          </div>
+
+          <div class="rollout-grid">
+            <div class="bullet-box">
+              <h3>Phase 1</h3>
+              <div class="timeline">
+                <div class="timeline-step">
+                  <b>1</b>
+                  <div>
+                    <strong>Unify sign-in and account context</strong>
+                    <span>Replace tenant-code confusion with user-aware access and device trust.</span>
+                  </div>
+                </div>
+                <div class="timeline-step">
+                  <b>2</b>
+                  <div>
+                    <strong>Launch one contractor home</strong>
+                    <span>Show job status, onboarding tasks, and support in one place.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bullet-box">
+              <h3>Phase 2</h3>
+              <div class="timeline">
+                <div class="timeline-step">
+                  <b>3</b>
+                  <div>
+                    <strong>Bring timecards and pay status into the same flow</strong>
+                    <span>Give workers visible confirmation of hours, approvals, and pay timing.</span>
+                  </div>
+                </div>
+                <div class="timeline-step">
+                  <b>4</b>
+                  <div>
+                    <strong>Turn it into a sales asset</strong>
+                    <span>Use the branded mobile experience as part of strategic-client expansion and retention.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p class="footer-note">
+            Public company history also supports the timing: Cypress built proprietary recruiting software early, added payroll support in 2009, and expanded enterprise support in 2013. A modern mobile overlay fits the direction they already operate in.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="shell">
+        <div class="card cta-card">
+          <div class="cta-copy">
+            <div class="eyebrow" style="margin-bottom:0;">Next Step</div>
+            <h2>Show strategic clients a better worker experience than the one they feel today.</h2>
+            <p>
+              Elinext can help Cypress turn the existing jobs, onboarding, and payroll stack into one mobile layer that feels deliberate, reliable, and easier to sell.
+            </p>
+            <div class="button-row">
+              <a class="button primary" href="https://www.elinext.com/contacts/">Get in Touch</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
