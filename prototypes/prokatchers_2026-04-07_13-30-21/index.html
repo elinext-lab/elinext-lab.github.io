@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProKatchers Mobile Trust Teardown</title>
+    <meta
+      name="description"
+      content="A mobile concept for ProKatchers showing how verified recruiter identity, staged document sharing, and contract-readiness could turn candidate skepticism into faster, safer conversion."
+    />
+    <link
+      rel="canonical"
+      href="https://elinext-lab.github.io/prototypes/prokatchers_2026-04-07_13-30-21/"
+    />
+    <meta
+      property="og:url"
+      content="https://elinext-lab.github.io/prototypes/prokatchers_2026-04-07_13-30-21/"
+    />
+    <meta
+      property="og:image"
+      content="https://elinext-lab.github.io/prototypes/prokatchers_2026-04-07_13-30-21/og-image.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:title" content="ProKatchers Mobile — AI Teardown" />
+    <meta
+      property="og:description"
+      content="What if ProKatchers turned first contact into a verified mobile workflow, so candidates could confirm recruiter identity, review the opportunity, and control when sensitive documents are shared?"
+    />
+    <meta name="author" content="Yauheni Shauchenka, Elinext" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-ZR415HX0B2");
+    </script>
+    <!-- Ratings as of 2026-04-07: iOS N/A (no first-party listing found, source: iTunes Search API US), Android N/A (no first-party listing found, source: Google Play search via local scraper) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f6efe2;
+        --paper: #fffaf1;
+        --ink: #102123;
+        --muted: #5f706e;
+        --line: rgba(16, 33, 35, 0.12);
+        --teal: #0f6765;
+        --teal-soft: #d6ebe9;
+        --rust: #d7683d;
+        --rust-soft: #ffe4d6;
+        --gold: #d4a44f;
+        --slate: #21383a;
+        --card-shadow: 0 24px 50px rgba(16, 33, 35, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(15, 103, 101, 0.18), transparent 24%),
+          radial-gradient(circle at top right, rgba(212, 164, 79, 0.16), transparent 22%),
+          linear-gradient(180deg, #f6efe2 0%, #efe3cf 100%);
+        color: var(--ink);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .page {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .page::before,
+      .page::after {
+        content: "";
+        position: fixed;
+        inset: auto;
+        width: 28rem;
+        height: 28rem;
+        border-radius: 999px;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.55;
+        filter: blur(16px);
+      }
+
+      .page::before {
+        top: -8rem;
+        right: -12rem;
+        background: rgba(15, 103, 101, 0.14);
+      }
+
+      .page::after {
+        bottom: -12rem;
+        left: -10rem;
+        background: rgba(215, 104, 61, 0.16);
+      }
+
+      .shell {
+        position: relative;
+        z-index: 1;
+      }
+
+      .section {
+        position: relative;
+        z-index: 1;
+        background: rgba(255, 250, 241, 0.88);
+        border-top: 1px solid rgba(16, 33, 35, 0.08);
+        backdrop-filter: blur(8px);
+      }
+
+      .container {
+        width: min(1160px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.55rem 0.9rem;
+        border-radius: 999px;
+        background: rgba(255, 250, 241, 0.74);
+        border: 1px solid rgba(16, 33, 35, 0.12);
+        color: var(--slate);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .hero {
+        padding: 48px 0 68px;
+      }
+
+      .hero-top {
+        text-align: center;
+      }
+
+      .hero-logo {
+        display: block;
+        width: min(280px, 72vw);
+        margin: 22px auto 16px;
+        filter: invert(1) saturate(0) brightness(0.18);
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+        line-height: 0.95;
+      }
+
+      h1 {
+        max-width: 860px;
+        margin: 0 auto;
+        font-size: clamp(3.2rem, 7vw, 6.8rem);
+        letter-spacing: -0.05em;
+      }
+
+      h1 .serif,
+      h2 .serif {
+        font-family: "Instrument Serif", serif;
+        font-weight: 400;
+        font-style: italic;
+      }
+
+      .hero-copy {
+        max-width: 780px;
+        margin: 24px auto 0;
+        color: var(--muted);
+        font-size: 1.1rem;
+        line-height: 1.7;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 24px;
+        margin-top: 42px;
+        align-items: start;
+      }
+
+      .panel,
+      .phone,
+      .metric,
+      .evidence-card,
+      .build-card,
+      .cta-panel {
+        box-shadow: var(--card-shadow);
+      }
+
+      .panel {
+        background: rgba(255, 250, 241, 0.94);
+        border: 1px solid rgba(16, 33, 35, 0.1);
+        border-radius: 28px;
+        padding: 26px;
+      }
+
+      .panel h2,
+      .evidence h2,
+      .build h2 {
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        letter-spacing: -0.05em;
+      }
+
+      .summary-list {
+        display: grid;
+        gap: 14px;
+        margin-top: 20px;
+      }
+
+      .summary-item {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        padding: 16px 18px;
+        background: #fff;
+        border-radius: 20px;
+        border: 1px solid rgba(16, 33, 35, 0.08);
+      }
+
+      .summary-badge {
+        flex: 0 0 auto;
+        min-width: 2.2rem;
+        height: 2.2rem;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        background: var(--rust-soft);
+        color: var(--rust);
+      }
+
+      .summary-item strong {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.96rem;
+      }
+
+      .summary-item p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.55;
+        font-size: 0.94rem;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .metric {
+        background: #102123;
+        color: #f9f4ec;
+        border-radius: 24px;
+        padding: 20px 18px;
+        min-height: 156px;
+      }
+
+      .metric:nth-child(2n) {
+        background: linear-gradient(180deg, #d7683d 0%, #bf5730 100%);
+      }
+
+      .metric-label {
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.7;
+      }
+
+      .metric-value {
+        margin-top: 18px;
+        font-size: clamp(2rem, 4vw, 3.4rem);
+        line-height: 1;
+        letter-spacing: -0.06em;
+      }
+
+      .metric-copy {
+        margin-top: 12px;
+        font-size: 0.95rem;
+        line-height: 1.55;
+        color: rgba(249, 244, 236, 0.82);
+      }
+
+      .showcase {
+        padding: 52px 0 42px;
+      }
+
+      .showcase-head {
+        text-align: center;
+        max-width: 760px;
+        margin: 0 auto 28px;
+      }
+
+      .showcase-head p {
+        margin: 18px auto 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .phone-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .phone-shell {
+        background: rgba(255, 250, 241, 0.96);
+        border: 1px solid rgba(16, 33, 35, 0.12);
+        border-radius: 32px;
+        padding: 20px;
+      }
+
+      .phone-shell header {
+        text-align: center;
+        margin-bottom: 14px;
+      }
+
+      .phone-shell header span,
+      .mini-kicker {
+        display: inline-block;
+        padding: 0.35rem 0.7rem;
+        background: rgba(15, 103, 101, 0.1);
+        border-radius: 999px;
+        color: var(--teal);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .phone-shell header h3 {
+        margin: 10px 0 0;
+        font-size: 1.55rem;
+        letter-spacing: -0.04em;
+      }
+
+      .phone-shell header p {
+        margin: 8px auto 0;
+        max-width: 320px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .phone {
+        position: relative;
+        width: 280px;
+        height: 580px;
+        margin: 0 auto;
+        border-radius: 38px;
+        padding: 10px;
+        background: linear-gradient(180deg, #192d30 0%, #081213 100%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .phone::before {
+        content: "";
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        width: 108px;
+        height: 24px;
+        border-radius: 999px;
+        transform: translateX(-50%);
+        background: rgba(7, 15, 16, 0.9);
+        z-index: 3;
+      }
+
+      .phone-screen {
+        position: relative;
+        height: 100%;
+        overflow: auto;
+        border-radius: 30px;
+        padding: 36px 14px 14px;
+        background: linear-gradient(180deg, #fff7ef 0%, #f2e4d4 100%);
+      }
+
+      .phone-screen.before {
+        background:
+          linear-gradient(180deg, rgba(216, 104, 61, 0.12), transparent 22%),
+          linear-gradient(180deg, #fff8f3 0%, #f5e5d9 100%);
+      }
+
+      .phone-screen.after {
+        background:
+          linear-gradient(180deg, rgba(15, 103, 101, 0.14), transparent 22%),
+          linear-gradient(180deg, #f5f8f6 0%, #dfeae5 100%);
+      }
+
+      .status-bar,
+      .phone-hero,
+      .phone-card,
+      .cta-chip,
+      .timeline-item,
+      .fit-row,
+      .toggle-row,
+      .warning-box,
+      .trust-strip {
+        display: block;
+      }
+
+      .status-bar {
+        font-size: 0.73rem;
+        font-weight: 700;
+        color: rgba(16, 33, 35, 0.72);
+        margin-bottom: 18px;
+      }
+
+      .phone-hero {
+        text-align: center;
+        margin-bottom: 18px;
+      }
+
+      .phone-hero h4 {
+        margin: 10px 0 8px;
+        font-size: 1.35rem;
+        letter-spacing: -0.04em;
+      }
+
+      .phone-hero p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.45;
+        font-size: 0.86rem;
+      }
+
+      .phone-stack {
+        display: grid;
+        gap: 12px;
+      }
+
+      .phone-card {
+        background: rgba(255, 255, 255, 0.84);
+        border: 1px solid rgba(16, 33, 35, 0.1);
+        border-radius: 22px;
+        padding: 14px;
+      }
+
+      .phone-card.dark {
+        background: #102123;
+        color: #fff9f1;
+        border-color: transparent;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .row + .row {
+        margin-top: 8px;
+      }
+
+      .tiny {
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+
+      .dark .tiny {
+        color: rgba(255, 249, 241, 0.7);
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0.32rem 0.66rem;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .pill.rust {
+        background: var(--rust-soft);
+        color: var(--rust);
+      }
+
+      .pill.teal {
+        background: rgba(15, 103, 101, 0.14);
+        color: var(--teal);
+      }
+
+      .warning-box {
+        margin-top: 12px;
+        padding: 12px;
+        border-radius: 16px;
+        background: rgba(216, 104, 61, 0.12);
+        color: #8f4122;
+        font-size: 0.82rem;
+        line-height: 1.45;
+      }
+
+      .warning-box strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .contact-log {
+        display: grid;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .contact-entry {
+        padding: 10px 12px;
+        border-radius: 14px;
+        background: rgba(16, 33, 35, 0.05);
+        font-size: 0.78rem;
+      }
+
+      .fit-list,
+      .timeline {
+        display: grid;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .fit-row,
+      .timeline-item,
+      .toggle-row {
+        padding: 10px 12px;
+        border-radius: 16px;
+        background: rgba(15, 103, 101, 0.08);
+        font-size: 0.82rem;
+      }
+
+      .toggle-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .toggle {
+        width: 42px;
+        height: 24px;
+        border-radius: 999px;
+        background: rgba(16, 33, 35, 0.18);
+        position: relative;
+      }
+
+      .toggle::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #fff;
+      }
+
+      .toggle.on {
+        background: var(--teal);
+      }
+
+      .toggle.on::after {
+        left: 21px;
+      }
+
+      .trust-strip {
+        margin-top: 12px;
+        padding: 12px 14px;
+        border-radius: 18px;
+        background: #102123;
+        color: #fff9f1;
+      }
+
+      .trust-strip strong {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .cta-chip {
+        margin-top: 12px;
+        width: 100%;
+        text-align: center;
+        padding: 12px 14px;
+        border-radius: 999px;
+        font-weight: 700;
+        background: var(--rust);
+        color: #fffaf1;
+      }
+
+      .evidence {
+        padding: 42px 0 26px;
+      }
+
+      .evidence-grid,
+      .build-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 24px;
+      }
+
+      .evidence-card,
+      .build-card {
+        background: rgba(255, 250, 241, 0.96);
+        border: 1px solid rgba(16, 33, 35, 0.1);
+        border-radius: 24px;
+        padding: 22px;
+      }
+
+      .evidence-card h3,
+      .build-card h3 {
+        margin: 16px 0 10px;
+        font-size: 1.28rem;
+        letter-spacing: -0.04em;
+      }
+
+      .evidence-card p,
+      .build-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .source-link {
+        display: inline-flex;
+        margin-top: 14px;
+        font-size: 0.82rem;
+        color: var(--teal);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .build {
+        padding: 32px 0 42px;
+      }
+
+      .cta-wrap {
+        padding: 18px 0 56px;
+      }
+
+      .cta-panel {
+        background: #102123;
+        color: #fff7ef;
+        border-radius: 32px;
+        padding: 28px;
+      }
+
+      .cta-panel p {
+        max-width: 720px;
+        color: rgba(255, 247, 239, 0.78);
+        line-height: 1.7;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 14px 22px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, #dd7a4f 0%, #cb6034 100%);
+        color: #fff7ef;
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .footer-note {
+        margin-top: 18px;
+        font-size: 0.82rem;
+        color: rgba(255, 247, 239, 0.65);
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 0.55s ease, transform 0.55s ease;
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 960px) {
+        .hero-grid,
+        .phone-grid,
+        .evidence-grid,
+        .build-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .metrics {
+          grid-template-columns: 1fr;
+        }
+
+        .panel,
+        .phone-shell,
+        .evidence-card,
+        .build-card,
+        .cta-panel {
+          border-radius: 24px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .phone {
+          width: 300px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="shell">
+        <section class="hero section">
+          <div class="container">
+            <div class="hero-top reveal visible">
+              <div class="eyebrow">AI teardown for ProKatchers</div>
+              <img class="hero-logo" src="assets/logo-white.png" alt="ProKatchers logo" />
+              <h1>
+                Turn
+                <span class="serif">“is this legit?”</span>
+                into
+                <span class="serif">“I’m ready to apply.”</span>
+              </h1>
+              <p class="hero-copy">
+                ProKatchers has a candidate trust problem before it has a funnel problem.
+                Public complaints keep circling the same friction: repeated outreach, vague
+                job context, and requests for sensitive data before confidence is earned. This
+                concept reframes first contact as a verified mobile workflow.
+              </p>
+            </div>
+
+            <div class="hero-grid">
+              <div class="panel reveal visible">
+                <h2>Why this matters <span class="serif">now</span></h2>
+                <div class="summary-list">
+                  <div class="summary-item">
+                    <div class="summary-badge">1</div>
+                    <div>
+                      <strong>Trust breaks before conversion</strong>
+                      <p>
+                        BBB and Reddit complaints describe repeated contact, unclear client
+                        visibility, and hesitation to share personal information.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="summary-item">
+                    <div class="summary-badge">2</div>
+                    <div>
+                      <strong>The public flow is still mostly a web form</strong>
+                      <p>
+                        The current candidate surface is "Talent &amp; Job Seekers" plus resume
+                        upload. There is no mobile product layer to reassure or guide candidates.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="summary-item">
+                    <div class="summary-badge">3</div>
+                    <div>
+                      <strong>Competitors already train the market for mobile</strong>
+                      <p>
+                        Aya, Cross Country, and Trusted all ship candidate-facing apps, so the
+                        expectation for self-serve recruiting is already set.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="metrics reveal visible">
+                <div class="metric">
+                  <div class="metric-label">Public review signal</div>
+                  <div class="metric-value">3/5</div>
+                  <div class="metric-copy">
+                    BBB average from 4 reviews, with recent 1-star complaints focused on spammy
+                    contact and trust.
+                  </div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Mobile layout stability</div>
+                  <div class="metric-value">0.901</div>
+                  <div class="metric-copy">
+                    Lighthouse mobile CLS on 2026-04-07. That is far above the healthy target and
+                    not ideal for a trust-sensitive landing page.
+                  </div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">App store footprint</div>
+                  <div class="metric-value">0</div>
+                  <div class="metric-copy">
+                    No first-party ProKatchers mobile app found in US App Store or Google Play
+                    search results.
+                  </div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Page weight</div>
+                  <div class="metric-value">13.3MB</div>
+                  <div class="metric-copy">
+                    Heavier than the Aya and Cross Country homepages sampled in the same mobile
+                    audit set.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="showcase section">
+          <div class="container">
+            <div class="showcase-head reveal">
+              <div class="eyebrow">Before / After</div>
+              <h2>
+                From blind intake to a
+                <span class="serif">verified opportunity wallet</span>
+              </h2>
+              <p>
+                The concept below keeps the recruiter in control, but changes the first moments on
+                mobile: the recruiter is verified, the job is contextualized, and sensitive fields
+                unlock only when the candidate is ready.
+              </p>
+            </div>
+
+            <div class="phone-grid">
+              <article class="phone-shell reveal">
+                <header>
+                  <span>Current experience</span>
+                  <h3>Blind intake</h3>
+                  <p>
+                    Friction starts before the candidate understands who is contacting them and why.
+                  </p>
+                </header>
+                <div class="phone">
+                  <div class="phone-screen before">
+                    <div class="status-bar">9:41 AM</div>
+                    <div class="phone-hero">
+                      <div class="mini-kicker">Current flow</div>
+                      <h4>Unknown job lead</h4>
+                      <p>Cold contact lands before credibility does.</p>
+                    </div>
+                    <div class="phone-stack">
+                      <div class="phone-card">
+                        <div class="row">
+                          <strong>Recent outreach</strong>
+                          <span class="pill rust">high friction</span>
+                        </div>
+                        <div class="contact-log">
+                          <div class="contact-entry">47 calls • 18 texts • 15 emails</div>
+                          <div class="contact-entry">Client name still not visible</div>
+                          <div class="contact-entry">Asked for resume + signature early</div>
+                        </div>
+                      </div>
+                      <div class="phone-card">
+                        <div class="row">
+                          <strong>Role details</strong>
+                          <span class="tiny">Travel contract</span>
+                        </div>
+                        <div class="tiny" style="margin-top: 8px;">
+                          Location: withheld until callback
+                        </div>
+                        <div class="tiny">Qualification ask: DOB month/day + zip code</div>
+                        <div class="warning-box">
+                          <strong>Candidate reaction</strong>
+                          "Why am I sharing personal info before I know this is real?"
+                        </div>
+                      </div>
+                      <div class="phone-card dark">
+                        <div class="row">
+                          <strong>Representation step</strong>
+                          <span class="pill rust">urgent</span>
+                        </div>
+                        <div class="tiny" style="margin-top: 8px;">
+                          Resume upload, e-sign, then wait for recruiter follow-up.
+                        </div>
+                        <div class="cta-chip">Upload resume blindly</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="phone-shell reveal">
+                <header>
+                  <span>Elinext concept</span>
+                  <h3>Verified opportunity</h3>
+                  <p>
+                    Give the candidate context first, then earn permission for each deeper step.
+                  </p>
+                </header>
+                <div class="phone">
+                  <div class="phone-screen after">
+                    <div class="status-bar">9:41 AM</div>
+                    <div class="phone-hero">
+                      <div class="mini-kicker">Trust-first mobile flow</div>
+                      <h4>Travel sonographer role</h4>
+                      <p>Verified recruiter, verified client, staged data sharing.</p>
+                    </div>
+                    <div class="phone-stack">
+                      <div class="phone-card">
+                        <div class="row">
+                          <strong>Recruiter verified</strong>
+                          <span class="pill teal">live</span>
+                        </div>
+                        <div class="fit-list">
+                          <div class="fit-row">Recruiter ID confirmed</div>
+                          <div class="fit-row">Client facility revealed after consent</div>
+                          <div class="fit-row">Last contact settings respected</div>
+                        </div>
+                      </div>
+                      <div class="phone-card">
+                        <div class="row">
+                          <strong>Why you matched</strong>
+                          <span class="tiny">96% fit</span>
+                        </div>
+                        <div class="fit-list">
+                          <div class="fit-row">Travel credentials already align</div>
+                          <div class="fit-row">Schedule and location preference matched</div>
+                          <div class="fit-row">Contract checklist is 70% complete</div>
+                        </div>
+                      </div>
+                      <div class="phone-card">
+                        <div class="row">
+                          <strong>Document control</strong>
+                          <span class="pill teal">candidate choice</span>
+                        </div>
+                        <div class="toggle-row">
+                          <span>Share resume now</span>
+                          <span class="toggle on"></span>
+                        </div>
+                        <div class="toggle-row">
+                          <span>Share DOB / ID after interview</span>
+                          <span class="toggle"></span>
+                        </div>
+                        <div class="toggle-row">
+                          <span>Pause recruiter follow-ups</span>
+                          <span class="toggle"></span>
+                        </div>
+                      </div>
+                      <div class="trust-strip">
+                        <strong>Consent timeline</strong>
+                        Viewed role → Accepted representation → Shared resume → Contract ready
+                      </div>
+                      <div class="cta-chip" style="background: var(--teal);">Continue with confidence</div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="evidence section">
+          <div class="container">
+            <div class="reveal">
+              <div class="eyebrow">Evidence stack</div>
+              <h2>
+                The pain is public, searchable, and
+                <span class="serif">commercially expensive</span>
+              </h2>
+            </div>
+            <div class="evidence-grid">
+              <article class="evidence-card reveal">
+                <div class="mini-kicker">BBB complaints</div>
+                <h3>Repeated contact and phishing-like perception</h3>
+                <p>
+                  BBB complaints describe do-not-call violations, repeated outreach, unclear client
+                  visibility, and concern about giving personal information before credibility is
+                  established.
+                </p>
+                <a
+                  class="source-link"
+                  href="https://www.bbb.org/us/ga/suwanee/profile/business-services/prokatchers-llc-0443-28027269/complaints"
+                  target="_blank"
+                  rel="noreferrer"
+                  >View BBB complaints</a
+                >
+              </article>
+              <article class="evidence-card reveal">
+                <div class="mini-kicker">Privacy policy</div>
+                <h3>Sensitive data is in scope very early</h3>
+                <p>
+                  The policy covers home address, digital signature, compensation data, and
+                  government-issued identifiers. That makes a trust-first intake experience much more
+                  important than a standard staffing form.
+                </p>
+                <a
+                  class="source-link"
+                  href="https://prokatchers.com/privacy-policy/"
+                  target="_blank"
+                  rel="noreferrer"
+                  >Review privacy policy</a
+                >
+              </article>
+              <article class="evidence-card reveal">
+                <div class="mini-kicker">Competitor reality</div>
+                <h3>Peers already live on the phone</h3>
+                <p>
+                  Aya, Cross Country, and Trusted each operate candidate-facing apps. ProKatchers is
+                  still web-form-led, which leaves a visible product gap in a mobile-native labor
+                  market.
+                </p>
+                <a
+                  class="source-link"
+                  href="https://apps.apple.com/us/app/aya-healthcare-job-search/id1488351642?uo=4"
+                  target="_blank"
+                  rel="noreferrer"
+                  >See Aya's app</a
+                >
+              </article>
+              <article class="evidence-card reveal">
+                <div class="mini-kicker">Mobile audit</div>
+                <h3>Heavy page, unstable layout</h3>
+                <p>
+                  ProKatchers' mobile homepage carried a 13.3MB payload and a 0.901 CLS in the
+                  2026-04-07 Lighthouse run. For candidates already checking whether the brand is
+                  credible, visual instability works against trust.
+                </p>
+                <span class="source-link">Captured locally via Lighthouse on 2026-04-07</span>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="build section">
+          <div class="container">
+            <div class="reveal">
+              <div class="eyebrow">Suggested build slice</div>
+              <h2>
+                A pragmatic v1 for Nathan:
+                <span class="serif">ship trust, not bloat</span>
+              </h2>
+            </div>
+            <div class="build-grid">
+              <article class="build-card reveal">
+                <div class="mini-kicker">Module 01</div>
+                <h3>Verified recruiter identity</h3>
+                <p>
+                  Give each outreach thread a visible recruiter profile, escalation path, and client
+                  verification badge before any deeper data request.
+                </p>
+              </article>
+              <article class="build-card reveal">
+                <div class="mini-kicker">Module 02</div>
+                <h3>Staged document vault</h3>
+                <p>
+                  Let candidates share resume first and hold back higher-risk items until the right
+                  point in the process, with a clear audit trail.
+                </p>
+              </article>
+              <article class="build-card reveal">
+                <div class="mini-kicker">Module 03</div>
+                <h3>Contact controls</h3>
+                <p>
+                  Respect preferred channels, quiet hours, and do-not-contact states inside the
+                  product instead of relying on manual recruiter memory.
+                </p>
+              </article>
+              <article class="build-card reveal">
+                <div class="mini-kicker">Module 04</div>
+                <h3>Contract-readiness checklist</h3>
+                <p>
+                  Turn compliance-heavy placements into a visible progression: credentials,
+                  representation, interview, contract review, and ready-to-submit state.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="cta-wrap section">
+          <div class="container">
+            <div class="cta-panel reveal">
+              <div class="eyebrow" style="background: rgba(255, 247, 239, 0.12); color: #fff7ef;">
+                Built for ProKatchers
+              </div>
+              <h2 style="margin-top: 18px;">
+                If the goal is better candidate conversion,
+                <span class="serif">trust has to ship first.</span>
+              </h2>
+              <p>
+                This is a deliberately scoped product move: a mobile trust layer for candidate intake
+                and contract readiness. It is specific enough to build, and narrow enough to discuss
+                in one working session.
+              </p>
+              <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer"
+                >Get in Touch</a
+              >
+              <div class="footer-note">
+                AI-powered mobile teardown by Elinext for Nathan Belcher at ProKatchers.
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+
+      document.querySelectorAll(".reveal").forEach((node, index) => {
+        if (!node.classList.contains("visible")) {
+          node.style.transitionDelay = `${index * 60}ms`;
+        }
+        observer.observe(node);
+      });
+    </script>
+  </body>
+</html>
