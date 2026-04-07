@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calance Mobile Teardown | Elinext</title>
+  <meta name="description" content="A focused mobile concept for Calance's Leak Defense System that adds live outage visibility, clearer leak actions, and water-usage intelligence before support tickets pile up.">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/calance_2026-04-07_14-30-17/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/calance_2026-04-07_14-30-17/">
+  <meta property="og:title" content="Calance Mobile — AI Teardown">
+  <meta property="og:description" content="What if Leak Defense System gave users a live incident layer, device heartbeat visibility, and daily water intelligence before a critical leak turns into a support crisis?">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/calance_2026-04-07_14-30-17/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <!-- Ratings as of 2026-04-07: iOS 3.10 (20 reviews, source: iTunes Lookup API / App Store scraper, US), Android 0.00 (0 public ratings, 2 recent public reviews, source: Google Play / google-play-scraper, US) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #e7f8fb;
+      --bg-2: #f7fcfd;
+      --ink: #0f2432;
+      --muted: #4f6777;
+      --line: rgba(15, 36, 50, 0.12);
+      --panel: rgba(255, 255, 255, 0.94);
+      --navy: #072238;
+      --navy-2: #123b58;
+      --teal: #14b8c4;
+      --teal-deep: #0a8590;
+      --foam: #d9fbff;
+      --foam-2: #f1feff;
+      --warning: #f2a64a;
+      --warning-soft: #fff1d9;
+      --danger: #bf4f4f;
+      --danger-soft: #ffe0e0;
+      --success: #0a7b64;
+      --success-soft: #dcfff4;
+      --shadow: 0 30px 70px rgba(7, 34, 56, 0.14);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "IBM Plex Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 8%, rgba(20, 184, 196, 0.22), transparent 24%),
+        radial-gradient(circle at 92% 10%, rgba(242, 166, 74, 0.18), transparent 18%),
+        linear-gradient(180deg, #dff8fc 0%, #f2fbfd 38%, #eef6ff 100%);
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(8px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+    }
+
+    body::before {
+      width: 320px;
+      height: 320px;
+      left: -110px;
+      top: 16%;
+      background: rgba(20, 184, 196, 0.2);
+    }
+
+    body::after {
+      width: 360px;
+      height: 360px;
+      right: -120px;
+      bottom: 10%;
+      background: rgba(18, 59, 88, 0.12);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(1200px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    .panel {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(16px);
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.72), transparent 36%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      padding: 30px 30px 32px;
+      text-align: center;
+    }
+
+    .hero-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0 auto 22px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(15, 36, 50, 0.08);
+    }
+
+    .hero-brand img.logo {
+      height: 28px;
+      width: auto;
+    }
+
+    .hero-brand img.icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      box-shadow: 0 8px 16px rgba(7, 34, 56, 0.14);
+    }
+
+    .hero-brand span {
+      display: block;
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 0 auto 18px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: var(--foam);
+      color: var(--teal-deep);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-family: "Sora", sans-serif;
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 7.4vw, 5.9rem);
+      max-width: 860px;
+      margin: 0 auto 18px;
+    }
+
+    .hero p {
+      width: min(820px, 100%);
+      margin: 0 auto;
+      font-size: 1.08rem;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 26px;
+      text-align: left;
+    }
+
+    .proof {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(15, 36, 50, 0.08);
+      background: rgba(255, 255, 255, 0.84);
+    }
+
+    .proof strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.45rem;
+      line-height: 1;
+    }
+
+    .proof span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .section {
+      margin-top: 20px;
+      padding: 28px;
+    }
+
+    .section-head {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(2rem, 5vw, 3.3rem);
+      margin-bottom: 10px;
+    }
+
+    .section-head p {
+      width: min(760px, 100%);
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .phone-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .phone-block {
+      text-align: center;
+    }
+
+    .phone-label {
+      display: inline-flex;
+      margin: 0 auto 14px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .phone-label.current {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .phone-label.future {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .phone-shell {
+      width: 280px;
+      height: 580px;
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 40px;
+      background:
+        linear-gradient(180deg, #1f3241 0%, #09151d 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.32),
+        0 26px 60px rgba(7, 34, 56, 0.24);
+      position: relative;
+    }
+
+    .phone-shell::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 24px;
+      border-radius: 0 0 16px 16px;
+      background: #0c1820;
+      z-index: 2;
+    }
+
+    .phone-screen {
+      height: 100%;
+      overflow-y: auto;
+      padding: 36px 14px 14px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, #f8fdff 0%, #eef8fc 100%);
+      text-align: left;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .phone-screen > * {
+      display: block;
+    }
+
+    .app-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .app-id {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .app-id img {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+    }
+
+    .app-id strong {
+      display: block;
+      font-size: 0.92rem;
+      line-height: 1.1;
+    }
+
+    .app-id span,
+    .app-top small,
+    .screen-copy,
+    .tiny {
+      color: var(--muted);
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .status-chip.offline {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .status-chip.live {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .status-chip.warn {
+      background: var(--warning-soft);
+      color: #9f6409;
+    }
+
+    .hero-card,
+    .mini-card,
+    .metric-row,
+    .timeline,
+    .usage-card {
+      border-radius: 22px;
+      background: #ffffff;
+      border: 1px solid rgba(15, 36, 50, 0.08);
+      box-shadow: 0 16px 30px rgba(7, 34, 56, 0.08);
+    }
+
+    .hero-card {
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .hero-card.alert {
+      background: linear-gradient(180deg, #fff5f5 0%, #fff 100%);
+      border-color: rgba(191, 79, 79, 0.18);
+    }
+
+    .hero-card.success {
+      background: linear-gradient(180deg, #effffc 0%, #fff 100%);
+      border-color: rgba(10, 123, 100, 0.16);
+    }
+
+    .hero-card h3 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .screen-copy {
+      font-size: 0.87rem;
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+
+    .action-row,
+    .mini-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .pill.fill {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .pill.outline {
+      border: 1px solid rgba(15, 36, 50, 0.14);
+      color: var(--ink);
+    }
+
+    .mini-card,
+    .usage-card,
+    .timeline {
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: linear-gradient(180deg, #effcff 0%, #ffffff 100%);
+    }
+
+    .metric {
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(15, 36, 50, 0.07);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .metric span {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .list li {
+      padding: 11px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(15, 36, 50, 0.07);
+      background: rgba(248, 253, 255, 0.96);
+    }
+
+    .list strong {
+      display: block;
+      font-size: 0.83rem;
+      margin-bottom: 4px;
+    }
+
+    .list span {
+      display: block;
+      font-size: 0.74rem;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 10px;
+      padding: 9px 0;
+      border-top: 1px solid rgba(15, 36, 50, 0.08);
+    }
+
+    .timeline-item:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .timeline-item time {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--teal-deep);
+    }
+
+    .timeline-item p {
+      margin: 0;
+      font-size: 0.77rem;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .bars {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      align-items: end;
+      height: 120px;
+      margin: 14px 0 10px;
+    }
+
+    .bar {
+      border-radius: 14px 14px 8px 8px;
+      background: linear-gradient(180deg, #67d9e1 0%, #118a95 100%);
+      position: relative;
+      min-height: 28px;
+    }
+
+    .bar span {
+      position: absolute;
+      left: 50%;
+      bottom: -22px;
+      transform: translateX(-50%);
+      font-size: 0.63rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .evidence-grid,
+    .rationale-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .evidence-card,
+    .rationale-card {
+      padding: 20px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(15, 36, 50, 0.08);
+    }
+
+    .evidence-card strong,
+    .rationale-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+
+    .evidence-card p,
+    .rationale-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.96rem;
+    }
+
+    .evidence-card ul,
+    .rationale-card ul {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .cta {
+      margin-top: 20px;
+      padding: 30px;
+      text-align: center;
+      background:
+        linear-gradient(135deg, rgba(7, 34, 56, 0.96), rgba(18, 59, 88, 0.94)),
+        linear-gradient(180deg, rgba(20, 184, 196, 0.24), transparent);
+      color: #f3feff;
+    }
+
+    .cta h2 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      margin-bottom: 12px;
+    }
+
+    .cta p {
+      width: min(720px, 100%);
+      margin: 0 auto 22px;
+      line-height: 1.75;
+      color: rgba(243, 254, 255, 0.82);
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 180px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, #6af0ff 0%, #2fc3ce 100%);
+      color: #062130;
+      box-shadow: 0 18px 30px rgba(12, 188, 205, 0.24);
+    }
+
+    .button.secondary {
+      border: 1px solid rgba(243, 254, 255, 0.24);
+      color: #f3feff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 0.85rem;
+      color: rgba(243, 254, 255, 0.72);
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero,
+    .section,
+    .cta {
+      animation: rise 0.8s ease both;
+    }
+
+    @media (max-width: 1080px) {
+      .proof-grid,
+      .phone-grid,
+      .evidence-grid,
+      .rationale-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        width: min(100%, calc(100% - 20px));
+      }
+
+      .hero,
+      .section,
+      .cta {
+        padding: 22px;
+      }
+
+      .proof-grid,
+      .phone-grid,
+      .evidence-grid,
+      .rationale-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone-shell {
+        width: 300px;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="panel hero">
+      <div class="hero-brand">
+        <img class="logo" src="assets/calance-logo.jpg" alt="Calance logo">
+        <img class="icon" src="assets/leak-defense-icon.jpg" alt="Leak Defense System icon">
+        <span>Leak Defense System teardown for Asit Govil</span>
+      </div>
+      <div class="eyebrow">Operations-Led Mobile Fix</div>
+      <h1>What if outage visibility landed before the next leak alert failed?</h1>
+      <p>
+        Calance now publicly sells 24x7 application support, incident response, and stakeholder communication. Leak Defense System still has recent user reports about outages, timeouts, and dead-end error states during critical moments. This concept adds one missing layer: a mobile command center that makes service health, device heartbeat, and next actions visible before support chaos starts.
+      </p>
+      <div class="proof-grid">
+        <div class="proof">
+          <strong>3.10</strong>
+          <span>US iOS rating from 20 public ratings on 2026-04-07.</span>
+        </div>
+        <div class="proof">
+          <strong>600K</strong>
+          <span>Daily device uploads cited in Calance's Sentinel Hydrosolutions case study.</span>
+        </div>
+        <div class="proof">
+          <strong>24x7</strong>
+          <span>Coverage promise on Calance's application-support page.</span>
+        </div>
+        <div class="proof">
+          <strong>1K+</strong>
+          <span>Google Play installs with public feedback asking for richer daily water analytics.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-head">
+        <h2>Before / After</h2>
+        <p>
+          The issue is not visual polish. The issue is that a smart shutoff app needs to stay interpretable during degraded service. The redesign focuses on status clarity, device confidence, and support-ready escalation.
+        </p>
+      </div>
+      <div class="phone-grid">
+        <div class="phone-block">
+          <div class="phone-label current">Current Experience</div>
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <div class="app-top">
+                <div class="app-id">
+                  <img src="assets/leak-defense-icon.jpg" alt="Leak Defense app icon">
+                  <div>
+                    <strong>Leak Defense</strong>
+                    <span class="tiny">Home control</span>
+                  </div>
+                </div>
+                <div class="status-chip offline">Service unstable</div>
+              </div>
+              <div class="hero-card alert">
+                <h3>Leak alert received</h3>
+                <div class="screen-copy">
+                  Basement zone alarm fired, but the control surface is timing out and the user cannot tell if the system is down or the device is unreachable.
+                </div>
+                <div class="action-row">
+                  <div class="pill outline">Server error</div>
+                  <div class="pill outline">Retry</div>
+                </div>
+              </div>
+              <div class="mini-card">
+                <strong>Error state</strong>
+                <div class="screen-copy">
+                  No outage banner. No ETA. No message about whether support is already engaged.
+                </div>
+              </div>
+              <div class="metric-row">
+                <div class="metric">
+                  <strong>--</strong>
+                  <span>Heartbeat hidden</span>
+                </div>
+                <div class="metric">
+                  <strong>--</strong>
+                  <span>Battery context missing</span>
+                </div>
+                <div class="metric">
+                  <strong>--</strong>
+                  <span>Usage trend missing</span>
+                </div>
+              </div>
+              <ul class="list">
+                <li>
+                  <strong>Recent user pain</strong>
+                  <span>Multi-hour outage, app would not open, no proactive notice.</span>
+                </li>
+                <li>
+                  <strong>Trust issue</strong>
+                  <span>Alarm cannot be silenced from the phone when the server path fails.</span>
+                </li>
+                <li>
+                  <strong>Operational gap</strong>
+                  <span>Support and product teams get blamed before the app explains what is happening.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-block">
+          <div class="phone-label future">Proposed Screen 1</div>
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <div class="app-top">
+                <div class="app-id">
+                  <img src="assets/leak-defense-icon.jpg" alt="Leak Defense app icon">
+                  <div>
+                    <strong>Response Center</strong>
+                    <span class="tiny">Incident-aware control</span>
+                  </div>
+                </div>
+                <div class="status-chip warn">Major incident</div>
+              </div>
+              <div class="hero-card success">
+                <h3>Platform degraded, device commands queued</h3>
+                <div class="screen-copy">
+                  Users see the status immediately: alerting is live, SMS fallback is active, and new control commands are queued safely until API confirmation returns.
+                </div>
+                <div class="action-row">
+                  <div class="pill fill">See timeline</div>
+                  <div class="pill outline">Message support</div>
+                </div>
+              </div>
+              <div class="metric-row">
+                <div class="metric">
+                  <strong>2m</strong>
+                  <span>ETA to next update</span>
+                </div>
+                <div class="metric">
+                  <strong>98%</strong>
+                  <span>Alert relay uptime</span>
+                </div>
+                <div class="metric">
+                  <strong>12s</strong>
+                  <span>Last heartbeat</span>
+                </div>
+              </div>
+              <ul class="list">
+                <li>
+                  <strong>Main valve</strong>
+                  <span>Command channel queued. Safe shutoff recommendation enabled.</span>
+                </li>
+                <li>
+                  <strong>Guest wing sensor</strong>
+                  <span>Battery at 16%. Replace within 7 days to protect leak confidence.</span>
+                </li>
+                <li>
+                  <strong>Support handoff</strong>
+                  <span>Case `#LD-4387` opened automatically with the user's device metadata attached.</span>
+                </li>
+              </ul>
+              <div class="timeline">
+                <strong>Incident timeline</strong>
+                <div class="timeline-item">
+                  <time>08:14</time>
+                  <p>API latency crossed threshold. User-facing banner enabled.</p>
+                </div>
+                <div class="timeline-item">
+                  <time>08:16</time>
+                  <p>SMS fallback activated for all new alarm notifications.</p>
+                </div>
+                <div class="timeline-item">
+                  <time>08:18</time>
+                  <p>Queued commands preserved. Next status update scheduled automatically.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-block">
+          <div class="phone-label future">Proposed Screen 2</div>
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <div class="app-top">
+                <div class="app-id">
+                  <img src="assets/leak-defense-icon.jpg" alt="Leak Defense app icon">
+                  <div>
+                    <strong>Usage & Trust</strong>
+                    <span class="tiny">Daily operating context</span>
+                  </div>
+                </div>
+                <div class="status-chip live">All services live</div>
+              </div>
+              <div class="usage-card">
+                <strong>Daily water consumption</strong>
+                <div class="screen-copy">Adds the visibility gap public reviewers already compare against Phyn.</div>
+                <div class="bars">
+                  <div class="bar" style="height: 42%;"><span>Mon</span></div>
+                  <div class="bar" style="height: 48%;"><span>Tue</span></div>
+                  <div class="bar" style="height: 40%;"><span>Wed</span></div>
+                  <div class="bar" style="height: 65%;"><span>Thu</span></div>
+                  <div class="bar" style="height: 58%;"><span>Fri</span></div>
+                  <div class="bar" style="height: 44%;"><span>Sat</span></div>
+                  <div class="bar" style="height: 78%;"><span>Sun</span></div>
+                </div>
+              </div>
+              <div class="mini-card">
+                <strong>Alert confidence engine</strong>
+                <div class="screen-copy">
+                  Running toilet pattern detected. Low-severity anomaly confirmed across 3 short bursts, not an emergency leak.
+                </div>
+                <div class="mini-row">
+                  <div class="pill fill">Schedule follow-up</div>
+                  <div class="pill outline">Ignore 24h</div>
+                </div>
+              </div>
+              <div class="mini-card">
+                <strong>Battery forecast</strong>
+                <div class="screen-copy">
+                  Basement sensor likely reaches service threshold in 6 days. Notify homeowner and installer now, not after the next false alarm.
+                </div>
+              </div>
+              <div class="mini-card">
+                <strong>Communication center</strong>
+                <div class="screen-copy">
+                  Email, SMS, and support-note history stay attached to the event so the user never wonders whether anyone saw the incident.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-head">
+        <h2>Why This Hits Calance's Reality</h2>
+        <p>
+          The concept is grounded in public evidence, not a made-up roadmap. It uses the same language Calance already uses on its application-support page and the same reliability gaps users already describe in the stores.
+        </p>
+      </div>
+      <div class="evidence-grid">
+        <div class="evidence-card">
+          <strong>Store feedback</strong>
+          <p>
+            Recent iOS reviews describe outages, timeouts, and dead-end error reporting. One Android reviewer asked for daily water-consumption visibility like Phyn. The pain is operational, not cosmetic.
+          </p>
+        </div>
+        <div class="evidence-card">
+          <strong>Calance case study</strong>
+          <p>
+            Calance's Sentinel Hydrosolutions page says the platform handles more than <strong>600K uploads a day</strong> and supports remote shutoff, alarm clearing, and API-driven device communication. A user-facing status layer belongs in that stack.
+          </p>
+        </div>
+        <div class="evidence-card">
+          <strong>Public services promise</strong>
+          <p>
+            Calance now markets incident management, system-health monitoring, stakeholder communication, and 24x7 support. This concept translates that promise into something the end user can actually see during a failure.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-head">
+        <h2>Why A COO Should Care</h2>
+        <p>
+          This is not just a UX fix. It reduces support noise, sharpens vendor handoff, and protects trust in a premium infrastructure product when something breaks.
+        </p>
+      </div>
+      <div class="rationale-grid">
+        <div class="rationale-card">
+          <strong>Fewer blind support tickets</strong>
+          <p>
+            Status-aware messaging explains whether the issue is platform, device, battery, or connectivity before the user calls support in panic.
+          </p>
+        </div>
+        <div class="rationale-card">
+          <strong>Cleaner escalation flow</strong>
+          <p>
+            Device metadata, heartbeat history, and queued commands create better handoff material for internal teams or external vendors.
+          </p>
+        </div>
+        <div class="rationale-card">
+          <strong>More defensible premium story</strong>
+          <p>
+            When a system protects homes and buildings, trust comes from visible operating clarity. This makes the app feel aligned with Calance's support maturity.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel cta">
+      <h2>Built As A Narrow Prototype For Calance</h2>
+      <p>
+        The point is not a full product rewrite. The point is a compact mobile layer that makes incidents readable, actions safe, and support communication explicit. That is the fastest path from app complaint to operational credibility.
+      </p>
+      <div class="button-row">
+        <a class="button primary" href="https://www.elinext.com/contacts/">Get in Touch</a>
+        <a class="button secondary" href="https://www.calanceus.com/application-support-services">See Calance Support Page</a>
+      </div>
+      <div class="footer-note">
+        Prototype path locked for deployment: https://elinext-lab.github.io/prototypes/calance_2026-04-07_14-30-17/
+      </div>
+    </section>
+  </div>
+</body>
+</html>
