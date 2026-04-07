@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vise Mobile Teardown | Elinext</title>
+  <meta name="description" content="A mobile concept for Vise that turns AI portfolio insights, transition blockers, and trade rationale into an advisor action queue built for fast decisions.">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/vise_2026-04-07_06-13-32/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/vise_2026-04-07_06-13-32/">
+  <meta property="og:title" content="Vise Mobile — AI Teardown">
+  <meta property="og:description" content="What if Vise’s AI became a mobile action queue that helps advisors clear transition blockers, explain trades, and send client-ready summaries in minutes?">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/vise_2026-04-07_06-13-32/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <!-- Ratings as of 2026-04-07: iOS n/a (no matching US App Store listing for Vise / Vise Technologies / Vise AI Advisors, source: iTunes Search API), Android n/a (no matching US Google Play listing for Vise / Vise Technologies / Vise AI Advisors, source: google-play-scraper search) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f3ece2;
+      --ink: #151822;
+      --muted: #5c6470;
+      --panel: rgba(255, 251, 246, 0.92);
+      --panel-strong: #fffdf9;
+      --line: rgba(21, 24, 34, 0.12);
+      --navy: #122238;
+      --navy-2: #1c314f;
+      --accent: #c86d33;
+      --accent-soft: #f3d3bc;
+      --sea: #1d5968;
+      --sea-soft: #d7ecee;
+      --danger: #8f4330;
+      --danger-soft: #f7dbd3;
+      --success: #1b5b45;
+      --success-soft: #d8f0e3;
+      --shadow: 0 24px 60px rgba(22, 25, 34, 0.12);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(29, 89, 104, 0.16), transparent 34%),
+        radial-gradient(circle at 88% 12%, rgba(200, 109, 51, 0.16), transparent 24%),
+        linear-gradient(180deg, #f8f1e6 0%, #efe5d8 100%);
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(10px);
+      opacity: 0.55;
+    }
+
+    body::before {
+      width: 300px;
+      height: 300px;
+      top: 8%;
+      left: -90px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(200, 109, 51, 0.16), transparent 70%);
+    }
+
+    body::after {
+      width: 380px;
+      height: 380px;
+      right: -120px;
+      bottom: 8%;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(65, 141, 255, 0.18), transparent 70%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+    }
+
+    .panel {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.65), transparent 42%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      padding: 32px;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 22px;
+    }
+
+    .brand-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(21, 24, 34, 0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-pill img {
+      display: block;
+      height: 28px;
+      width: auto;
+    }
+
+    .brand-pill span {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .hero-copy {
+      max-width: 860px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 14px;
+      margin: 0 auto 18px;
+      border-radius: 999px;
+      background: var(--sea-soft);
+      color: var(--sea);
+      font-weight: 800;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Fraunces", serif;
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      max-width: 900px;
+      margin: 0 auto 20px;
+    }
+
+    .hero-copy p {
+      max-width: 760px;
+      margin: 0 auto;
+      font-size: 1.08rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .hero-proofs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .proof {
+      padding: 18px 18px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(21, 24, 34, 0.08);
+      text-align: left;
+    }
+
+    .proof strong {
+      display: block;
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+    }
+
+    .proof span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .section {
+      margin-top: 20px;
+      padding: 28px;
+    }
+
+    .section-head {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .section-head h2 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+    }
+
+    .section-head p {
+      width: min(760px, 100%);
+      margin: 0 auto;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .compare-card {
+      padding: 22px;
+      border-radius: var(--radius-lg);
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      display: grid;
+      gap: 18px;
+    }
+
+    .compare-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .compare-label.current {
+      color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .compare-label.future {
+      color: var(--success);
+      background: var(--success-soft);
+    }
+
+    .compare-card h3 {
+      font-size: 2rem;
+      margin-top: -4px;
+    }
+
+    .compare-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 580px;
+      padding: 10px;
+      border-radius: 40px;
+      background: linear-gradient(180deg, #25344d 0%, #121824 100%);
+      box-shadow: 0 24px 48px rgba(18, 24, 36, 0.32);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 36px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 118px;
+      height: 22px;
+      border-radius: 16px;
+      background: #091018;
+      z-index: 3;
+    }
+
+    .phone-screen {
+      position: relative;
+      height: 100%;
+      border-radius: 30px;
+      background: linear-gradient(180deg, #fbf6ef 0%, #f7efe6 100%);
+      overflow: auto;
+      padding: 36px 14px 14px;
+      scrollbar-width: none;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .phone-status,
+    .phone-title,
+    .phone-subtitle {
+      display: block;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .phone-status {
+      margin-bottom: 12px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .phone-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .phone-subtitle {
+      max-width: 210px;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    .stack-card,
+    .queue-card,
+    .mini-chart,
+    .detail-card {
+      display: block;
+      width: 100%;
+      border-radius: 20px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(21, 24, 34, 0.08);
+    }
+
+    .stack-card strong,
+    .queue-card strong,
+    .detail-card strong {
+      display: block;
+      font-size: 0.86rem;
+      margin-bottom: 6px;
+    }
+
+    .stack-card span,
+    .queue-card span,
+    .detail-card span,
+    .mini-chart span {
+      display: block;
+      font-size: 0.74rem;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .stack-card.current-hot {
+      background: linear-gradient(180deg, #fff7f4 0%, #ffe9e3 100%);
+      border-color: rgba(143, 67, 48, 0.16);
+    }
+
+    .stack-card.current-cold {
+      background: linear-gradient(180deg, #f7fbff 0%, #e6eef7 100%);
+    }
+
+    .mini-chart {
+      background: linear-gradient(180deg, #16304d 0%, #0d2034 100%);
+      border: none;
+      color: #f8fbff;
+    }
+
+    .mini-chart strong,
+    .mini-chart span {
+      color: inherit;
+    }
+
+    .bar-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      align-items: end;
+      height: 74px;
+      margin-top: 12px;
+    }
+
+    .bar {
+      border-radius: 999px 999px 8px 8px;
+      background: linear-gradient(180deg, #76b8ff 0%, #c86d33 100%);
+    }
+
+    .queue-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .queue-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(29, 89, 104, 0.18), rgba(200, 109, 51, 0.55));
+    }
+
+    .queue-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .chip.orange {
+      color: #8b431d;
+      background: #fde2d2;
+    }
+
+    .chip.blue {
+      color: #173b57;
+      background: #dff0f8;
+    }
+
+    .chip.green {
+      color: #14513c;
+      background: #dbf3e5;
+    }
+
+    .queue-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .queue-actions a,
+    .queue-actions span {
+      display: block;
+      text-align: center;
+      padding: 10px 8px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .queue-actions a {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .queue-actions span {
+      background: #edf2f7;
+      color: #42505f;
+    }
+
+    .insight-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .insight {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+    }
+
+    .insight strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.96rem;
+    }
+
+    .insight p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.92rem;
+    }
+
+    .blueprint {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .blueprint-card {
+      padding: 22px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, #fffdf9 0%, #f7f0e7 100%);
+      border: 1px solid var(--line);
+    }
+
+    .blueprint-card .count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      margin-bottom: 14px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .blueprint-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+
+    .blueprint-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.92rem;
+    }
+
+    .cta {
+      margin-top: 20px;
+      padding: 28px;
+      text-align: center;
+      background: linear-gradient(135deg, #162337 0%, #1f314e 48%, #275f6d 100%);
+      color: #fff;
+    }
+
+    .cta .eyebrow {
+      background: rgba(255, 255, 255, 0.14);
+      color: #f3ebe0;
+    }
+
+    .cta h2 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      margin-bottom: 14px;
+    }
+
+    .cta p {
+      width: min(720px, 100%);
+      margin: 0 auto 24px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 26px;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--navy);
+      font-size: 0.92rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .rise {
+      animation: rise 0.8s ease both;
+    }
+
+    .rise:nth-child(2) { animation-delay: 0.06s; }
+    .rise:nth-child(3) { animation-delay: 0.12s; }
+    .rise:nth-child(4) { animation-delay: 0.18s; }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rise {
+        animation: none;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .hero-proofs,
+      .comparison-grid,
+      .insight-strip,
+      .blueprint {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(100% - 18px, 100%);
+        padding-top: 10px;
+      }
+
+      .hero,
+      .section,
+      .cta {
+        padding: 22px 16px;
+      }
+
+      .hero-proofs,
+      .comparison-grid,
+      .insight-strip,
+      .blueprint {
+        grid-template-columns: 1fr;
+      }
+
+      .compare-card {
+        justify-items: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+
+      h1 {
+        font-size: 2.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="panel hero rise">
+      <div class="hero-top">
+        <div class="brand-pill">
+          <img src="assets/vise-logo.svg" alt="Vise logo">
+          <span>Mobile Teardown</span>
+        </div>
+      </div>
+      <div class="hero-copy">
+        <span class="eyebrow">Built For Runik Mehrotra</span>
+        <h1>What if Vise’s smartest portfolio insight was also the fastest thing an advisor could act on?</h1>
+        <p>
+          Vise already sells intelligence, transition analysis, and client-ready explanations. After scaling from under $1B to
+          over $50B in platform assets with a lean team, the gap is execution on the move. This concept turns that stack into a
+          phone-first advisor action queue for trade rationale, transition blockers, and client communication.
+        </p>
+      </div>
+      <div class="hero-proofs">
+        <article class="proof rise">
+          <strong>No app</strong>
+          <span>No matching US App Store or Google Play listing for Vise as of 2026-04-07.</span>
+        </article>
+        <article class="proof rise">
+          <strong>$50B+</strong>
+          <span>Vise said on 2026-02-13 that platform assets had scaled to over $50B.</span>
+        </article>
+        <article class="proof rise">
+          <strong>~40 people</strong>
+          <span>The same 2026 update says the team now runs at around 40 people.</span>
+        </article>
+        <article class="proof rise">
+          <strong>35%</strong>
+          <span>Vise says advisors can cut extra work around trade execution by 35%.</span>
+        </article>
+      </div>
+    </header>
+
+    <section class="panel section rise">
+      <div class="section-head">
+        <span class="eyebrow">Before / After</span>
+        <h2>From scattered portfolio work to one ranked mobile action flow</h2>
+        <p>
+          The left screen reflects the current public story: insight exists, but it lives across web-heavy transition, explanation,
+          and communication surfaces. The right screen shows a tighter mobile layer designed to make Vise Intelligence operational,
+          even as options overlays and crypto add more advisor decision paths.
+        </p>
+      </div>
+
+      <div class="comparison-grid">
+        <article class="compare-card">
+          <span class="compare-label current">Current Reality</span>
+          <div>
+            <h3>Desktop-first, context-split</h3>
+            <p>Trade rationale, transition analysis, client summaries, and macro alerts exist, but they do not resolve into one obvious next action for an advisor away from a desk.</p>
+          </div>
+          <div class="phone-wrap">
+            <div class="phone" aria-label="Current Vise workflow mockup">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <span class="phone-status">Current stack</span>
+                <strong class="phone-title">Morning starts in fragments</strong>
+                <span class="phone-subtitle">The advisor sees signal everywhere, but approval and client response still feel scattered.</span>
+
+                <div class="stack-card current-hot">
+                  <strong>Transition analysis</strong>
+                  <span>3 accounts need review for embedded gains. One model override is still pending.</span>
+                </div>
+
+                <div class="stack-card current-cold">
+                  <strong>Trade rationale</strong>
+                  <span>A client asked why a tax-loss harvest touched two sector ETFs. Explanation lives in another view.</span>
+                </div>
+
+                <div class="stack-card current-hot">
+                  <strong>Client summary</strong>
+                  <span>Portfolio update drafted, but not yet tied to the specific account exception that triggered it.</span>
+                </div>
+
+                <div class="mini-chart">
+                  <strong>Macro watchlist</strong>
+                  <span>Rates + energy + concentration risk touched 14 households, but there is no single triage lane.</span>
+                  <div class="bar-grid" aria-hidden="true">
+                    <div class="bar" style="height: 34%;"></div>
+                    <div class="bar" style="height: 48%;"></div>
+                    <div class="bar" style="height: 70%;"></div>
+                    <div class="bar" style="height: 56%;"></div>
+                    <div class="bar" style="height: 82%;"></div>
+                  </div>
+                </div>
+
+                <div class="stack-card current-cold">
+                  <strong>Next step problem</strong>
+                  <span>High-value insight exists, but the advisor still decides where to click next, what to explain, and what can wait.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="compare-card">
+          <span class="compare-label future">Prototype</span>
+          <div>
+            <h3>Advisor Action Queue</h3>
+            <p>A mobile companion that ranks what matters now, explains why it matters, and lets the advisor approve or send a client-ready summary in a few taps.</p>
+          </div>
+          <div class="phone-wrap">
+            <div class="phone" aria-label="Improved Vise mobile queue mockup">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <span class="phone-status">Prototype</span>
+                <strong class="phone-title">Advisor Action Queue</strong>
+                <span class="phone-subtitle">Every item lands with urgency, reason, and a next best action already prepared.</span>
+
+                <div class="queue-card">
+                  <div class="queue-meta">
+                    <span class="chip orange">Priority 1</span>
+                    <span class="chip blue">Transition</span>
+                  </div>
+                  <strong>Tax-sensitive rollover at risk</strong>
+                  <span>Client has concentrated gains in NVDA. Vise recommends staggered transition over 14 days with a client-ready explanation.</span>
+                  <div class="queue-actions">
+                    <a href="#cta">Approve plan</a>
+                    <span>Send summary</span>
+                  </div>
+                </div>
+
+                <div class="queue-card">
+                  <div class="queue-meta">
+                    <span class="chip blue">Macro</span>
+                    <span class="chip green">Explain</span>
+                  </div>
+                  <strong>2 households exposed to rate shock</strong>
+                  <span>Long-duration fixed income overweight. Vise generated a plain-language trade rationale and a suggested client email.</span>
+                  <div class="queue-actions">
+                    <a href="#cta">Review why</a>
+                    <span>Message client</span>
+                  </div>
+                </div>
+
+                <div class="detail-card">
+                  <strong>Client-ready answer in 14 seconds</strong>
+                  <span>“We sold part of the position to harvest losses, maintain sector exposure, and reduce tax drag without changing the portfolio objective.”</span>
+                </div>
+
+                <div class="queue-card" style="margin-bottom: 0;">
+                  <div class="queue-meta">
+                    <span class="chip green">Done today</span>
+                    <span class="chip blue">Book-wide</span>
+                  </div>
+                  <strong>4 actions closed before first meeting</strong>
+                  <span>Transition exception cleared, 2 trade questions answered, 1 portfolio summary approved.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="insight-strip">
+        <article class="insight">
+          <strong>Closer to Vise’s current roadmap</strong>
+          <p>This extends Build, Manage, Explain, and Intelligence. It does not ask Vise to invent a new category.</p>
+        </article>
+        <article class="insight">
+          <strong>Stronger advisor throughput</strong>
+          <p>The design removes “what should I open next?” and replaces it with ranked action plus embedded trade rationale.</p>
+        </article>
+        <article class="insight">
+          <strong>Better enterprise fit</strong>
+          <p>Large transition workflows become easier to supervise from a phone during travel, meetings, and client callbacks.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel section rise">
+      <div class="section-head">
+        <span class="eyebrow">Why This Angle</span>
+        <h2>High-leverage because it converts AI insight into advisor action</h2>
+        <p>
+          Public Vise messaging already covers tax-efficient transitions, trade transparency, macro awareness, and client-ready summaries.
+          The missing layer is a mobile shell that compresses those outputs into one decision surface, especially now that Vise is
+          broadening the workflow with overlays and crypto access.
+        </p>
+      </div>
+
+      <div class="blueprint">
+        <article class="blueprint-card">
+          <span class="count">01</span>
+          <strong>Queue the highest-stakes account work first</strong>
+          <p>Rank items by client sensitivity, tax impact, transition deadline, and urgency so an advisor knows what deserves attention before opening a laptop.</p>
+        </article>
+        <article class="blueprint-card">
+          <span class="count">02</span>
+          <strong>Attach the “why” to every action</strong>
+          <p>Bring trade rationale, concentration context, and macro exposure directly into the card so explanation and approval happen in one motion.</p>
+        </article>
+        <article class="blueprint-card">
+          <span class="count">03</span>
+          <strong>Ship client-ready communication from the same flow</strong>
+          <p>Move from insight to a reusable summary or approved message without forcing the advisor through separate desktop views.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel cta rise" id="cta">
+      <span class="eyebrow">Elinext Angle</span>
+      <h2>A mobile companion that makes Vise Intelligence feel immediate</h2>
+      <p>
+        This concept is intentionally narrow: not a broad redesign, but a fast pilot that helps advisors clear transition blockers,
+        explain trades, and send client-ready answers from one phone-first workflow.
+      </p>
+      <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Get in Touch</a>
+    </section>
+
+    <p class="footer-note">Built from public Vise product pages, 2025-2026 company updates, web surface checks, career signals, Reddit workflow threads, and BuiltWith stack notes.</p>
+  </main>
+</body>
+</html>
