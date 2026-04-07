@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentry Mobile — AI Teardown</title>
+  <meta name="description" content="A concept for giving Sentry one mobile release control layer that surfaces sourcemap failures, replay health, extension-safe builds, and ownership before launch.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/sentry_2026-04-07_08-33-01/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/sentry_2026-04-07_08-33-01/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/sentry_2026-04-07_08-33-01/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Sentry Mobile — AI Teardown">
+  <meta property="og:description" content="What if Sentry had one mobile release gate that surfaced sourcemap failures, black session replays, and extension-safe builds before customers ever felt them?">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Ratings as of 2026-04-07: iOS 5.00 (5 reviews, source: iTunes API US), Android N/A (public Google Play listing observed; scraper/direct fetch unavailable on 2026-04-07, source: Google Play web) -->
+  <style>
+    :root {
+      --bg: #09111f;
+      --bg-soft: #0f1a30;
+      --panel: #111d37;
+      --panel-strong: #162449;
+      --text: #f7f4ec;
+      --muted: #98a4be;
+      --line: rgba(255, 255, 255, 0.10);
+      --accent: #ff7a59;
+      --accent-soft: #ffd1a8;
+      --lime: #89e3a5;
+      --warn: #ffbe5b;
+      --danger: #ff7480;
+      --ink: #0b1221;
+      --display: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+      --body: "IBM Plex Sans", "Segoe UI", sans-serif;
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.38);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--body);
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 122, 89, 0.14), transparent 26%),
+        radial-gradient(circle at top right, rgba(137, 227, 165, 0.12), transparent 20%),
+        linear-gradient(180deg, #09111f 0%, #0c1426 44%, #08101d 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      pointer-events: none;
+      z-index: 0;
+      border-radius: 999px;
+      filter: blur(40px);
+      opacity: 0.55;
+    }
+
+    body::before {
+      width: 300px;
+      height: 300px;
+      top: 80px;
+      left: -100px;
+      background: rgba(255, 122, 89, 0.18);
+    }
+
+    body::after {
+      width: 340px;
+      height: 340px;
+      right: -140px;
+      top: 260px;
+      background: rgba(68, 198, 255, 0.14);
+    }
+
+    .page {
+      position: relative;
+      z-index: 2;
+    }
+
+    .wrap {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+    }
+
+    .section {
+      position: relative;
+      z-index: 2;
+      padding: 28px 0 54px;
+      background: transparent;
+    }
+
+    .surface {
+      background: rgba(9, 17, 31, 0.84);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .hero {
+      padding-top: 28px;
+    }
+
+    .hero-shell {
+      padding: 26px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 122, 89, 0.12), transparent 35%),
+        linear-gradient(145deg, rgba(17, 29, 55, 0.94), rgba(10, 16, 30, 0.94));
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-badge img {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .hero-copy {
+      max-width: 860px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 122, 89, 0.12);
+      color: var(--accent-soft);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: var(--display);
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(42px, 7vw, 88px);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      margin: 0 auto 18px;
+      max-width: 980px;
+    }
+
+    .hero-copy p {
+      max-width: 740px;
+      margin: 0 auto 22px;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 21px);
+      line-height: 1.55;
+    }
+
+    .metric-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 0 auto 26px;
+    }
+
+    .metric-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .metric-pill strong {
+      color: var(--accent-soft);
+      font-weight: 700;
+    }
+
+    .phone-stage {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+      gap: 22px;
+      align-items: start;
+      justify-items: center;
+      margin-top: 16px;
+    }
+
+    .phone-card {
+      width: 100%;
+      max-width: 360px;
+      padding: 18px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: center;
+    }
+
+    .phone-card h3 {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .phone-card p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .phone {
+      width: 280px;
+      height: 580px;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 34px;
+      padding: 10px;
+      background: linear-gradient(180deg, #151b2a, #060b16);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 10px;
+      transform: translateX(-50%);
+      width: 102px;
+      height: 20px;
+      border-radius: 999px;
+      background: #04070f;
+      z-index: 3;
+    }
+
+    .phone-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 26px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 36px 14px 14px;
+      background: linear-gradient(180deg, #f5eedf, #fffdf9);
+      color: var(--ink);
+      text-align: center;
+    }
+
+    .phone-screen::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .phone .kicker,
+    .phone .headline,
+    .phone .subline,
+    .phone .panel,
+    .phone .tag-row,
+    .phone .footer-chip {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .kicker {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #91543d;
+      margin-bottom: 10px;
+    }
+
+    .headline {
+      font-family: var(--display);
+      font-size: 28px;
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      margin-bottom: 8px;
+    }
+
+    .subline {
+      font-size: 13px;
+      color: #6d6659;
+      line-height: 1.45;
+      margin-bottom: 16px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tag.warn {
+      background: rgba(255, 190, 91, 0.2);
+      color: #9b5b00;
+    }
+
+    .tag.good {
+      background: rgba(137, 227, 165, 0.18);
+      color: #166b34;
+    }
+
+    .panel {
+      text-align: left;
+      background: #ffffff;
+      border-radius: 22px;
+      border: 1px solid rgba(11, 18, 33, 0.08);
+      padding: 14px;
+      box-shadow: 0 12px 28px rgba(13, 22, 37, 0.08);
+      margin-bottom: 12px;
+    }
+
+    .panel.dark {
+      background: #12203b;
+      color: #f6f0e4;
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .panel h4 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .rowline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 9px;
+      font-size: 13px;
+      color: #2a3347;
+    }
+
+    .dark .rowline {
+      color: rgba(246, 240, 228, 0.88);
+    }
+
+    .rowline:last-child {
+      margin-bottom: 0;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .status.bad {
+      background: rgba(255, 116, 128, 0.15);
+      color: #b11b2a;
+    }
+
+    .status.warn {
+      background: rgba(255, 190, 91, 0.18);
+      color: #8a5700;
+    }
+
+    .status.good {
+      background: rgba(137, 227, 165, 0.18);
+      color: #176536;
+    }
+
+    .bar {
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(11, 18, 33, 0.08);
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .bar > span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), #ffc37a);
+    }
+
+    .dark .bar {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .dark .bar > span {
+      background: linear-gradient(90deg, var(--lime), #b6f5cb);
+    }
+
+    .footer-chip {
+      margin-top: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(11, 18, 33, 0.06);
+      color: #293243;
+    }
+
+    .section-head {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 24px;
+    }
+
+    .section-head .eyebrow {
+      margin-bottom: 12px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(30px, 4vw, 56px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      margin-bottom: 12px;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .evidence-grid,
+    .help-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .evidence-card,
+    .help-card {
+      padding: 22px;
+      background: linear-gradient(180deg, rgba(18, 32, 59, 0.96), rgba(11, 18, 33, 0.98));
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      min-height: 100%;
+    }
+
+    .evidence-card .stamp,
+    .help-card .stamp {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      background: rgba(255, 122, 89, 0.14);
+      color: var(--accent-soft);
+      font-family: var(--display);
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .evidence-card h3,
+    .help-card h3 {
+      font-size: 24px;
+      line-height: 1.02;
+      margin-bottom: 10px;
+    }
+
+    .evidence-card p,
+    .help-card p,
+    .evidence-card li,
+    .help-card li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.62;
+    }
+
+    .evidence-card ul,
+    .help-card ul {
+      padding-left: 18px;
+      margin: 0;
+    }
+
+    .board {
+      padding: 26px;
+      background:
+        radial-gradient(circle at top right, rgba(137, 227, 165, 0.10), transparent 30%),
+        linear-gradient(180deg, rgba(17, 29, 55, 0.96), rgba(10, 16, 30, 0.98));
+    }
+
+    .board-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .war-room,
+    .signal-stack {
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 18px;
+    }
+
+    .war-room h3,
+    .signal-stack h3 {
+      font-size: 24px;
+      margin-bottom: 14px;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .mini-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(8, 17, 31, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+      margin-bottom: 8px;
+    }
+
+    .mini-card span {
+      color: var(--text);
+      font-size: 21px;
+      font-family: var(--display);
+      line-height: 1;
+    }
+
+    .signal-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .signal {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(8, 17, 31, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .signal .dot {
+      width: 11px;
+      height: 11px;
+      margin-top: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      flex: 0 0 auto;
+    }
+
+    .signal.good .dot {
+      background: var(--lime);
+    }
+
+    .signal.warn .dot {
+      background: var(--warn);
+    }
+
+    .signal strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+
+    .signal p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .cta {
+      text-align: center;
+    }
+
+    .cta-shell {
+      padding: 34px 24px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 122, 89, 0.16), transparent 38%),
+        linear-gradient(180deg, rgba(17, 29, 55, 0.96), rgba(9, 17, 31, 0.98));
+    }
+
+    .cta h2 {
+      font-size: clamp(30px, 4vw, 54px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      margin-bottom: 12px;
+    }
+
+    .cta p {
+      max-width: 680px;
+      margin: 0 auto 22px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 22px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent), #ff9d55);
+      color: #20130f;
+      box-shadow: 0 18px 45px rgba(255, 122, 89, 0.28);
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .footnote {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #7c88a1;
+    }
+
+    @media (max-width: 960px) {
+      .phone-stage,
+      .evidence-grid,
+      .help-grid,
+      .board-grid,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-shell,
+      .board,
+      .cta-shell {
+        padding: 20px;
+      }
+
+      h1 {
+        letter-spacing: -0.06em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone {
+        width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="section hero">
+      <div class="wrap surface hero-shell">
+        <div class="brand-row">
+          <div class="brand-badge">
+            <img src="assets/app-icon.jpg" alt="Sentry Defenses icon">
+            <span>AI-powered mobile teardown for Sentry by Elinext</span>
+          </div>
+        </div>
+        <div class="hero-copy">
+          <span class="eyebrow">Release confidence, not more noise</span>
+          <h1>What if every Sentry mobile release shipped with one source of truth?</h1>
+          <p>
+            Sentry is visibly investing in predictable delivery. This concept turns sourcemap integrity,
+            replay health, extension-safe builds, and clear ownership into one go or no-go decision for launch.
+          </p>
+          <div class="metric-row">
+            <div class="metric-pill"><strong>100k+</strong> organizations on Sentry</div>
+            <div class="metric-pill"><strong>$217M</strong> publicly stated funding</div>
+            <div class="metric-pill"><strong>1 open role</strong> Head of Technical Program Management</div>
+          </div>
+        </div>
+        <div class="phone-stage">
+          <div class="phone-card">
+            <h3>Current state</h3>
+            <p>Mobile release risk exists, but the truth is scattered across issues, dashboards, and handoffs.</p>
+            <div class="phone">
+              <div class="phone-screen">
+                <span class="kicker">Current release day</span>
+                <div class="headline">Too many half-signals</div>
+                <div class="subline">Replay, sourcemaps, extension safety, and owners all live in different places.</div>
+                <div class="tag-row">
+                  <span class="tag warn">Slack thread</span>
+                  <span class="tag warn">GitHub issue</span>
+                  <span class="tag warn">Dashboard gap</span>
+                </div>
+                <div class="panel">
+                  <h4>Release 8.53.2</h4>
+                  <div class="rowline"><span>iOS replay</span><span class="status bad">black output</span></div>
+                  <div class="rowline"><span>RN sourcemaps</span><span class="status warn">manual check</span></div>
+                  <div class="rowline"><span>App extensions</span><span class="status bad">build fail</span></div>
+                  <div class="bar"><span style="width: 43%;"></span></div>
+                </div>
+                <div class="panel">
+                  <h4>Handoff friction</h4>
+                  <div class="rowline"><span>Owner for rollback</span><span class="status warn">unclear</span></div>
+                  <div class="rowline"><span>Launch confidence</span><span class="status bad">52 / 100</span></div>
+                  <div class="rowline"><span>Dependency visibility</span><span class="status warn">partial</span></div>
+                </div>
+                <div class="panel">
+                  <h4>Store touchpoint</h4>
+                  <div class="rowline"><span>Sentry Defenses iOS</span><span class="status good">5.0 stars</span></div>
+                  <div class="rowline"><span>Latest user asks</span><span class="status warn">delete towers</span></div>
+                </div>
+                <div class="footer-chip">Visible bugs become invisible execution drag</div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-card">
+            <h3>Improved state</h3>
+            <p>A release-control layer that collapses mobile quality, risk, and ownership into one operating view.</p>
+            <div class="phone">
+              <div class="phone-screen" style="background: linear-gradient(180deg, #102241, #09182f); color: #f5efe2;">
+                <span class="kicker" style="color: #ffd0bd;">Proposed control layer</span>
+                <div class="headline">One launch verdict</div>
+                <div class="subline" style="color: rgba(245, 239, 226, 0.72);">
+                  Every blocker is explicit. Every risk has an owner. Every release has a confidence score.
+                </div>
+                <div class="tag-row">
+                  <span class="tag good">source maps verified</span>
+                  <span class="tag good">owners assigned</span>
+                </div>
+                <div class="panel dark">
+                  <h4>Mobile Release Control</h4>
+                  <div class="rowline"><span>Confidence score</span><span class="status good">91 / 100</span></div>
+                  <div class="rowline"><span>Sourcemap audit</span><span class="status good">clean</span></div>
+                  <div class="rowline"><span>Replay smoke test</span><span class="status good">rendering</span></div>
+                  <div class="bar"><span style="width: 91%;"></span></div>
+                </div>
+                <div class="panel dark">
+                  <h4>Gate checklist</h4>
+                  <div class="rowline"><span>Extension-safe build</span><span class="status good">passed</span></div>
+                  <div class="rowline"><span>Release note owner</span><span class="status good">set</span></div>
+                  <div class="rowline"><span>Rollback path</span><span class="status good">ready</span></div>
+                </div>
+                <div class="panel dark">
+                  <h4>Decision support</h4>
+                  <div class="rowline"><span>Blockers</span><span class="status good">0</span></div>
+                  <div class="rowline"><span>Watch items</span><span class="status warn">2 low-risk</span></div>
+                  <div class="rowline"><span>Next owner sync</span><span class="status good">in 15 min</span></div>
+                </div>
+                <div class="footer-chip" style="background: rgba(255, 255, 255, 0.08); color: #f5efe2;">Launch faster because the system is clearer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Evidence</span>
+          <h2>The public signals all point to execution risk, not just feature work.</h2>
+          <p>These are the three signals that make a release-control concept feel relevant to Sentry right now.</p>
+        </div>
+        <div class="evidence-grid">
+          <article class="evidence-card">
+            <div class="stamp">01</div>
+            <h3>Org pressure for predictable delivery</h3>
+            <p>
+              Sentry is actively hiring a Head of Technical Program Management to build a TPM function,
+              improve roadmap confidence, and surface risk early across Engineering, Product, and Design.
+            </p>
+            <ul>
+              <li>Predictable delivery is explicitly named.</li>
+              <li>Leadership wants lightweight, high-signal dashboards.</li>
+              <li>Dependencies and tradeoffs need earlier visibility.</li>
+            </ul>
+          </article>
+          <article class="evidence-card">
+            <div class="stamp">02</div>
+            <h3>Mobile SDK issues are operational</h3>
+            <p>
+              Public GitHub issues show the friction is not cosmetic. It affects whether launches are diagnosable and safe.
+            </p>
+            <ul>
+              <li>`2025-08-21`: black session replays on iOS in `sentry-react-native`.</li>
+              <li>`2025-07-17`: extension-target build failures in `sentry-cocoa`.</li>
+              <li>Search-indexed React Native sourcemap mapping complaints.</li>
+            </ul>
+          </article>
+          <article class="evidence-card">
+            <div class="stamp">03</div>
+            <h3>The public app footprint is a sidecar</h3>
+            <p>
+              `Sentry Defenses` is a branded game, not the core product. It still reveals a pattern:
+              the real mobile value is in release confidence and SDK quality, not a consumer app.
+            </p>
+            <ul>
+              <li>US iOS rating: `5.00` from `5` ratings.</li>
+              <li>Current iOS version still `1.0`.</li>
+              <li>Latest review asks for clearer in-session control.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap surface board">
+        <div class="section-head">
+          <span class="eyebrow">Prototype concept</span>
+          <h2>Turn release chaos into an operating rhythm.</h2>
+          <p>
+            Instead of asking teams to inspect five tools and a Slack thread, the control layer stages the release,
+            verifies the risky mobile pieces, and exposes only the decisions leadership actually needs.
+          </p>
+        </div>
+        <div class="board-grid">
+          <div class="war-room">
+            <h3>Release war room</h3>
+            <div class="mini-grid">
+              <div class="mini-card">
+                <strong>Confidence</strong>
+                <span>91 / 100</span>
+              </div>
+              <div class="mini-card">
+                <strong>Go-live ETA</strong>
+                <span>18 min</span>
+              </div>
+              <div class="mini-card">
+                <strong>Open blockers</strong>
+                <span>0</span>
+              </div>
+              <div class="mini-card">
+                <strong>Rollback ready</strong>
+                <span>Yes</span>
+              </div>
+            </div>
+          </div>
+          <div class="signal-stack">
+            <h3>Signals collapsed into one stack</h3>
+            <div class="signal-list">
+              <div class="signal good">
+                <div class="dot"></div>
+                <div>
+                  <strong>Sourcemaps verified</strong>
+                  <p>JS bundle symbolication checked before launch instead of after customer crashes.</p>
+                </div>
+              </div>
+              <div class="signal warn">
+                <div class="dot"></div>
+                <div>
+                  <strong>Replay health watch</strong>
+                  <p>Automatic smoke capture spots black-output regressions before the release is marked green.</p>
+                </div>
+              </div>
+              <div class="signal good">
+                <div class="dot"></div>
+                <div>
+                  <strong>Extension-safe build audit</strong>
+                  <p>Unsafe SDK modules are flagged and routed before iOS extension targets break the pipeline.</p>
+                </div>
+              </div>
+              <div class="signal good">
+                <div class="dot"></div>
+                <div>
+                  <strong>Named owners for action</strong>
+                  <p>Every risk gets an assignee, a deadline, and a rollback plan that leadership can trust.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Elinext fit</span>
+          <h2>This is where an external mobile team actually helps.</h2>
+          <p>Not by replacing Sentry’s product team. By accelerating the parts that make mobile releases safer and easier to scale.</p>
+        </div>
+        <div class="help-grid">
+          <article class="help-card">
+            <div class="stamp">A</div>
+            <h3>SDK hardening</h3>
+            <p>
+              Fix platform edge cases, extension-safe behavior, rendering regressions, and implementation gaps across iOS,
+              Android, React Native, and Flutter-adjacent surfaces.
+            </p>
+          </article>
+          <article class="help-card">
+            <div class="stamp">B</div>
+            <h3>Release-quality automation</h3>
+            <p>
+              Build preflight checks for sourcemaps, replay capture, release metadata, and rollback readiness so teams stop
+              discovering critical gaps after launch.
+            </p>
+          </article>
+          <article class="help-card">
+            <div class="stamp">C</div>
+            <h3>Operational UX</h3>
+            <p>
+              Design the control surfaces that give engineering leaders a decision, not a data dump:
+              confidence score, blockers, owners, and next action.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap surface cta-shell">
+        <span class="eyebrow">Next step</span>
+        <h2>Walk the release-control concept in 15 minutes.</h2>
+        <p>
+          If this direction is relevant, Elinext can turn the concept into a production-grade mobile delivery layer
+          without forcing Sentry to slow down its roadmap.
+        </p>
+        <a class="button" href="https://www.elinext.com/contacts/">Get in Touch</a>
+        <div class="footnote">Prototype created for Stephanie Anderson, Director of Engineering at Sentry.</div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
