@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notion — What If Search Felt Trustworthy At Scale?</title>
+  <meta name="description" content="A prototype for Notion showing how faster large-workspace performance, explainable search, clearer permissions, and stronger offline readiness could support its AI workspace promise.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/notion_2026-04-09_12-55-31/">
+  <link rel="icon" href="./assets/notion-favicon.ico">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/notion_2026-04-09_12-55-31/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/notion_2026-04-09_12-55-31/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Notion — What If Search Felt Trustworthy At Scale?">
+  <meta property="og:description" content="A Notion-specific product concept from Elinext focused on large-workspace speed, explainable search, permission clarity, and offline readiness.">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Notion — What If Search Felt Trustworthy At Scale?">
+  <meta name="twitter:description" content="A Notion-specific product concept from Elinext focused on large-workspace speed, explainable search, permission clarity, and offline readiness.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/notion_2026-04-09_12-55-31/og-image.jpg">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5efe7;
+      --ink: #121110;
+      --muted: #645c54;
+      --panel: rgba(255, 251, 246, 0.88);
+      --panel-strong: #fffaf4;
+      --stroke: rgba(18, 17, 16, 0.1);
+      --accent: #ff7a2f;
+      --accent-soft: rgba(255, 122, 47, 0.14);
+      --shadow: 0 24px 70px rgba(34, 25, 15, 0.12);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --page-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(255, 122, 47, 0.2), transparent 26%),
+        radial-gradient(circle at 85% 12%, rgba(120, 92, 255, 0.08), transparent 20%),
+        linear-gradient(180deg, #fbf6ef 0%, #f2e8dd 48%, #efe4d7 100%);
+      min-height: 100vh;
+    }
+
+    img { max-width: 100%; display: block; }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page-shell {
+      width: min(var(--page-width), calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 64px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0 28px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .brand-lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border: 1px solid var(--stroke);
+      background: rgba(255, 255, 255, 0.56);
+      border-radius: 999px;
+      box-shadow: 0 8px 24px rgba(34, 25, 15, 0.06);
+    }
+
+    .brand-lockup img {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+    }
+
+    .hero,
+    .prototype,
+    .cases {
+      background: var(--panel);
+      border: 1px solid rgba(18, 17, 16, 0.08);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      gap: 28px;
+      padding: 34px;
+      margin-bottom: 26px;
+    }
+
+    .hero::before,
+    .prototype::before,
+    .cases::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.55), transparent 38%),
+        linear-gradient(120deg, transparent 64%, rgba(255,122,47,0.08));
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero > *,
+    .prototype > *,
+    .cases > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(18, 17, 16, 0.05);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow span {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 8px rgba(255, 122, 47, 0.12);
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      max-width: 11ch;
+      margin-bottom: 18px;
+    }
+
+    .hero-copy p,
+    .section-copy p {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .hero-copy p + p {
+      margin-top: 12px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button,
+    .button-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 800;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .button {
+      color: #fff;
+      background: linear-gradient(135deg, #ff8a46, #eb5f18);
+      box-shadow: 0 18px 36px rgba(235, 95, 24, 0.28);
+    }
+
+    .button-secondary {
+      color: var(--ink);
+      background: rgba(255,255,255,0.66);
+      border-color: var(--stroke);
+    }
+
+    .button:hover,
+    .button-secondary:hover {
+      transform: translateY(-2px);
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .stat-card,
+    .hero-panel,
+    .module,
+    .case-card,
+    .preview-row {
+      background: var(--panel-strong);
+      border: 1px solid rgba(18, 17, 16, 0.08);
+      border-radius: var(--radius-lg);
+    }
+
+    .stat-card {
+      padding: 16px;
+    }
+
+    .stat-card strong,
+    .signal-metric strong {
+      display: block;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: -0.04em;
+      margin-bottom: 6px;
+    }
+
+    .stat-card span,
+    .signal-metric span {
+      display: block;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .hero-panel {
+      padding: 24px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .hero-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .hero-panel-head strong {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.2rem;
+    }
+
+    .hero-panel-head span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .signal-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .signal-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(18, 17, 16, 0.03);
+    }
+
+    .signal-row strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 3px;
+      line-height: 1.35;
+    }
+
+    .signal-row span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .signal-metric {
+      flex: 0 0 auto;
+      text-align: right;
+    }
+
+    .signal-metric strong {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .prototype {
+      padding: 32px;
+      margin-bottom: 26px;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    .section-kicker {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-copy h2 {
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      margin-bottom: 14px;
+    }
+
+    .source-pill {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(18, 17, 16, 0.05);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      max-width: 330px;
+    }
+
+    .control-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .tab-list,
+    .scale-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tab,
+    .scale {
+      border: 1px solid rgba(18, 17, 16, 0.1);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--ink);
+      padding: 12px 15px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    .tab.active,
+    .scale.active {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    .demo-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.78fr);
+      gap: 18px;
+    }
+
+    .demo-main,
+    .demo-side {
+      background: rgba(255,255,255,0.58);
+      border: 1px solid rgba(18, 17, 16, 0.08);
+      border-radius: 24px;
+      padding: 20px;
+    }
+
+    .demo-title {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .demo-title h3 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      margin-bottom: 10px;
+    }
+
+    .demo-title p,
+    .demo-side p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .accent-line {
+      width: 72px;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 10px rgba(255, 122, 47, 0.12);
+      flex: 0 0 auto;
+      margin-top: 8px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .metric-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: var(--panel-strong);
+      border: 1px solid rgba(18, 17, 16, 0.08);
+      display: grid;
+      gap: 10px;
+      min-height: 164px;
+    }
+
+    .metric-card span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .metric-value {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: -0.05em;
+    }
+
+    .metric-before {
+      color: rgba(18, 17, 16, 0.44);
+      text-decoration: line-through;
+      font-size: 1.2rem;
+    }
+
+    .metric-after {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .metric-note {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+      margin-top: auto;
+    }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 12px;
+    }
+
+    .module {
+      padding: 18px;
+      min-height: 290px;
+    }
+
+    .module strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 14px;
+    }
+
+    .preview-table {
+      display: grid;
+      gap: 10px;
+    }
+
+    .preview-row {
+      display: grid;
+      gap: 8px;
+      padding: 14px 15px;
+    }
+
+    .preview-row-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .preview-row-head b {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #9d440e;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .preview-row p,
+    .bullet-list li,
+    .quote-card p,
+    .quote-card small {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .bullet-list {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .quote-card {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(18, 17, 16, 0.04);
+      border: 1px solid rgba(18, 17, 16, 0.06);
+    }
+
+    .quote-card small {
+      display: block;
+      margin-top: 10px;
+      font-weight: 700;
+      color: #7a5b43;
+    }
+
+    .demo-side {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .side-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: var(--panel-strong);
+      border: 1px solid rgba(18, 17, 16, 0.08);
+    }
+
+    .side-card strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+
+    .side-card ul {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .cases {
+      padding: 32px;
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .case-card {
+      padding: 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .case-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(18, 17, 16, 0.05);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .case-card h3 {
+      font-size: 1.5rem;
+      line-height: 1.05;
+    }
+
+    .case-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    .case-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: #8d3f0d;
+    }
+
+    .footnote {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .section-head,
+      .demo-shell,
+      .module-grid,
+      .case-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .source-pill {
+        max-width: none;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page-shell { width: min(var(--page-width), calc(100vw - 18px)); padding: 14px 0 34px; }
+      .topline { flex-direction: column; align-items: flex-start; padding-bottom: 18px; }
+      .hero, .prototype, .cases { padding: 20px; border-radius: 22px; }
+      h1 { max-width: none; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .button, .button-secondary { width: 100%; }
+      .control-bar { align-items: flex-start; }
+      .tab-list, .scale-list { width: 100%; }
+      .tab, .scale { flex: 1 1 auto; text-align: center; }
+      .demo-main, .demo-side { padding: 16px; }
+      .module { min-height: 0; }
+      .signal-row { flex-direction: column; }
+      .signal-metric { width: 100%; text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <div class="topline">
+      <div class="brand-lockup">
+        <img src="./assets/notion-logo.png" alt="Notion logo">
+        <strong>Notion x Elinext</strong>
+      </div>
+      <div>Built from public signals across Capterra, G2, Product Hunt, Reddit, Crunchbase, and BuiltWith.</div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span></span> Product Concept For Notion</div>
+        <h1>Make Notion feel instant and trustworthy at enterprise scale.</h1>
+        <p>Public feedback is not asking Notion for more surface area. It is asking for a stronger foundation once pages, databases, teams, and AI retrieval all get dense.</p>
+        <p>This prototype focuses on the quality layer behind the AI workspace story: search confidence, database acceleration, permission clarity, and offline readiness.</p>
+        <div class="hero-actions">
+          <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Let's Talk</a>
+          <a class="button-secondary" href="#prototype">See The Interactive Demo</a>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <strong>4.7 / 5</strong>
+            <span>Capterra, 2,683 reviews</span>
+          </div>
+          <div class="stat-card">
+            <strong>4.6 / 5</strong>
+            <span>G2, 11,027 reviews</span>
+          </div>
+          <div class="stat-card">
+            <strong>4.8 / 5</strong>
+            <span>Product Hunt, 1,328 reviews</span>
+          </div>
+          <div class="stat-card">
+            <strong>100M+</strong>
+            <span>Users worldwide on Notion's official product page</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-panel">
+        <div class="hero-panel-head">
+          <div>
+            <strong>Why This Direction</strong>
+            <span>Aligned with Notion's current enterprise + AI push</span>
+          </div>
+        </div>
+        <div class="signal-stack">
+          <div class="signal-row">
+            <div>
+              <strong>Scale friction stays visible in public reviews.</strong>
+              <span>Large pages and databases are still the most repeated source of frustration.</span>
+            </div>
+            <div class="signal-metric">
+              <strong>83%</strong>
+              <span>negative on large-content speed in Capterra topic data</span>
+            </div>
+          </div>
+          <div class="signal-row">
+            <div>
+              <strong>Search trust is a platform issue now.</strong>
+              <span>Notion is selling enterprise search and agents, while users still complain that search misses obvious content.</span>
+            </div>
+            <div class="signal-metric">
+              <strong>2x</strong>
+              <span>higher risk when AI depends on fuzzy retrieval</span>
+            </div>
+          </div>
+          <div class="signal-row">
+            <div>
+              <strong>Offline improved, but not all the way.</strong>
+              <span>Users welcome the rollout but still describe setup, scope, and sync behavior as incomplete.</span>
+            </div>
+            <div class="signal-metric">
+              <strong>77%</strong>
+              <span>negative on offline usability in Capterra topic data</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="prototype" id="prototype">
+      <div class="section-head">
+        <div class="section-copy">
+          <span class="section-kicker">Interactive Prototype</span>
+          <h2>Workspace Health Console</h2>
+          <p>A lightweight control surface that makes the invisible parts of product trust visible: what search knows, why results rank, which views are getting heavy, who can see what, and whether offline access is actually safe for this workspace.</p>
+        </div>
+        <div class="source-pill">
+          Prototype targets the exact public themes repeating across review sources: speed at scale, search quality, permissions, onboarding complexity, and offline reliability.
+        </div>
+      </div>
+
+      <div class="control-bar">
+        <div class="tab-list" role="tablist" aria-label="Prototype modules">
+          <button class="tab active" data-tab="search" type="button">Search Trust</button>
+          <button class="tab" data-tab="speed" type="button">Database Speed</button>
+          <button class="tab" data-tab="permissions" type="button">Permission Clarity</button>
+          <button class="tab" data-tab="offline" type="button">Offline Readiness</button>
+        </div>
+        <div class="scale-list" aria-label="Workspace scale">
+          <button class="scale active" data-scale="team" type="button">500 records</button>
+          <button class="scale" data-scale="growth" type="button">5K records</button>
+          <button class="scale" data-scale="enterprise" type="button">25K records</button>
+        </div>
+      </div>
+
+      <div class="demo-shell">
+        <div class="demo-main">
+          <div class="demo-title">
+            <div>
+              <h3 id="demo-heading">Make search explain itself.</h3>
+              <p id="demo-copy">Users should be able to see why a result ranks, what data powered it, and whether missing answers are caused by indexing or permissions.</p>
+            </div>
+            <div class="accent-line"></div>
+          </div>
+
+          <div class="metric-grid" id="metric-grid"></div>
+
+          <div class="module-grid">
+            <div class="module">
+              <strong id="preview-title">Search confidence board</strong>
+              <div class="preview-table" id="preview-table"></div>
+            </div>
+            <div class="module">
+              <strong>What changes in the product</strong>
+              <ul class="bullet-list" id="feature-list"></ul>
+              <div class="quote-card">
+                <p id="quote-copy">Users still describe search as poor or incomplete when they know the page exists.</p>
+                <small id="quote-source">Signal source: Reddit + G2</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="demo-side">
+          <div class="side-card">
+            <strong>Engineering Story</strong>
+            <p id="engineering-story">This is not a redesign of Notion's core UI. It is a thin reliability layer that helps users trust the workspace and gives the product team better observability into experience breakdowns.</p>
+          </div>
+          <div class="side-card">
+            <strong>Why This Matters Now</strong>
+            <ul id="timing-list"></ul>
+          </div>
+          <div class="side-card">
+            <strong>Outcome To Sell Internally</strong>
+            <ul id="outcome-list"></ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="cases">
+      <div class="section-head">
+        <div class="section-copy">
+          <span class="section-kicker">Relevant Elinext Work</span>
+          <h2>Proven track record in collaboration-heavy web products.</h2>
+          <p>We chose case studies closest to Notion's real challenge: scalable collaboration software that stays stable, measurable, and efficient as complexity grows.</p>
+        </div>
+        <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Let's Talk</a>
+      </div>
+
+      <div class="case-grid">
+        <article class="case-card">
+          <div class="case-meta">
+            <span class="tag">Web Development</span>
+            <span class="tag">QA</span>
+            <span class="tag">DevOps</span>
+            <span class="tag">Financial Services</span>
+          </div>
+          <h3>Document Collaboration Platform Development</h3>
+          <p><strong>Problem:</strong> A financial-markets client needed a scalable document management and collaboration platform that could replace third-party tools and support more complex workflows.</p>
+          <p><strong>What Elinext did:</strong> Built a production-ready collaboration platform with a 20-person cross-functional team covering development, QA automation, DevOps, analysis, and delivery management.</p>
+          <p><strong>Outcome:</strong> Lower operational cost, faster agreement creation and negotiation flows, better platform stability, and stronger QA efficiency.</p>
+          <a class="case-link" href="https://www.elinext.com/case-study/document-collaboration-platform/" target="_blank" rel="noreferrer">Open case study</a>
+        </article>
+
+        <article class="case-card">
+          <div class="case-meta">
+            <span class="tag">Web Development</span>
+            <span class="tag">QA</span>
+            <span class="tag">DevOps</span>
+            <span class="tag">Capital Markets</span>
+          </div>
+          <h3>Document Collaboration And Automation Testing Services</h3>
+          <p><strong>Problem:</strong> The client needed document collaboration services that stayed stable, measurable, and fast while reducing delivery drag on the team.</p>
+          <p><strong>What Elinext did:</strong> Extended the client's technical department with web development and QA automation support, using a transparent delivery setup and a dedicated coordinator.</p>
+          <p><strong>Outcome:</strong> 40% faster time-to-launch and 60% less QA workload thanks to automation, with stronger client satisfaction through better site performance and stability.</p>
+          <a class="case-link" href="https://www.elinext.com/case-study/document-collaboration-and-qa-testing-service/" target="_blank" rel="noreferrer">Open case study</a>
+        </article>
+      </div>
+
+      <p class="footnote">Prototype is illustrative and grounded in public signals retrieved on 2026-04-09. It is meant to show implementation direction, not to claim internal Notion metrics.</p>
+    </section>
+  </main>
+
+  <script>
+    const scales = {
+      team: 0,
+      growth: 1,
+      enterprise: 2,
+    };
+
+    const tabs = {
+      search: {
+        accent: "#ff7a2f",
+        heading: "Make search explain itself.",
+        copy: "Users should be able to see why a result ranks, what data powered it, and whether missing answers are caused by indexing or permissions.",
+        previewTitle: "Search confidence board",
+        metrics: [
+          { label: "First useful answer", before: ["2.1s", "2.8s", "3.4s"], after: ["0.8s", "1.1s", "1.3s"], note: "Blend workspace search, freshness, and permission checks into a single answer path." },
+          { label: "Search confidence", before: ["68%", "61%", "54%"], after: ["91%", "92%", "94%"], note: "Every result exposes why it ranked and whether permissions filtered stronger matches." },
+          { label: "Escalation risk", before: ["23%", "41%", "54%"], after: ["9%", "13%", "18%"], note: "Fewer support requests when the product can explain missing or partial answers." }
+        ],
+        previewRows: [
+          { title: "Q3 launch retro", badge: "93% match", body: "Ranked because meeting notes, project timeline, and owner updates agree on the same topic cluster." },
+          { title: "2026 data residency rollout", badge: "Permission trace", body: "Not shown to guest users. Admins can see the exact policy and inherited restriction path." },
+          { title: "AI search freshness", badge: "Index lag 4m", body: "Content exists but the newest connector sync is still warming. Explain delay instead of failing silently." }
+        ],
+        features: [
+          "Ranking reason chips on every result card.",
+          "Missing-result explanations tied to permission or index state.",
+          "Freshness labels for connected enterprise-search sources."
+        ],
+        quote: "Public feedback still describes standard search as poor or incomplete when users know the page exists.",
+        quoteSource: "Signal source: Reddit + G2",
+        engineeringStory: "Notion already wants search to be a central product layer. The missing piece is explainability, so the retrieval system feels trustworthy rather than magical when it fails.",
+        timing: [
+          "Enterprise Search is already on the homepage, so trust in retrieval now affects the AI story too.",
+          "Public complaints show search confidence is still behind the ambition of the product.",
+          "A thin explainability layer can ship without re-architecting the whole workspace."
+        ],
+        outcomes: [
+          "Higher trust in AI answers and assistant flows.",
+          "Fewer support tickets framed as 'search is broken'.",
+          "Better internal signal on where indexing or permissions actually fail users."
+        ]
+      },
+      speed: {
+        accent: "#0a8f6a",
+        heading: "Expose heavy workspaces before they feel broken.",
+        copy: "The product should know when a view, relation set, or database shape is drifting into lag territory and help the team fix it before users hit the wall.",
+        previewTitle: "Database acceleration board",
+        metrics: [
+          { label: "Heavy-view load", before: ["2.6s", "4.1s", "5.4s"], after: ["1.2s", "1.7s", "2.1s"], note: "Virtualize wide tables, pre-compute expensive formulas, and stream relation-heavy blocks." },
+          { label: "Memory pressure", before: ["1.4x", "2.3x", "3.1x"], after: ["1.0x", "1.2x", "1.4x"], note: "Flag the views most likely to create sluggish desktop sessions." },
+          { label: "Slow-view incidents", before: ["18%", "33%", "47%"], after: ["7%", "12%", "16%"], note: "Turn performance drift into an observable product signal, not just a user complaint." }
+        ],
+        previewRows: [
+          { title: "Product roadmap database", badge: "Virtualized", body: "Row rendering becomes incremental once view width and relation count cross the workspace budget." },
+          { title: "Cross-team project board", badge: "Warm cache", body: "Frequently opened dashboards keep a lightweight pre-built snapshot for faster first interaction." },
+          { title: "Content wiki home", badge: "Heavy formula alert", body: "Formula and rollup hotspots are surfaced to owners with the exact fields causing lag." }
+        ],
+        features: [
+          "View-level performance budgets visible to workspace owners.",
+          "Recommended fixes for relation-heavy or formula-heavy databases.",
+          "Pre-warmed caches for high-traffic dashboards and templates."
+        ],
+        quote: "Large pages and databases are still the loudest speed complaint in public Notion feedback.",
+        quoteSource: "Signal source: Capterra + Product Hunt + Reddit",
+        engineeringStory: "The simplest win is not a dramatic rewrite. It is productizing performance observability so heavy views can be routed to lighter rendering and caching paths.",
+        timing: [
+          "The more work Notion centralizes, the more expensive page and database shapes become.",
+          "Speed complaints stay visible even from otherwise happy users.",
+          "A workspace-health layer protects adoption before teams split back into narrower tools."
+        ],
+        outcomes: [
+          "Faster first interaction for the views people open every day.",
+          "Less 'Notion is slow' sentiment in enterprise rollouts.",
+          "A clearer feedback loop between product usage and engineering priorities."
+        ]
+      },
+      permissions: {
+        accent: "#7b61ff",
+        heading: "Make permission logic obvious, not mysterious.",
+        copy: "Users should be able to understand why they can or cannot see a page, database, or result without opening a support ticket or poking through nested share settings.",
+        previewTitle: "Permission trace board",
+        metrics: [
+          { label: "Access clarity", before: ["42%", "37%", "31%"], after: ["84%", "88%", "91%"], note: "Show the inherited path, teamspace rule, and guest state behind every access decision." },
+          { label: "Resolution time", before: ["6m", "11m", "16m"], after: ["1m", "2m", "3m"], note: "Admins should resolve a visibility issue from one explainer card, not three menus." },
+          { label: "Collab friction", before: ["29%", "38%", "46%"], after: ["11%", "15%", "19%"], note: "Reduce the 'why can I not edit this?' loop that slows team onboarding." }
+        ],
+        previewRows: [
+          { title: "Board meeting notes", badge: "Guest blocked", body: "Visible in search to admins only. Guest access is denied by teamspace policy, not page-level sharing." },
+          { title: "Finance wiki", badge: "Inherited allow", body: "Member access comes from the parent space. Explain inheritance instead of leaving users guessing." },
+          { title: "Product launch tasks", badge: "Edit limited", body: "The page is visible, but property updates are restricted to owners. Surface the exact rule inline." }
+        ],
+        features: [
+          "Permission traces attached to search, share, and page surfaces.",
+          "Inline explanations for inherited, direct, and guest-specific rules.",
+          "Admin-facing risk view for fragile or contradictory sharing setups."
+        ],
+        quote: "Collaboration is powerful in Notion, but permission behavior still gets confusing at scale.",
+        quoteSource: "Signal source: G2 + Product Hunt",
+        engineeringStory: "As Notion moves deeper into larger organizations, permission explainability becomes a product feature. Trust erodes quickly when visibility logic feels random.",
+        timing: [
+          "Enterprise expansion means more guests, more restricted spaces, and more policy edge cases.",
+          "Permission confusion amplifies search complaints because missing content looks like broken retrieval.",
+          "Explainers reduce both onboarding drag and support load."
+        ],
+        outcomes: [
+          "Less confusion around page visibility and edit rights.",
+          "Better confidence in enterprise-search results.",
+          "Cleaner governance for larger, cross-functional workspaces."
+        ]
+      },
+      offline: {
+        accent: "#cf3e66",
+        heading: "Turn offline access into a confidence signal.",
+        copy: "Offline mode is now real, but users still need clearer coverage, sync status, and content support so they trust it before they travel or lose connection.",
+        previewTitle: "Offline readiness board",
+        metrics: [
+          { label: "Ready-offline coverage", before: ["58%", "44%", "33%"], after: ["81%", "86%", "89%"], note: "Show exactly which critical pages, databases, and docs are safe before the user goes offline." },
+          { label: "Sync confidence", before: ["61%", "52%", "43%"], after: ["88%", "90%", "92%"], note: "Expose pending changes, risky blocks, and last verified local state in one place." },
+          { label: "Recovery friction", before: ["24%", "31%", "39%"], after: ["8%", "11%", "14%"], note: "Give teams fewer surprises when they reconnect after editing offline." }
+        ],
+        previewRows: [
+          { title: "Field-ops handbook", badge: "Safe offline", body: "Pinned for mobile and desktop with last verified sync, owner, and content-scope status." },
+          { title: "Weekly operating review", badge: "Partial support", body: "Text and checklist blocks are safe. Relation-heavy inline databases need a lightweight fallback snapshot." },
+          { title: "Team travel pack", badge: "Conflict watch", body: "Two users edited the same page offline. Show confidence and likely merge risk before reconnect completes." }
+        ],
+        features: [
+          "Critical-page packs for travel, field use, and exec briefings.",
+          "Offline readiness score before a user disconnects.",
+          "Conflict and unsupported-content warnings surfaced before trust breaks."
+        ],
+        quote: "Offline mode launch helped, but users still describe setup, limits, and support scope as uneven.",
+        quoteSource: "Signal source: Capterra + Product Hunt + Reddit",
+        engineeringStory: "The opportunity is not just offline editing. It is offline confidence: the product should tell users what is safe, what is partial, and what may surprise them later.",
+        timing: [
+          "Offline mode is finally in market, so the next question becomes how trustworthy it feels.",
+          "Mobile and travel scenarios are still a public weak spot.",
+          "A confidence layer lets Notion refine offline scope without overpromising."
+        ],
+        outcomes: [
+          "Fewer sync surprises in real-world travel and field scenarios.",
+          "Stronger confidence in mobile usage for critical pages.",
+          "A clear roadmap for expanding offline coverage over time."
+        ]
+      }
+    };
+
+    const tabButtons = [...document.querySelectorAll(".tab")];
+    const scaleButtons = [...document.querySelectorAll(".scale")];
+    const metricGrid = document.getElementById("metric-grid");
+    const previewTable = document.getElementById("preview-table");
+    const featureList = document.getElementById("feature-list");
+    const timingList = document.getElementById("timing-list");
+    const outcomeList = document.getElementById("outcome-list");
+    const demoHeading = document.getElementById("demo-heading");
+    const demoCopy = document.getElementById("demo-copy");
+    const previewTitle = document.getElementById("preview-title");
+    const quoteCopy = document.getElementById("quote-copy");
+    const quoteSource = document.getElementById("quote-source");
+    const engineeringStory = document.getElementById("engineering-story");
+
+    let activeTab = "search";
+    let activeScale = "growth";
+
+    function renderMetrics(items, index) {
+      metricGrid.innerHTML = items.map((item) => `
+        <article class="metric-card">
+          <span>${item.label}</span>
+          <div class="metric-value">
+            <div class="metric-before">${item.before[index]}</div>
+            <div class="metric-after">${item.after[index]}</div>
+          </div>
+          <div class="metric-note">${item.note}</div>
+        </article>
+      `).join("");
+    }
+
+    function renderRows(rows) {
+      previewTable.innerHTML = rows.map((row) => `
+        <article class="preview-row">
+          <div class="preview-row-head">
+            <b>${row.title}</b>
+            <span class="badge">${row.badge}</span>
+          </div>
+          <p>${row.body}</p>
+        </article>
+      `).join("");
+    }
+
+    function renderList(target, items) {
+      target.innerHTML = items.map((item) => `<li>${item}</li>`).join("");
+    }
+
+    function render() {
+      const scaleIndex = scales[activeScale];
+      const data = tabs[activeTab];
+      document.documentElement.style.setProperty("--accent", data.accent);
+      demoHeading.textContent = data.heading;
+      demoCopy.textContent = data.copy;
+      previewTitle.textContent = data.previewTitle;
+      quoteCopy.textContent = data.quote;
+      quoteSource.textContent = data.quoteSource;
+      engineeringStory.textContent = data.engineeringStory;
+      renderMetrics(data.metrics, scaleIndex);
+      renderRows(data.previewRows);
+      renderList(featureList, data.features);
+      renderList(timingList, data.timing);
+      renderList(outcomeList, data.outcomes);
+      tabButtons.forEach((button) => button.classList.toggle("active", button.dataset.tab === activeTab));
+      scaleButtons.forEach((button) => button.classList.toggle("active", button.dataset.scale === activeScale));
+    }
+
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeTab = button.dataset.tab;
+        render();
+      });
+    });
+
+    scaleButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeScale = button.dataset.scale;
+        render();
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>
