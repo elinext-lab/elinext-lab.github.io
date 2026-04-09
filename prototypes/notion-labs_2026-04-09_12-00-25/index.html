@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notion Workspace Rescue | Elinext</title>
+  <meta name="description" content="What if Notion could diagnose slow databases, restore trust in search, and keep critical pages usable on mobile before teams fall back to duplicate docs and Slack pings?">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/notion-labs_2026-04-09_12-00-25/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/notion-labs_2026-04-09_12-00-25/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/notion-labs_2026-04-09_12-00-25/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Notion Product — AI Teardown">
+  <meta property="og:description" content="What if Notion could diagnose slow databases, reveal sync and permission state inside search, and keep high-priority knowledge usable on mobile before users lose trust?">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Notion Product — AI Teardown">
+  <meta name="twitter:description" content="What if Notion could diagnose slow databases, reveal sync and permission state inside search, and keep high-priority knowledge usable on mobile before users lose trust?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/notion-labs_2026-04-09_12-00-25/og-image.jpg">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <!-- Web/SaaS: Ratings as of 2026-04-09: Capterra 4.7 (2,683 reviews, source: https://www.capterra.com/p/186596/Notion/), G2 4.6 (11,027 reviews, source: https://www.g2.com/products/notion/reviews), Lighthouse perf: 53 (mobile), accessibility: 92, best-practices: 100, SEO: 100 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #101114;
+      --ink-soft: #232833;
+      --paper: #f5f1ea;
+      --cloud: #eef4ff;
+      --shell: #17181d;
+      --shell-alt: #22252d;
+      --card: #ffffff;
+      --line: rgba(18, 24, 38, 0.1);
+      --line-strong: rgba(18, 24, 38, 0.18);
+      --muted: #657086;
+      --muted-dark: #425067;
+      --lime: #d9ff5f;
+      --lime-deep: #b7e842;
+      --orange: #ffb258;
+      --rose: #ffb2b8;
+      --blue: #8bc0ff;
+      --green: #4caf79;
+      --warning: #f38b45;
+      --danger: #da5a5a;
+      --shadow-xl: 0 36px 80px rgba(12, 17, 28, 0.16);
+      --shadow-lg: 0 24px 56px rgba(12, 17, 28, 0.12);
+      --shadow-sm: 0 12px 28px rgba(12, 17, 28, 0.08);
+      --radius-xl: 34px;
+      --radius-lg: 26px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(217, 255, 95, 0.22), transparent 26%),
+        radial-gradient(circle at top right, rgba(139, 192, 255, 0.16), transparent 24%),
+        linear-gradient(180deg, #0f1115 0%, #17181d 24%, #efe8dd 24%, #efe8dd 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 52px 52px;
+      opacity: 0.22;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 28px 0 64px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      margin-bottom: 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(14px);
+      color: #f3f6fb;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+      flex: 0 0 auto;
+      background: #fff;
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand-copy strong,
+    .brand-copy span {
+      display: block;
+    }
+
+    .brand-copy strong {
+      font-size: 0.98rem;
+    }
+
+    .brand-copy span {
+      color: rgba(243, 246, 251, 0.72);
+      font-size: 0.84rem;
+    }
+
+    .topbar-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(217, 255, 95, 0.14);
+      border: 1px solid rgba(217, 255, 95, 0.3);
+      color: var(--lime);
+      font-weight: 700;
+      font-size: 0.92rem;
+      white-space: nowrap;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 38px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        radial-gradient(circle at 12% 14%, rgba(217, 255, 95, 0.1), transparent 24%),
+        radial-gradient(circle at 88% 16%, rgba(139, 192, 255, 0.12), transparent 20%),
+        linear-gradient(180deg, #181a20 0%, #121419 100%);
+      padding: 40px 36px 34px;
+      box-shadow: var(--shadow-xl);
+      color: #f4f6fb;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -100px -100px auto;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(217, 255, 95, 0.18), transparent 65%);
+      z-index: 0;
+    }
+
+    .hero-copy,
+    .hero-copy img,
+    .hero-copy h1,
+    .hero-copy p {
+      display: block;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 auto 18px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(217, 255, 95, 0.3);
+      background: rgba(217, 255, 95, 0.08);
+      color: var(--lime);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .wordmark-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 0 auto 18px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(244, 246, 251, 0.92);
+      font-size: 0.96rem;
+      font-weight: 700;
+    }
+
+    .wordmark-chip img {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-copy h1 {
+      max-width: 920px;
+      margin-bottom: 18px;
+      font-size: clamp(2.5rem, 5.4vw, 5.35rem);
+      line-height: 1.02;
+    }
+
+    .hero-copy p {
+      max-width: 780px;
+      margin-top: 0;
+      margin-bottom: 28px;
+      color: rgba(244, 246, 251, 0.74);
+      font-size: clamp(1.02rem, 2vw, 1.2rem);
+      line-height: 1.72;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button.primary {
+      background: var(--lime);
+      color: #111313;
+      box-shadow: 0 18px 36px rgba(217, 255, 95, 0.2);
+    }
+
+    .button.secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #f4f6fb;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stat {
+      min-height: 122px;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(10px);
+      text-align: left;
+    }
+
+    .stat strong,
+    .stat span {
+      display: block;
+    }
+
+    .stat strong {
+      margin-bottom: 8px;
+      font-size: 1.68rem;
+      color: #ffffff;
+      line-height: 1.05;
+    }
+
+    .stat span {
+      font-size: 0.92rem;
+      line-height: 1.56;
+      color: rgba(244, 246, 251, 0.72);
+    }
+
+    .section {
+      padding: 58px 0;
+    }
+
+    .section-card {
+      border-radius: var(--radius-xl);
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(16, 17, 20, 0.06);
+      box-shadow: var(--shadow-lg);
+      padding: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #f2f4f8;
+      color: var(--muted-dark);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-head {
+      max-width: 820px;
+      margin: 0 auto 28px;
+      text-align: center;
+    }
+
+    .section-head h2 {
+      margin-top: 14px;
+      margin-bottom: 12px;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1.04;
+      color: var(--ink);
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.72;
+    }
+
+    .story-stack {
+      display: grid;
+      gap: 22px;
+    }
+
+    .story-panel {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: #fcfbf8;
+      padding: 22px;
+    }
+
+    .story-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .story-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .story-tag.before {
+      background: rgba(255, 178, 184, 0.22);
+      color: #9d4751;
+    }
+
+    .story-tag.after {
+      background: rgba(217, 255, 95, 0.28);
+      color: #4a6200;
+    }
+
+    .story-copy {
+      max-width: 700px;
+    }
+
+    .story-copy h3 {
+      margin-bottom: 6px;
+      font-size: 1.6rem;
+      color: var(--ink);
+    }
+
+    .story-copy p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.64;
+    }
+
+    .signal-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      max-width: 320px;
+    }
+
+    .signal {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: #f1efe8;
+      color: var(--muted-dark);
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .browser {
+      width: min(960px, 100%);
+      height: 600px;
+      margin: 0 auto;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(16, 17, 20, 0.08);
+      background: #f7f9fc;
+      box-shadow: 0 26px 60px rgba(17, 24, 38, 0.14);
+    }
+
+    .browser-top {
+      height: 54px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      background: #eceff4;
+      border-bottom: 1px solid rgba(16, 17, 20, 0.08);
+    }
+
+    .chrome-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .chrome-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #c8ced9;
+    }
+
+    .chrome-dot:first-child {
+      background: #ff8f8f;
+    }
+
+    .chrome-dot:nth-child(2) {
+      background: #ffcf70;
+    }
+
+    .chrome-dot:nth-child(3) {
+      background: #7bc78d;
+    }
+
+    .browser-url {
+      min-width: 0;
+      flex: 1 1 auto;
+      padding: 11px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #60708a;
+      font-size: 0.86rem;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .browser-actions {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--ink-soft);
+      font-size: 0.78rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .browser-screen {
+      height: calc(100% - 54px);
+      overflow: auto;
+      background: #f6f7fb;
+      padding: 18px;
+    }
+
+    .app-shell {
+      min-height: 100%;
+      border-radius: 22px;
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid rgba(16, 17, 20, 0.06);
+    }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(16, 17, 20, 0.06);
+      background: #faf9f6;
+    }
+
+    .app-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .app-title img {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      flex: 0 0 auto;
+    }
+
+    .app-title strong,
+    .app-title span {
+      display: block;
+    }
+
+    .app-title strong {
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    .app-title span {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .app-mode {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .app-mode.current {
+      background: rgba(255, 178, 184, 0.24);
+      color: #93414e;
+    }
+
+    .app-mode.future {
+      background: rgba(217, 255, 95, 0.26);
+      color: #567100;
+    }
+
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr) 250px;
+      min-height: 526px;
+    }
+
+    .sidebar {
+      background: #f5f1ea;
+      border-right: 1px solid rgba(16, 17, 20, 0.06);
+      padding: 18px 16px;
+    }
+
+    .side-heading,
+    .side-item,
+    .mini-stat strong,
+    .mini-stat span,
+    .panel-head strong,
+    .panel-head span,
+    .result-card strong,
+    .result-card span,
+    .insight-card strong,
+    .insight-card span,
+    .health-pill strong,
+    .health-pill span,
+    .task-row strong,
+    .task-row span,
+    .queue-row strong,
+    .queue-row span,
+    .quote-card strong,
+    .quote-card span,
+    .case-card strong,
+    .case-card span {
+      display: block;
+    }
+
+    .side-heading {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .side-stack {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .side-item {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.76);
+      color: var(--ink-soft);
+      font-size: 0.86rem;
+      font-weight: 700;
+      box-shadow: 0 8px 18px rgba(17, 24, 38, 0.04);
+    }
+
+    .side-item.active {
+      background: #181a20;
+      color: #f4f6fb;
+    }
+
+    .side-note {
+      padding: 12px;
+      border-radius: 16px;
+      background: #ffffff;
+      border: 1px solid rgba(16, 17, 20, 0.06);
+      color: var(--muted-dark);
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+
+    .main-panel {
+      padding: 20px;
+      background: #ffffff;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: #f3f6fb;
+      border: 1px solid rgba(16, 17, 20, 0.06);
+      margin-bottom: 16px;
+    }
+
+    .search-bar span {
+      color: #6a7890;
+      font-size: 0.9rem;
+    }
+
+    .search-bar strong {
+      color: var(--ink);
+      font-size: 0.92rem;
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr);
+      gap: 14px;
+    }
+
+    .panel-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .panel-card {
+      border-radius: 18px;
+      border: 1px solid rgba(16, 17, 20, 0.06);
+      background: #f8fafc;
+      padding: 14px;
+      box-shadow: 0 10px 24px rgba(17, 24, 38, 0.05);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .panel-head strong {
+      color: var(--ink);
+      font-size: 0.96rem;
+    }
+
+    .panel-head span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .chip.warn {
+      background: rgba(243, 139, 69, 0.16);
+      color: #a2520f;
+    }
+
+    .chip.good {
+      background: rgba(76, 175, 121, 0.16);
+      color: #2f774e;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .mini-stat {
+      padding: 12px;
+      border-radius: 16px;
+      background: #ffffff;
+      border: 1px solid rgba(16, 17, 20, 0.05);
+    }
+
+    .mini-stat strong {
+      color: var(--ink);
+      font-size: 1.08rem;
+      margin-bottom: 4px;
+    }
+
+    .mini-stat span {
+      color: var(--muted);
+      font-size: 0.77rem;
+      line-height: 1.45;
+    }
+
+    .result-list,
+    .insight-list,
+    .queue-list,
+    .health-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .result-card,
+    .insight-card,
+    .queue-row,
+    .health-pill {
+      padding: 12px;
+      border-radius: 16px;
+      background: #ffffff;
+      border: 1px solid rgba(16, 17, 20, 0.06);
+    }
+
+    .result-card strong,
+    .insight-card strong,
+    .queue-row strong,
+    .health-pill strong {
+      margin-bottom: 5px;
+      color: var(--ink);
+      font-size: 0.88rem;
+    }
+
+    .result-card span,
+    .insight-card span,
+    .queue-row span,
+    .health-pill span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.52;
+    }
+
+    .result-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .result-meta em {
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: #edf3ff;
+      color: #45658f;
+      font-size: 0.72rem;
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    .insight-bar {
+      height: 10px;
+      margin-top: 10px;
+      border-radius: 999px;
+      background: #edf1f6;
+      overflow: hidden;
+    }
+
+    .insight-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--orange), #ffd28b);
+    }
+
+    .sidebar-right {
+      padding: 20px 18px;
+      background: #f8fafc;
+      border-left: 1px solid rgba(16, 17, 20, 0.06);
+    }
+
+    .quote-grid,
+    .impact-grid,
+    .proof-grid,
+    .case-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .impact-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .proof-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .quote-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .case-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .impact-card,
+    .proof-card,
+    .quote-card,
+    .case-card {
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .impact-card h3,
+    .proof-card h3,
+    .case-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.3rem;
+      color: var(--ink);
+    }
+
+    .impact-card p,
+    .proof-card p,
+    .quote-card p,
+    .case-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.66;
+      font-size: 0.95rem;
+    }
+
+    .proof-card .metric {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eff5ff;
+      color: #46658e;
+      font-weight: 800;
+      font-size: 0.78rem;
+    }
+
+    .quote-card {
+      background: #fbfbf8;
+    }
+
+    .quote-card strong {
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-size: 0.96rem;
+    }
+
+    .quote-card span {
+      margin-top: 12px;
+      color: var(--muted-dark);
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .case-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f7f5ef 100%);
+    }
+
+    .case-card strong {
+      margin-bottom: 8px;
+      color: #4b5c10;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .case-card ul {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      color: var(--muted-dark);
+      line-height: 1.65;
+      font-size: 0.93rem;
+    }
+
+    .case-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 16px;
+      padding: 11px 14px;
+      border-radius: 999px;
+      background: #111318;
+      color: #f6f8fb;
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .cta-band {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .cta-panel {
+      padding: 24px;
+      border-radius: 28px;
+      border: 1px solid rgba(16, 17, 20, 0.08);
+      background: linear-gradient(180deg, #17181d 0%, #111216 100%);
+      color: #f4f6fb;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .cta-panel h2 {
+      margin-bottom: 12px;
+      font-size: clamp(1.9rem, 3vw, 2.8rem);
+    }
+
+    .cta-panel p {
+      margin: 0 0 18px;
+      color: rgba(244, 246, 251, 0.74);
+      line-height: 1.72;
+    }
+
+    .cta-aside {
+      padding: 24px;
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cta-aside h3 {
+      margin-bottom: 10px;
+      font-size: 1.36rem;
+      color: var(--ink);
+    }
+
+    .cta-aside p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.68;
+    }
+
+    .cta-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .cta-item {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: #f5f7fb;
+      color: var(--muted-dark);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .footer {
+      padding: 0 0 64px;
+    }
+
+    @media (max-width: 1024px) {
+      .browser {
+        width: 100%;
+      }
+
+      .stats,
+      .impact-grid,
+      .proof-grid,
+      .quote-grid,
+      .case-grid,
+      .cta-band {
+        grid-template-columns: 1fr;
+      }
+
+      .workspace-grid,
+      .panel-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar-right {
+        border-left: 0;
+        border-top: 1px solid rgba(16, 17, 20, 0.06);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar,
+      .story-top {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .signal-list {
+        justify-content: flex-start;
+        max-width: none;
+      }
+
+      .section-card,
+      .hero-card {
+        padding: 24px 18px;
+      }
+
+      .browser {
+        height: 620px;
+      }
+
+      .browser-top,
+      .app-header,
+      .search-bar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .browser-actions,
+      .browser-url {
+        width: 100%;
+      }
+
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="shell">
+        <div class="topbar">
+          <div class="brand">
+            <img class="brand-icon" src="assets/notion-icon.jpg" alt="Notion icon">
+            <div class="brand-copy">
+              <strong>Notion Workspace Rescue</strong>
+              <span>AI teardown by Elinext for Notion Labs, Inc.</span>
+            </div>
+          </div>
+          <a class="topbar-link" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Discuss the build</a>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-copy">
+            <div class="eyebrow">AI teardown for large-workspace trust</div>
+            <div class="wordmark-chip">
+              <img src="assets/notion-icon.jpg" alt="Notion">
+              <span>What if Notion could rescue slow search before teams abandon the flow?</span>
+            </div>
+            <h1>Make big workspaces feel reliable again.</h1>
+            <p>
+              Public feedback around Notion is remarkably consistent: people love the flexibility, but trust drops when large databases get sluggish,
+              offline behavior feels uncertain, and mobile users still cannot jump to the exact block they need. This concept adds a rescue layer on top
+              of Notion's existing AI workspace so users can diagnose, retrieve, and act without guesswork.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#prototype">See the concept</a>
+              <a class="button secondary" href="#track-record">Why Elinext fits this</a>
+            </div>
+            <div class="stats">
+              <div class="stat">
+                <strong>100M+</strong>
+                <span>Users worldwide on the official Notion product page.</span>
+              </div>
+              <div class="stat">
+                <strong>62%</strong>
+                <span>Of the Fortune 100 already use Notion, raising the bar for trust and enterprise readiness.</span>
+              </div>
+              <div class="stat">
+                <strong>11,027</strong>
+                <span>Public G2 reviews, with repeat complaints around performance, offline reliability, and mobile friction.</span>
+              </div>
+              <div class="stat">
+                <strong>98%</strong>
+                <span>Of the Forbes Cloud 100 are cited by Notion as customers, making quality-of-scale improvements highly leverageable.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="prototype">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-head">
+            <div class="section-kicker">Current vs improved</div>
+            <h2>Turn vague slowdown into a clear recovery path.</h2>
+            <p>
+              The prototype leads with one narrow promise: if a search, page, or database is getting shaky, Notion should tell the user why,
+              show whether the result is trustworthy, and offer a clean next action across desktop and mobile.
+            </p>
+          </div>
+
+          <div class="story-stack">
+            <article class="story-panel">
+              <div class="story-top">
+                <div class="story-copy">
+                  <div class="story-tag before">Current state</div>
+                  <h3>Power users hit slow databases, partial search confidence, and unclear sync state.</h3>
+                  <p>
+                    Search technically works, but users still end up opening the wrong page, waiting on slow database rows, or falling back to Slack to
+                    confirm whether the page they are seeing is current. The product feels capable, but not always dependable.
+                  </p>
+                </div>
+                <div class="signal-list">
+                  <span class="signal">Large databases slow down</span>
+                  <span class="signal">Offline confidence is weak</span>
+                  <span class="signal">Mobile retrieval lags desktop</span>
+                </div>
+              </div>
+
+              <div class="browser">
+                <div class="browser-top">
+                  <div class="chrome-group">
+                    <span class="chrome-dot"></span>
+                    <span class="chrome-dot"></span>
+                    <span class="chrome-dot"></span>
+                  </div>
+                  <div class="browser-url">notion.so / product / current-state / q2-ops</div>
+                  <div class="browser-actions">Current flow</div>
+                </div>
+                <div class="browser-screen">
+                  <div class="app-shell">
+                    <div class="app-header">
+                      <div class="app-title">
+                        <img src="assets/notion-icon.jpg" alt="Notion">
+                        <div>
+                          <strong>Workspace search and task recovery</strong>
+                          <span>Good enough in small setups, harder to trust in the big ones</span>
+                        </div>
+                      </div>
+                      <div class="app-mode current">current workspace</div>
+                    </div>
+                    <div class="workspace-grid">
+                      <aside class="sidebar">
+                        <div class="side-heading">Pinned pages</div>
+                        <div class="side-stack">
+                          <div class="side-item active">Q2 company launch plan</div>
+                          <div class="side-item">Engineering operating rhythm</div>
+                          <div class="side-item">Customer escalation board</div>
+                          <div class="side-item">Go-to-market dependencies</div>
+                        </div>
+                        <div class="side-heading">Symptoms users see</div>
+                        <div class="side-stack">
+                          <div class="side-item">Search opens the page, not the exact block</div>
+                          <div class="side-item">Database load delay with no culprit</div>
+                          <div class="side-item">Offline edit confidence feels unclear</div>
+                        </div>
+                        <div class="side-note">
+                          Public review language is consistent: flexible, powerful, and increasingly slow or clunky once the workspace becomes more complex.
+                        </div>
+                      </aside>
+
+                      <div class="main-panel">
+                        <div class="search-bar">
+                          <span>Search: "headcount freeze exceptions"</span>
+                          <strong>14 page matches, no exact block anchors</strong>
+                        </div>
+
+                        <div class="panel-grid">
+                          <div class="panel-stack">
+                            <div class="panel-card">
+                              <div class="panel-head">
+                                <div>
+                                  <strong>Search results</strong>
+                                  <span>Users still have to hunt inside the right page after the result opens.</span>
+                                </div>
+                                <span class="chip warn">Low confidence</span>
+                              </div>
+                              <div class="result-list">
+                                <div class="result-card">
+                                  <strong>Q2 hiring plan</strong>
+                                  <span>Page looks relevant, but the exact decision note is still buried several sections down.</span>
+                                  <div class="result-meta">
+                                    <em>Page-level result only</em>
+                                    <em>Mobile jump missing</em>
+                                  </div>
+                                </div>
+                                <div class="result-card">
+                                  <strong>Comp committee notes</strong>
+                                  <span>Permission state is unclear until after open, so users often ask in chat instead.</span>
+                                  <div class="result-meta">
+                                    <em>Permission unknown</em>
+                                    <em>Stale risk</em>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="panel-card">
+                              <div class="panel-head">
+                                <div>
+                                  <strong>Database health</strong>
+                                  <span>Row opened in 9.6s and the workspace does not explain whether formulas, rollups, or relations caused it.</span>
+                                </div>
+                                <span class="chip warn">Needs diagnosis</span>
+                              </div>
+                              <div class="mini-grid">
+                                <div class="mini-stat">
+                                  <strong>9.6s</strong>
+                                  <span>Single row open time on the roadmap database.</span>
+                                </div>
+                                <div class="mini-stat">
+                                  <strong>?</strong>
+                                  <span>No ranked explanation of the expensive property chain.</span>
+                                </div>
+                              </div>
+                              <div class="insight-list">
+                                <div class="insight-card">
+                                  <strong>Rollup dependency_count</strong>
+                                  <span>Likely involved, but no confidence score or suggested simplification path is shown.</span>
+                                  <div class="insight-bar"><div class="insight-fill" style="width: 84%;"></div></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <aside class="sidebar-right">
+                            <div class="panel-card">
+                              <div class="panel-head">
+                                <div>
+                                  <strong>Offline queue</strong>
+                                  <span>Editors cannot tell which pages are fresh, cached, or waiting to sync.</span>
+                                </div>
+                                <span class="chip warn">7 pending</span>
+                              </div>
+                              <div class="queue-list">
+                                <div class="queue-row">
+                                  <strong>Executive brief</strong>
+                                  <span>Cached 4h ago, edits pending upload.</span>
+                                </div>
+                                <div class="queue-row">
+                                  <strong>Customer handoff</strong>
+                                  <span>Needs reconnection before comments are safe.</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="panel-card">
+                              <div class="panel-head">
+                                <div>
+                                  <strong>Observed outcome</strong>
+                                  <span>Users switch to backup channels when the product does not explain itself.</span>
+                                </div>
+                              </div>
+                              <div class="health-list">
+                                <div class="health-pill">
+                                  <strong>Slack pings increase</strong>
+                                  <span>"Can you send the latest link?" replaces trusted retrieval.</span>
+                                </div>
+                                <div class="health-pill">
+                                  <strong>Duplicate docs appear</strong>
+                                  <span>Teams preserve momentum by copying critical decisions outside the source of truth.</span>
+                                </div>
+                              </div>
+                            </div>
+                          </aside>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="story-panel">
+              <div class="story-top">
+                <div class="story-copy">
+                  <div class="story-tag after">Improved concept</div>
+                  <h3>Workspace Rescue adds observability, block-level retrieval, and mobile-safe continuity.</h3>
+                  <p>
+                    The concept does not redesign Notion's core. It adds a focused diagnostic and retrieval layer for high-value workspaces: exact matches,
+                    trust indicators, expensive property inspection, and a clear offline packet for the pages the team cannot afford to lose.
+                  </p>
+                </div>
+                <div class="signal-list">
+                  <span class="signal">Exact block hits</span>
+                  <span class="signal">Sync + permission confidence</span>
+                  <span class="signal">Formula/rollup inspector</span>
+                </div>
+              </div>
+
+              <div class="browser">
+                <div class="browser-top">
+                  <div class="chrome-group">
+                    <span class="chrome-dot"></span>
+                    <span class="chrome-dot"></span>
+                    <span class="chrome-dot"></span>
+                  </div>
+                  <div class="browser-url">notion.so / workspace-rescue / q2-ops</div>
+                  <div class="browser-actions">Proposed flow</div>
+                </div>
+                <div class="browser-screen">
+                  <div class="app-shell">
+                    <div class="app-header">
+                      <div class="app-title">
+                        <img src="assets/notion-icon.jpg" alt="Notion">
+                        <div>
+                          <strong>Workspace Rescue</strong>
+                          <span>A trust layer for heavy knowledge, high-value search, and mobile continuity</span>
+                        </div>
+                      </div>
+                      <div class="app-mode future">improved workspace</div>
+                    </div>
+                    <div class="workspace-grid">
+                      <aside class="sidebar">
+                        <div class="side-heading">Health summary</div>
+                        <div class="side-stack">
+                          <div class="side-item active">Search confidence 92%</div>
+                          <div class="side-item">Heavy formulas flagged: 3</div>
+                          <div class="side-item">Offline-ready pages: 14</div>
+                          <div class="side-item">Permission gaps detected: 0</div>
+                        </div>
+                        <div class="side-heading">Rescue tools</div>
+                        <div class="side-stack">
+                          <div class="side-item">Open at exact match</div>
+                          <div class="side-item">Inspect costly properties</div>
+                          <div class="side-item">Prepare mobile packet</div>
+                        </div>
+                        <div class="side-note">
+                          This gives power users a fast answer to the real question: can I trust this result, and what should I do next?
+                        </div>
+                      </aside>
+
+                      <div class="main-panel">
+                        <div class="search-bar">
+                          <span>Search: "headcount freeze exceptions"</span>
+                          <strong>3 exact block matches, all permission-checked</strong>
+                        </div>
+
+                        <div class="panel-grid">
+                          <div class="panel-stack">
+                            <div class="panel-card">
+                              <div class="panel-head">
+                                <div>
+                                  <strong>Search Rescue</strong>
+                                  <span>Every result shows exact block context, freshness, and access confidence before open.</span>
+                                </div>
+                                <span class="chip good">Trustworthy</span>
+                              </div>
+                              <div class="result-list">
+                                <div class="result-card">
+                                  <strong>Q2 hiring plan → "Exceptions approved by finance on March 28"</strong>
+                                  <span>Open directly at the matched block, with a preview of the previous and next decision context.</span>
+                                  <div class="result-meta">
+                                    <em>Block-level hit</em>
+                                    <em>Synced 3m ago</em>
+                                    <em>Open at match</em>
+                                  </div>
+                                </div>
+                                <div class="result-card">
+                                  <strong>Comp committee notes → "Temporary freeze exemption applies to infra hires"</strong>
+                                  <span>Permission-aware result chip removes the extra guesswork and chat follow-up.</span>
+                                  <div class="result-meta">
+                                    <em>Permission cleared</em>
+                                    <em>Mobile jump ready</em>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="panel-card">
+                              <div class="panel-head">
+                                <div>
+                                  <strong>Database Load Inspector</strong>
+                                  <span>Heavy properties are ranked by impact, with a safe simplification path before the workflow degrades.</span>
+                                </div>
+                                <span class="chip good">3 issues ranked</span>
+                              </div>
+                              <div class="insight-list">
+                                <div class="insight-card">
+                                  <strong>Rollup dependency_count</strong>
+                                  <span>Estimated 38% of row open cost. Suggest pre-computed summary table for mobile-facing views.</span>
+                                  <div class="insight-bar"><div class="insight-fill" style="width: 82%; background: linear-gradient(90deg, #ffb258, #ffd58f);"></div></div>
+                                </div>
+                                <div class="insight-card">
+                                  <strong>Formula launch_risk_label</strong>
+                                  <span>Estimated 23% of row open cost. Suggest moving AI fill to async update rather than inline load.</span>
+                                  <div class="insight-bar"><div class="insight-fill" style="width: 56%; background: linear-gradient(90deg, #8bc0ff, #badbff);"></div></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <aside class="sidebar-right">
+                            <div class="panel-card">
+                              <div class="panel-head">
+                                <div>
+                                  <strong>Mobile Rescue Packet</strong>
+                                  <span>Prepare the pages, comments, and decision blocks that matter before the user leaves desktop.</span>
+                                </div>
+                                <span class="chip good">Ready now</span>
+                              </div>
+                              <div class="queue-list">
+                                <div class="queue-row">
+                                  <strong>Executive brief</strong>
+                                  <span>Fresh copy cached, comments included, sync delta less than 60 seconds.</span>
+                                </div>
+                                <div class="queue-row">
+                                  <strong>Customer escalation board</strong>
+                                  <span>Critical block matches pinned for in-note jump on mobile.</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="panel-card">
+                              <div class="panel-head">
+                                <div>
+                                  <strong>Expected product effect</strong>
+                                  <span>The user keeps momentum inside Notion instead of creating backup behavior around it.</span>
+                                </div>
+                              </div>
+                              <div class="health-list">
+                                <div class="health-pill">
+                                  <strong>Fewer chat fallbacks</strong>
+                                  <span>Permission and freshness are explained before the click.</span>
+                                </div>
+                                <div class="health-pill">
+                                  <strong>Faster issue triage</strong>
+                                  <span>Performance trouble is surfaced as ranked causes, not just a slow feeling.</span>
+                                </div>
+                                <div class="health-pill">
+                                  <strong>Better mobile trust</strong>
+                                  <span>Users can reach the exact block, not just the page that probably contains it.</span>
+                                </div>
+                              </div>
+                            </div>
+                          </aside>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-head">
+            <div class="section-kicker">Why this concept</div>
+            <h2>Three upgrades that align with Notion's existing direction.</h2>
+            <p>
+              This is not a speculative brand exercise. It follows the current product strategy around AI, enterprise search, and deeper workflow orchestration,
+              while answering the public review patterns that still block trust in larger or mobile-heavy use cases.
+            </p>
+          </div>
+          <div class="impact-grid">
+            <article class="impact-card">
+              <h3>Make search prove itself</h3>
+              <p>
+                Page-level retrieval is not enough when the real need is inside a long document or nested database workflow. Exact block matches, freshness labels,
+                and permission chips reduce the need for backup channels.
+              </p>
+            </article>
+            <article class="impact-card">
+              <h3>Expose the cause of slow workflows</h3>
+              <p>
+                Users should not have to reverse-engineer which rollup, formula, or automation is degrading the experience. A ranked inspector makes performance work
+                actionable for both users and internal teams.
+              </p>
+            </article>
+            <article class="impact-card">
+              <h3>Protect momentum away from desktop</h3>
+              <p>
+                Mobile confidence improves when high-priority pages can be prepared as a packet: exact decision blocks, recent comments, sync status, and offline-safe copies.
+              </p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-head">
+            <div class="section-kicker">Public evidence</div>
+            <h2>The review pattern is strong enough to justify a focused build.</h2>
+            <p>
+              Notion is clearly loved. That is precisely why the negative themes matter: they come from advanced users who want to keep using the product as their system of record.
+            </p>
+          </div>
+          <div class="proof-grid">
+            <article class="proof-card">
+              <div class="metric">G2 • 11,027 reviews</div>
+              <h3>Performance slips as complexity grows</h3>
+              <p>
+                G2's review summary calls out lag in larger databases, and a recent reviewer explicitly says pages take longer to load as workspaces grow.
+              </p>
+            </article>
+            <article class="proof-card">
+              <div class="metric">Capterra • 2,683 reviews</div>
+              <h3>Mobile is still seen as reduced capability</h3>
+              <p>
+                Capterra highlights limited mobile functionality, slower performance, and a less intuitive experience than desktop for more advanced use.
+              </p>
+            </article>
+            <article class="proof-card">
+              <div class="metric">Reddit • 2025-2026 threads</div>
+              <h3>Users ask for trust, not just features</h3>
+              <p>
+                Recent Reddit threads describe 10-second row loads, lag after offline updates, and the absence of a basic search-within-note jump flow on mobile.
+              </p>
+            </article>
+          </div>
+          <div class="quote-grid" style="margin-top: 18px;">
+            <article class="quote-card">
+              <strong>“My main database takes 10 seconds to load a single row...”</strong>
+              <p>
+                This is not a complaint about a missing button. It is a complaint about operational trust inside a heavy workspace.
+              </p>
+              <span>Reddit / r/Notion</span>
+            </article>
+            <article class="quote-card">
+              <strong>“Please add a search in note feature...”</strong>
+              <p>
+                Retrieval breaks down when a result lands on a page but not the exact content the user needs to act on.
+              </p>
+              <span>Reddit / r/Notion</span>
+            </article>
+            <article class="quote-card">
+              <strong>“Pages that used to open instantly now take forever...”</strong>
+              <p>
+                Offline and sync features raise expectations. If freshness is unclear, the product gets treated as risky even when the capability exists.
+              </p>
+              <span>Reddit / r/Notion</span>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="track-record">
+      <div class="shell">
+        <div class="section-card">
+          <div class="section-head">
+            <div class="section-kicker">Proven track record</div>
+            <h2>Elinext already ships document-heavy collaboration platforms at scale.</h2>
+            <p>
+              The concept above fits the kind of work Elinext has delivered before: document workflows, collaboration systems, stability improvements,
+              and long-lived web platforms that need to scale with real operational complexity.
+            </p>
+          </div>
+          <div class="case-grid">
+            <article class="case-card">
+              <strong>Closest match</strong>
+              <h3>Document Collaboration Platform Development</h3>
+              <p>
+                Elinext assembled a 20-person cross-functional team to build a scalable document management and collaboration platform for regulated financial markets.
+              </p>
+              <ul>
+                <li>Reduced operational costs by replacing third-party document generation tools.</li>
+                <li>Improved platform stability and scalability for broader adoption.</li>
+                <li>Accelerated release cycles with automated QA coverage.</li>
+              </ul>
+              <a class="case-link" href="https://www.elinext.com/case-study/document-collaboration-platform/" target="_blank" rel="noopener noreferrer">View case study</a>
+            </article>
+            <article class="case-card">
+              <strong>Scale proof</strong>
+              <h3>Document Management System for Clinical Trials</h3>
+              <p>
+                Elinext has also delivered a long-running SaaS collaboration platform for clinical trial management with secure file hosting and configurable modules.
+              </p>
+              <ul>
+                <li>Supports 45,000 users in healthcare workflows.</li>
+                <li>Processes hundreds of gigabytes of regulated data.</li>
+                <li>Continues evolving over a long product lifecycle.</li>
+              </ul>
+              <a class="case-link" href="https://www.elinext.com/case-study/clinical-trials-management/" target="_blank" rel="noopener noreferrer">View case study</a>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section footer">
+      <div class="shell">
+        <div class="cta-band">
+          <div class="cta-panel">
+            <h2>Best next step: build the rescue layer as a narrow product experiment.</h2>
+            <p>
+              This does not need to start as a broad platform rewrite. A focused build could target one high-value path first: exact retrieval plus expensive-property diagnosis
+              for a heavy teamspace. That is enough to prove trust, speed, and adoption impact without disrupting the rest of the product.
+            </p>
+            <a class="button primary" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Get in Touch</a>
+          </div>
+          <div class="cta-aside">
+            <h3>What Elinext would bring</h3>
+            <p>
+              A blended squad across product engineering, frontend, backend, QA, and performance-sensitive workflow design for shipping the experiment cleanly.
+            </p>
+            <div class="cta-list">
+              <div class="cta-item">Search + retrieval UX grounded in trust signals</div>
+              <div class="cta-item">Performance instrumentation for complex web workflows</div>
+              <div class="cta-item">Responsive web and mobile continuity patterns</div>
+              <div class="cta-item">QA automation for high-change collaboration products</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
