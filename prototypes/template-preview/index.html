@@ -35,14 +35,20 @@
     body {
       font-family: "Manrope", -apple-system, sans-serif;
       color: var(--ink);
-      background: linear-gradient(180deg, #0f1115 0%, #17181d 360px, var(--paper) 360px);
+      background: var(--paper);
       -webkit-font-smoothing: antialiased;
     }
     a { color: inherit; text-decoration: none; }
     .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px; }
 
     /* ── Hero (dark) ── */
-    .hero { padding: 100px 0 64px; color: #f3f6fb; text-align: center; }
+    .hero {
+      padding: 100px 0 64px; color: #f3f6fb; text-align: center;
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(217,255,95,0.15), transparent 50%),
+        radial-gradient(ellipse at 80% 0%, rgba(139,192,255,0.12), transparent 50%),
+        linear-gradient(180deg, #0f1115, #17181d);
+    }
     .hero-topbar {
       display: inline-flex; align-items: center; gap: 10px;
       padding: 8px 16px 8px 8px; border-radius: 999px;
@@ -70,18 +76,30 @@
     }
     .btn-lime:hover { opacity: .85; }
 
-    /* ── Stats row (transition zone) ── */
+    /* ── Stats row ── */
     .stats-row {
-      display: flex; justify-content: center; gap: 32px;
+      display: flex; justify-content: center; gap: 48px;
       padding: 28px 0 0; margin-top: 32px;
-      border-top: 1px solid rgba(255,255,255,0.08);
+      border-top: 1px solid rgba(255,255,255,0.1);
     }
     .stat { text-align: center; }
-    .stat .num { font-size: 28px; font-weight: 800; color: #fff; }
-    .stat .lbl { font-size: 12px; color: rgba(243,246,251,0.5); margin-top: 2px; }
+    .stat .num { font-size: 32px; font-weight: 800; color: var(--lime); }
+    .stat .lbl { font-size: 11px; color: rgba(243,246,251,0.45); margin-top: 4px; text-transform: uppercase; letter-spacing: .06em; }
 
-    /* ── Sections (light bg) ── */
+    /* ── Sections ── */
     .section { padding: 56px 0; }
+    .section-dark {
+      background: linear-gradient(180deg, #13151a, #1a1d25);
+      color: #f3f6fb;
+    }
+    .section-dark .section-tag { color: var(--lime); }
+    .section-dark .pain .big { color: var(--lime); }
+    .section-dark .pain { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); }
+    .section-dark .pain .label { color: #f3f6fb; }
+    .section-dark .pain .detail { color: rgba(243,246,251,0.5); }
+    .section-gradient {
+      background: linear-gradient(180deg, #eef4ff, var(--paper));
+    }
     .section-tag {
       font-size: 12px; font-weight: 700; color: var(--muted);
       text-transform: uppercase; letter-spacing: .1em; margin-bottom: 16px;
@@ -102,10 +120,24 @@
     .pain .label { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
     .pain .detail { font-size: 12px; color: var(--muted); line-height: 1.4; }
 
-    /* ── Demo ── */
+    /* ── Demo (browser frame) ── */
     .demo-card {
       background: var(--card); border: 1px solid var(--line);
-      border-radius: var(--r-lg); box-shadow: var(--shadow); overflow: hidden;
+      border-radius: var(--r-lg); box-shadow: 0 24px 64px rgba(12,17,28,0.14); overflow: hidden;
+    }
+    .browser-bar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 16px; background: #f0eeea; border-bottom: 1px solid var(--line);
+    }
+    .browser-dots { display: flex; gap: 5px; }
+    .browser-dots span { width: 10px; height: 10px; border-radius: 50%; }
+    .browser-dots span:nth-child(1) { background: #ff5f57; }
+    .browser-dots span:nth-child(2) { background: #ffbd2e; }
+    .browser-dots span:nth-child(3) { background: #28c940; }
+    .browser-url {
+      flex: 1; margin-left: 8px; padding: 5px 12px;
+      background: #fff; border-radius: 6px; border: 1px solid var(--line);
+      font-size: 11px; color: var(--muted);
     }
     .demo-tabs {
       display: flex; gap: 0; border-bottom: 1px solid var(--line);
@@ -217,7 +249,7 @@
   </section>
 
   <!-- PROBLEM -->
-  <section class="section">
+  <section class="section section-dark">
     <div class="wrap">
       <div class="section-tag">What we found</div>
       <div class="pain-grid">
@@ -241,10 +273,14 @@
   </section>
 
   <!-- DEMO -->
-  <section class="section" id="demo">
+  <section class="section section-gradient" id="demo">
     <div class="wrap">
       <div class="section-tag">What we'd build</div>
       <div class="demo-card">
+        <div class="browser-bar">
+          <div class="browser-dots"><span></span><span></span><span></span></div>
+          <div class="browser-url">notion.so/workspace-trust-layer</div>
+        </div>
         <div class="demo-tabs">
           <button class="demo-tab active" data-tab="0">Search QA</button>
           <button class="demo-tab" data-tab="1">Trust Layer</button>
