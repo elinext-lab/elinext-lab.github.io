@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trust Layer for Notion AI | Elinext</title>
+  <meta name="description" content="A prototype for Notion showing how a trust layer could improve search confidence, enterprise clarity, and mobile performance.">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/notion_2026-04-09_16-57-05/">
+  <meta property="og:title" content="Trust Layer for Notion AI">
+  <meta property="og:description" content="A prototype for Notion showing how a trust layer could improve search confidence, enterprise clarity, and mobile performance.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/notion_2026-04-09_16-57-05/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/notion_2026-04-09_16-57-05/">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZR415HX0B2');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0e13;
+      --surface: #15181f;
+      --surface-2: #1c2029;
+      --border: rgba(255,255,255,0.08);
+      --text: #f0eee9;
+      --text-secondary: #9a9ba1;
+      --accent: #5ba2ff;
+      --accent-soft: rgba(91, 162, 255, 0.14);
+      --font: "Inter", -apple-system, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    section { position: relative; z-index: 1; background: var(--bg); }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(12,14,19,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 600; font-size: 14px; color: var(--text-secondary);
+      min-width: 0;
+    }
+    .nav-brand img { width: 28px; height: 28px; border-radius: 6px; background: #fff; flex: 0 0 auto; }
+    .nav-brand span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .nav-cta {
+      padding: 8px 20px; border-radius: 8px;
+      background: var(--accent); color: #fff;
+      font-weight: 600; font-size: 14px;
+      border: none; cursor: pointer;
+      transition: opacity 0.2s;
+      flex: 0 0 auto;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+    .hero {
+      min-height: 70vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 120px 0 60px;
+    }
+    .hero-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 500; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 700; line-height: 1.15;
+      max-width: 760px;
+      margin-bottom: 20px;
+    }
+    .hero-sub {
+      font-size: 18px; color: var(--text-secondary);
+      max-width: 650px; line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .hero-evidence {
+      max-width: 680px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 36px;
+    }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; border-radius: 10px;
+      background: var(--accent); color: #fff;
+      font-weight: 600; font-size: 16px;
+      border: none; cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+      width: fit-content;
+    }
+    .hero-cta:hover { transform: translateY(-1px); opacity: 0.9; }
+    .problem, .demo, .proof, .footer-cta {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+    }
+    .problem-heading, .demo-heading, .proof-heading {
+      font-size: 13px; font-weight: 600; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+    .problem h2, .demo h2, .proof h2 {
+      font-size: clamp(24px, 3.5vw, 36px);
+      font-weight: 700; line-height: 1.25;
+      max-width: 700px;
+      margin-bottom: 32px;
+    }
+    .pain-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .pain-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .pain-card .number {
+      font-size: 32px; font-weight: 700; color: var(--accent);
+      line-height: 1; margin-bottom: 8px;
+    }
+    .pain-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .pain-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.55; }
+    .demo-tabs {
+      display: flex; gap: 4px;
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 24px;
+      width: fit-content;
+      flex-wrap: wrap;
+    }
+    .demo-tab {
+      padding: 10px 20px; border-radius: 8px;
+      font-size: 14px; font-weight: 500;
+      cursor: pointer; border: none;
+      background: transparent; color: var(--text-secondary);
+      transition: all 0.25s;
+    }
+    .demo-tab.active {
+      background: var(--accent);
+      color: #fff;
+    }
+    .demo-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      min-height: 340px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .demo-panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .demo-split {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    }
+    .demo-col h4 {
+      font-size: 13px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+    .demo-col-before h4 { color: #ff7480; }
+    .demo-col-after h4 { color: #89e3a5; }
+    .demo-item {
+      background: var(--surface-2);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .demo-item .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+    .demo-item .value { font-size: 22px; font-weight: 700; }
+    .demo-item .value.bad { color: #ff7480; }
+    .demo-item .value.good { color: #89e3a5; }
+    .demo-toggle-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .demo-toggle-row:last-of-type { border-bottom: none; }
+    .toggle {
+      position: relative; width: 48px; height: 26px;
+      background: #333; border-radius: 999px; cursor: pointer;
+      transition: background 0.3s; border: none;
+      flex: 0 0 auto;
+    }
+    .toggle.on { background: var(--accent); }
+    .toggle::after {
+      content: ""; position: absolute;
+      top: 3px; left: 3px;
+      width: 20px; height: 20px;
+      background: #fff; border-radius: 50%;
+      transition: transform 0.3s;
+    }
+    .toggle.on::after { transform: translateX(22px); }
+    .toggle-copy { min-width: 0; }
+    .toggle-label { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+    .toggle-detail { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+    .demo-note {
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .case-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      transition: border-color 0.2s;
+    }
+    .case-card:hover { border-color: var(--accent); }
+    .case-tag {
+      display: inline-block; padding: 4px 10px;
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.06em; border-radius: 6px;
+      background: var(--accent-soft); color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .case-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .case-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.55; margin-bottom: 14px; }
+    .case-result {
+      font-size: 14px; font-weight: 600; color: #89e3a5;
+    }
+    .case-link {
+      display: inline-block; margin-top: 12px;
+      font-size: 13px; font-weight: 500; color: var(--accent);
+    }
+    .case-link:hover { text-decoration: underline; }
+    .footer-cta {
+      text-align: center;
+    }
+    .footer-cta h2 {
+      font-size: clamp(24px, 4vw, 40px);
+      font-weight: 700; margin-bottom: 16px;
+    }
+    .footer-cta p {
+      font-size: 16px; color: var(--text-secondary);
+      margin-bottom: 32px;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .footer-brand {
+      margin-top: 48px;
+      font-size: 13px; color: var(--text-secondary);
+    }
+    @media (max-width: 640px) {
+      .wrap { padding: 0 16px; }
+      nav { padding: 14px 16px; gap: 12px; }
+      .nav-cta { padding: 8px 14px; }
+      .demo-split { grid-template-columns: 1fr; }
+      .case-cards { grid-template-columns: 1fr; }
+      .hero { min-height: 60vh; padding: 100px 0 40px; }
+      .demo-panel { padding: 22px; }
+      .demo-toggle-row { align-items: flex-start; }
+      .nav-brand span { max-width: 160px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-brand">
+      <img src="assets/notion-icon.png" alt="Notion">
+      <span>Notion × Elinext</span>
+    </div>
+    <a href="https://www.elinext.com/contacts/" class="nav-cta">Let's Talk</a>
+  </nav>
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-label">AI-powered product analysis</div>
+      <h1>What if Notion's AI workspace felt as trustworthy as it is flexible?</h1>
+      <p class="hero-sub">Notion is already winning on breadth: agents, enterprise search, meeting notes, docs, projects, and collaboration in one surface. The public friction is lower-level and fixable: search confidence in deep page trees, sluggishness in larger databases, mobile/offline lag, and trust anxiety when pricing or recovery feels opaque.</p>
+      <p class="hero-evidence">This concept prototype turns that into an engineering brief: a trust layer for retrieval, admin clarity, and high-scale usage, built from official product pages plus Capterra, G2, Product Hunt, Reddit, Crunchbase, and BuiltWith signals gathered on April 9, 2026.</p>
+      <a href="#demo" class="hero-cta">See How ↓</a>
+    </div>
+  </section>
+
+  <section class="problem">
+    <div class="wrap">
+      <div class="problem-heading">What we found</div>
+      <h2>Users love the flexibility. They still trip on setup friction, search trust, and scale.</h2>
+      <div class="pain-cards">
+        <div class="pain-card">
+          <div class="number">4.3/5</div>
+          <h3>Ease Still Trails Love</h3>
+          <p>Capterra gives Notion 4.7 overall, but ease of use sits at 4.3. Its verdict says teams often need serious upfront structuring work before the product scales cleanly across departments.</p>
+        </div>
+        <div class="pain-card">
+          <div class="number">11,024</div>
+          <h3>Search Confidence Gaps</h3>
+          <p>G2 reviews are broadly positive, yet recent reviewers still say pages disappear inside nested trees and search can miss known meeting transcripts, which weakens the Enterprise Search story.</p>
+        </div>
+        <div class="pain-card">
+          <div class="number">2,991↑</div>
+          <h3>Trust Breaks Loudly</h3>
+          <p>An October 2025 Reddit thread about account bans and data access drew 2,991 upvotes. Another May 2025 thread framed pricing and feature changes as trust-breaking for paying teams.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo" id="demo">
+    <div class="wrap">
+      <div class="demo-heading">What we'd build</div>
+      <h2>A reliability layer for search, admin trust, and high-scale mobile use.</h2>
+
+      <div class="demo-tabs">
+        <button class="demo-tab active" data-tab="0">Search QA</button>
+        <button class="demo-tab" data-tab="1">Trust Ops</button>
+        <button class="demo-tab" data-tab="2">Mobile Scale</button>
+      </div>
+
+      <div class="demo-panel active" data-panel="0">
+        <div class="demo-split">
+          <div class="demo-col demo-col-before">
+            <h4>Today</h4>
+            <div class="demo-item">
+              <div class="label">Trusted answer hit rate</div>
+              <div class="value bad">61%</div>
+            </div>
+            <div class="demo-item">
+              <div class="label">Time to trusted answer</div>
+              <div class="value bad">14s avg</div>
+            </div>
+          </div>
+          <div class="demo-col demo-col-after">
+            <h4>With our solution</h4>
+            <div class="demo-item">
+              <div class="label">Trusted answer hit rate</div>
+              <div class="value good">92%</div>
+            </div>
+            <div class="demo-item">
+              <div class="label">Time to trusted answer</div>
+              <div class="value good">4s avg</div>
+            </div>
+          </div>
+        </div>
+        <p class="demo-note">The concept adds confidence scoring, source pinning for verified pages, and missed-answer analytics so agent outputs are explainable instead of magical. The numbers here are prototype targets, chosen to directly address the review pattern around search misses and retrieval friction.</p>
+      </div>
+
+      <div class="demo-panel" data-panel="1">
+        <div class="demo-toggle-row">
+          <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+          <div class="toggle-copy">
+            <div class="toggle-label">Entitlement change log</div>
+            <div class="toggle-detail">Surface upcoming plan-gate changes, beta feature status, and admin-visible packaging impacts before teams feel blindsided.</div>
+          </div>
+        </div>
+        <div class="demo-toggle-row">
+          <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+          <div class="toggle-copy">
+            <div class="toggle-label">Recovery and export health checks</div>
+            <div class="toggle-detail">Give workspace owners a live view of export readiness, backup state, and recovery pathways so trust is earned inside the product, not only in docs.</div>
+          </div>
+        </div>
+        <div class="demo-toggle-row">
+          <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+          <div class="toggle-copy">
+            <div class="toggle-label">Enterprise trust center</div>
+            <div class="toggle-detail">Pull data residency, audit, AI governance, and permission posture into one in-product view for admins evaluating rollout risk.</div>
+          </div>
+        </div>
+        <p class="demo-note">This is the thin layer between Notion's aggressive AI surface area and the trust questions enterprise buyers ask before they expand usage. It complements the security and data residency work Notion is already shipping.</p>
+      </div>
+
+      <div class="demo-panel" data-panel="2">
+        <div class="demo-split">
+          <div class="demo-col">
+            <div class="demo-item">
+              <div class="label">Offline-ready critical docs</div>
+              <div class="value good">50 docs</div>
+            </div>
+          </div>
+          <div class="demo-col">
+            <div class="demo-item">
+              <div class="label">Large DB interaction target</div>
+              <div class="value good">&lt;120 ms</div>
+            </div>
+          </div>
+        </div>
+        <p class="demo-note">We'd ship a thinner mobile path for favorites, search, and recent meeting notes, backed by selective offline caching and virtualized database rendering. The goal is not to recreate desktop on mobile; it is to make the highest-value actions feel instant and dependable.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="proof">
+    <div class="wrap">
+      <div class="proof-heading">We've done this before</div>
+      <h2>Similar projects we delivered</h2>
+      <div class="case-cards">
+        <div class="case-card">
+          <div class="case-tag">Financial Services</div>
+          <h3>Document Collaboration Platform Development</h3>
+          <p>Built a regulated-market collaboration platform that brought document generation and negotiation into one scalable web product with dedicated QA and DevOps support.</p>
+          <div class="case-result">Reduced operational costs by replacing third-party document generation tools with an in-house solution.</div>
+          <a href="https://www.elinext.com/case-study/document-collaboration-platform/" target="_blank" class="case-link">Read case study →</a>
+        </div>
+
+        <div class="case-card">
+          <div class="case-tag">AI / Web</div>
+          <h3>Web Application for Text Summary of Internal Meetings within Elinext</h3>
+          <p>Built a web app that transcribes internal meetings, generates concise summaries, and emails the result shortly after the call for better communication and traceability.</p>
+          <div class="case-result">Teams saved time and improved communication with concise meeting summaries delivered shortly after meetings.</div>
+          <a href="https://www.elinext.com/case-study/text-to-speech-web-application/" target="_blank" class="case-link">Read case study →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="footer-cta">
+    <div class="wrap">
+      <h2>Fuzzy, if this maps to the trust friction your team is hearing, let's compare notes.</h2>
+      <p>We built this around public signals from Notion's own roadmap, review data, and community feedback. If useful, we'd love 15 minutes to walk through how we'd turn the concept into a scoped implementation.</p>
+      <a href="https://www.elinext.com/contacts/" class="hero-cta">Let's Talk</a>
+      <div class="footer-brand">Built with AI by Elinext</div>
+    </div>
+  </section>
+
+  <script>
+    document.querySelectorAll('.demo-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const idx = tab.dataset.tab;
+        document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.demo-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelector(`[data-panel="${idx}"]`).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
