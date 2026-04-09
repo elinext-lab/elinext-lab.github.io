@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notion Workspace Clarity | Elinext</title>
+  <meta name="description" content="Search certainty, seat impact, and access previews before admins lose trust.">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/notion_2026-04-09_13-26-09/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/notion_2026-04-09_13-26-09/">
+  <meta property="og:title" content="What if every workspace stayed legible?">
+  <meta property="og:description" content="Search certainty, seat impact, and access previews before admins lose trust.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/notion_2026-04-09_13-26-09/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1012;
+      --panel: #17191d;
+      --panel-2: #1d2025;
+      --line: rgba(247, 241, 232, 0.12);
+      --text: #f7f1e8;
+      --muted: #b9b2a8;
+      --accent: #ff7a2f;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-pill: 999px;
+      --ease: 320ms ease;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 14% 12%, rgba(255, 122, 47, 0.18), transparent 22%),
+        radial-gradient(circle at 88% 20%, rgba(255, 122, 47, 0.08), transparent 18%),
+        linear-gradient(180deg, #0b0c0e 0%, #101215 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.025), transparent 24%),
+        repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 32px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(1160px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 18px 0 56px;
+    }
+
+    .panel {
+      position: relative;
+      background: rgba(23, 25, 29, 0.95);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 22%);
+      pointer-events: none;
+    }
+
+    .section {
+      position: relative;
+      min-height: 100svh;
+      display: grid;
+      align-items: center;
+      padding: 22px 0;
+    }
+
+    .hero-shell,
+    .proof-shell {
+      padding: 28px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--line);
+      background: rgba(15, 16, 18, 0.6);
+    }
+
+    .brand img {
+      width: 34px;
+      height: 34px;
+      display: block;
+    }
+
+    .brand span {
+      font-size: 0.82rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .hero-copy {
+      max-width: 860px;
+      padding-top: 18px;
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      font-family: "Syne", sans-serif;
+      letter-spacing: -0.05em;
+      line-height: 0.92;
+    }
+
+    h1 {
+      max-width: 860px;
+      font-size: clamp(3.3rem, 9vw, 5.6rem);
+    }
+
+    .subline {
+      margin: 18px 0 0;
+      max-width: 660px;
+      font-size: clamp(1.15rem, 2vw, 1.4rem);
+      line-height: 1.35;
+      color: var(--muted);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .chip {
+      padding: 10px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--line);
+      background: rgba(247, 241, 232, 0.04);
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .chip strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 164px;
+      min-height: 52px;
+      margin-top: 24px;
+      padding: 0 18px;
+      border-radius: var(--radius-pill);
+      background: var(--accent);
+      color: #111113;
+      font-weight: 700;
+      transition: transform var(--ease), filter var(--ease);
+    }
+
+    .cta:hover,
+    .cta:focus-visible {
+      transform: translateY(-2px);
+      filter: brightness(1.04);
+    }
+
+    .demo-shell {
+      padding: 18px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .demo-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .toggle {
+      min-height: 48px;
+      padding: 0 16px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--line);
+      background: rgba(247, 241, 232, 0.04);
+      color: var(--muted);
+      cursor: pointer;
+      transition: background var(--ease), color var(--ease), border-color var(--ease);
+    }
+
+    .toggle[aria-pressed="true"] {
+      background: var(--accent);
+      border-color: transparent;
+      color: #111113;
+      font-weight: 700;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .stats,
+    .scene {
+      min-height: 520px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      position: relative;
+      z-index: 1;
+    }
+
+    .stats {
+      display: grid;
+      align-content: start;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: rgba(247, 241, 232, 0.04);
+      border: 1px solid var(--line);
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      display: block;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 0.9;
+      font-family: "Syne", sans-serif;
+    }
+
+    .scene {
+      padding: 20px;
+      display: grid;
+      align-content: start;
+      gap: 18px;
+    }
+
+    .scene-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .scene-title {
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    .scene-badge {
+      padding: 8px 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--line);
+      color: var(--accent);
+      background: rgba(255, 122, 47, 0.08);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      background: rgba(247, 241, 232, 0.03);
+    }
+
+    .row strong {
+      font-size: 1rem;
+    }
+
+    .row span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-top: 6px;
+    }
+
+    .row em {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      min-height: 40px;
+      padding: 0 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 122, 47, 0.12);
+      color: var(--text);
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    .scene-footer {
+      margin-top: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tag {
+      padding: 8px 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .proof-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .proof-card {
+      display: grid;
+      gap: 14px;
+      padding: 22px;
+      border-radius: var(--radius-lg);
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+    }
+
+    .proof-card small {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 122, 47, 0.08);
+      border: 1px solid rgba(255, 122, 47, 0.22);
+      color: var(--accent);
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+    }
+
+    .proof-card strong {
+      font-size: 1.2rem;
+      line-height: 1.2;
+    }
+
+    .proof-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.35;
+    }
+
+    .proof-link {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-weight: 700;
+    }
+
+    .reveal {
+      opacity: 1;
+      transform: none;
+      animation: float-up 520ms ease both;
+    }
+
+    @keyframes float-up {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .section {
+        min-height: auto;
+      }
+
+      .demo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats,
+      .scene {
+        min-height: auto;
+      }
+
+      .proof-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100%, calc(100% - 16px));
+        padding-top: 10px;
+      }
+
+      .hero-shell,
+      .proof-shell {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: clamp(2.7rem, 14vw, 4.2rem);
+      }
+
+      .subline {
+        font-size: 1.04rem;
+      }
+
+      .proof-head {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .cta {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section reveal">
+      <div class="panel hero-shell">
+        <div class="hero-grid">
+          <div class="brand">
+            <img src="assets/notion-mark.svg" alt="Notion mark">
+            <span>Notion x Elinext</span>
+          </div>
+          <div class="hero-copy">
+            <h1>What if every workspace stayed legible?</h1>
+            <p class="subline">Search certainty, seat impact, and access previews before admins lose trust.</p>
+            <div class="hero-meta" aria-label="Public signals">
+              <div class="chip"><strong>PH</strong> 4.8</div>
+              <div class="chip"><strong>G2</strong> 4.6</div>
+              <div class="chip"><strong>TP</strong> 2.4</div>
+              <div class="chip"><strong>LH</strong> 53</div>
+            </div>
+            <a class="cta" href="https://www.elinext.com/contacts/">Let's Talk</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="panel demo-shell">
+        <div class="demo-top">
+          <div class="group" aria-label="Demo mode">
+            <button class="toggle" data-mode="search" aria-pressed="true">Search</button>
+            <button class="toggle" data-mode="access" aria-pressed="false">Access</button>
+            <button class="toggle" data-mode="seats" aria-pressed="false">Seats</button>
+          </div>
+          <div class="group" aria-label="State toggle">
+            <button class="toggle" data-phase="before" aria-pressed="true">Before</button>
+            <button class="toggle" data-phase="after" aria-pressed="false">After</button>
+          </div>
+        </div>
+
+        <div class="demo-grid">
+          <aside class="stats" aria-live="polite">
+            <div class="stat">
+              <span class="stat-label" id="stat-label-1">Exact</span>
+              <span class="stat-value" id="stat-value-1">0</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label" id="stat-label-2">Noise</span>
+              <span class="stat-value" id="stat-value-2">18</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label" id="stat-label-3">Fresh</span>
+              <span class="stat-value" id="stat-value-3">9d</span>
+            </div>
+          </aside>
+
+          <section class="scene" aria-live="polite">
+            <div class="scene-head">
+              <div class="scene-title" id="scene-title">Search trace</div>
+              <div class="scene-badge" id="scene-badge">Q2 roadmap</div>
+            </div>
+            <div class="stack">
+              <div class="row">
+                <div>
+                  <strong id="row-title-1">Transcript</strong>
+                  <span id="row-copy-1">Skipped in index</span>
+                </div>
+                <em id="row-tag-1">ghost</em>
+              </div>
+              <div class="row">
+                <div>
+                  <strong id="row-title-2">Board note</strong>
+                  <span id="row-copy-2">14 similar hits</span>
+                </div>
+                <em id="row-tag-2">noise</em>
+              </div>
+              <div class="row">
+                <div>
+                  <strong id="row-title-3">Owner</strong>
+                  <span id="row-copy-3">No cited answer</span>
+                </div>
+                <em id="row-tag-3">guess</em>
+              </div>
+            </div>
+            <div class="scene-footer" id="scene-footer">
+              <div class="tag">deep pages</div>
+              <div class="tag">dense docs</div>
+              <div class="tag">slow find</div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="panel proof-shell">
+        <div class="proof-head">
+          <h2>We've done this before</h2>
+          <a class="cta" href="https://www.elinext.com/contacts/">Let's Talk</a>
+        </div>
+
+        <div class="proof-grid">
+          <article class="proof-card">
+            <small>Docs</small>
+            <strong>Regulated document collaboration platform</strong>
+            <p>Lower tool costs. Faster agreement creation.</p>
+            <a class="proof-link" href="https://www.elinext.com/case-study/document-collaboration-platform/">Read case</a>
+          </article>
+
+          <article class="proof-card">
+            <small>Scale</small>
+            <strong>SaaS document system</strong>
+            <p>45k users. Secure virtual data room.</p>
+            <a class="proof-link" href="https://www.elinext.com/case-study/clinical-trials-management/">Read case</a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const states = {
+      search: {
+        title: "Search trace",
+        badge: "Q2 roadmap",
+        footer: ["deep pages", "dense docs", "slow find"],
+        before: {
+          stats: [
+            { label: "Exact", value: 0, suffix: "" },
+            { label: "Noise", value: 18, suffix: "" },
+            { label: "Fresh", value: 9, suffix: "d" }
+          ],
+          rows: [
+            { title: "Transcript", copy: "Skipped in index", tag: "ghost" },
+            { title: "Board note", copy: "14 similar hits", tag: "noise" },
+            { title: "Owner", copy: "No cited answer", tag: "guess" }
+          ]
+        },
+        after: {
+          stats: [
+            { label: "Exact", value: 1, suffix: "" },
+            { label: "Noise", value: 2, suffix: "" },
+            { label: "Fresh", value: 92, suffix: "%" }
+          ],
+          rows: [
+            { title: "Transcript", copy: "Cited answer on top", tag: "found" },
+            { title: "Board note", copy: "2 near hits left", tag: "clean" },
+            { title: "Owner", copy: "Source linked", tag: "ready" }
+          ]
+        }
+      },
+      access: {
+        title: "Access map",
+        badge: "Launch page",
+        footer: ["hidden groups", "shared links", "guest drift"],
+        before: {
+          stats: [
+            { label: "Blocks", value: 5, suffix: "" },
+            { label: "Guests", value: 9, suffix: "" },
+            { label: "Rules", value: 3, suffix: "" }
+          ],
+          rows: [
+            { title: "Design", copy: "Group shadowed", tag: "hidden" },
+            { title: "Ops", copy: "Nested deny rule", tag: "conflict" },
+            { title: "Agency", copy: "Guest still active", tag: "leak" }
+          ]
+        },
+        after: {
+          stats: [
+            { label: "Blocks", value: 0, suffix: "" },
+            { label: "Guests", value: 5, suffix: "" },
+            { label: "Rules", value: 1, suffix: "" }
+          ],
+          rows: [
+            { title: "Design", copy: "Path preview is clear", tag: "clean" },
+            { title: "Ops", copy: "Inheritance pinned", tag: "mapped" },
+            { title: "Agency", copy: "Guest expiry set", tag: "safe" }
+          ]
+        }
+      },
+      seats: {
+        title: "Seat impact",
+        badge: "Growth sync",
+        footer: ["paid seats", "guest swaps", "plan gates"],
+        before: {
+          stats: [
+            { label: "Seats", value: 7, suffix: "" },
+            { label: "Guests", value: 0, suffix: "" },
+            { label: "Cost", value: 0, prefix: "$", suffix: "?" }
+          ],
+          rows: [
+            { title: "Invite 7", copy: "Paid jump hidden", tag: "blind" },
+            { title: "AI note", copy: "Tier gate unclear", tag: "gate" },
+            { title: "Owner", copy: "No approval step", tag: "risk" }
+          ]
+        },
+        after: {
+          stats: [
+            { label: "Seats", value: 2, suffix: "" },
+            { label: "Guests", value: 5, suffix: "" },
+            { label: "Cost", value: 168, prefix: "$", suffix: "/mo" }
+          ],
+          rows: [
+            { title: "Invite 7", copy: "5 stay guests", tag: "trim" },
+            { title: "AI note", copy: "Tier diff shown", tag: "clear" },
+            { title: "Owner", copy: "Approval sent", tag: "safe" }
+          ]
+        }
+      }
+    };
+
+    let mode = "search";
+    let phase = "before";
+
+    const statLabels = [
+      document.getElementById("stat-label-1"),
+      document.getElementById("stat-label-2"),
+      document.getElementById("stat-label-3")
+    ];
+    const statValues = [
+      document.getElementById("stat-value-1"),
+      document.getElementById("stat-value-2"),
+      document.getElementById("stat-value-3")
+    ];
+    const sceneTitle = document.getElementById("scene-title");
+    const sceneBadge = document.getElementById("scene-badge");
+    const footer = document.getElementById("scene-footer");
+
+    const rows = [1, 2, 3].map((i) => ({
+      title: document.getElementById(`row-title-${i}`),
+      copy: document.getElementById(`row-copy-${i}`),
+      tag: document.getElementById(`row-tag-${i}`)
+    }));
+
+    const parseValue = (text) => {
+      const n = Number(text.replace(/[^0-9.-]/g, ""));
+      return Number.isFinite(n) ? n : 0;
+    };
+
+    const animateValue = (element, target, prefix = "", suffix = "") => {
+      const start = parseValue(element.textContent);
+      const startTime = performance.now();
+      const duration = 360;
+
+      const step = (now) => {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = start + (target - start) * eased;
+        const display = Math.round(value);
+        element.textContent = `${prefix}${display}${suffix}`;
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          element.textContent = `${prefix}${target}${suffix}`;
+        }
+      };
+
+      requestAnimationFrame(step);
+    };
+
+    function render() {
+      const state = states[mode];
+      const data = state[phase];
+
+      sceneTitle.textContent = state.title;
+      sceneBadge.textContent = state.badge;
+
+      data.stats.forEach((stat, index) => {
+        statLabels[index].textContent = stat.label;
+        animateValue(statValues[index], stat.value, stat.prefix || "", stat.suffix || "");
+      });
+
+      data.rows.forEach((row, index) => {
+        rows[index].title.textContent = row.title;
+        rows[index].copy.textContent = row.copy;
+        rows[index].tag.textContent = row.tag;
+      });
+
+      footer.innerHTML = "";
+      state.footer.forEach((item) => {
+        const tag = document.createElement("div");
+        tag.className = "tag";
+        tag.textContent = item;
+        footer.appendChild(tag);
+      });
+
+      document.querySelectorAll("[data-mode]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.mode === mode));
+      });
+      document.querySelectorAll("[data-phase]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.phase === phase));
+      });
+    }
+
+    document.querySelectorAll("[data-mode]").forEach((button) => {
+      button.addEventListener("click", () => {
+        mode = button.dataset.mode;
+        render();
+      });
+    });
+
+    document.querySelectorAll("[data-phase]").forEach((button) => {
+      button.addEventListener("click", () => {
+        phase = button.dataset.phase;
+        render();
+      });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+        }
+      });
+    }, { threshold: 0.18 });
+
+    document.querySelectorAll(".reveal").forEach((node) => observer.observe(node));
+
+    render();
+  </script>
+</body>
+</html>
