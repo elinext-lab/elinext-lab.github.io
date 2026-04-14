@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SanityRx Scoping Support | Elinext</title>
+  <meta name="description" content="Proposal brief for Sanity Solutions on scaling SanityRx scoping, portal workflow, and delivery handoff.">
+  <meta name="author" content="Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/sanity-solutions_2026-04-14_14-08-37/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/sanity-solutions_2026-04-14_14-08-37/">
+  <meta property="og:title" content="SanityRx Scoping Support | Elinext">
+  <meta property="og:description" content="A focused proposal brief for Sanity Solutions on faster service scoping, cleaner handoff, and a stronger customer workflow.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/sanity-solutions_2026-04-14_14-08-37/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SanityRx Scoping Support | Elinext">
+  <meta name="twitter:description" content="A focused proposal brief for Sanity Solutions on faster service scoping, cleaner handoff, and a stronger customer workflow.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/sanity-solutions_2026-04-14_14-08-37/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --surface: #fffdf8;
+      --surface-strong: #eef5ff;
+      --ink: #101b33;
+      --muted: #5b687c;
+      --line: rgba(16, 27, 51, 0.12);
+      --brand: #0a7cff;
+      --brand-deep: #10274d;
+      --accent: #c4692b;
+      --shadow: 0 22px 56px rgba(16, 27, 51, 0.12);
+      --radius: 22px;
+      --font: "Space Grotesk", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; overflow-x: hidden; }
+    body {
+      font-family: var(--font);
+      color: var(--ink);
+      line-height: 1.55;
+      background:
+        radial-gradient(circle at top right, rgba(10,124,255,0.12), transparent 24rem),
+        radial-gradient(circle at left 10%, rgba(196,105,43,0.12), transparent 20rem),
+        linear-gradient(180deg, #f6f1e8 0%, #f3eee5 48%, #fbf8f2 100%);
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .page { position: relative; isolation: isolate; }
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 24rem;
+      background: linear-gradient(135deg, rgba(16,39,77,0.92), rgba(10,124,255,0.74));
+      z-index: -1;
+    }
+    .container { width: min(100% - 1.5rem, 70rem); margin: 0 auto; }
+    .topline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0 0;
+      color: rgba(255,255,255,0.9);
+      font-size: 0.9rem;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.16);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+    }
+    main { padding: 0 0 4rem; }
+    section { position: relative; z-index: 1; }
+    .hero {
+      padding: 3.4rem 0 1.75rem;
+      color: white;
+    }
+    .hero-card {
+      padding: 1.8rem;
+      border-radius: calc(var(--radius) + 6px);
+      background: linear-gradient(160deg, rgba(94, 147, 214, 0.92) 0%, rgba(34, 73, 126, 0.96) 45%, rgba(16, 39, 77, 0.99) 100%);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 20px 70px rgba(9, 18, 38, 0.28);
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: clamp(2.2rem, 7vw, 4.6rem); line-height: 0.98; max-width: 11ch; margin-top: 1rem; }
+    .hero-why { max-width: 40rem; margin-top: 1.25rem; font-size: 1.02rem; color: rgba(255,255,255,0.95); }
+    .hero-desc { max-width: 32rem; margin-top: 1rem; font-size: 0.98rem; color: rgba(255,255,255,0.82); }
+    .hero-panel { margin-top: 1.4rem; display: grid; gap: 0.85rem; }
+    .hero-note {
+      display: grid;
+      gap: 0.2rem;
+      padding: 0.95rem 1rem;
+      border-radius: 16px;
+      background: rgba(9, 18, 38, 0.18);
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+    .hero-note strong { font-size: 0.86rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .hero-note span { color: rgba(255,255,255,0.84); font-size: 0.94rem; }
+    .section { padding: 1rem 0 0; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .section-heading {
+      text-align: center;
+      padding: 1.8rem 1.2rem 0;
+    }
+    .section-heading p {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .section-heading h2 { font-size: clamp(1.8rem, 5vw, 3rem); margin-top: 0.45rem; }
+    .read-wrap { padding: 0 1rem 1rem; }
+    .read-card {
+      margin-top: 1rem;
+      background: linear-gradient(180deg, #f2efe7 0%, #fffaf1 100%);
+      border: 1px solid rgba(196,105,43,0.22);
+      border-left: 8px solid var(--accent);
+      border-radius: 18px;
+      padding: 1.35rem;
+    }
+    .read-card p { max-width: 64ch; color: var(--ink); font-size: 1rem; }
+    .proposal {
+      background: linear-gradient(180deg, var(--brand-deep), #0e1f3c 100%);
+      color: white;
+      padding-bottom: 1.4rem;
+    }
+    .proposal .section-heading p { color: #8ac3ff; }
+    .proposal .section-heading h2 { color: white; }
+    .proposal-inner { padding: 0 1rem 1rem; }
+    .proposal-intro { max-width: 46rem; margin: 0.35rem auto 0; text-align: center; color: rgba(255,255,255,0.84); }
+    .proposal-grid { display: grid; gap: 1rem; margin-top: 1.2rem; }
+    .proposal-block {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 1.1rem;
+    }
+    .proposal-block h3 { font-size: 1.1rem; margin-bottom: 0.7rem; }
+    .team-list, .stack-list { display: flex; flex-wrap: wrap; gap: 0.55rem; padding: 0; margin: 0; list-style: none; }
+    .team-list li, .stack-list li {
+      padding: 0.55rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+    .milestones { display: grid; gap: 0.9rem; margin-top: 1rem; }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.9rem;
+      align-items: start;
+      padding: 1rem;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .step-num {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: white;
+      color: var(--brand-deep);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step-title { display: block; font-weight: 700; margin-bottom: 0.28rem; font-size: 1rem; }
+    .step-desc { color: rgba(255,255,255,0.82); font-size: 0.95rem; }
+    .who-card { padding: 0 1rem 1rem; }
+    .who-copy { margin-top: 1rem; padding: 1.35rem; background: var(--surface); border-radius: 20px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .who-copy p { color: var(--ink); }
+    .customer-list { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 1rem; }
+    .customer-list span { padding: 0.5rem 0.72rem; border-radius: 999px; background: var(--surface-strong); border: 1px solid rgba(10,124,255,0.16); font-weight: 700; font-size: 0.9rem; }
+    .proof-wrap { padding: 0 1rem 1rem; }
+    .proof-grid { display: grid; gap: 1rem; margin-top: 1rem; }
+    .proof-card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); }
+    .proof-card .copy { padding: 1.15rem; display: grid; gap: 0.7rem; }
+    .proof-card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #e8eef8; }
+    .proof-card small { color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+    .proof-card h3 { font-size: 1.22rem; }
+    .proof-card p { color: var(--muted); }
+    .proof-card a { color: var(--brand); font-weight: 700; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+    .cta { padding: 0 0 1rem; }
+    .cta-card { margin-top: 1rem; padding: 1.5rem; background: linear-gradient(160deg, #fff7ef, #fffdf8); border: 1px solid rgba(196,105,43,0.22); border-radius: 24px; box-shadow: var(--shadow); text-align: center; }
+    .cta-card h2 { font-size: clamp(1.7rem, 5vw, 2.5rem); }
+    .cta-card p { margin-top: 0.8rem; color: var(--muted); }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding: 0.95rem 1.35rem;
+      border-radius: 999px;
+      background: var(--brand-deep);
+      color: white;
+      font-weight: 700;
+      text-decoration: none;
+      border: 2px solid transparent;
+    }
+    .button:hover { border-color: var(--brand); }
+    @media (min-width: 48rem) {
+      .hero-card { padding: 2.1rem; display: grid; grid-template-columns: 1.4fr 0.9fr; gap: 1.4rem; align-items: end; }
+      .hero-panel { margin-top: 0; }
+      .proposal-grid { grid-template-columns: 1fr 1fr; align-items: start; }
+      .proposal-block.full { grid-column: 1 / -1; }
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (min-width: 64rem) {
+      .topline { padding-top: 1.25rem; }
+      .hero { padding-top: 4rem; }
+      .hero-card { padding: 2.4rem; gap: 1.8rem; }
+      .read-wrap, .proposal-inner, .who-card, .proof-wrap { padding-left: 1.4rem; padding-right: 1.4rem; padding-bottom: 1.4rem; }
+      .read-card, .who-copy, .proposal-block, .step, .proof-card, .cta-card { border-radius: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="container topline">
+      <div class="eyebrow">Prepared for Kunle Obafemi</div>
+      <div>Sanity Solutions • Proposal brief by Elinext</div>
+    </div>
+    <main>
+      <section class="hero">
+        <div class="container hero-card">
+          <div>
+            <div class="eyebrow">Hero</div>
+            <h1>Helping SanityRx turn more service demand into clean delivery</h1>
+            <p class="hero-why">We saw Sanity growing service architecture work around Azure and Microsoft 365. That usually means demand is up, but discovery, pricing, and handoff still lean too hard on people.</p>
+            <p class="hero-desc">SanityRx already has a clear method. We would turn that method into a faster shared workflow.</p>
+          </div>
+          <div class="hero-panel" aria-label="Why we are here highlights">
+            <div class="hero-note">
+              <strong>Signal</strong>
+              <span>Azure and Microsoft 365 scoping.</span>
+            </div>
+            <div class="hero-note">
+              <strong>Process</strong>
+              <span>SanityRx already names the steps.</span>
+            </div>
+            <div class="hero-note">
+              <strong>Gap</strong>
+              <span>Login still says coming soon.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <div class="container card">
+          <div class="section-heading">
+            <p>Our Read</p>
+            <h2>What the current moment likely means</h2>
+          </div>
+          <div class="read-wrap">
+            <div class="read-card">
+              <p>Growing service architecture roles tells us SanityRx is winning more work that needs careful discovery and clean handoff. Your site already names the path: Discovery, Architecture, Service Delivery, and Ongoing Support. The pressure rises with Azure, Microsoft 365, and zero trust work, where scope gaps slow deals or delivery. The login path still points to a coming-soon e-commerce flow, so the customer workflow also looks unfinished.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <div class="container card proposal">
+          <div class="section-heading">
+            <p>What We Would Do</p>
+            <h2>Build a faster scoping and handoff workflow</h2>
+          </div>
+          <div class="proposal-inner">
+            <p class="proposal-intro">We would run this as a scoped end-to-end project, then leave you with a live pilot.</p>
+            <div class="proposal-grid">
+              <div class="proposal-block">
+                <h3>Team shape</h3>
+                <ul class="team-list">
+                  <li>1 Business Analyst</li>
+                  <li>1 Tech Lead</li>
+                  <li>2 Senior Full-Stack Engineers</li>
+                  <li>1 QA Engineer</li>
+                  <li>1 Product Designer</li>
+                </ul>
+              </div>
+              <div class="proposal-block">
+                <h3>Relevant stack</h3>
+                <ul class="stack-list">
+                  <li>React</li>
+                  <li>.NET / C#</li>
+                  <li>Node.js</li>
+                  <li>QA Automation</li>
+                  <li>DevOps</li>
+                </ul>
+              </div>
+              <div class="proposal-block full">
+                <h3>Eight-week pilot</h3>
+                <div class="milestones">
+                  <div class="step">
+                    <div class="step-num">1</div>
+                    <div>
+                      <span class="step-title">Map the current flow</span>
+                      <div class="step-desc">Map the SanityRx discovery flow, Azure and Microsoft 365 questions, and handoff gaps across sales, architects, and delivery.</div>
+                    </div>
+                  </div>
+                  <div class="step">
+                    <div class="step-num">2</div>
+                    <div>
+                      <span class="step-title">Build the scoping workspace</span>
+                      <div class="step-desc">Build a guided workspace that turns client answers into service bundles, effort ranges, reusable SOW blocks, and approval-ready notes.</div>
+                    </div>
+                  </div>
+                  <div class="step">
+                    <div class="step-num">3</div>
+                    <div>
+                      <span class="step-title">Create one shared record</span>
+                      <div class="step-desc">Add role-based views for account teams, solutions architects, and project leads, so one record moves cleanly from quote to kickoff.</div>
+                    </div>
+                  </div>
+                  <div class="step">
+                    <div class="step-num">4</div>
+                    <div>
+                      <span class="step-title">Launch and harden the pilot</span>
+                      <div class="step-desc">Pilot the workflow with one team, add QA and security checks, then prepare rollout across co-managed, staffing, and project offers.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <div class="container card">
+          <div class="section-heading">
+            <p>Who Is Elinext</p>
+            <h2>The team behind the proposal</h2>
+          </div>
+          <div class="who-card">
+            <div class="who-copy">
+              <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For infrastructure and security-heavy work, our ISO 9001 and ISO 27001 processes matter. We also bring experience from enterprise clients such as Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. That mix fits a SanityRx scoping portal, secure workflow tooling, and a fast pilot that can grow into rollout. We can build the pilot fast, then stay for rollout if it works.</p>
+              <div class="customer-list" aria-label="Named Elinext customers">
+                <span><strong>Siemens</strong></span>
+                <span><strong>Broadcom</strong></span>
+                <span><strong>Volkswagen</strong></span>
+                <span><strong>TRUMPF</strong></span>
+                <span><strong>TUI</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <div class="container card">
+          <div class="section-heading">
+            <p>Proof</p>
+            <h2>Similar work we can point to</h2>
+          </div>
+          <div class="proof-wrap">
+            <div class="proof-grid">
+<article class="proof-card">
+
+  <div class="copy">
+    <small>Telecom</small>
+    <h3>CI/CD Optimization and Automatization for an Infrastructure Management Solutions Provider</h3>
+    <p>Quarterly releases across many infrastructure tools were slowing delivery.</p>
+    <p>CI/CD automation cut development time by 40%.</p>
+    <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/" target="_blank" rel="noopener">See case study</a>
+  </div>
+</article>
+<article class="proof-card">
+
+  <div class="copy">
+    <small>Telecom</small>
+    <h3>Quality Assurance for an IT Infrastructure Management Solutions Provider</h3>
+    <p>A complex infrastructure KPI product needed long-term QA support.</p>
+    <p>Elinext helped lift quality by 86% and coverage by 340%.</p>
+    <a href="https://www.elinext.com/case-study/it-infrastructure-management-software-qa/" target="_blank" rel="noopener">See case study</a>
+  </div>
+</article>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section cta">
+        <div class="container">
+          <div class="cta-card">
+            <h2>Start the conversation</h2>
+            <p>If this fits, we can sketch the pilot in one call.</p>
+            <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener">Talk to Elinext</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
