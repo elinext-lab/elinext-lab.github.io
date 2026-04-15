@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aspia x Elinext | Automation Proposal Brief</title>
+  <meta name="description" content="A short proposal for helping Aspia reduce manual work across MyBusiness, payroll, and finance workflows while the team scales RPA and automation.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/aspia_2026-04-15_10-38-47/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Cut manual work across Aspia's portal, payroll, and finance flows">
+  <meta property="og:description" content="A short proposal for helping Aspia reduce manual work across MyBusiness, payroll, and finance workflows while the team scales RPA and automation.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/aspia_2026-04-15_10-38-47/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/aspia_2026-04-15_10-38-47/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cut manual work across Aspia's portal, payroll, and finance flows">
+  <meta name="twitter:description" content="A short proposal for helping Aspia reduce manual work across MyBusiness, payroll, and finance workflows while the team scales RPA and automation.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/aspia_2026-04-15_10-38-47/og-image.jpg">
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+    :root {
+      --bg: #efe6da;
+      --paper: #fff8f1;
+      --paper-soft: #f7efe5;
+      --paper-deep: #efe3d2;
+      --ink: #122034;
+      --muted: #536071;
+      --line: rgba(18, 32, 52, 0.12);
+      --navy: #122034;
+      --navy-soft: #1e3048;
+      --orange: #ef7c34;
+      --orange-soft: #ffd4b7;
+      --gold: #f1b85d;
+      --success: #2f7d63;
+      --shadow: 0 24px 56px rgba(18, 32, 52, 0.12);
+      --radius: 26px;
+      --max: 1160px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(239, 124, 52, 0.18), transparent 24rem),
+        linear-gradient(180deg, #f6eee4 0%, var(--bg) 48%, #e9decf 100%);
+      color: var(--ink);
+      font-family: "Plus Jakarta Sans", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page {
+      position: relative;
+      padding: 24px 16px 56px;
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(22px);
+      pointer-events: none;
+      opacity: 0.52;
+      z-index: 0;
+    }
+
+    .page::before {
+      top: 40px;
+      right: -60px;
+      width: 220px;
+      height: 220px;
+      background: rgba(239, 124, 52, 0.18);
+    }
+
+    .page::after {
+      bottom: 60px;
+      left: -40px;
+      width: 190px;
+      height: 190px;
+      background: rgba(18, 32, 52, 0.1);
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    section {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-pad {
+      padding: 22px 18px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 9vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      max-width: 11ch;
+    }
+
+    h2 {
+      margin-bottom: 14px;
+      text-align: center;
+      font-size: clamp(1.45rem, 4vw, 2.1rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    h3 {
+      font-size: 1.04rem;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    p,
+    li {
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.58;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      max-width: 100%;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.12);
+      color: rgba(255, 250, 245, 0.88);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow.light {
+      border-color: rgba(18, 32, 52, 0.12);
+      background: rgba(18, 32, 52, 0.05);
+      color: var(--navy);
+    }
+
+    .hero {
+      position: relative;
+      background:
+        linear-gradient(135deg, rgba(18, 32, 52, 0.98) 0%, rgba(30, 48, 72, 0.98) 54%, rgba(13, 20, 34, 0.98) 100%);
+      color: #fffaf4;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px) 0 0 / 32px 32px,
+        linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px) 0 0 / 32px 32px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.82), transparent);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: relative;
+      display: grid;
+      gap: 24px;
+      align-items: end;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-copy p {
+      max-width: 38rem;
+      color: rgba(255, 248, 241, 0.82);
+    }
+
+    .hero-panel {
+      display: grid;
+      gap: 12px;
+      max-width: 100%;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .fact {
+      display: grid;
+      gap: 4px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .fact strong {
+      font-size: 0.86rem;
+      color: #fff8f1;
+    }
+
+    .fact span {
+      color: rgba(255, 248, 241, 0.76);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .read {
+      background: linear-gradient(180deg, #fff3e8 0%, #f8eee2 100%);
+      border-color: rgba(239, 124, 52, 0.18);
+    }
+
+    .read-card {
+      max-width: 72ch;
+      margin: 0 auto;
+      padding: 18px;
+      border-radius: 20px;
+      border-left: 4px solid var(--orange);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .delivery {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(250,244,235,0.96) 100%);
+    }
+
+    .delivery-intro {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .intro-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .intro-card {
+      padding: 16px;
+      border-radius: 20px;
+      background: var(--paper-soft);
+      border: 1px solid rgba(18, 32, 52, 0.08);
+    }
+
+    .intro-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--navy);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .stack span,
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: rgba(18, 32, 52, 0.08);
+      color: var(--navy);
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #fffdf9 0%, #f6ecdf 100%);
+      border: 1px solid rgba(18, 32, 52, 0.09);
+    }
+
+    .step-head {
+      display: grid;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--navy);
+      color: #fff8f1;
+      font-weight: 800;
+      font-size: 1rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .step p {
+      color: var(--muted);
+    }
+
+    .cred {
+      background: linear-gradient(180deg, #14233a 0%, #0f1a2b 100%);
+      color: #fffaf5;
+    }
+
+    .cred p {
+      color: rgba(255, 248, 241, 0.8);
+      max-width: 70ch;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .customers span {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fffaf4;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .proof {
+      background: linear-gradient(180deg, #fff8f1 0%, #f3e7d8 100%);
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .proof-card {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.66);
+      border: 1px solid rgba(18, 32, 52, 0.08);
+    }
+
+    .proof-card img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      border-radius: 16px;
+      border: 1px solid rgba(18, 32, 52, 0.08);
+      object-fit: cover;
+    }
+
+    .proof-card p {
+      margin-top: 8px;
+    }
+
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      color: var(--navy);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .cta {
+      text-align: center;
+      background:
+        linear-gradient(135deg, rgba(239, 124, 52, 0.94) 0%, rgba(241, 184, 93, 0.9) 100%);
+      color: #1d1f24;
+    }
+
+    .cta p {
+      color: rgba(29, 31, 36, 0.8);
+      max-width: 40rem;
+      margin: 0 auto;
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+      padding: 14px 18px;
+      min-height: 48px;
+      border-radius: 999px;
+      background: var(--navy);
+      color: #fffaf3;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      box-shadow: 0 16px 34px rgba(18, 32, 52, 0.2);
+    }
+
+    @media (min-width: 700px) {
+      .page {
+        padding: 28px 20px 64px;
+      }
+
+      .section-pad {
+        padding: 28px 24px;
+      }
+
+      .hero-grid,
+      .intro-grid {
+        grid-template-columns: 1.18fr 0.82fr;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .step-head {
+        grid-template-columns: auto 1fr;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .section-pad {
+        padding: 34px 32px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1.2fr 0.8fr;
+      }
+
+      .delivery-intro {
+        margin-bottom: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="shell">
+      <section class="hero">
+        <div class="section-pad hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">Aspia x Elinext</span>
+            <h1>Cut manual work across Aspia's portal, payroll, and finance flows</h1>
+            <p>You are hiring an RPA / UiPath developer while payroll, HR, and portal work keep growing. We made this short brief to show where an outside squad could remove friction fast.</p>
+          </div>
+          <div class="hero-panel">
+            <div class="fact">
+              <strong>Why we're here</strong>
+              <span>Public signals point to one pressure: too many process steps between MyBusiness, time data, payroll, and customer support.</span>
+            </div>
+            <div class="fact">
+              <strong>What we saw</strong>
+              <span>MyBusiness is live, MFA just launched, and the public login surface still spans several tools and portals.</span>
+            </div>
+            <div class="fact">
+              <strong>What users say</strong>
+              <span>Public reviews call out receipt delays, hard time views, and weak message flow inside the app.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="read">
+        <div class="section-pad">
+          <span class="eyebrow light">Our Read</span>
+          <h2>What The Signal Tells Us</h2>
+          <div class="read-card">
+            <p>The RPA hire says Aspia is pushing more automation into live operations, not just planning it. Public pages show a wide surface across MyBusiness, payroll, time tracking, and finance tools. Reviews suggest the pain is in handoffs, not in one feature. If those steps stay slow, clients feel extra clicks and teams keep fixing exceptions by hand.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="delivery">
+        <div class="section-pad">
+          <span class="eyebrow light">What We'd Do</span>
+          <h2>One Focused Automation Pilot</h2>
+          <div class="delivery-intro">
+            <div class="intro-grid">
+              <div class="intro-card">
+                <strong>Engagement model</strong>
+                <p>A dedicated squad under Aspia's product and operations leads for an eight-week pilot with weekly demos and clear exit criteria.</p>
+              </div>
+              <div class="intro-card">
+                <strong>Team shape</strong>
+                <p>1 solution lead, 1 senior automation engineer, 1 .NET integration engineer, 1 React engineer, and 1 QA engineer.</p>
+                <div class="stack">
+                  <span>.NET / C#</span>
+                  <span>Python</span>
+                  <span>Node.js</span>
+                  <span>React</span>
+                  <span>PostgreSQL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="step-head">
+                <span class="step-num">01</span>
+                <div>
+                  <h3>Map the costly flow first</h3>
+                </div>
+              </div>
+              <p>Trace one real path from customer input to payroll or finance result, then rank every manual step, delay, and re-entry by cost.</p>
+            </article>
+            <article class="step">
+              <div class="step-head">
+                <span class="step-num">02</span>
+                <div>
+                  <h3>Automate the handoff layer</h3>
+                </div>
+              </div>
+              <p>Build the first automation lane around receipts, time data, or support intake, with audit logs, retries, and clear exception ownership.</p>
+            </article>
+            <article class="step">
+              <div class="step-head">
+                <span class="step-num">03</span>
+                <div>
+                  <h3>Remove portal friction</h3>
+                </div>
+              </div>
+              <p>Simplify the user step that creates most support noise, such as status updates, file intake, or time-report feedback in MyBusiness.</p>
+            </article>
+            <article class="step">
+              <div class="step-head">
+                <span class="step-num">04</span>
+                <div>
+                  <h3>Leave a repeatable model</h3>
+                </div>
+              </div>
+              <p>Ship test coverage, release notes, and a rollout playbook so Aspia can extend the same pattern across more payroll and HR flows.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cred">
+        <div class="section-pad">
+          <span class="eyebrow">Who Is Elinext</span>
+          <h2>Built For Complex Delivery</h2>
+          <p>Elinext is a full-cycle software development company working since 1997 with around 700 in-house specialists and no freelancers. For work like this, we bring web, integration, QA, AI, and delivery management in one team. We work under <strong>ISO 27001</strong> and <strong>ISO 9001</strong> processes, and our customer list includes <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. That matters here because payroll and portal automation needs secure change control, careful testing, and clean ownership from week one.</p>
+          <div class="customers">
+            <span>Siemens</span>
+            <span>Broadcom</span>
+            <span>Volkswagen</span>
+            <span>TRUMPF</span>
+            <span>TUI</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="proof">
+        <div class="section-pad">
+          <span class="eyebrow light">Proof</span>
+          <h2>Relevant Delivery History</h2>
+          <div class="proof-grid">
+            <article class="proof-card">
+              <img src="assets/case-payroll.jpg" alt="Payroll management case study">
+              <div>
+                <h3>Payroll Management</h3>
+                <p>Elinext built a payroll product for approval-heavy salary work. The solution already handled test data for around 1,500 employees.</p>
+                <a class="proof-link" href="https://www.elinext.com/case-study/elinext-payroll-management/">View case study</a>
+              </div>
+            </article>
+            <article class="proof-card">
+              <img src="assets/case-helpdesk-bot.jpg" alt="Help desk bot case study">
+              <div>
+                <h3>Help Desk Ticket Bot</h3>
+                <p>Elinext built a conversational support bot that cut routine ticket creation workload by 60% for the internal help desk team.</p>
+                <a class="proof-link" href="https://www.elinext.com/case-study/elinext-conversational-bot-for-help-desk/">View case study</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="section-pad">
+          <span class="eyebrow light">Start The Conversation</span>
+          <h2>Map The First Pilot</h2>
+          <p>If the goal is fewer manual steps, we would start with one live workflow and make it measurable in eight weeks.</p>
+          <a class="cta-link" href="https://www.elinext.com/contacts/">Talk with Elinext</a>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
