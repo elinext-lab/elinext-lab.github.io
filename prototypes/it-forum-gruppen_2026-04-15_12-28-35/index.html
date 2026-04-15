@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A tighter ops layer for IT Forum Gruppen's Hosting & Cloud promise | Elinext</title>
+  <meta name="description" content="A short proposal for helping IT Forum Gruppen make Hosting & Cloud, Web hosting, and support updates clearer as managed-services load grows.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/it-forum-gruppen_2026-04-15_12-28-35/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/it-forum-gruppen_2026-04-15_12-28-35/">
+  <meta property="og:title" content="A tighter ops layer for IT Forum Gruppen's Hosting & Cloud promise">
+  <meta property="og:description" content="A short proposal for helping IT Forum Gruppen make Hosting & Cloud, Web hosting, and support updates clearer as managed-services load grows.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/it-forum-gruppen_2026-04-15_12-28-35/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A tighter ops layer for IT Forum Gruppen's Hosting & Cloud promise">
+  <meta name="twitter:description" content="A short proposal for helping IT Forum Gruppen make Hosting & Cloud, Web hosting, and support updates clearer as managed-services load grows.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/it-forum-gruppen_2026-04-15_12-28-35/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6efe8;
+      --bg-soft: #fff9f3;
+      --paper: rgba(255, 252, 248, 0.95);
+      --paper-strong: #fffdf9;
+      --ink: #24201b;
+      --muted: #6c6258;
+      --line: rgba(36, 32, 27, 0.12);
+      --line-strong: rgba(36, 32, 27, 0.2);
+      --brand: #f47a36;
+      --brand-deep: #c95f24;
+      --brand-soft: #ffe3d4;
+      --olive: #394437;
+      --olive-soft: #e7efe0;
+      --blue: #24566e;
+      --blue-soft: #ddeef6;
+      --shadow: 0 24px 60px rgba(46, 35, 27, 0.12);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(244, 122, 54, 0.22), transparent 26rem),
+        radial-gradient(circle at top right, rgba(36, 86, 110, 0.16), transparent 24rem),
+        linear-gradient(180deg, #f8f2eb 0%, #efe3d6 100%);
+      color: var(--ink);
+      font-family: "Barlow", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.42;
+      background-image:
+        linear-gradient(rgba(36, 32, 27, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(36, 32, 27, 0.035) 1px, transparent 1px);
+      background-size: 54px 54px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      padding: 18px 14px 56px;
+    }
+
+    .shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    section {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      animation: rise 0.72s ease both;
+    }
+
+    section:nth-of-type(2) { animation-delay: 0.06s; }
+    section:nth-of-type(3) { animation-delay: 0.12s; }
+    section:nth-of-type(4) { animation-delay: 0.18s; }
+    section:nth-of-type(5) { animation-delay: 0.24s; }
+    section:nth-of-type(6) { animation-delay: 0.3s; }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-pad {
+      padding: 26px 18px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brand-deep);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--brand), #f9b279);
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Oswald", sans-serif;
+      text-transform: uppercase;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: clamp(2.3rem, 8vw, 4.8rem);
+      max-width: 10.5ch;
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.58;
+    }
+
+    .hero {
+      background:
+        linear-gradient(145deg, rgba(244, 122, 54, 0.11), rgba(255, 255, 255, 0) 42%),
+        linear-gradient(180deg, #fffaf4 0%, #f9efe6 100%);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-copy .lead {
+      max-width: 58ch;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .hero-copy .why {
+      max-width: 58ch;
+      padding: 15px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(36, 86, 110, 0.16);
+      background: rgba(221, 238, 246, 0.82);
+      color: #23485d;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .signal-card,
+    .focus-card,
+    .step,
+    .team-card,
+    .stack-card,
+    .proof-card,
+    .who-card,
+    .cta-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .signal-card {
+      padding: 18px;
+      background: linear-gradient(180deg, #2f2a24 0%, #3f362e 100%);
+      color: #fff8f2;
+    }
+
+    .signal-card p,
+    .signal-card .small {
+      color: rgba(255, 248, 242, 0.8);
+    }
+
+    .signal-chip {
+      display: inline-flex;
+      margin-top: 12px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(244, 122, 54, 0.18);
+      color: #ffd0b5;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .small {
+      font-size: 0.86rem;
+    }
+
+    .focus-card {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+      background: var(--paper-strong);
+    }
+
+    .focus-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .focus-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .focus-num {
+      flex: none;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--brand-soft);
+      color: var(--brand-deep);
+      font-weight: 700;
+    }
+
+    .our-read {
+      background:
+        linear-gradient(180deg, rgba(57, 68, 55, 0.08), rgba(57, 68, 55, 0.04)),
+        #f8fbf4;
+    }
+
+    .read-panel {
+      max-width: 64ch;
+      width: 100%;
+      margin: 0 auto;
+      padding: 22px 20px 22px 24px;
+      border-left: 6px solid var(--brand);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 253, 249, 0.9);
+      box-shadow: inset 0 0 0 1px rgba(57, 68, 55, 0.09);
+    }
+
+    .what-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .what-top {
+      display: grid;
+      gap: 14px;
+    }
+
+    .team-card,
+    .stack-card {
+      padding: 18px;
+    }
+
+    .team-list,
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+      font-size: 0.92rem;
+      color: var(--ink);
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+      background: linear-gradient(180deg, rgba(255, 249, 244, 0.98), rgba(255, 255, 255, 0.92));
+    }
+
+    .step-num {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--brand);
+      color: #fff8f3;
+      font-family: "Oswald", sans-serif;
+      font-size: 1.1rem;
+    }
+
+    .step p {
+      font-size: 0.94rem;
+    }
+
+    .who-card {
+      padding: 24px 20px;
+      background:
+        linear-gradient(180deg, rgba(36, 86, 110, 0.08), rgba(36, 86, 110, 0.03)),
+        #fcfeff;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 16px 0 0;
+    }
+
+    .customers .pill {
+      border-color: rgba(36, 86, 110, 0.14);
+      background: rgba(221, 238, 246, 0.82);
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      background: #fffdf9;
+    }
+
+    .proof-image {
+      aspect-ratio: 16 / 9;
+      width: 100%;
+      object-fit: cover;
+      background: #f0ebe3;
+    }
+
+    .proof-body {
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .proof-meta {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brand-deep);
+    }
+
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .cta-panel {
+      padding: 24px 20px;
+      text-align: center;
+      background:
+        linear-gradient(180deg, rgba(244, 122, 54, 0.11), rgba(255, 255, 255, 0.9)),
+        #fffaf6;
+    }
+
+    .cta-panel p {
+      max-width: 40ch;
+      margin: 12px auto 0;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      margin-top: 18px;
+      padding: 0 18px;
+      border-radius: 999px;
+      background: var(--brand);
+      color: #fff8f3;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      box-shadow: 0 16px 32px rgba(244, 122, 54, 0.24);
+    }
+
+    @media (min-width: 768px) {
+      .page {
+        padding: 28px 20px 72px;
+      }
+
+      .section-pad {
+        padding: 34px 30px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+        align-items: start;
+      }
+
+      .what-top {
+        grid-template-columns: 1.05fr 0.95fr;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .what-grid {
+        grid-template-columns: 0.95fr 1.05fr;
+        align-items: start;
+      }
+
+      .what-top {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <section class="hero">
+        <div class="section-pad hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">Proposal For Günther Weidinger</span>
+            <h1>A tighter ops layer for IT Forum Gruppen's Hosting &amp; Cloud promise</h1>
+            <p class="lead">You already sell Danish hosting, private cloud, IT outsourcing, and security with close dialogue. The next step is a cleaner customer view of status, support, and service quality as volume grows.</p>
+            <p class="why">We noticed IT Forum Gruppen is adding a Senior Account Manager and Sales Support and Operations. That usually means more customer load, more handoffs, and more pressure on service quality under one COO view.</p>
+          </div>
+          <div class="hero-side">
+            <div class="signal-card">
+              <h3>Why we're here</h3>
+              <p>You already sell uptime, backup, SLAs, and local support. That makes operating clarity part of the product.</p>
+              <span class="signal-chip">Hosting &amp; Cloud + Operating status</span>
+            </div>
+            <div class="focus-card">
+              <h3>Public product surfaces</h3>
+              <div class="focus-list">
+                <div class="focus-item">
+                  <span class="focus-num">1</span>
+                  <p><strong>Hosting &amp; Cloud</strong> with Danish hosting, Azure Cloud, and Hybrid Cloud.</p>
+                </div>
+                <div class="focus-item">
+                  <span class="focus-num">2</span>
+                  <p><strong>Operating status</strong> with live incident updates and SMS alerts.</p>
+                </div>
+                <div class="focus-item">
+                  <span class="focus-num">3</span>
+                  <p><strong>Web hosting</strong> with packages, backup, and uptime promises.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="our-read">
+        <div class="section-pad">
+          <h2>Our Read</h2>
+          <div class="read-panel">
+            <p>The signal says the front of the business is growing while Datacenter, ServiceDesk, Networking, and Security &amp; Compliance still sit inside one operating model. The risk is not more demand. The risk is keeping Hosting &amp; Cloud, Web hosting, and incident response clear when tickets, changes, and updates move fast. If that chain stays split across email, phone, and status posts, response time, NPS, and margin get harder to protect.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-pad">
+          <h2>What We'd Do</h2>
+          <div class="what-grid">
+            <div class="what-top">
+              <div class="team-card">
+                <h3>Scoped pilot</h3>
+                <p>A scoped 6-week pilot with weekly demos and one shared backlog.</p>
+                <div class="team-list">
+                  <span class="pill">1 Product Lead</span>
+                  <span class="pill">1 Full-stack Engineer</span>
+                  <span class="pill">1 DevOps / Data Engineer</span>
+                  <span class="pill">1 QA Automation Engineer</span>
+                  <span class="pill">1 UI/UX Designer</span>
+                </div>
+              </div>
+              <div class="stack-card">
+                <h3>Relevant stack</h3>
+                <p>Platform and reporting tools that fit service operations.</p>
+                <div class="stack-list">
+                  <span class="pill">Azure</span>
+                  <span class="pill">.NET</span>
+                  <span class="pill">Angular</span>
+                  <span class="pill">Node.js</span>
+                  <span class="pill">Python</span>
+                  <span class="pill">QA</span>
+                </div>
+              </div>
+            </div>
+            <div class="steps">
+              <div class="step">
+                <span class="step-num">1</span>
+                <h3>Map the real handoff</h3>
+                <p>Map the path from sales handoff to Service Desk, Operating status, and Incident Response. Keep only the fields teams really need.</p>
+              </div>
+              <div class="step">
+                <span class="step-num">2</span>
+                <h3>Build one ops workspace</h3>
+                <p>Build one internal workspace for change notes, SLA state, backup checks, and customer update drafts across Hosting &amp; Cloud and Web hosting.</p>
+              </div>
+              <div class="step">
+                <span class="step-num">3</span>
+                <h3>Structure the hard requests</h3>
+                <p>Add guided flows for onboarding, offboarding, major changes, and cyber incidents so support gets scope, last-known-good, and owners first.</p>
+              </div>
+              <div class="step">
+                <span class="step-num">4</span>
+                <h3>Make KPI data usable</h3>
+                <p>Push clean event data into Power BI-ready outputs so you can review response time, rework, NPS risk, and margin by service line.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-pad who-card">
+          <h2>Who Is Elinext</h2>
+          <p>Elinext is a full-cycle software development partner, active since 1997, with around 700 in-house specialists and no freelancers. For work like this, <strong>ISO 27001</strong> and <strong>ISO 9001</strong> matter because the product sits close to security and uptime. We have delivered software for <strong>Siemens</strong>, <strong>Broadcom</strong>, and <strong>Volkswagen</strong>, where clear workflows and reliable releases were business-critical. We can ship a scoped pilot end to end with design, backend, QA, and reporting in one team. That fits this proposal because the ops layer needs one owner across product, service quality, and release discipline.</p>
+          <div class="customers">
+            <span class="pill">Siemens</span>
+            <span class="pill">Broadcom</span>
+            <span class="pill">Volkswagen</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-pad">
+          <h2>Proof</h2>
+          <div class="proof-grid">
+            <article class="proof-card">
+              <img class="proof-image" src="assets/case-m365-security-monitoring.jpg" alt="SaaS Platform Design for M365 Security Monitoring">
+              <div class="proof-body">
+                <span class="proof-meta">Security Monitoring</span>
+                <h3>SaaS Platform Design for M365 Security Monitoring</h3>
+                <p>Elinext helped launch a proprietary security platform. Audit work that took hours moved to minutes, with less manual effort.</p>
+                <a class="proof-link" href="https://www.elinext.com/case-study/saas-platform-design/" target="_blank" rel="noopener">View case study</a>
+              </div>
+            </article>
+            <article class="proof-card">
+              <img class="proof-image" src="assets/case-infrastructure-qa.jpg" alt="Quality Assurance for an IT Infrastructure Management Solutions Provider">
+              <div class="proof-body">
+                <span class="proof-meta">Infrastructure QA</span>
+                <h3>Quality Assurance for an IT Infrastructure Management Solutions Provider</h3>
+                <p>For a KPI-heavy infrastructure product, Elinext raised product quality by 86% and test coverage by 340% through steady QA discipline.</p>
+                <a class="proof-link" href="https://www.elinext.com/case-study/it-infrastructure-management-software-qa/" target="_blank" rel="noopener">View case study</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-pad cta-panel">
+          <h2>Let's Make Ops Clearer</h2>
+          <p>One short pilot can tighten status, support, and reporting.</p>
+          <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener">Start The Conversation</a>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
