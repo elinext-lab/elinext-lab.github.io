@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Harnham Proposal Brief | Elinext</title>
+  <meta name="description" content="A focused proposal for Harnham to stabilize job-feed logic, tracking, and recruiter handoffs around its public hiring funnel.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/harnham_2026-04-15_19-06-17/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/harnham_2026-04-15_19-06-17/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/harnham_2026-04-15_19-06-17/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Harnham x Elinext">
+  <meta property="og:description" content="A scoped proposal to tighten Harnham's marketing data flow, job-search reliability, and recruiter follow-up visibility.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Harnham x Elinext">
+  <meta name="twitter:description" content="A scoped proposal to tighten Harnham's marketing data flow, job-search reliability, and recruiter follow-up visibility.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/harnham_2026-04-15_19-06-17/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0b0d39;
+      --ink-soft: #39425e;
+      --brand: #fd5b2f;
+      --brand-deep: #d94720;
+      --brand-soft: #ffe5dc;
+      --sky: #dbe8ff;
+      --sky-deep: #eff4ff;
+      --paper: #fff8f4;
+      --white: #ffffff;
+      --line: rgba(11, 13, 57, 0.12);
+      --shadow: 0 24px 54px rgba(11, 13, 57, 0.12);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --shell: min(1120px, calc(100% - 28px));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(253, 91, 47, 0.16), transparent 24%),
+        radial-gradient(circle at top right, rgba(219, 232, 255, 0.95), transparent 30%),
+        linear-gradient(180deg, #fff4ee 0%, #fff8f4 46%, #f6f7ff 100%);
+      color: var(--ink);
+      font-family: "Manrope", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.05;
+      background-image:
+        linear-gradient(rgba(11, 13, 57, 0.7) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(11, 13, 57, 0.7) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      padding: 18px 0 36px;
+    }
+
+    .shell {
+      width: var(--shell);
+      margin: 0 auto;
+    }
+
+    .hero,
+    .section,
+    .cta {
+      padding: 12px 0;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(253, 91, 47, 0.32), transparent 24%),
+        linear-gradient(135deg, rgba(11, 13, 57, 0.98), rgba(29, 42, 94, 0.94));
+      color: var(--white);
+      padding: 28px;
+    }
+
+    .section-card,
+    .cta-card {
+      background: rgba(255, 255, 255, 0.96);
+      padding: 28px;
+    }
+
+    .eyebrow,
+    .pill,
+    .tag,
+    .step-index {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .eyebrow {
+      padding: 9px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffd8cb;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: -0.03em;
+    }
+
+    h1 {
+      max-width: 12ch;
+      font-size: clamp(2.5rem, 9vw, 5rem);
+      line-height: 0.96;
+      margin: 18px 0 14px;
+    }
+
+    h2 {
+      font-size: clamp(1.75rem, 4.6vw, 2.7rem);
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.68;
+      color: var(--ink-soft);
+      font-size: 0.98rem;
+    }
+
+    .hero-copy {
+      max-width: 43rem;
+    }
+
+    .hero-copy .lede,
+    .hero-copy .why {
+      color: rgba(255, 255, 255, 0.86);
+      max-width: 39rem;
+    }
+
+    .hero-copy .lede {
+      margin-bottom: 14px;
+    }
+
+    .hero-copy .why {
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+      padding-top: 14px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .hero-note {
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .hero-note strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #ffd2c1;
+      letter-spacing: 0.08em;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+    }
+
+    .hero-note p {
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 0.94rem;
+    }
+
+    .read-card {
+      background:
+        linear-gradient(145deg, rgba(255, 235, 228, 0.98), rgba(248, 244, 255, 0.98));
+      border-left: 6px solid var(--brand);
+    }
+
+    .read-card p {
+      max-width: 70ch;
+      margin: 0 auto;
+      font-size: 1rem;
+    }
+
+    .plan-wrap {
+      display: grid;
+      gap: 20px;
+      margin-top: 18px;
+    }
+
+    .plan-meta {
+      display: grid;
+      gap: 14px;
+    }
+
+    .meta-card,
+    .proof-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, rgba(239, 244, 255, 0.95), rgba(255, 255, 255, 0.98));
+    }
+
+    .meta-card strong,
+    .proof-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .meta-row,
+    .stack-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .pill,
+    .tag {
+      padding: 8px 12px;
+      border: 1px solid rgba(11, 13, 57, 0.12);
+      background: rgba(255, 255, 255, 0.76);
+      color: var(--ink);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(11, 13, 57, 0.12);
+      background: linear-gradient(180deg, rgba(255, 248, 244, 0.98), rgba(255, 255, 255, 1));
+    }
+
+    .step-index {
+      width: 42px;
+      height: 42px;
+      background: var(--brand);
+      color: var(--white);
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    .step h3 {
+      font-size: 1.15rem;
+    }
+
+    .step p {
+      font-size: 0.95rem;
+    }
+
+    .elinext-card p {
+      max-width: 68ch;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .customer-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .customer-row span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--ink);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 0.82rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card img {
+      width: 100%;
+      border-radius: var(--radius-md);
+      margin-bottom: 14px;
+      border: 1px solid rgba(11, 13, 57, 0.08);
+    }
+
+    .proof-card p {
+      font-size: 0.94rem;
+    }
+
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      color: var(--brand-deep);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .cta-card {
+      text-align: center;
+      background:
+        radial-gradient(circle at top center, rgba(253, 91, 47, 0.12), transparent 30%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 249, 255, 0.98));
+    }
+
+    .cta-card p {
+      max-width: 34rem;
+      margin: 0 auto;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+      min-height: 52px;
+      padding: 0 22px;
+      border-radius: 999px;
+      background: var(--brand);
+      color: var(--white);
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      box-shadow: 0 18px 34px rgba(253, 91, 47, 0.28);
+    }
+
+    .button:hover {
+      background: var(--brand-deep);
+    }
+
+    @media (min-width: 760px) {
+      .hero-card,
+      .section-card,
+      .cta-card {
+        padding: 36px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1.35fr 0.8fr;
+        align-items: end;
+      }
+
+      .plan-wrap {
+        grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.74fr);
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .hero-card {
+        padding: 42px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="shell">
+        <div class="hero-card card">
+          <span class="eyebrow">Harnham x Elinext</span>
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <h1>A sharper martech engine for Harnham's hiring funnel</h1>
+              <p class="lede">We looked at Harnham's public jobs platform, candidate feedback, and current market signal. The pattern is clear: feed quality, tracking, and recruiter handoffs need to stay clean as hiring volume grows.</p>
+              <p class="why">Saw Harnham is running an urgent Marketing Technology Executive brief around product feeds, ETL, Meta, TikTok, and Marketing Cloud. When that work becomes urgent, small breaks between marketing, product, and recruiter systems start costing time fast.</p>
+            </div>
+            <div class="hero-note">
+              <strong>Why we are here</strong>
+              <p>Harnham's public job-search layer already carries hundreds of live roles and many filters. That makes speed, routing, and data trust part of the product, not just back-office process.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-card card read-card">
+          <h2>Our Read</h2>
+          <p>You cover the full data and AI lifecycle, and your public platform already carries 777 live roles across many markets. That scale makes job feeds, attribution, and recruiter follow-up hard to keep aligned. Public reviews point to missed updates and slow replies, while your site stack shows many plugins and tracking layers. If those handoffs stay brittle, candidate trust drops, paid traffic costs more, and your team spends time chasing data instead of placing talent.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-card card">
+          <h2>What We'd Do</h2>
+          <div class="plan-wrap">
+            <div class="timeline">
+              <article class="step">
+                <span class="step-index">01</span>
+                <h3>Map the feed chain</h3>
+                <p>Trace every handoff from job source inputs to site pages, paid channels, CRM records, and recruiter alerts, then flag breakpoints and duplicate logic.</p>
+              </article>
+              <article class="step">
+                <span class="step-index">02</span>
+                <h3>Fix data quality and routing</h3>
+                <p>Rebuild the weak feed transforms, add validation rules, and protect Meta, TikTok, Marketing Cloud, and reporting inputs from stale or partial job data.</p>
+              </article>
+              <article class="step">
+                <span class="step-index">03</span>
+                <h3>Clean tracking and recruiter visibility</h3>
+                <p>Standardize events across landing pages, forms, and apply steps so marketing, product, and delivery teams read the same funnel and candidate-status picture.</p>
+              </article>
+              <article class="step">
+                <span class="step-index">04</span>
+                <h3>Ship safer releases</h3>
+                <p>Add automated checks, dashboard alerts, and release gates for search, forms, and feed jobs so broken pages or missing updates are caught early.</p>
+              </article>
+            </div>
+
+            <div class="plan-meta">
+              <div class="meta-card">
+                <strong>Engagement</strong>
+                <p>We would run a scoped 6-week project under one Harnham owner, with weekly demos and a handover at the end.</p>
+              </div>
+              <div class="meta-card">
+                <strong>Team shape</strong>
+                <div class="meta-row">
+                  <span class="pill">1 Tech Lead</span>
+                  <span class="pill">1 Full-Stack Engineer</span>
+                  <span class="pill">1 Data Engineer</span>
+                  <span class="pill">1 QA Engineer</span>
+                </div>
+              </div>
+              <div class="meta-card">
+                <strong>Relevant stack</strong>
+                <div class="stack-row">
+                  <span class="tag">Python</span>
+                  <span class="tag">Node.js</span>
+                  <span class="tag">React</span>
+                  <span class="tag">QA Automation</span>
+                  <span class="tag">DevOps</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-card card elinext-card">
+          <h2>Who Is Elinext</h2>
+          <p>Elinext is a full-cycle software development company, working since 1997 with about 700 in-house specialists and no freelancers. For a workflow like this, we bring product, web, QA, and integration work in one team. We are ISO 9001 and ISO 27001 certified, which matters when candidate data and employer reporting move across many systems. Our teams have delivered for <strong>Siemens</strong>, <strong>Broadcom</strong>, and <strong>Volkswagen</strong>, and we also support both dedicated squads and scoped delivery. That is the same mix Harnham would need to harden feeds, funnel tracking, and recruiter tooling without slowing the market team.</p>
+          <div class="customer-row" aria-label="Selected Elinext customers">
+            <span>Siemens</span>
+            <span>Broadcom</span>
+            <span>Volkswagen</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-card card">
+          <h2>Proof</h2>
+          <div class="proof-grid">
+            <article class="proof-card">
+              <img src="assets/case-applicant-tracking.jpg" alt="Applicant Tracking case study cover">
+              <strong>Elinext. Applicant Tracking</strong>
+              <p>Built a web ATS with candidate, vacancy, and admin modules. The first version shipped in six months and streamlined hiring during active growth.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/elinext-applicant-tracking/" target="_blank" rel="noreferrer">View case study</a>
+            </article>
+            <article class="proof-card">
+              <img src="assets/case-job-search-service.jpg" alt="Job Search Service case study cover">
+              <strong>Job Search Service for a German Startup</strong>
+              <p>Built a modern job portal and applicant search service, then expanded scope as the product owner prepared the platform for launch.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/job-and-applicants-search-service/" target="_blank" rel="noreferrer">View case study</a>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="shell">
+        <div class="cta-card card">
+          <h2>Start The Conversation</h2>
+          <p>Feed, tracking, and recruiter flow first.</p>
+          <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Talk with Elinext</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
