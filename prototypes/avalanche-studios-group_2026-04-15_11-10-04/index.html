@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avalanche Production Bridge | Elinext</title>
+  <meta name="description" content="A small delivery squad to protect Avalanche's new project ramp while live games still ship patches and DLC.">
+  <meta name="author" content="Yauheni Shauchenka, Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/avalanche-studios-group_2026-04-15_11-10-04/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/avalanche-studios-group_2026-04-15_11-10-04/">
+  <meta property="og:title" content="How do you keep worlds beyond limits moving?">
+  <meta property="og:description" content="A small delivery squad to protect Avalanche's new project ramp while live games still ship patches and DLC.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/avalanche-studios-group_2026-04-15_11-10-04/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c110f;
+      --bg-2: #111714;
+      --panel: rgba(22, 28, 26, 0.94);
+      --panel-soft: rgba(32, 40, 37, 0.95);
+      --panel-warm: rgba(37, 32, 22, 0.96);
+      --line: rgba(229, 221, 204, 0.12);
+      --text: #f4efe5;
+      --muted: #c4bcad;
+      --accent: #d6a24a;
+      --accent-soft: rgba(214, 162, 74, 0.12);
+      --accent-2: #91b26a;
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+      --max: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(145, 178, 106, 0.15), transparent 24%),
+        radial-gradient(circle at 82% 12%, rgba(214, 162, 74, 0.12), transparent 20%),
+        linear-gradient(180deg, var(--bg) 0%, #0f1412 100%);
+      color: var(--text);
+      font-family: "Space Grotesk", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.018), transparent 26%),
+        repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 34px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(var(--max), calc(100% - 24px));
+      margin: 0 auto;
+      padding: 16px 0 48px;
+    }
+
+    .section {
+      margin-top: 16px;
+      padding: 22px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: rise 700ms ease both;
+    }
+
+    .section h2 {
+      margin: 0;
+      text-align: center;
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      letter-spacing: -0.04em;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 auto 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .section-head {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .section-sub {
+      max-width: 58ch;
+      margin: 0 auto;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .hero {
+      position: relative;
+      padding: 28px 22px 26px;
+      background:
+        linear-gradient(140deg, rgba(26, 34, 31, 0.98), rgba(15, 19, 18, 0.98)),
+        var(--panel);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(214, 162, 74, 0.1), transparent 40%),
+        radial-gradient(circle at 78% 22%, rgba(145, 178, 106, 0.12), transparent 22%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 20px;
+    }
+
+    .hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-pill,
+    .mini-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .brand-pill strong,
+    .mini-pill strong {
+      color: var(--text);
+    }
+
+    .hero h1 {
+      margin: 0;
+      max-width: 12ch;
+      font-size: clamp(2.7rem, 10vw, 5.5rem);
+      line-height: 0.94;
+      letter-spacing: -0.06em;
+    }
+
+    .hero-copy {
+      max-width: 64ch;
+    }
+
+    .hero-copy p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 1rem;
+    }
+
+    .hero-why {
+      padding-left: 16px;
+      border-left: 3px solid var(--accent);
+      color: var(--text);
+    }
+
+    .hero-notes {
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-notes .mini-pill {
+      justify-content: space-between;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .read {
+      background: var(--panel-warm);
+      border-color: rgba(214, 162, 74, 0.22);
+    }
+
+    .read-box {
+      position: relative;
+      max-width: 100%;
+      padding: 18px 18px 18px 22px;
+      border-radius: var(--radius-lg);
+      background: rgba(15, 12, 8, 0.28);
+      border: 1px solid rgba(214, 162, 74, 0.16);
+    }
+
+    .read-box::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      bottom: 14px;
+      left: 0;
+      width: 4px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--accent), #f0ca7b);
+    }
+
+    .read-box p {
+      margin: 0;
+      max-width: 64ch;
+      color: var(--text);
+      line-height: 1.68;
+    }
+
+    .plan {
+      background:
+        linear-gradient(180deg, rgba(17, 23, 20, 0.98), rgba(13, 18, 17, 0.98)),
+        var(--panel);
+    }
+
+    .engagement {
+      margin: 0 0 18px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .engagement strong {
+      color: var(--text);
+    }
+
+    .plan-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .team-card,
+    .stack-card,
+    .step-card,
+    .proof-card,
+    .who-box,
+    .cta-box {
+      width: 100%;
+      max-width: 100%;
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+    }
+
+    .team-card,
+    .stack-card,
+    .step-card,
+    .who-box,
+    .cta-box {
+      padding: 18px;
+    }
+
+    .team-card h3,
+    .stack-card h3,
+    .proof-card h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      letter-spacing: -0.03em;
+    }
+
+    .team-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .team-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .team-list strong {
+      color: var(--text);
+    }
+
+    .stack-card {
+      background: rgba(145, 178, 106, 0.08);
+    }
+
+    .stack-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .stack-tags span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--line);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step-card {
+      position: relative;
+      padding-left: 78px;
+    }
+
+    .step-num {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .step-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.04rem;
+      letter-spacing: -0.03em;
+    }
+
+    .step-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.58;
+    }
+
+    .who-box p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .client-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 0;
+    }
+
+    .client-row span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(214, 162, 74, 0.12);
+      color: var(--text);
+      border: 1px solid rgba(214, 162, 74, 0.16);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #171d1a;
+    }
+
+    .proof-copy {
+      padding: 18px;
+    }
+
+    .proof-meta {
+      margin: 0 0 10px;
+      color: var(--accent-2);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .proof-copy p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .proof-link,
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #14110c;
+      font-weight: 700;
+      transition: transform 180ms ease, filter 180ms ease;
+    }
+
+    .proof-link:hover,
+    .proof-link:focus-visible,
+    .cta-link:hover,
+    .cta-link:focus-visible {
+      transform: translateY(-2px);
+      filter: brightness(1.04);
+    }
+
+    .cta-box {
+      text-align: center;
+      background:
+        linear-gradient(135deg, rgba(214, 162, 74, 0.12), rgba(145, 178, 106, 0.12)),
+        var(--panel-soft);
+    }
+
+    .cta-box h2 {
+      margin-bottom: 10px;
+    }
+
+    .cta-box p {
+      max-width: 34ch;
+      margin: 0 auto 18px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    @media (min-width: 768px) {
+      .page {
+        width: min(var(--max), calc(100% - 40px));
+        padding-top: 22px;
+      }
+
+      .section,
+      .hero {
+        padding: 28px;
+      }
+
+      .hero-inner {
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        align-items: end;
+      }
+
+      .plan-grid {
+        grid-template-columns: minmax(260px, 0.42fr) minmax(0, 0.58fr);
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hero h1 {
+        max-width: 9.5ch;
+      }
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div class="hero-top">
+            <div class="brand-pill"><strong>Avalanche Studios Group</strong><span>for Patrik Skoog</span></div>
+          </div>
+          <h1>Keep worlds beyond limits moving while the new project ramps</h1>
+          <p>You are growing a new multi-disciplinary team. Live games still need patches and DLC. That puts weekly pressure on build flow and regression checks across titles.</p>
+          <p class="hero-why">Your Senior Producer post says the project is early. It also says pipelines need work, and outsourcing may help. That is why this brief stays on QA, tooling, and release support.</p>
+        </div>
+        <div class="hero-notes">
+          <div class="mini-pill"><span>Primary product</span><strong>theHunter: Call of the Wild</strong></div>
+          <div class="mini-pill"><span>Live title signal</span><strong>Fresh patch and DLC cadence</strong></div>
+          <div class="mini-pill"><span>Main risk</span><strong>Core engineers get pulled sideways</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section read">
+      <div class="section-head">
+        <div class="section-tag">Our Read</div>
+        <h2>What we think is happening</h2>
+      </div>
+      <div class="read-box">
+        <p>The signal says Avalanche is starting a new project, not backfilling. Technical leads then carry delivery risk before production rhythms settle. Live games still ship content, fixes, and community beats. Thin pipeline support pulls core engineers into regressions and build noise. Players then feel the cost through crashes, lag, and co-op instability.</p>
+      </div>
+    </section>
+
+    <section class="section plan">
+      <div class="section-head">
+        <div class="section-tag">What We'd Do</div>
+        <h2>A focused production bridge squad</h2>
+        <p class="section-sub">Use a dedicated squad under your producer and tech leads. Run a six-week pilot first.</p>
+      </div>
+      <p class="engagement"><strong>Engagement model:</strong> one Elinext squad works inside Avalanche's weekly delivery cadence.</p>
+      <div class="plan-grid">
+        <div>
+          <div class="team-card">
+            <h3>Team shape</h3>
+            <ul class="team-list">
+              <li><strong>1 Delivery Lead</strong><span>weekly planning and risk tracking</span></li>
+              <li><strong>1 QA Automation Engineer</strong><span>regression checks for live updates</span></li>
+              <li><strong>1 Build and DevOps Engineer</strong><span>CI, packaging, and release flow</span></li>
+              <li><strong>1 C/C++ Tools Engineer</strong><span>engine-adjacent support and fixes</span></li>
+              <li><strong>1 Test Analyst</strong><span>co-op, mission, and store-path coverage</span></li>
+            </ul>
+          </div>
+          <div class="stack-card">
+            <h3>Relevant stack</h3>
+            <div class="stack-tags">
+              <span>C/C++</span>
+              <span>Python</span>
+              <span>React</span>
+              <span>QA</span>
+              <span>DevOps</span>
+            </div>
+          </div>
+        </div>
+        <div class="steps">
+          <article class="step-card">
+            <div class="step-num">01</div>
+            <h3>Map the risky path</h3>
+            <p>Map the release path for live titles and the new game. Mark the build, test, and approval steps that still need senior engineers.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-num">02</div>
+            <h3>Cover the regressions</h3>
+            <p>Stand up regression coverage for multiplayer, missions, audio, and DLC checks. Fail risky builds before they reach players or content partners.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-num">03</div>
+            <h3>Clean up release flow</h3>
+            <p>Add CI and release support around tooling, packaging, and reports. Give Patrik and production leads a clean weekly view.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-num">04</div>
+            <h3>Protect core specialists</h3>
+            <p>Keep one C/C++ tools engineer ready for engine-adjacent fixes. Keep QA and DevOps work off core gameplay engineers.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="section-tag">Who Is Elinext</div>
+        <h2>Why this team is credible</h2>
+      </div>
+      <div class="who-box">
+        <p>Elinext is a full-cycle software development company, working since 1997 with about 700 in-house specialists and no freelancers. We cover C/C++, Python, QA, DevOps, and internal web tooling, which matches the support work this proposal describes. We work to ISO 9001 and ISO 27001 standards, and our teams have delivered software for Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. For Avalanche, we would place one dedicated squad under your producer and tech leads, then work inside your weekly delivery rhythm. That adds support capacity without pulling core gameplay engineers away from the new project.</p>
+        <div class="client-row">
+          <span>Siemens</span>
+          <span>Broadcom</span>
+          <span>Volkswagen</span>
+          <span>TRUMPF</span>
+          <span>TUI</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="section-tag">Proof</div>
+        <h2>Related work by Elinext</h2>
+      </div>
+      <div class="proof-grid">
+        <article class="proof-card">
+          <img src="assets/case-bundled-software-installers-platform.jpg" alt="Bundled software installers platform case study cover">
+          <div class="proof-copy">
+            <h3>Platform for Creating Bundled Software Installers</h3>
+            <div class="proof-meta">Media &amp; entertainment · Web + DevOps</div>
+            <p>Built a stable installer platform for media software delivery. It now supports about 70,000 installs a month.</p>
+            <a class="proof-link" href="https://www.elinext.com/case-study/bundled-software-installers-platform/" target="_blank" rel="noreferrer">View case study</a>
+          </div>
+        </article>
+        <article class="proof-card">
+          <img src="assets/case-allin1social-smm-platform.jpg" alt="Allin1social SMM platform case study cover">
+          <div class="proof-copy">
+            <h3>Testing of Allin1social SMM Platform</h3>
+            <div class="proof-meta">Media &amp; entertainment · QA</div>
+            <p>Tested a social media platform across web and mobile paths. The team found 60+ defects and cut complaints by 67%.</p>
+            <a class="proof-link" href="https://www.elinext.com/case-study/allin1social-smm-platform/" target="_blank" rel="noreferrer">View case study</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="cta-box">
+        <div class="section-tag">Let's Talk</div>
+        <h2>Start a technical conversation</h2>
+        <p>If the producer gap is real, we can bridge it.</p>
+        <a class="cta-link" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Talk with Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
