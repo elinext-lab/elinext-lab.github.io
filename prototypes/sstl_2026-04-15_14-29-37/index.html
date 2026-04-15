@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSTL x Elinext | Mission Workflow Brief</title>
+  <meta name="description" content="A short proposal for helping SSTL reduce workflow friction across live mission builds, engineering handoffs, and the public Lunar Mission Builder surface.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/sstl_2026-04-15_14-29-37/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/sstl_2026-04-15_14-29-37/">
+  <meta property="og:title" content="A calmer workflow for SSTL mission delivery">
+  <meta property="og:description" content="A short proposal for helping SSTL reduce workflow friction across live mission builds, engineering handoffs, and the public Lunar Mission Builder surface.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/sstl_2026-04-15_14-29-37/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A calmer workflow for SSTL mission delivery">
+  <meta name="twitter:description" content="A short proposal for helping SSTL reduce workflow friction across live mission builds, engineering handoffs, and the public Lunar Mission Builder surface.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/sstl_2026-04-15_14-29-37/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #08101f;
+      --bg-2: #111f3d;
+      --panel: rgba(11, 22, 43, 0.92);
+      --panel-strong: #0f1b34;
+      --panel-soft: #eef3fb;
+      --card: rgba(255, 255, 255, 0.94);
+      --card-2: rgba(233, 241, 255, 0.96);
+      --ink: #16233f;
+      --ink-soft: #4d5d82;
+      --line: rgba(107, 133, 186, 0.22);
+      --line-strong: rgba(107, 133, 186, 0.38);
+      --white: #f7fbff;
+      --accent: #ff8d4f;
+      --accent-soft: rgba(255, 141, 79, 0.14);
+      --blue: #79b6ff;
+      --blue-soft: rgba(121, 182, 255, 0.16);
+      --mint: #8ddbb1;
+      --shadow: 0 28px 70px rgba(7, 17, 35, 0.18);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --max: 1160px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(121, 182, 255, 0.18), transparent 28rem),
+        radial-gradient(circle at top right, rgba(255, 141, 79, 0.12), transparent 20rem),
+        linear-gradient(180deg, #091122 0%, #0d1831 24%, #edf2fb 24%, #edf2fb 100%);
+      color: var(--ink);
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 34px 34px;
+      opacity: 0.45;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      padding: 14px 14px 56px;
+    }
+
+    .shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    section {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .section-pad {
+      padding: 24px 18px;
+    }
+
+    .hero {
+      position: relative;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(121, 182, 255, 0.22), transparent 18rem),
+        radial-gradient(circle at 92% 22%, rgba(255, 141, 79, 0.18), transparent 16rem),
+        linear-gradient(135deg, #0a1328 0%, #112143 52%, #0d1730 100%);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      border: 1px solid rgba(121, 182, 255, 0.22);
+      pointer-events: none;
+    }
+
+    .hero::before {
+      width: 340px;
+      height: 340px;
+      top: -120px;
+      right: -80px;
+    }
+
+    .hero::after {
+      width: 520px;
+      height: 520px;
+      left: -240px;
+      bottom: -320px;
+    }
+
+    .topline,
+    .section-kicker,
+    .mini-tag,
+    .stack-tag,
+    .client-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      max-width: 100%;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .topline,
+    .section-kicker {
+      padding: 8px 12px;
+    }
+
+    .topline {
+      color: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.08);
+      margin-bottom: 18px;
+    }
+
+    .section-kicker {
+      margin: 0 auto 14px;
+      color: var(--ink);
+      background: var(--accent-soft);
+      border: 1px solid rgba(255, 141, 79, 0.24);
+    }
+
+    .mini-tag,
+    .stack-tag,
+    .client-tag {
+      padding: 8px 11px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .mini-tag {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .stack-tag {
+      color: var(--ink);
+      background: rgba(22, 35, 63, 0.06);
+      border: 1px solid rgba(22, 35, 63, 0.08);
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    .client-tag {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Newsreader", serif;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+    }
+
+    h1 {
+      max-width: 11ch;
+      font-size: clamp(2.7rem, 9vw, 5.15rem);
+      line-height: 0.93;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: clamp(1.95rem, 5vw, 3.15rem);
+      line-height: 0.98;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 1.34rem;
+      line-height: 1.05;
+    }
+
+    p,
+    li {
+      font-size: 0.99rem;
+      line-height: 1.62;
+      color: var(--ink-soft);
+    }
+
+    .hero p {
+      color: rgba(238, 245, 255, 0.84);
+      max-width: 34rem;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-lead {
+      font-size: 1.02rem;
+    }
+
+    .why-here {
+      max-width: 38rem;
+      padding: 16px 18px;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 18px 18px 0;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-meta {
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .section-title-wrap {
+      max-width: 46rem;
+      margin: 0 auto 24px;
+      text-align: center;
+    }
+
+    .section-sub {
+      max-width: 34rem;
+      margin: 0 auto;
+    }
+
+    .read-card {
+      width: 100%;
+      max-width: none;
+      background:
+        linear-gradient(135deg, rgba(17, 31, 61, 0.96) 0%, rgba(13, 23, 48, 0.96) 100%);
+      color: var(--white);
+      border: 1px solid rgba(121, 182, 255, 0.22);
+      border-radius: var(--radius-lg);
+      padding: 24px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .read-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 6px;
+      background: linear-gradient(180deg, var(--accent) 0%, #ffb27b 100%);
+    }
+
+    .read-card p {
+      max-width: 68ch;
+      color: rgba(238, 245, 255, 0.86);
+      font-size: 1.02rem;
+    }
+
+    .plan-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proposal-shell {
+      display: grid;
+      gap: 16px;
+    }
+
+    .panel {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--card) 0%, var(--card-2) 100%);
+      padding: 20px 18px;
+    }
+
+    .engagement {
+      display: grid;
+      gap: 16px;
+    }
+
+    .engagement-line {
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      background: var(--panel-strong);
+      color: var(--white);
+      border: 1px solid rgba(121, 182, 255, 0.2);
+    }
+
+    .engagement-line p {
+      color: rgba(238, 245, 255, 0.84);
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    .step-num {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, var(--accent) 0%, #ffb27b 100%);
+      color: #17284c;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.36);
+    }
+
+    .step-copy {
+      display: grid;
+      gap: 6px;
+    }
+
+    .step-copy h3 {
+      font-size: 1.18rem;
+      color: var(--ink);
+    }
+
+    .step-copy p {
+      color: var(--ink-soft);
+    }
+
+    .team-panel {
+      display: grid;
+      gap: 16px;
+      background:
+        radial-gradient(circle at top right, rgba(121, 182, 255, 0.16), transparent 14rem),
+        linear-gradient(180deg, #101d38 0%, #0b152b 100%);
+      color: var(--white);
+      border-color: rgba(121, 182, 255, 0.2);
+    }
+
+    .team-panel p {
+      color: rgba(238, 245, 255, 0.78);
+    }
+
+    .team-grid,
+    .stack-row,
+    .client-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .team-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      max-width: 100%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .team-chip span {
+      display: inline-grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 9px;
+      background: rgba(255, 141, 79, 0.2);
+      color: #ffd0b7;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .who-card {
+      background:
+        linear-gradient(180deg, rgba(14, 25, 49, 0.96) 0%, rgba(12, 21, 41, 0.98) 100%);
+      color: var(--white);
+      border-color: rgba(121, 182, 255, 0.18);
+    }
+
+    .who-card p {
+      color: rgba(238, 245, 255, 0.82);
+      max-width: 70ch;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .clients {
+      margin: 18px auto 0;
+      justify-content: center;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .case-card {
+      display: grid;
+      gap: 0;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .case-media {
+      background: #dbe7fb;
+      aspect-ratio: 1170 / 508;
+      overflow: hidden;
+    }
+
+    .case-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .case-body {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+    }
+
+    .case-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .case-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--ink);
+      border: 1px solid rgba(121, 182, 255, 0.2);
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .result-line {
+      color: #18624d;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .case-link {
+      width: fit-content;
+      color: var(--ink);
+      font-size: 0.93rem;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(22, 35, 63, 0.24);
+    }
+
+    .cta {
+      text-align: center;
+      color: var(--white);
+      background:
+        radial-gradient(circle at top center, rgba(121, 182, 255, 0.2), transparent 16rem),
+        linear-gradient(180deg, #101c38 0%, #0b1327 100%);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .cta p {
+      max-width: 28rem;
+      margin: 0 auto;
+      color: rgba(238, 245, 255, 0.82);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 20px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--accent) 0%, #ffb27b 100%);
+      color: #152341;
+      font-weight: 700;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    .cta .btn {
+      margin-top: 22px;
+    }
+
+    .stamp {
+      margin-top: 18px;
+      color: rgba(238, 245, 255, 0.58);
+      font-size: 0.82rem;
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .hero .topline,
+    .hero .mini-tag:nth-child(2) {
+      animation: drift 7s ease-in-out infinite;
+    }
+
+    @media (min-width: 760px) {
+      .page {
+        padding: 20px 20px 72px;
+      }
+
+      .section-pad {
+        padding: 34px 30px;
+      }
+
+      .proposal-shell {
+        grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.95fr);
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero-copy {
+        gap: 20px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .section-pad {
+        padding: 42px 38px;
+      }
+
+      .hero-copy {
+        max-width: 58rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <section class="hero">
+        <div class="section-pad hero-copy">
+          <div class="topline">SSTL × Elinext</div>
+          <h1>A calmer workflow for SSTL's next mission wave</h1>
+          <p class="hero-lead">SSTL is carrying more mission work across Earth observation, Lunar Pathfinder, and payload imaging. This brief shows how Elinext could remove workflow friction without touching the engineering core.</p>
+          <p class="why-here">We saw contractor hiring in harness, AIT, and thermal engineering. When that happens beside live missions, chief engineering needs better status, QA, and handoff tools.</p>
+          <div class="hero-meta">
+            <div class="meta-row">
+              <div class="mini-tag">Prepared for Richard Hebden</div>
+              <div class="mini-tag">Head of Chief Engineering</div>
+            </div>
+            <div class="meta-row">
+              <div class="mini-tag">Public software surface: Lunar Mission Builder App</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-pad">
+          <div class="section-title-wrap">
+            <div class="section-kicker">Our Read</div>
+            <h2>The load is bigger than one hiring burst</h2>
+          </div>
+          <div class="read-card">
+            <p>Those hires tell us SSTL is carrying more parallel mission work. The hard part is keeping AIT, thermal, payload, and ground teams on the same data. When that layer is weak, reviews slow, test evidence scatters, and engineers chase status. The public mission builder adds another surface that must stay accurate and fast.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-pad">
+          <div class="section-title-wrap">
+            <div class="section-kicker">What We'd Do</div>
+            <h2>One live delivery layer for mission readiness</h2>
+            <p class="section-sub">A scoped 10-week project with chief engineering for one live build-readiness view.</p>
+          </div>
+          <div class="proposal-shell">
+            <div class="engagement">
+              <div class="engagement-line">
+                <p><strong>Engagement model:</strong> scoped end-to-end project, run with your chief engineering and mission leads.</p>
+              </div>
+              <div class="steps">
+                <article class="step">
+                  <div class="step-num">01</div>
+                  <div class="step-copy">
+                    <h3>Map the mission flow</h3>
+                    <p>Map one active flow across AIT, thermal, payload, and ground teams. Mark where actions, documents, and sign-off data split.</p>
+                  </div>
+                </article>
+                <article class="step">
+                  <div class="step-num">02</div>
+                  <div class="step-copy">
+                    <h3>Build the working layer</h3>
+                    <p>Create one secure web workspace for status, blockers, approvals, and evidence. Keep it simple and easy to train.</p>
+                  </div>
+                </article>
+                <article class="step">
+                  <div class="step-num">03</div>
+                  <div class="step-copy">
+                    <h3>Connect key sources</h3>
+                    <p>Link the tool to the mission-builder flow, core documents, and test outputs. Show owners, due dates, and release gates.</p>
+                  </div>
+                </article>
+                <article class="step">
+                  <div class="step-num">04</div>
+                  <div class="step-copy">
+                    <h3>Prove and hand over</h3>
+                    <p>Add QA checks, audit trails, and weekly demos. Hand over runbooks so the next mission can use it fast.</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+            <aside class="panel team-panel">
+              <div>
+                <div class="section-kicker" style="margin:0 0 14px; color:#fff; background:rgba(255,141,79,0.14); border-color:rgba(255,141,79,0.24);">Team Shape</div>
+                <p>Small team. Clear scope. Fast feedback from your side each week.</p>
+              </div>
+              <div class="team-grid">
+                <div class="team-chip"><span>1</span>Delivery lead</div>
+                <div class="team-chip"><span>1</span>Solution architect</div>
+                <div class="team-chip"><span>2</span>Full-stack engineers</div>
+                <div class="team-chip"><span>1</span>QA automation engineer</div>
+              </div>
+              <div>
+                <p style="margin-bottom:10px;">Relevant stack</p>
+                <div class="stack-row">
+                  <div class="stack-tag">.NET / C#</div>
+                  <div class="stack-tag">Angular</div>
+                  <div class="stack-tag">React</div>
+                  <div class="stack-tag">Python</div>
+                  <div class="stack-tag">QA automation</div>
+                  <div class="stack-tag">DevOps</div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="who-card">
+        <div class="section-pad">
+          <div class="section-title-wrap">
+            <div class="section-kicker" style="color:#fff; background:rgba(255,141,79,0.14); border-color:rgba(255,141,79,0.24);">Who Is Elinext</div>
+            <h2 style="color:#fff;">A delivery team built for controlled engineering work</h2>
+          </div>
+          <p>Elinext is a full-cycle software team, working since 1997. We have about 700 in-house specialists, with no freelancers or subcontractors. For controlled delivery, we bring .NET, frontend, QA, DevOps, and project management together. We hold ISO 9001 and ISO 27001. Our teams have shipped work for Siemens, Broadcom, TRUMPF, and Volkswagen. That makes us a practical fit for a workflow project around mission evidence and release control.</p>
+          <div class="client-row clients">
+            <div class="client-tag"><strong>Siemens</strong></div>
+            <div class="client-tag"><strong>Broadcom</strong></div>
+            <div class="client-tag"><strong>TRUMPF</strong></div>
+            <div class="client-tag"><strong>Volkswagen</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-pad">
+          <div class="section-title-wrap">
+            <div class="section-kicker">Proof</div>
+            <h2>Relevant work already shipped</h2>
+            <p class="section-sub">Two Elinext cases show delivery around industrial software, hardware-linked workflows, and long-life operational systems.</p>
+          </div>
+          <div class="proof-grid">
+            <article class="case-card">
+              <div class="case-media">
+                <img src="assets/case-lidar-management.jpg" alt="LiDAR Management Solution case study image">
+              </div>
+              <div class="case-body">
+                <div class="case-meta">
+                  <div class="case-kicker">Manufacturing</div>
+                </div>
+                <h3>LiDAR Management Solution for a Swedish Company</h3>
+                <p class="result-line">Built two major setup and management modules in six weeks.</p>
+                <p>Strong match for hardware-linked operations software, tight timelines, and clear user flows around device setup and control.</p>
+                <a class="case-link" href="https://www.elinext.com/case-study/lidar-management-solution/" target="_blank" rel="noreferrer">Read the case study</a>
+              </div>
+            </article>
+            <article class="case-card">
+              <div class="case-media">
+                <img src="assets/case-manufacturing-execution.jpg" alt="Manufacturing Execution System case study image">
+              </div>
+              <div class="case-body">
+                <div class="case-meta">
+                  <div class="case-kicker">Manufacturing</div>
+                </div>
+                <h3>Manufacturing Execution System</h3>
+                <p class="result-line">Helped support a core MES that became most of the client's revenue.</p>
+                <p>Useful proof for workflow-heavy software that needs support, monitoring, integration, and long release discipline.</p>
+                <a class="case-link" href="https://www.elinext.com/case-study/manufacturing-execution-system/" target="_blank" rel="noreferrer">Read the case study</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="section-pad">
+          <div class="section-title-wrap">
+            <div class="section-kicker" style="color:#fff; background:rgba(121,182,255,0.14); border-color:rgba(121,182,255,0.24);">Let's Talk</div>
+            <h2 style="color:#fff;">Talk through one mission</h2>
+          </div>
+          <p>We can scope a focused pilot around build readiness, evidence flow, and release control.</p>
+          <a class="btn" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Contact Elinext</a>
+          <div class="stamp">Prepared for SSTL on 15 Apr 2026</div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
