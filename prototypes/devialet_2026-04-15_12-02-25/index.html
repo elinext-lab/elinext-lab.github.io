@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Make Devialet setup feel as premium as the sound | Elinext</title>
+  <meta name="description" content="A short proposal for Devialet on setup quality, customer operations, and app reliability.">
+  <meta name="author" content="Elinext">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Make Devialet setup feel as premium as the sound">
+  <meta property="og:description" content="A short proposal for Devialet on setup quality, customer operations, and app reliability.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/devialet_2026-04-15_12-02-25/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/devialet_2026-04-15_12-02-25/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Devialet proposal brief by Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Make Devialet setup feel as premium as the sound">
+  <meta name="twitter:description" content="A short proposal for Devialet on setup quality, customer operations, and app reliability.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/devialet_2026-04-15_12-02-25/og-image.jpg">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/devialet_2026-04-15_12-02-25/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f3ede5;
+      --surface: rgba(255, 255, 255, 0.82);
+      --surface-strong: #fffaf4;
+      --ink: #171411;
+      --muted: #5f584f;
+      --line: rgba(23, 20, 17, 0.12);
+      --line-strong: rgba(23, 20, 17, 0.2);
+      --dark: #171411;
+      --dark-soft: #27211d;
+      --accent: #c67a3c;
+      --accent-soft: rgba(198, 122, 60, 0.14);
+      --warm: #efe1d1;
+      --ok: #2a7a53;
+      --radius: 26px;
+      --shadow: 0 24px 70px rgba(49, 31, 13, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(198, 122, 60, 0.16), transparent 28rem),
+        radial-gradient(circle at top right, rgba(33, 23, 18, 0.08), transparent 22rem),
+        var(--bg);
+      color: var(--ink);
+      font-family: "Space Grotesk", "Helvetica Neue", sans-serif;
+    }
+
+    body {
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    p,
+    h1,
+    h2,
+    h3 {
+      overflow-wrap: anywhere;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0 0;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 16px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 250, 244, 0.74);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 12px 30px rgba(49, 31, 13, 0.06);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-mark {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #e8b07a);
+      box-shadow: 0 0 0 6px var(--accent-soft);
+      flex: 0 0 auto;
+    }
+
+    .topbar-note {
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-align: right;
+    }
+
+    .hero {
+      padding: 18px 0 44px;
+    }
+
+    .hero-shell {
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      border-radius: 34px;
+      color: #f8f1e8;
+      background:
+        linear-gradient(135deg, rgba(198, 122, 60, 0.18), transparent 35%),
+        linear-gradient(180deg, #1f1814, #171411);
+      box-shadow: 0 28px 70px rgba(28, 18, 11, 0.24);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-shell::before,
+    .hero-shell::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+    }
+
+    .hero-shell::before {
+      width: 240px;
+      height: 240px;
+      right: -100px;
+      top: -80px;
+      background: radial-gradient(circle, rgba(198, 122, 60, 0.32), transparent 72%);
+    }
+
+    .hero-shell::after {
+      width: 180px;
+      height: 180px;
+      left: -70px;
+      bottom: -70px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 72%);
+    }
+
+    .eyebrow {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: #efc7a2;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 1px;
+      background: rgba(239, 199, 162, 0.75);
+    }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      max-width: 12ch;
+      font-size: clamp(2.35rem, 8vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .hero-copy p {
+      margin: 0;
+      max-width: 44rem;
+      font-size: 1rem;
+      color: rgba(248, 241, 232, 0.86);
+    }
+
+    .hero-why {
+      padding-left: 16px;
+      border-left: 3px solid var(--accent);
+      color: #fff6ee;
+    }
+
+    section {
+      padding: 20px 0 52px;
+    }
+
+    .section-head {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .section-kicker {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.6rem, 5vw, 2.6rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .section-sub {
+      margin: 12px auto 0;
+      max-width: 42rem;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .read-panel {
+      max-width: none;
+      padding: 26px 22px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #f6e8d8, #f1dfcc);
+      box-shadow: var(--shadow);
+    }
+
+    .read-panel p {
+      margin: 0;
+      max-width: 64ch;
+      font-size: 1.03rem;
+      color: #2f271f;
+    }
+
+    .proposal-shell {
+      display: grid;
+      gap: 20px;
+    }
+
+    .proposal-card,
+    .proof-card,
+    .who-card,
+    .cta-card {
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .proposal-card {
+      overflow: hidden;
+      background: linear-gradient(180deg, #1d1713, #221b16);
+      color: #f8f1e8;
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+      padding: 22px;
+    }
+
+    .team-card {
+      padding: 22px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .team-card h3,
+    .steps h3,
+    .proof-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.18rem;
+      letter-spacing: -0.02em;
+    }
+
+    .team-card p,
+    .proof-card p,
+    .cta-card p {
+      margin: 0;
+      color: inherit;
+    }
+
+    .team-card p {
+      color: rgba(248, 241, 232, 0.82);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff8f0;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .chip.stack {
+      color: #f0c9a6;
+      background: rgba(198, 122, 60, 0.14);
+      border-color: rgba(198, 122, 60, 0.22);
+    }
+
+    .steps {
+      padding: 22px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+    }
+
+    .step-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .step {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .step-top {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 8px;
+    }
+
+    .step-no {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #1f1510;
+      font-size: 0.88rem;
+      font-weight: 700;
+      flex: 0 0 auto;
+    }
+
+    .step-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .step p {
+      margin: 0;
+      color: rgba(248, 241, 232, 0.78);
+      font-size: 0.95rem;
+    }
+
+    .who-card {
+      padding: 24px 22px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 250, 244, 0.92));
+    }
+
+    .who-card p {
+      margin: 0;
+      max-width: 68ch;
+      color: #2e271f;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0 0;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: var(--surface-strong);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 248, 241, 0.96));
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 1170 / 508;
+      object-fit: cover;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-type {
+      display: inline-flex;
+      margin-bottom: 10px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #864f20;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .proof-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      color: var(--ok);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .cta-card {
+      padding: 24px 22px;
+      text-align: center;
+      background: linear-gradient(180deg, #1b1512, #241c18);
+      color: #f8f1e8;
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .cta-card p {
+      max-width: 30rem;
+      margin: 12px auto 0;
+      color: rgba(248, 241, 232, 0.8);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 22px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), #e5a76f);
+      color: #21150e;
+      font-weight: 700;
+      font-size: 0.95rem;
+      box-shadow: 0 18px 30px rgba(198, 122, 60, 0.22);
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: rgba(248, 241, 232, 0.6);
+      font-size: 0.8rem;
+    }
+
+    @media (min-width: 760px) {
+      .hero-shell {
+        padding: 38px;
+      }
+
+      .proposal-grid {
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr);
+        align-items: start;
+      }
+
+      .steps {
+        border-top: 0;
+        border-left: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 980px) {
+      .hero {
+        padding-bottom: 56px;
+      }
+
+      .hero-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+        gap: 22px;
+        align-items: end;
+      }
+
+      .hero-copy {
+        margin-top: 0;
+        padding-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="container">
+      <div class="topbar-inner">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>Devialet × Elinext</span>
+        </div>
+        <div class="topbar-note">Lead proposal brief · 15 April 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-shell">
+        <div>
+          <div class="eyebrow">Customer Experience and App Quality</div>
+          <h1>Make Devialet setup feel as premium as the sound</h1>
+        </div>
+        <div class="hero-copy">
+          <p>We reviewed the public app journey, recent feedback, and your current product mix. The sound wins people fast. The control and setup layer still asks too much from them.</p>
+          <p class="hero-why">You are adding a Customer Operations &amp; Experience role. That usually means service demand is rising. The product team needs fewer setup cases and faster recovery.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <p class="section-kicker">Our Read</p>
+          <h2>Where the pressure likely sits</h2>
+        </div>
+        <div class="read-panel">
+          <p>That hire tells us the post-sale journey is getting heavier. The Devialet app now carries setup, pairing, updates, and daily control across several product lines. When setup loops, Wi-Fi drops, or stereo pairing breaks, customer teams become the recovery path. That slows service, hurts trust, and makes premium hardware feel less premium.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <p class="section-kicker">What We’d Do</p>
+          <h2>A focused squad for setup, stability, and support flow</h2>
+          <p class="section-sub">Dedicated squad under your PO/PM for a 10-week track. Start with setup first. Then lock in QA and support visibility.</p>
+        </div>
+        <div class="proposal-shell">
+          <div class="proposal-card">
+            <div class="proposal-grid">
+              <div class="team-card">
+                <h3>Suggested squad</h3>
+                <p>One delivery lead and one mobile lead. Two iOS or Android engineers. One backend engineer. One QA automation engineer.</p>
+                <div class="chip-row">
+                  <span class="chip">Delivery Lead</span>
+                  <span class="chip">Mobile Lead</span>
+                  <span class="chip">2 Mobile Engineers</span>
+                  <span class="chip">Backend Engineer</span>
+                  <span class="chip">QA Automation</span>
+                </div>
+                <div class="chip-row">
+                  <span class="chip stack">iOS</span>
+                  <span class="chip stack">Android</span>
+                  <span class="chip stack">Node.js</span>
+                  <span class="chip stack">Python</span>
+                  <span class="chip stack">React</span>
+                </div>
+              </div>
+              <div class="steps">
+                <h3>Milestones</h3>
+                <div class="step-list">
+                  <article class="step">
+                    <div class="step-top">
+                      <div class="step-no">1</div>
+                      <div class="step-title">Trace the real setup path</div>
+                    </div>
+                    <p>Map setup, pairing, and recovery for Phantom, Dione, and Mania. Add event tracking so support and product see every stop.</p>
+                  </article>
+                  <article class="step">
+                    <div class="step-top">
+                      <div class="step-no">2</div>
+                      <div class="step-title">Fix the high-friction moments</div>
+                    </div>
+                    <p>Fix account start, device discovery, stereo pairing, and source switching. Cut the steps users repeat when the app loses context.</p>
+                  </article>
+                  <article class="step">
+                    <div class="step-top">
+                      <div class="step-no">3</div>
+                      <div class="step-title">Add release confidence</div>
+                    </div>
+                    <p>Build regression coverage for Wi-Fi, stereo, HDMI, and firmware handoffs. Add release checks before updates reach premium customers.</p>
+                  </article>
+                  <article class="step">
+                    <div class="step-top">
+                      <div class="step-no">4</div>
+                      <div class="step-title">Give support clearer tools</div>
+                    </div>
+                    <p>Give support clearer error states, notes, and quick diagnostics. Reduce back-and-forth during first-line triage.</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <p class="section-kicker">Who Is Elinext</p>
+          <h2>One team across mobile, backend, and QA</h2>
+        </div>
+        <div class="who-card">
+          <p>Elinext is a full-cycle software development company. We have worked since 1997 with about 700 in-house specialists. We use no freelancers. For this work, we combine mobile, backend, QA, and delivery in one squad. Our process is backed by ISO 9001 and ISO 27001. We have delivered for <strong>Parrot</strong>, <strong>Siemens</strong>, <strong>TRUMPF</strong>, <strong>Broadcom</strong>, and <strong>Volkswagen</strong>. We can stay close to your product owner with weekly demos. That helps when app quality and customer experience must move together.</p>
+          <div class="pill-list" aria-label="Highlighted customers">
+            <span class="pill">Parrot</span>
+            <span class="pill">Siemens</span>
+            <span class="pill">TRUMPF</span>
+            <span class="pill">Broadcom</span>
+            <span class="pill">Volkswagen</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <p class="section-kicker">Proof</p>
+          <h2>Relevant work we can point to</h2>
+        </div>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-handsfree.jpg" alt="Applications Suite for a Hands-free Device case study cover">
+            <div class="proof-body">
+              <div class="proof-type">Connected Device App</div>
+              <h3>Applications Suite for a Hands-free Device</h3>
+              <p>Built iPhone and Android control apps for a hands-free device. Added dual-mode connection and guided pairing.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/handsfree-app-for-driving/" target="_blank" rel="noreferrer">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-router.jpg" alt="Remote Network and Router Management Platform case study cover">
+            <div class="proof-body">
+              <div class="proof-type">Support Load Reduction</div>
+              <h3>Remote Network and Router Management Platform for Internet Providers</h3>
+              <p>Built a remote management platform that helped operators reduce support cost and improve customer communication.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/" target="_blank" rel="noreferrer">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="cta-card">
+          <div class="section-head">
+            <p class="section-kicker">Start The Conversation</p>
+            <h2>Talk through the plan</h2>
+          </div>
+          <p>If this matches your view, we can map the first sprint.</p>
+          <a class="btn" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Start with Elinext</a>
+          <div class="footer-note">Proposal prepared for Devialet on 15 April 2026.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
