@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devialet x Elinext | Customer Experience Brief</title>
+  <meta name="description" content="A short proposal for helping Devialet reduce premium support friction around setup, pairing, and customer-operations handoff.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/devialet_2026-04-15_11-27-21/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/devialet_2026-04-15_11-27-21/">
+  <meta property="og:title" content="A cleaner support engine for Devialet's premium product experience">
+  <meta property="og:description" content="A short proposal for helping Devialet reduce premium support friction around setup, pairing, and customer-operations handoff.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/devialet_2026-04-15_11-27-21/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A cleaner support engine for Devialet's premium product experience">
+  <meta name="twitter:description" content="A short proposal for helping Devialet reduce premium support friction around setup, pairing, and customer-operations handoff.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/devialet_2026-04-15_11-27-21/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0d0f;
+      --bg-soft: #17171b;
+      --paper: #f3eee6;
+      --paper-warm: #ece3d8;
+      --ink: #161518;
+      --ink-soft: #5d5852;
+      --line: rgba(24, 22, 20, 0.11);
+      --line-light: rgba(255, 255, 255, 0.1);
+      --gold: #bf8f4a;
+      --gold-deep: #8e6732;
+      --gold-soft: rgba(191, 143, 74, 0.14);
+      --cream: #fffaf4;
+      --shadow: 0 28px 70px rgba(8, 8, 10, 0.22);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top right, rgba(191, 143, 74, 0.2), transparent 24rem),
+        radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.08), transparent 20rem),
+        linear-gradient(180deg, #0d0d0f 0%, #141418 34%, #e9e2d8 34%, #efe8de 100%);
+      color: var(--ink);
+      font-family: "Manrope", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.15;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      padding: 18px 14px 56px;
+    }
+
+    .shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    section {
+      position: relative;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      background: var(--paper);
+      animation: rise 0.7s ease both;
+    }
+
+    section:nth-of-type(2) { animation-delay: 0.08s; }
+    section:nth-of-type(3) { animation-delay: 0.14s; }
+    section:nth-of-type(4) { animation-delay: 0.2s; }
+    section:nth-of-type(5) { animation-delay: 0.26s; }
+    section:nth-of-type(6) { animation-delay: 0.32s; }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-pad {
+      padding: 22px 18px;
+    }
+
+    .eyebrow,
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      max-width: 100%;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      color: rgba(255, 250, 244, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .section-kicker {
+      color: var(--gold-deep);
+      background: var(--gold-soft);
+      border: 1px solid rgba(191, 143, 74, 0.22);
+      margin: 0 auto 14px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Instrument Serif", serif;
+      letter-spacing: -0.03em;
+      font-weight: 400;
+    }
+
+    h1 {
+      font-size: clamp(2.6rem, 8vw, 5.1rem);
+      line-height: 0.95;
+      max-width: 12ch;
+    }
+
+    h2 {
+      font-size: clamp(1.9rem, 5vw, 3rem);
+      line-height: 0.96;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    p,
+    li {
+      font-size: 0.99rem;
+      line-height: 1.58;
+      color: var(--ink-soft);
+    }
+
+    .hero {
+      color: #fffaf4;
+      background:
+        radial-gradient(circle at 85% 16%, rgba(191, 143, 74, 0.28), transparent 18rem),
+        linear-gradient(135deg, #131317 0%, #1a1a20 48%, #0f1012 100%);
+      border-color: var(--line-light);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -30% -35% auto;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 35%, transparent 62%);
+      filter: blur(4px);
+    }
+
+    .hero-grid {
+      position: relative;
+      display: grid;
+      gap: 22px;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-copy p {
+      color: rgba(255, 250, 244, 0.8);
+      max-width: 36rem;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 250, 244, 0.88);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .signal-card {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(10px);
+    }
+
+    .signal-card h3,
+    .signal-card p,
+    .signal-card strong {
+      color: #fffaf4;
+    }
+
+    .signal-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .signal-item {
+      min-width: 0;
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .signal-item strong,
+    .team-role strong,
+    .proof-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.96rem;
+    }
+
+    .signal-item span {
+      display: block;
+      font-size: 0.84rem;
+      line-height: 1.45;
+      color: rgba(255, 250, 244, 0.7);
+    }
+
+    .read {
+      background: linear-gradient(180deg, #fbf5ed 0%, #fff8f0 100%);
+      border-color: rgba(191, 143, 74, 0.24);
+    }
+
+    .read-box {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      padding: 4px 0 0 18px;
+    }
+
+    .read-box::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--gold) 0%, rgba(191, 143, 74, 0.2) 100%);
+    }
+
+    .read p {
+      max-width: 70ch;
+      margin: 0 auto;
+      color: #5b544d;
+      text-align: left;
+      font-size: 1.03rem;
+    }
+
+    .plan {
+      background: linear-gradient(180deg, #efe6da 0%, #f7f0e8 100%);
+    }
+
+    .plan-intro {
+      max-width: 44rem;
+      margin: 0 auto 22px;
+      text-align: center;
+    }
+
+    .plan-grid {
+      display: grid;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(24, 22, 20, 0.08);
+    }
+
+    .step-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-num {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .step-title {
+      font-size: 1.12rem;
+      line-height: 1.1;
+      color: var(--ink);
+    }
+
+    .step p {
+      color: #645d55;
+    }
+
+    .project-card {
+      display: grid;
+      gap: 16px;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: #121216;
+      color: #fffaf4;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .mini-kicker {
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 250, 244, 0.58);
+    }
+
+    .team-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .team-role {
+      min-width: 0;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .team-role span,
+    .project-card p {
+      color: rgba(255, 250, 244, 0.72);
+      font-size: 0.9rem;
+    }
+
+    .stack-row,
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .stack-chip,
+    .proof-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .stack-chip {
+      color: #fffaf4;
+      background: rgba(191, 143, 74, 0.18);
+      border: 1px solid rgba(191, 143, 74, 0.3);
+    }
+
+    .about {
+      background: linear-gradient(180deg, #faf6f0 0%, #f0e8dc 100%);
+    }
+
+    .about-copy {
+      max-width: 52rem;
+      margin: 0 auto 18px;
+      text-align: center;
+    }
+
+    .about p {
+      color: #5b544d;
+    }
+
+    .proof-pill {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(24, 22, 20, 0.08);
+    }
+
+    .proof {
+      background: linear-gradient(180deg, #121216 0%, #18181d 100%);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: #fffaf4;
+    }
+
+    .proof h2 {
+      color: #fffaf4;
+    }
+
+    .proof-copy {
+      max-width: 40rem;
+      margin: 0 auto 22px;
+      text-align: center;
+      color: rgba(255, 250, 244, 0.72);
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .proof-card {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .proof-card img {
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .proof-card p {
+      color: rgba(255, 250, 244, 0.72);
+    }
+
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(191, 143, 74, 0.18);
+      color: #fffaf4;
+      border: 1px solid rgba(191, 143, 74, 0.3);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .cta {
+      background:
+        radial-gradient(circle at 20% 18%, rgba(191, 143, 74, 0.22), transparent 16rem),
+        linear-gradient(180deg, #1b1b20 0%, #0f1012 100%);
+      color: #fffaf4;
+      text-align: center;
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .cta h2,
+    .cta p {
+      color: #fffaf4;
+    }
+
+    .cta p {
+      color: rgba(255, 250, 244, 0.76);
+      margin-bottom: 20px;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 280px;
+      padding: 15px 20px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #d39b52 0%, #b7803f 100%);
+      color: #fff;
+      font-size: 0.98rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      box-shadow: 0 18px 32px rgba(191, 143, 74, 0.22);
+    }
+
+    @media (min-width: 760px) {
+      .page {
+        padding: 24px 20px 68px;
+      }
+
+      .section-pad {
+        padding: 28px 26px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+        gap: 26px;
+        align-items: end;
+      }
+
+      .plan-grid {
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .signal-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .section-pad {
+        padding: 34px 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main class="shell">
+      <section class="hero">
+        <div class="section-pad hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">Prepared for Jacques Demont · Devialet</span>
+            <h1>A cleaner support engine for Devialet's premium product experience</h1>
+            <p>We noticed the customer operations hiring. It looks like Devialet is trying to keep premium service strong while app, reseller, and support load grow.</p>
+            <div class="chip-row">
+              <span class="chip">Signal: ops hiring</span>
+              <span class="chip">Surface: Devialet app</span>
+              <span class="chip">Focus: support flow</span>
+            </div>
+          </div>
+          <aside class="signal-card" aria-label="Why this matters now">
+            <h3>Where pressure shows today</h3>
+            <div class="signal-grid">
+              <div class="signal-item">
+                <strong>Setup pain</strong>
+                <span>Resets, pairing drops, and slow recovery.</span>
+              </div>
+              <div class="signal-item">
+                <strong>Partner load</strong>
+                <span>One team supports buyers and partners.</span>
+              </div>
+              <div class="signal-item">
+                <strong>Tool sprawl</strong>
+                <span>FAQ, tickets, and product feedback need one flow.</span>
+              </div>
+              <div class="signal-item">
+                <strong>Luxury bar</strong>
+                <span>Service has to match the sound.</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="read">
+        <div class="section-pad">
+          <span class="section-kicker">Our read</span>
+          <div class="read-box">
+            <h2>Premium sound raises the bar for service</h2>
+            <p>The hiring signal says Devialet is trying to make customer operations more repeatable across outsourced support, reseller requests, and product escalations. Public reviews show why that matters now: people praise the sound, then complain about setup, pairing, stereo sync, and slow follow-up. When premium devices need resets or workarounds, the support team absorbs the gap. If that gap stays open, five-star trust gets tested by software and service, not by acoustics.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="plan">
+        <div class="section-pad">
+          <span class="section-kicker">What we'd do</span>
+          <h2>Ship one service layer that cuts repeat work</h2>
+          <p class="plan-intro">We would run this as a scoped end-to-end project. In eight weeks, we would ship a live workflow with weekly demos and one Devialet owner.</p>
+          <div class="plan-grid">
+            <div class="steps">
+              <article class="step">
+                <div class="step-top">
+                  <span class="step-num">01</span>
+                  <h3 class="step-title">Map the real support path</h3>
+                </div>
+                <p>Trace the path from app issue to outsourced ticket, partner case, and product escalation. Remove duplicate fields and unclear handoffs.</p>
+              </article>
+              <article class="step">
+                <div class="step-top">
+                  <span class="step-num">02</span>
+                  <h3 class="step-title">Build one triage model</h3>
+                </div>
+                <p>Route B2C, B2B, and reseller requests by product, market, issue type, and SLA risk so agents stop guessing.</p>
+              </article>
+              <article class="step">
+                <div class="step-top">
+                  <span class="step-num">03</span>
+                  <h3 class="step-title">Turn repeat pain into guided playbooks</h3>
+                </div>
+                <p>Create shared playbooks for setup, pairing, stereo sync, HDMI, and source switching, then reuse them in the knowledge base and FAQ.</p>
+              </article>
+              <article class="step">
+                <div class="step-top">
+                  <span class="step-num">04</span>
+                  <h3 class="step-title">Close the product feedback loop</h3>
+                </div>
+                <p>Send one weekly issue view to product teams so release notes, agent scripts, and troubleshooting content move together.</p>
+              </article>
+            </div>
+            <aside class="project-card">
+              <div>
+                <div class="mini-kicker">Engagement model</div>
+                <p>A scoped project with weekly demos and a clean handover.</p>
+              </div>
+              <div>
+                <div class="mini-kicker">Team shape</div>
+                <div class="stack-row">
+                  <span class="stack-chip">1 Solution Architect</span>
+                  <span class="stack-chip">2 Senior Engineers</span>
+                  <span class="stack-chip">1 QA Engineer</span>
+                  <span class="stack-chip">1 Business Analyst</span>
+                </div>
+              </div>
+              <div>
+                <div class="mini-kicker">Relevant stack</div>
+                <div class="stack-row">
+                  <span class="stack-chip">React</span>
+                  <span class="stack-chip">Node.js</span>
+                  <span class="stack-chip">Python</span>
+                  <span class="stack-chip">C# / .NET</span>
+                </div>
+              </div>
+              <div>
+                <div class="mini-kicker">Pilot goal</div>
+                <p>Lower repeat support load around setup, pairing, and partner escalations.</p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="about">
+        <div class="section-pad">
+          <span class="section-kicker">Who is Elinext</span>
+          <h2>Delivery strength without extra vendor sprawl</h2>
+          <div class="about-copy">
+            <p>Elinext is a full-cycle software development company. Since 1997, our ~700 in-house specialists have built and supported digital products with no freelancers or subcontractors. For a premium brand, ISO 27001 and ISO 9001 matter, and so does work for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, and <strong>TUI</strong>. We can cover React, Node.js, Python, QA, and delivery management in one team. That lets us ship the first customer-operations layer fast, then hand it over cleanly or extend it further.</p>
+          </div>
+          <div class="pill-row" aria-label="Credentials">
+            <span class="proof-pill">ISO 27001</span>
+            <span class="proof-pill">ISO 9001</span>
+            <span class="proof-pill">Siemens</span>
+            <span class="proof-pill">Broadcom</span>
+            <span class="proof-pill">Volkswagen</span>
+            <span class="proof-pill">TUI</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="proof">
+        <div class="section-pad">
+          <span class="section-kicker">Proof</span>
+          <h2>Relevant work we can point to</h2>
+          <div class="proof-grid">
+            <article class="proof-card">
+              <img src="assets/case-ecommerce-builder.jpg" alt="E-commerce Website Builder case study cover">
+              <div>
+                <strong>E-Commerce Website Builder for the North American Market</strong>
+                <p>Commerce product work with stronger customer-support flow and 25 onboarded retail brands.</p>
+              </div>
+              <a class="proof-link" href="https://www.elinext.com/case-study/ecommerce-website-builder/">View case study</a>
+            </article>
+            <article class="proof-card">
+              <img src="assets/case-web-crm.jpg" alt="Web CRM case study cover">
+              <div>
+                <strong>Web CRM for a Singaporean Technology Company</strong>
+                <p>Configurable CRM and mobile flow built to support cleaner operations and growth.</p>
+              </div>
+              <a class="proof-link" href="https://www.elinext.com/case-study/crm-for-a-technology-company/">View case study</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="section-pad">
+          <span class="section-kicker">Start the conversation</span>
+          <h2>Compare notes with us</h2>
+          <p>We can map the first pilot in one call.</p>
+          <a class="cta-button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
