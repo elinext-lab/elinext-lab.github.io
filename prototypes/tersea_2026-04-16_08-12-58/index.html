@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Deskea Turn AI Demand Into Fast, Repeatable Pilots | Elinext</title>
+  <meta name="description" content="A short proposal for Tersea and Deskea on turning BDR-driven demand into clearer demos, faster pilots, and cleaner delivery.">
+  <meta name="author" content="Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/tersea_2026-04-16_08-12-58/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/tersea_2026-04-16_08-12-58/">
+  <meta property="og:title" content="Help Deskea Turn AI Demand Into Fast, Repeatable Pilots">
+  <meta property="og:description" content="A short proposal for Tersea and Deskea on turning BDR-driven demand into clearer demos, faster pilots, and cleaner delivery.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/tersea_2026-04-16_08-12-58/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Help Deskea Turn AI Demand Into Fast, Repeatable Pilots">
+  <meta name="twitter:description" content="A short proposal for Tersea and Deskea on turning BDR-driven demand into clearer demos, faster pilots, and cleaner delivery.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/tersea_2026-04-16_08-12-58/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5efe3;
+      --paper: rgba(255, 251, 244, 0.92);
+      --paper-strong: #fffdf8;
+      --ink: #16263e;
+      --muted: #5e6c7f;
+      --line: rgba(22, 38, 62, 0.12);
+      --accent: #f26a2a;
+      --accent-deep: #cd4f16;
+      --accent-soft: rgba(242, 106, 42, 0.14);
+      --navy: #10233d;
+      --navy-soft: #183252;
+      --warm: #eadbc3;
+      --shadow: 0 22px 60px rgba(16, 35, 61, 0.12);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; overflow-x: hidden; }
+    body {
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(242, 106, 42, 0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(24, 50, 82, 0.12), transparent 34%),
+        linear-gradient(180deg, #fbf7ef 0%, #f2eadc 46%, #efe5d6 100%);
+      line-height: 1.55;
+    }
+
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+
+    .shell {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 28px 0;
+    }
+
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--accent-deep);
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .section-intro {
+      max-width: 62ch;
+      margin: 0 auto;
+      text-align: center;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .hero {
+      padding: 24px 0 18px;
+    }
+
+    .hero-wrap {
+      position: relative;
+      overflow: hidden;
+      padding: 26px;
+      background:
+        linear-gradient(145deg, rgba(16, 35, 61, 0.98), rgba(24, 50, 82, 0.96)),
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+      color: #f9f4ec;
+    }
+
+    .hero-wrap::before {
+      content: "";
+      position: absolute;
+      inset: auto -8% -25% auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(242, 106, 42, 0.28), transparent 68%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .hero-headline {
+      margin: 0 0 16px;
+      font-size: clamp(34px, 7vw, 64px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      max-width: 10ch;
+    }
+
+    .hero-copy p {
+      margin: 0 0 14px;
+      max-width: 34rem;
+      font-size: 17px;
+      color: rgba(249, 244, 236, 0.88);
+    }
+
+    .hero-copy p:last-child {
+      margin-bottom: 0;
+    }
+
+    .hero-note {
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .hero-note h2 {
+      margin: 0 0 12px;
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #f4b08b;
+    }
+
+    .signal-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .signal-item {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .signal-item strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: #fff4eb;
+    }
+
+    .signal-item span {
+      display: block;
+      font-size: 13px;
+      color: rgba(249, 244, 236, 0.78);
+    }
+
+    .our-read {
+      padding-top: 18px;
+    }
+
+    .read-box {
+      padding: 24px;
+      background:
+        linear-gradient(180deg, rgba(242, 106, 42, 0.06), rgba(242, 106, 42, 0.02)),
+        var(--paper-strong);
+      border: 1px solid rgba(242, 106, 42, 0.18);
+      border-left: 6px solid var(--accent);
+    }
+
+    .read-box p {
+      margin: 0;
+      max-width: 66ch;
+      color: var(--ink);
+      font-size: 18px;
+    }
+
+    .proposal-wrap {
+      padding: 26px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.82)),
+        var(--paper);
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .proposal-main > p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step-card {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border-radius: 20px;
+      background: var(--paper-strong);
+      border: 1px solid var(--line);
+    }
+
+    .step-number {
+      width: 38px;
+      height: 38px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-deep);
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .step-title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.15;
+    }
+
+    .step-text {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .proposal-side {
+      display: grid;
+      gap: 14px;
+    }
+
+    .side-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(16, 35, 61, 0.03), rgba(16, 35, 61, 0.01)), var(--paper-strong);
+      border: 1px solid var(--line);
+    }
+
+    .side-card h3 {
+      margin: 0 0 12px;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-deep);
+    }
+
+    .engagement {
+      margin: 0 0 14px;
+      font-size: 16px;
+      color: var(--ink);
+    }
+
+    .meta-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+    }
+
+    .meta-item {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(16, 35, 61, 0.04);
+    }
+
+    .meta-item strong,
+    .stack strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .meta-item span,
+    .stack span {
+      display: block;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .stack-chip,
+    .tag,
+    .customer-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .stack-chip {
+      background: rgba(16, 35, 61, 0.06);
+      color: var(--ink);
+    }
+
+    .elinext-card {
+      padding: 26px;
+    }
+
+    .elinext-card p {
+      margin: 0 0 12px;
+      font-size: 17px;
+      color: var(--ink);
+    }
+
+    .customer-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .customer-pill {
+      background: rgba(242, 106, 42, 0.12);
+      color: var(--accent-deep);
+      border: 1px solid rgba(242, 106, 42, 0.18);
+    }
+
+    .proof-wrap {
+      padding: 26px;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .case-card {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+      border-radius: 22px;
+      background: var(--paper-strong);
+      border: 1px solid var(--line);
+    }
+
+    .case-card img {
+      width: 100%;
+      border-radius: 16px;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .tag {
+      width: fit-content;
+      background: rgba(16, 35, 61, 0.06);
+      color: var(--muted);
+      padding-inline: 10px;
+    }
+
+    .case-card h3 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.15;
+    }
+
+    .case-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .case-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      font-weight: 800;
+      color: var(--accent-deep);
+      text-decoration: none;
+    }
+
+    .cta-wrap {
+      padding: 26px;
+      text-align: center;
+      background:
+        linear-gradient(155deg, rgba(242, 106, 42, 0.12), rgba(242, 106, 42, 0.03)),
+        var(--paper-strong);
+    }
+
+    .cta-wrap h2 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 44px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .cta-wrap p {
+      margin: 0 auto 18px;
+      max-width: 32rem;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 22px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff9f2;
+      text-decoration: none;
+      font-weight: 800;
+      box-shadow: 0 14px 28px rgba(242, 106, 42, 0.28);
+    }
+
+    .footer-note {
+      margin: 18px 0 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 34px 0;
+      }
+
+      .hero-wrap,
+      .proposal-wrap,
+      .elinext-card,
+      .proof-wrap,
+      .cta-wrap {
+        padding: 34px;
+      }
+
+      .hero-grid,
+      .proposal-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-grid {
+        grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.95fr);
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .hero-wrap {
+        padding: 44px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.78fr);
+      }
+
+      .proposal-wrap,
+      .elinext-card,
+      .proof-wrap,
+      .cta-wrap {
+        padding: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="section hero">
+      <div class="hero-wrap panel">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Prepared for Mohamed Benyahia, Founder &amp; CEO</p>
+            <h1 class="hero-headline">Help Deskea turn AI demand into fast, repeatable pilots.</h1>
+            <p>Deskea already has clear AI modules and real customer cases. The next step is easier demos, cleaner pilots, and smoother delivery.</p>
+            <p>We saw Deskea is adding a Business Development Representative as the AI offer grows. This often means founder-led sales must become a repeatable pilot motion with faster proof.</p>
+          </div>
+          <aside class="hero-note" aria-label="Why now">
+            <h2>Why now</h2>
+            <div class="signal-list">
+              <div class="signal-item">
+                <strong>Sales signal</strong>
+                <span>Simpler first offer.</span>
+              </div>
+              <div class="signal-item">
+                <strong>Product signal</strong>
+                <span>One path for buyers.</span>
+              </div>
+              <div class="signal-item">
+                <strong>Delivery signal</strong>
+                <span>Pilot pressure is real.</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section our-read">
+      <div class="read-box panel">
+        <p class="eyebrow">Our Read</p>
+        <p>The BDR signal says Deskea is moving past founder-led sales. Public pages show a strong offer, but the story splits between Tersea, Deskea, Flow, Assist, Insights, and Evaluate. That can slow demos, confuse buyers, and make pilot scope harder for sales and delivery teams. If this stays, good interest can turn into slow pilots, heavy custom work, and uneven follow-up.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="proposal-wrap panel">
+        <p class="eyebrow" style="text-align:center;">What We’d Do</p>
+        <h2 class="section-title">A short pilot-readiness project for Deskea.</h2>
+        <p class="section-intro">Engagement model: a scoped end-to-end project, shipped in six weeks, with weekly demos.</p>
+        <div class="proposal-grid">
+          <div class="proposal-main">
+            <p>We focus on one goal: a clean sales and delivery path for Flow, Assist, and Insights.</p>
+            <div class="steps">
+              <article class="step-card">
+                <span class="step-number">01</span>
+                <h3 class="step-title">Map the first buyer path.</h3>
+                <p class="step-text">We map the path from first demo to live pilot, then remove unclear steps, duplicate screens, and weak handoff points.</p>
+              </article>
+              <article class="step-card">
+                <span class="step-number">02</span>
+                <h3 class="step-title">Package one clear pilot offer.</h3>
+                <p class="step-text">We define one repeatable pilot for a target sector, with success rules, demo data, limits, risks, and delivery notes.</p>
+              </article>
+              <article class="step-card">
+                <span class="step-number">03</span>
+                <h3 class="step-title">Ship the missing product blocks.</h3>
+                <p class="step-text">We build the practical pieces that reduce manual work, like lead qualification views, admin states, setup flows, and proof screens.</p>
+              </article>
+              <article class="step-card">
+                <span class="step-number">04</span>
+                <h3 class="step-title">Add a steady release rhythm.</h3>
+                <p class="step-text">We set a weekly demo and QA loop so new BDR-led pilots move faster, with less rework for product and delivery.</p>
+              </article>
+            </div>
+          </div>
+          <aside class="proposal-side">
+            <div class="side-card">
+              <h3>Team shape</h3>
+              <div class="meta-list">
+                <div class="meta-item">
+                  <strong>Core squad</strong>
+                  <span>1 Tech Lead, 1 Product BA, 1 Senior Frontend, 1 AI Engineer, 1 QA.</span>
+                </div>
+                <div class="meta-item">
+                  <strong>Working mode</strong>
+                  <span>Weekly demos, shared backlog, direct work with your leads.</span>
+                </div>
+                <div class="meta-item">
+                  <strong>Pilot outputs</strong>
+                  <span>Clear scope, buyer path, shipped product fixes.</span>
+                </div>
+              </div>
+            </div>
+            <div class="side-card">
+              <h3>Relevant stack</h3>
+              <div class="stack" aria-label="Relevant stack">
+                <span class="stack-chip">React</span>
+                <span class="stack-chip">Angular</span>
+                <span class="stack-chip">Node.js</span>
+                <span class="stack-chip">Python</span>
+                <span class="stack-chip">Java</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="elinext-card panel">
+        <p class="eyebrow" style="text-align:center;">Who Is Elinext</p>
+        <h2 class="section-title">A delivery team built for this stage.</h2>
+        <p>Elinext is a full-cycle software development company, founded in 1997, with about 700 in-house specialists and no freelancers. We build web, AI, QA, and integration work for teams that need speed and control. We work under <strong>ISO 27001</strong> and <strong>ISO 9001</strong>, and our teams have delivered for:</p>
+        <div class="customer-row" aria-label="Named customers">
+          <span class="customer-pill">Siemens</span>
+          <span class="customer-pill">Broadcom</span>
+          <span class="customer-pill">Volkswagen</span>
+          <span class="customer-pill">TUI</span>
+        </div>
+        <p>That matters here because your next step is not one feature. It is a steady pilot engine across product, sales, and delivery. We can plug into that work and ship it with clear ownership.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="proof-wrap panel">
+        <p class="eyebrow" style="text-align:center;">Proof</p>
+        <h2 class="section-title">Similar work, shipped for real teams.</h2>
+        <p class="section-intro">Two case studies for the Deskea moment.</p>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-chatbot.jpg" alt="Customer service chatbot case study">
+            <span class="tag">Customer service chatbot</span>
+            <h3>Chatbot for a hotel service team.</h3>
+            <p>Elinext built a chatbot for repeat service requests, so guests got answers fast.</p>
+            <a class="case-link" href="https://www.elinext.com/case-study/chatbot-for-a-customer-service-department/" target="_blank" rel="noreferrer">View case study</a>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-lead-management.jpg" alt="AI lead management case study">
+            <span class="tag">AI lead management</span>
+            <h3>AI workflow for lead operations.</h3>
+            <p>Elinext built an AI lead workflow, so teams could focus on high-priority leads.</p>
+            <a class="case-link" href="https://www.elinext.com/case-study/ai-powered-lead-management-software/" target="_blank" rel="noreferrer">View case study</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="cta-wrap panel">
+        <p class="eyebrow">Start The Conversation</p>
+        <h2>Scope a short pilot.</h2>
+        <p>If this is close to your next step, we can map it fast.</p>
+        <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Talk with Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
