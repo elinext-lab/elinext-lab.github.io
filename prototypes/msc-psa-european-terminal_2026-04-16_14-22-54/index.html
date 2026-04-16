@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elinext Proposal for MPET Connect</title>
+    <meta
+      name="description"
+      content="A focused proposal for MSC PSA European Terminal to harden delivery around MPET Connect."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="canonical"
+      href="https://elinext-lab.github.io/prototypes/msc-psa-european-terminal_2026-04-16_14-22-54/"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Elinext Proposal for MPET Connect" />
+    <meta
+      property="og:description"
+      content="A concrete delivery proposal for MPET Connect, built around secure releases and lower support friction."
+    />
+    <meta
+      property="og:url"
+      content="https://elinext-lab.github.io/prototypes/msc-psa-european-terminal_2026-04-16_14-22-54/"
+    />
+    <meta
+      property="og:image"
+      content="https://elinext-lab.github.io/prototypes/msc-psa-european-terminal_2026-04-16_14-22-54/og-image.jpg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Elinext Proposal for MPET Connect" />
+    <meta
+      name="twitter:description"
+      content="A concrete delivery proposal for MPET Connect, built around secure releases and lower support friction."
+    />
+    <meta
+      name="twitter:image"
+      content="https://elinext-lab.github.io/prototypes/msc-psa-european-terminal_2026-04-16_14-22-54/og-image.jpg"
+    />
+    <style>
+      :root {
+        --bg: #f4efe6;
+        --paper: rgba(255, 252, 246, 0.94);
+        --panel: #fffaf1;
+        --ink: #16243a;
+        --muted: #5d6676;
+        --navy: #12203a;
+        --navy-soft: #1d2f4f;
+        --line: rgba(18, 32, 58, 0.12);
+        --accent: #db6841;
+        --accent-soft: rgba(219, 104, 65, 0.14);
+        --mint: #7bb9ab;
+        --shadow: 0 22px 60px rgba(18, 32, 58, 0.12);
+        --radius-lg: 28px;
+        --radius-md: 20px;
+        --radius-sm: 14px;
+        --content: 1120px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 0;
+        font-family: "Space Grotesk", "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(123, 185, 171, 0.22), transparent 34%),
+          radial-gradient(circle at right 15%, rgba(219, 104, 65, 0.18), transparent 28%),
+          linear-gradient(180deg, #f6f0e5 0%, #efe7dc 52%, #f7f2eb 100%);
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .page-shell {
+        position: relative;
+        overflow: clip;
+      }
+
+      .page-shell::before,
+      .page-shell::after {
+        content: "";
+        position: fixed;
+        inset: auto;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .page-shell::before {
+        top: 88px;
+        left: -96px;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: rgba(123, 185, 171, 0.16);
+        filter: blur(6px);
+      }
+
+      .page-shell::after {
+        right: -120px;
+        bottom: 18%;
+        width: 260px;
+        height: 260px;
+        border-radius: 44px;
+        border: 1px solid rgba(18, 32, 58, 0.06);
+        transform: rotate(18deg);
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        width: min(calc(100% - 32px), var(--content));
+        margin: 0 auto;
+      }
+
+      .topline {
+        padding: 22px 0 8px;
+        font-size: 0.82rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(22, 36, 58, 0.7);
+      }
+
+      .hero {
+        padding: 8px 0 28px;
+      }
+
+      .hero-card {
+        position: relative;
+        padding: 28px 22px;
+        border-radius: var(--radius-lg);
+        background:
+          linear-gradient(145deg, rgba(18, 32, 58, 0.97), rgba(29, 47, 79, 0.94));
+        color: #fbf6ef;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .hero-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(219, 104, 65, 0.3), transparent 40%),
+          repeating-linear-gradient(
+            120deg,
+            transparent,
+            transparent 18px,
+            rgba(255, 255, 255, 0.04) 18px,
+            rgba(255, 255, 255, 0.04) 19px
+          );
+        pointer-events: none;
+      }
+
+      .hero-card > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(251, 246, 239, 0.74);
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 34px;
+        height: 2px;
+        background: var(--accent);
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.02;
+        font-family: "Fraunces", Georgia, serif;
+        font-weight: 700;
+      }
+
+      h1 {
+        max-width: 11ch;
+        font-size: clamp(2.55rem, 7vw, 5.2rem);
+      }
+
+      .hero-intro,
+      .hero-why {
+        max-width: 62ch;
+        margin: 16px 0 0;
+        font-size: 1rem;
+        line-height: 1.55;
+        color: rgba(251, 246, 239, 0.9);
+      }
+
+      .hero-why {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.18);
+        color: #ffffff;
+      }
+
+      .hero-grid {
+        display: grid;
+        gap: 16px;
+        margin-top: 24px;
+      }
+
+      .signal-card,
+      .surface-card {
+        padding: 16px;
+        border-radius: var(--radius-md);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        backdrop-filter: blur(10px);
+      }
+
+      .card-label {
+        margin: 0 0 8px;
+        font-size: 0.76rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(251, 246, 239, 0.7);
+      }
+
+      .signal-card p,
+      .surface-card p {
+        margin: 0;
+        line-height: 1.45;
+        color: rgba(251, 246, 239, 0.94);
+      }
+
+      .surface-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .surface-list span {
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        font-size: 0.88rem;
+      }
+
+      main {
+        padding-bottom: 36px;
+      }
+
+      section {
+        margin-top: 18px;
+      }
+
+      .section-card {
+        background: var(--paper);
+        border: 1px solid rgba(18, 32, 58, 0.08);
+        border-radius: var(--radius-lg);
+        padding: 24px 20px;
+        box-shadow: 0 14px 42px rgba(18, 32, 58, 0.06);
+      }
+
+      .section-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .section-head small {
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(22, 36, 58, 0.52);
+      }
+
+      .read-copy {
+        max-width: 68ch;
+        margin: 0;
+        line-height: 1.68;
+        color: var(--muted);
+      }
+
+      .proposal-layout {
+        display: grid;
+        gap: 16px;
+      }
+
+      .proposal-lead {
+        margin: 0 0 14px;
+        max-width: 66ch;
+        line-height: 1.62;
+        color: var(--muted);
+      }
+
+      .engagement-band {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 0 0 18px;
+      }
+
+      .engagement-band span {
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--ink);
+        font-size: 0.92rem;
+      }
+
+      .team-card {
+        padding: 18px;
+        border-radius: var(--radius-md);
+        background: linear-gradient(180deg, #fff7ee, #fffdf8);
+        border: 1px solid rgba(219, 104, 65, 0.16);
+      }
+
+      .team-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 14px;
+      }
+
+      .team-grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+      }
+
+      .team-grid div {
+        min-width: 0;
+        padding: 12px;
+        border-radius: var(--radius-sm);
+        background: #ffffff;
+        border: 1px solid rgba(18, 32, 58, 0.08);
+      }
+
+      .team-grid strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.94rem;
+      }
+
+      .team-grid span {
+        display: block;
+        line-height: 1.4;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .steps-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .step {
+        position: relative;
+        padding: 18px 18px 18px 58px;
+        border-radius: var(--radius-md);
+        background: #fffdf8;
+        border: 1px solid var(--line);
+      }
+
+      .step::before {
+        content: attr(data-step);
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--navy);
+        color: #ffffff;
+        font-size: 0.84rem;
+        font-weight: 700;
+      }
+
+      .step h3 {
+        font-size: 1.12rem;
+        margin-bottom: 8px;
+      }
+
+      .step p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .who-copy {
+        margin: 0;
+        max-width: 69ch;
+        line-height: 1.68;
+        color: var(--muted);
+      }
+
+      .proof-grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .case-card {
+        display: grid;
+        gap: 16px;
+        overflow: hidden;
+        border-radius: var(--radius-md);
+        background: #fffdf8;
+        border: 1px solid var(--line);
+      }
+
+      .case-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+      }
+
+      .case-copy {
+        padding: 0 18px 18px;
+      }
+
+      .case-copy h3 {
+        font-size: 1.18rem;
+        margin-bottom: 10px;
+      }
+
+      .case-copy p {
+        margin: 0 0 12px;
+        line-height: 1.58;
+        color: var(--muted);
+      }
+
+      .case-copy a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--navy);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .case-copy a::after {
+        content: "→";
+      }
+
+      .cta-card {
+        padding: 24px 20px;
+        border-radius: var(--radius-lg);
+        background:
+          linear-gradient(130deg, rgba(18, 32, 58, 0.97), rgba(24, 56, 70, 0.96));
+        color: #fbf6ef;
+        box-shadow: var(--shadow);
+      }
+
+      .cta-card h2 {
+        max-width: 12ch;
+        font-size: clamp(1.9rem, 4vw, 3.1rem);
+        margin-bottom: 10px;
+      }
+
+      .cta-card p {
+        max-width: 50ch;
+        margin: 0 0 18px;
+        line-height: 1.6;
+        color: rgba(251, 246, 239, 0.86);
+      }
+
+      .cta-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 12px 18px;
+        border-radius: 999px;
+        background: #fff7ee;
+        color: var(--navy);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      @media (min-width: 700px) {
+        .hero-card,
+        .section-card,
+        .cta-card {
+          padding: 32px 30px;
+        }
+
+        .hero-grid,
+        .proposal-layout,
+        .proof-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .proposal-layout > .proposal-copy {
+          grid-column: 1 / -1;
+        }
+
+        .proof-grid .case-card {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      @media (min-width: 980px) {
+        .topline {
+          padding-top: 26px;
+        }
+
+        .hero {
+          padding-bottom: 34px;
+        }
+
+        .hero-grid {
+          grid-template-columns: 1.1fr 0.9fr;
+          align-items: start;
+        }
+
+        .proposal-layout {
+          grid-template-columns: 0.95fr 1.05fr;
+        }
+
+        .proposal-layout > .steps-grid {
+          grid-column: 2;
+          grid-row: 1 / span 2;
+        }
+
+        .proposal-layout > .proposal-copy,
+        .proposal-layout > .team-card {
+          grid-column: 1;
+        }
+
+        .proof-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .case-card {
+          grid-template-rows: auto 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="container">
+        <div class="topline">Elinext x MPET Connect proposal brief</div>
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-card">
+            <div class="eyebrow">For Jan Hermans, CISO at MPET</div>
+            <h1 id="hero-title">Help MPET ship digital change with less risk</h1>
+            <p class="hero-intro">
+              MPET Connect now sits close to truck appointments, booking data,
+              carrier views, and partner flows. That makes each release part of
+              terminal service quality.
+            </p>
+            <p class="hero-why">
+              We are here because MPET is hiring a Digital Service Delivery
+              Manager. That usually means the platform is growing fast, the
+              service surface is wider, and release control now matters as much
+              as features.
+            </p>
+            <div class="hero-grid">
+              <div class="signal-card">
+                <p class="card-label">Why this matters now</p>
+                <p>
+                  Public pages show active work around truck appointments, DCD
+                  visibility, API fields, reporting, and operator guidance.
+                </p>
+              </div>
+              <div class="surface-card">
+                <p class="card-label">Product surface</p>
+                <p>
+                  MPET Connect is a real operating platform, not a simple
+                  portal.
+                </p>
+                <div class="surface-list" aria-label="MPET Connect product surface">
+                  <span>Web app</span>
+                  <span>APIs</span>
+                  <span>Smart apps</span>
+                  <span>Support flows</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </header>
+
+      <main class="container">
+        <section aria-labelledby="our-read-title">
+          <div class="section-card">
+            <div class="section-head">
+              <h2 id="our-read-title">Our read</h2>
+              <small>signal to pain</small>
+            </div>
+            <p class="read-copy">
+              The hiring signal says MPET is scaling digital delivery around a
+              platform with many operational rules. Public pages already show
+              DCD windows, gate split rules, active appointment conflicts,
+              late-change fees, and role-based support paths. If delivery stays
+              fragmented across web, API, docs, and service teams, support
+              noise grows and security review gets heavier every release.
+            </p>
+          </div>
+        </section>
+
+        <section aria-labelledby="what-title">
+          <div class="section-card">
+            <div class="section-head">
+              <h2 id="what-title">What we'd do</h2>
+              <small>8-week pilot squad</small>
+            </div>
+            <div class="proposal-layout">
+              <div class="proposal-copy">
+                <p class="proposal-lead">
+                  We would place one dedicated Elinext squad under MPET's
+                  service owner. The goal is safer releases for MPET Connect,
+                  lower support friction, and clearer delivery evidence for
+                  security and operations.
+                </p>
+                <p class="engagement-band" aria-label="Proposal summary">
+                  <span>1 Tech Lead</span>
+                  <span>1 Backend/API Engineer</span>
+                  <span>1 Frontend Engineer</span>
+                  <span>1 QA Automation Engineer</span>
+                  <span>1 DevOps Engineer</span>
+                  <span>React, .NET, Node.js, QA, CI/CD</span>
+                </p>
+              </div>
+              <div class="team-card">
+                <h3>Working shape</h3>
+                <div class="team-grid">
+                  <div>
+                    <strong>Tech lead</strong>
+                    <span>Owns release map, service risk, and weekly steering.</span>
+                  </div>
+                  <div>
+                    <strong>Backend/API</strong>
+                    <span>Stabilizes booking, DCD, and partner data flows.</span>
+                  </div>
+                  <div>
+                    <strong>Frontend</strong>
+                    <span>Hardens operator paths and clearer error handling.</span>
+                  </div>
+                  <div>
+                    <strong>QA + DevOps</strong>
+                    <span>Automates checks, rollout guardrails, and rollback.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="steps-grid">
+                <article class="step" data-step="1">
+                  <h3>Map the risky service paths</h3>
+                  <p>
+                    Review truck appointments, DCD checks, deleted bookings,
+                    role views, and support pages to define the release paths
+                    that can hurt terminal users fastest.
+                  </p>
+                </article>
+                <article class="step" data-step="2">
+                  <h3>Build regression on real rules</h3>
+                  <p>
+                    Add automated checks for booking conflicts, gate split
+                    handling, fee-triggering changes, API field drift, and the
+                    core messages users see during exceptions.
+                  </p>
+                </article>
+                <article class="step" data-step="3">
+                  <h3>Set delivery guardrails</h3>
+                  <p>
+                    Tighten CI/CD, release evidence, smoke tests, rollback
+                    steps, and change approval so security and service delivery
+                    can sign off with less manual chasing.
+                  </p>
+                </article>
+                <article class="step" data-step="4">
+                  <h3>Run a weekly service room</h3>
+                  <p>
+                    Bring product, support, and operations into one short review
+                    of incidents, support themes, and next release actions for
+                    MPET Connect.
+                  </p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section aria-labelledby="who-title">
+          <div class="section-card">
+            <div class="section-head">
+              <h2 id="who-title">Who is Elinext</h2>
+              <small>fit for this work</small>
+            </div>
+            <p class="who-copy">
+              Elinext is a full-cycle software development company, active since
+              1997, with about 700 in-house specialists and no freelancers in
+              delivery teams. For a security-sensitive platform like MPET
+              Connect, that matters: we work with ISO 27001 and ISO 9001
+              processes, and support complex products for Siemens, Broadcom,
+              Volkswagen, and TRUMPF. We can join as a dedicated squad, work
+              inside your release cadence, and keep delivery discipline visible
+              to service owners and security stakeholders.
+            </p>
+          </div>
+        </section>
+
+        <section aria-labelledby="proof-title">
+          <div class="section-card">
+            <div class="section-head">
+              <h2 id="proof-title">Proof</h2>
+              <small>related delivery work</small>
+            </div>
+            <div class="proof-grid">
+              <article class="case-card">
+                <img
+                  src="./assets/case-fleet.jpg"
+                  alt="Fleet management case study"
+                />
+                <div class="case-copy">
+                  <h3>Fleet management for logistics flows</h3>
+                  <p>
+                    Elinext built a logistics app around live location, API-fed
+                    tasks, and driver workflow updates, helping users move work
+                    faster with less friction.
+                  </p>
+                  <a
+                    href="https://www.elinext.com/case-study/fleet-management-app-for-logistics-solution-provider-in-the-usa/"
+                    target="_blank"
+                    rel="noreferrer"
+                    >Read the case</a
+                  >
+                </div>
+              </article>
+              <article class="case-card">
+                <img src="./assets/case-cicd.jpg" alt="CI/CD case study" />
+                <div class="case-copy">
+                  <h3>CI/CD cleanup for infrastructure releases</h3>
+                  <p>
+                    For an infrastructure solutions provider, Elinext cut
+                    delivery time by 40% while keeping quality and security
+                    measures in place across a broader release pipeline.
+                  </p>
+                  <a
+                    href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/"
+                    target="_blank"
+                    rel="noreferrer"
+                    >Read the case</a
+                  >
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section aria-labelledby="talk-title">
+          <div class="cta-card">
+            <h2 id="talk-title">Start with one working pilot</h2>
+            <p>
+              If this direction fits, we can scope the first release paths and
+              team setup together.
+            </p>
+            <a class="cta-link" href="https://www.elinext.com/contacts/"
+              >Talk with Elinext</a
+            >
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
