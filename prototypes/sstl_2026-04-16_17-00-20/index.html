@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSTL x Elinext | Secure Mission Workflow Brief</title>
+  <meta name="description" content="A short proposal for helping SSTL handle contractor-heavy mission work with clearer access control, stronger evidence flow, and a safer Lunar Mission Builder release path.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/sstl_2026-04-16_17-00-20/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/sstl_2026-04-16_17-00-20/">
+  <meta property="og:title" content="Make mission delivery safer at SSTL">
+  <meta property="og:description" content="A short proposal for helping SSTL handle contractor-heavy mission work with clearer access control, stronger evidence flow, and a safer Lunar Mission Builder release path.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/sstl_2026-04-16_17-00-20/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Make mission delivery safer at SSTL">
+  <meta name="twitter:description" content="A short proposal for helping SSTL handle contractor-heavy mission work with clearer access control, stronger evidence flow, and a safer Lunar Mission Builder release path.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/sstl_2026-04-16_17-00-20/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #081525;
+      --bg-soft: #eff4fb;
+      --panel: rgba(9, 25, 47, 0.92);
+      --card: rgba(255, 255, 255, 0.96);
+      --card-soft: #f4f8fe;
+      --ink: #13233f;
+      --ink-soft: #53627f;
+      --line: rgba(19, 35, 63, 0.11);
+      --line-strong: rgba(19, 35, 63, 0.2);
+      --white: #f8fbff;
+      --teal: #00acc8;
+      --teal-soft: rgba(0, 172, 200, 0.14);
+      --orange: #f68f36;
+      --orange-soft: rgba(246, 143, 54, 0.14);
+      --navy: #0d1e39;
+      --shadow: 0 26px 64px rgba(7, 18, 36, 0.16);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --max: 1140px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(0, 172, 200, 0.12), transparent 22rem),
+        radial-gradient(circle at top right, rgba(246, 143, 54, 0.12), transparent 18rem),
+        linear-gradient(180deg, #081525 0%, #0d1e39 24%, #eff4fb 24%, #eff4fb 100%);
+      color: var(--ink);
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 34px 34px;
+      opacity: 0.45;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    p,
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      padding: 14px 14px 60px;
+    }
+
+    .shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    section {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-pad {
+      padding: 24px 18px;
+    }
+
+    .eyebrow,
+    .section-kicker,
+    .signal-chip,
+    .stack-tag,
+    .client-tag,
+    .meta-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      max-width: 100%;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow,
+    .section-kicker {
+      padding: 8px 12px;
+    }
+
+    .eyebrow {
+      color: rgba(248, 251, 255, 0.9);
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      margin-bottom: 18px;
+    }
+
+    .section-kicker {
+      margin: 0 auto 16px;
+      color: var(--ink);
+      background: var(--orange-soft);
+      border: 1px solid rgba(246, 143, 54, 0.24);
+    }
+
+    .signal-chip,
+    .stack-tag,
+    .client-tag,
+    .meta-tag {
+      padding: 8px 11px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .signal-chip {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.11);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.81rem;
+      font-weight: 600;
+    }
+
+    .stack-tag,
+    .meta-tag {
+      color: var(--ink);
+      background: rgba(19, 35, 63, 0.05);
+      border: 1px solid rgba(19, 35, 63, 0.08);
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    .client-tag {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Newsreader", serif;
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+    }
+
+    h1 {
+      font-size: clamp(2.35rem, 7vw, 4.8rem);
+      max-width: 10ch;
+    }
+
+    h2 {
+      font-size: clamp(1.7rem, 4vw, 2.7rem);
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    h3 {
+      font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+    }
+
+    .hero {
+      position: relative;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 16% 14%, rgba(0, 172, 200, 0.24), transparent 18rem),
+        radial-gradient(circle at 86% 18%, rgba(246, 143, 54, 0.2), transparent 16rem),
+        linear-gradient(135deg, #081525 0%, #102341 52%, #0a1b35 100%);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 172, 200, 0.18);
+      pointer-events: none;
+    }
+
+    .hero::before {
+      width: 360px;
+      height: 360px;
+      top: -110px;
+      right: -120px;
+    }
+
+    .hero::after {
+      width: 520px;
+      height: 520px;
+      left: -260px;
+      bottom: -360px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 18px;
+      padding: 28px 18px;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .hero-copy p {
+      max-width: 32rem;
+      color: rgba(248, 251, 255, 0.88);
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .hero-panel {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-panel h3 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.2;
+    }
+
+    .hero-panel p {
+      color: rgba(248, 251, 255, 0.8);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .signal-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .signal-card {
+      display: grid;
+      gap: 6px;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .signal-card strong {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .signal-card span {
+      font-size: 0.86rem;
+      color: rgba(248, 251, 255, 0.76);
+      line-height: 1.45;
+    }
+
+    .read {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
+        linear-gradient(135deg, rgba(0, 172, 200, 0.08), rgba(246, 143, 54, 0.08));
+      border-color: var(--line-strong);
+    }
+
+    .read-copy {
+      width: min(100%, 64ch);
+      margin: 0 auto;
+      padding: 0 2px;
+      font-size: 1.02rem;
+      line-height: 1.7;
+      color: var(--ink);
+      text-align: left;
+    }
+
+    .plan-intro,
+    .about-copy,
+    .proof-note,
+    .cta-copy {
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--ink);
+      text-align: center;
+      max-width: 44rem;
+      margin: 0 auto;
+    }
+
+    .plan-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .team-card,
+    .step-card,
+    .focus-card,
+    .case-card,
+    .about-panel {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: var(--card-soft);
+    }
+
+    .team-card {
+      display: grid;
+      gap: 16px;
+      padding: 18px;
+    }
+
+    .team-card h3,
+    .step-card h3,
+    .focus-card h3,
+    .case-card h3 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .team-block {
+      display: grid;
+      gap: 10px;
+    }
+
+    .team-block strong {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-soft);
+    }
+
+    .team-shape {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .team-role {
+      padding: 12px;
+      border-radius: var(--radius-md);
+      background: #fff;
+      border: 1px solid rgba(19, 35, 63, 0.08);
+      min-width: 0;
+    }
+
+    .team-role span {
+      display: block;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-soft);
+      margin-bottom: 6px;
+    }
+
+    .team-role strong {
+      display: block;
+      font-size: 0.96rem;
+      color: var(--ink);
+    }
+
+    .stack-row,
+    .client-row,
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .steps-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step-card {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      background: #fff;
+    }
+
+    .step-number {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--navy);
+      background: var(--teal-soft);
+      border: 1px solid rgba(0, 172, 200, 0.26);
+    }
+
+    .step-card p,
+    .focus-card p,
+    .case-card p,
+    .about-panel p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
+    .focus-strip {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .focus-card {
+      padding: 16px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)),
+        linear-gradient(135deg, rgba(0, 172, 200, 0.08), rgba(246, 143, 54, 0.08));
+    }
+
+    .focus-card h3 {
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .about-panel {
+      margin-top: 18px;
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(11, 27, 52, 0.96), rgba(11, 27, 52, 0.96)),
+        linear-gradient(135deg, rgba(0, 172, 200, 0.14), rgba(246, 143, 54, 0.12));
+      border-color: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+    }
+
+    .about-panel p {
+      color: rgba(248, 251, 255, 0.86);
+      text-align: left;
+    }
+
+    .about-panel strong {
+      color: var(--white);
+    }
+
+    .proof-note {
+      margin-bottom: 18px;
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-card {
+      display: grid;
+      gap: 12px;
+      padding: 0;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #dce7f7;
+    }
+
+    .case-body {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+    }
+
+    .case-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      color: #0f5f8f;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .cta {
+      background:
+        radial-gradient(circle at 16% 20%, rgba(0, 172, 200, 0.16), transparent 16rem),
+        radial-gradient(circle at 84% 20%, rgba(246, 143, 54, 0.18), transparent 14rem),
+        linear-gradient(135deg, #0a1830 0%, #12274a 100%);
+      color: var(--white);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .cta .section-kicker {
+      color: rgba(248, 251, 255, 0.94);
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .cta h2,
+    .cta p {
+      color: var(--white);
+    }
+
+    .cta p {
+      color: rgba(248, 251, 255, 0.84);
+    }
+
+    .cta-action {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px auto 0;
+      padding: 14px 20px;
+      min-height: 48px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #00acc8, #2ec1d8);
+      color: #081525;
+      font-weight: 700;
+      box-shadow: 0 18px 32px rgba(0, 172, 200, 0.24);
+    }
+
+    @media (min-width: 760px) {
+      .page {
+        padding: 18px 18px 72px;
+      }
+
+      .section-pad {
+        padding: 34px 28px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.95fr);
+        align-items: end;
+        padding: 34px 28px;
+      }
+
+      .plan-grid {
+        grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.25fr);
+        align-items: start;
+      }
+
+      .focus-strip,
+      .case-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .hero-copy {
+        padding-right: 20px;
+      }
+
+      .steps-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="shell">
+      <section class="hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">Proposal Brief for Daniel Nye</div>
+            <h1>Make Mission Delivery Safer During This Contractor Push</h1>
+            <p>This brief focuses on secure mission workflow at SSTL. It supports contractor-heavy engineering work. It also gives IT one clearer view of access, evidence, and release risk.</p>
+            <p>Saw SSTL hiring contractor roles across harness, AIT, and thermal work. That usually means delivery pressure is rising. It also tests access control, evidence flow, and release quality.</p>
+          </div>
+          <aside class="hero-panel" aria-label="Why this brief is specific">
+            <h3>Why this fits</h3>
+            <div class="signal-grid">
+              <div class="signal-card">
+                <strong>Hiring signal</strong>
+                <span>Harness, AIT, and thermal contractor roles are live now.</span>
+              </div>
+              <div class="signal-card">
+                <strong>Public software surface</strong>
+                <span>Lunar Mission Builder is live and still returns mission results.</span>
+              </div>
+              <div class="signal-card">
+                <strong>Security relevance</strong>
+                <span>The service guide names VPN, NOC file flow, patches, and Kiteworks.</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="read">
+        <div class="section-pad">
+          <div class="section-kicker">Our Read</div>
+          <h2>What we think is happening</h2>
+          <p class="read-copy">These roles point to several mission streams moving at once. More contractors mean more accounts, devices, files, and approvals. Lunar Mission Builder adds a public software surface during the same period. The service guide also shows VPN, NOC, patch, and Kiteworks steps. If those flows stay split across older tools, delay and security risk grow together.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-pad">
+          <div class="section-kicker">What We'd Do</div>
+          <h2>A small pilot</h2>
+          <p class="plan-intro">We would run this as a scoped six-week project. Small team, weekly demos, and one live pilot.</p>
+
+          <div class="plan-grid">
+            <div class="team-card">
+              <div class="team-block">
+                <strong>Engagement model</strong>
+                <p>Scoped six-week project. One pilot under SSTL's IT lead.</p>
+              </div>
+
+              <div class="team-block">
+                <strong>Team shape</strong>
+                <div class="team-shape">
+                  <div class="team-role">
+                    <span>Lead</span>
+                    <strong>Solution Architect</strong>
+                  </div>
+                  <div class="team-role">
+                    <span>Backend</span>
+                    <strong>Senior .NET Engineer</strong>
+                  </div>
+                  <div class="team-role">
+                    <span>Frontend</span>
+                    <strong>Senior Angular Engineer</strong>
+                  </div>
+                  <div class="team-role">
+                    <span>Quality</span>
+                    <strong>QA Automation Engineer</strong>
+                  </div>
+                  <div class="team-role">
+                    <span>Security</span>
+                    <strong>DevOps and Security Engineer</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="team-block">
+                <strong>Relevant stack</strong>
+                <div class="stack-row">
+                  <span class="stack-tag">.NET</span>
+                  <span class="stack-tag">C#</span>
+                  <span class="stack-tag">Angular</span>
+                  <span class="stack-tag">Python</span>
+                  <span class="stack-tag">Node.js</span>
+                  <span class="stack-tag">Bootstrap</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="steps-grid">
+              <article class="step-card">
+                <div class="step-number">01</div>
+                <h3>Map the real control points</h3>
+                <p>Map contractor access, mission documents, and release steps. Keep only the controls that change speed or security.</p>
+              </article>
+              <article class="step-card">
+                <div class="step-number">02</div>
+                <h3>Build one mission workspace</h3>
+                <p>Build one web workspace for actions, reviews, and evidence. Every team sees the same status and audit trail.</p>
+              </article>
+              <article class="step-card">
+                <div class="step-number">03</div>
+                <h3>Connect the risky handoffs</h3>
+                <p>Connect the workspace to NOC, Kiteworks, and core systems. Remove manual copy steps where risk is highest.</p>
+              </article>
+              <article class="step-card">
+                <div class="step-number">04</div>
+                <h3>Stabilize product releases</h3>
+                <p>Harden Lunar Mission Builder releases with tests, rollback checks, and logs. Give Daniel's team a calmer handover path.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="focus-strip" aria-label="Pilot outcomes">
+            <article class="focus-card">
+              <h3>Access</h3>
+              <p>Named roles, expiry dates, and cleaner contractor audit logs.</p>
+            </article>
+            <article class="focus-card">
+              <h3>Evidence</h3>
+              <p>One place for reviews, test notes, approvals, and blockers.</p>
+            </article>
+            <article class="focus-card">
+              <h3>Releases</h3>
+              <p>Checks before each Mission Builder update or service-document change.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-pad">
+          <div class="section-kicker">Who Is Elinext</div>
+          <h2>A delivery team with enterprise discipline</h2>
+          <div class="about-panel">
+            <p><strong>Elinext</strong> is a full-cycle software development company, active since 1997, with strong enterprise delivery discipline. We have about <strong>700 in-house specialists</strong>, with no freelancers or subcontractors in delivery teams. For security-sensitive programmes, <strong>ISO 27001</strong> and <strong>ISO 9001</strong> help keep controls clear. Our teams have delivered for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong> across complex industries. We also cover .NET, C#, Python, React, Angular, QA, DevOps, and enterprise integrations. That makes a fast SSTL pilot realistic, while Daniel keeps control of priorities.</p>
+            <div class="client-row" style="margin-top: 16px;">
+              <span class="client-tag">Siemens</span>
+              <span class="client-tag">Broadcom</span>
+              <span class="client-tag">Volkswagen</span>
+              <span class="client-tag">TRUMPF</span>
+              <span class="client-tag">TUI</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-pad">
+          <div class="section-kicker">Proof</div>
+          <h2>Relevant work we can point to</h2>
+
+          <div class="case-grid">
+            <article class="case-card">
+              <img src="assets/case-cicd.jpg" alt="CI/CD optimization case study cover">
+              <div class="case-body">
+                <div class="meta-row">
+                  <span class="meta-tag">Telecom</span>
+                  <span class="meta-tag">Web Development</span>
+                  <span class="meta-tag">DevOps</span>
+                </div>
+                <h3>CI/CD Optimization and Automatization for an Infrastructure Management Solutions Provider</h3>
+                <p>Elinext reduced development time by 40% while keeping quality and security measures intact.</p>
+                <a class="case-link" href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">View case study</a>
+              </div>
+            </article>
+
+            <article class="case-card">
+              <img src="assets/case-machines.jpg" alt="Real-time machine data insights case study cover">
+              <div class="case-body">
+                <div class="meta-row">
+                  <span class="meta-tag">Manufacturing</span>
+                  <span class="meta-tag">Web Development</span>
+                  <span class="meta-tag">DevOps</span>
+                </div>
+                <h3>Real-time Data Insights of Machines Performance</h3>
+                <p>Elinext built a platform that pulls factory data and shows improvement insight for operations teams.</p>
+                <a class="case-link" href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">View case study</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="section-pad">
+          <div class="section-kicker">Let's Talk</div>
+          <h2>Start With One Pilot</h2>
+          <p class="cta-copy">Secure the flow before the next mission peak.</p>
+          <a class="cta-action" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
