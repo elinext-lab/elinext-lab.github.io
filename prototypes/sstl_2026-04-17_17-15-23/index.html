@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSTL x Elinext | Proposal Brief</title>
+  <meta name="description" content="A focused proposal brief for SSTL on reducing mission build and AIT coordination load with targeted software delivery support from Elinext.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/sstl_2026-04-17_17-15-23/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SSTL x Elinext | Proposal Brief">
+  <meta property="og:description" content="A focused proposal brief for SSTL on reducing mission build and AIT coordination load with targeted software delivery support from Elinext.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/sstl_2026-04-17_17-15-23/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/sstl_2026-04-17_17-15-23/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SSTL x Elinext | Proposal Brief">
+  <meta name="twitter:description" content="A focused proposal brief for SSTL on reducing mission build and AIT coordination load with targeted software delivery support from Elinext.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/sstl_2026-04-17_17-15-23/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #091120;
+      --bg-soft: #111d33;
+      --panel: rgba(15, 24, 42, 0.92);
+      --panel-strong: #111d31;
+      --panel-warm: #18243a;
+      --line: rgba(140, 169, 214, 0.18);
+      --line-strong: rgba(140, 169, 214, 0.32);
+      --text: #ecf2ff;
+      --muted: #b8c7e8;
+      --soft: #8da2cf;
+      --accent: #ff7b22;
+      --accent-soft: rgba(255, 123, 34, 0.14);
+      --shadow: 0 28px 80px rgba(3, 7, 18, 0.34);
+      --radius: 24px;
+      --radius-sm: 16px;
+      --page-width: min(1120px, calc(100% - 32px));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255, 123, 34, 0.18), transparent 26%),
+        radial-gradient(circle at 85% 8%, rgba(125, 166, 255, 0.16), transparent 22%),
+        linear-gradient(180deg, #091120 0%, #0d1628 48%, #101a2d 100%);
+      color: var(--text);
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 12% 16%, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px),
+        radial-gradient(circle at 78% 30%, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px),
+        radial-gradient(circle at 65% 72%, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px);
+      background-size: 220px 220px, 260px 260px, 300px 300px;
+      opacity: 0.6;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      padding: 24px 0 56px;
+    }
+
+    .shell {
+      width: var(--page-width);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border: 1px solid rgba(255, 123, 34, 0.28);
+      border-radius: 999px;
+      background: rgba(255, 123, 34, 0.09);
+      color: #ffd2b2;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 123, 34, 0.18), transparent 34%),
+        linear-gradient(135deg, rgba(14, 25, 46, 0.96), rgba(10, 17, 33, 0.98));
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      right: -70px;
+      top: -90px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 46px rgba(255, 255, 255, 0.03),
+        0 0 0 92px rgba(255, 255, 255, 0.025);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 24px;
+      padding: 28px 22px;
+    }
+
+    .hero-copy h1 {
+      margin: 18px 0 0;
+      font-size: clamp(2.1rem, 6vw, 4.2rem);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      max-width: 12ch;
+    }
+
+    .hero-copy p {
+      margin: 16px 0 0;
+      max-width: 62ch;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .hero-note {
+      color: #f7d9c1;
+    }
+
+    .signal-card {
+      align-self: end;
+      border: 1px solid rgba(140, 169, 214, 0.18);
+      border-radius: 24px;
+      background: rgba(9, 16, 31, 0.76);
+      padding: 18px;
+      backdrop-filter: blur(14px);
+    }
+
+    .signal-card h2 {
+      margin: 0;
+      font-size: 0.88rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #d8e2fb;
+    }
+
+    .signal-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .signal-list li,
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #eef4ff;
+      font-size: 0.9rem;
+    }
+
+    .signal-card p {
+      margin: 16px 0 0;
+      color: var(--soft);
+      line-height: 1.55;
+    }
+
+    section {
+      margin-top: 22px;
+    }
+
+    .section-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 26px 20px;
+    }
+
+    .section-card h2 {
+      margin: 0 0 16px;
+      text-align: center;
+      font-size: 1.2rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .read-card {
+      border-color: rgba(255, 123, 34, 0.24);
+      background:
+        linear-gradient(180deg, rgba(255, 123, 34, 0.08), rgba(255, 123, 34, 0.03)),
+        #16233a;
+      position: relative;
+    }
+
+    .read-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 24px;
+      bottom: 24px;
+      width: 4px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ff9e57, #ff7b22);
+    }
+
+    .read-card p {
+      margin: 0;
+      padding-left: 16px;
+      max-width: 64ch;
+      color: #eef3ff;
+      line-height: 1.7;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .proposal-intro {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .meta-grid {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .meta-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 14px;
+    }
+
+    .meta-card span {
+      display: block;
+      color: #ffbf8d;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .meta-card strong {
+      display: block;
+      font-size: 1rem;
+      line-height: 1.45;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr);
+      gap: 14px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 16px;
+    }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255, 123, 34, 0.18), rgba(255, 123, 34, 0.36));
+      border: 1px solid rgba(255, 123, 34, 0.28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff5ec;
+    }
+
+    .step h3 {
+      margin: 0;
+      font-size: 1.04rem;
+    }
+
+    .step p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.62;
+    }
+
+    .elinext-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .customer-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px 0;
+      justify-content: center;
+    }
+
+    .customer-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #121f34;
+    }
+
+    .proof-copy {
+      padding: 16px;
+    }
+
+    .proof-copy span {
+      display: inline-block;
+      color: #ffbf8d;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .proof-copy h3 {
+      margin: 0;
+      font-size: 1.08rem;
+      line-height: 1.35;
+    }
+
+    .proof-copy p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .proof-link {
+      display: inline-flex;
+      margin-top: 14px;
+      color: #fff0e3;
+      border-bottom: 1px solid rgba(255, 123, 34, 0.35);
+      padding-bottom: 2px;
+    }
+
+    .cta-card {
+      text-align: center;
+      background:
+        radial-gradient(circle at top, rgba(255, 123, 34, 0.18), transparent 34%),
+        linear-gradient(180deg, #17253c, #131f33);
+      border-color: rgba(255, 123, 34, 0.22);
+    }
+
+    .cta-card p {
+      margin: 0 auto;
+      max-width: 34ch;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .cta-action {
+      margin-top: 18px;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 320px;
+      min-height: 54px;
+      padding: 14px 24px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ff8f45, #ff7021);
+      color: #1d1208;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 16px 34px rgba(255, 123, 34, 0.26);
+    }
+
+    .footnote {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--soft);
+      font-size: 0.82rem;
+    }
+
+    @media (min-width: 768px) {
+      .page {
+        padding-top: 34px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.9fr);
+        padding: 38px 34px;
+      }
+
+      .section-card {
+        padding: 34px 30px;
+      }
+
+      .proposal-grid {
+        grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.82fr);
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .cta-button {
+        width: auto;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .page {
+        padding-bottom: 70px;
+      }
+
+      section {
+        margin-top: 26px;
+      }
+
+      .step {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="shell">
+      <section class="hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">Proposal Brief for SSTL</div>
+            <h1>Support SSTL's mission build work without pulling engineers off spacecraft</h1>
+            <p>You already have the mission teams. The gap is often the software around them: data flow, test evidence, sign-off packs, and clear status across build, integration, and operations.</p>
+            <p class="hero-note">We saw SSTL is hiring AIT, harness, and thermal contractors right now. That usually means several programmes are moving together and internal tools need to keep up.</p>
+          </div>
+
+          <aside class="signal-card" aria-label="Why we are here">
+            <h2>Why We're Here</h2>
+            <ul class="signal-list">
+              <li>AIT contractor hiring</li>
+              <li>Harness work in flight build</li>
+              <li>Thermal workload rising</li>
+            </ul>
+            <p>That is a strong signal of delivery pressure around the mission life-cycle, not just normal hiring.</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section-card read-card">
+        <h2>Our Read</h2>
+        <p>Those hires tell us you are carrying several mission workstreams at once. When assembly, integration, test, harness, and thermal teams are stretched, the first thing to slow down is the software around them. Test evidence, action lists, sign-off packs, and readiness views end up split across files, inboxes, and separate systems. That steals senior engineer time and makes reviews harder than they should be. The cost is not only delay. It is focus lost from the core spacecraft work.</p>
+      </section>
+
+      <section class="section-card">
+        <h2>What We'd Do</h2>
+        <div class="proposal-grid">
+          <div>
+            <p class="proposal-intro">We would run a dedicated software squad under your engineering lead for one quarter, focused on one job: cut the admin and reporting load around spacecraft build and test.</p>
+
+            <div class="timeline">
+              <article class="step">
+                <div class="step-number">01</div>
+                <div>
+                  <h3>Map the live handoffs</h3>
+                  <p>Map the current AIT, harness, thermal, and quality handoffs. Lock one owner and one source of truth for each mission step.</p>
+                </div>
+              </article>
+
+              <article class="step">
+                <div class="step-number">02</div>
+                <div>
+                  <h3>Build one shared workspace</h3>
+                  <p>Build a secure workspace for test evidence, action logs, NCRs, harness revisions, and sign-offs, so teams stop chasing the latest PDF by email.</p>
+                </div>
+              </article>
+
+              <article class="step">
+                <div class="step-number">03</div>
+                <div>
+                  <h3>Connect the systems already in use</h3>
+                  <p>Connect SAP, shared files, and calculator or lab outputs into simple status views that show blockers, overdue actions, and review readiness by mission.</p>
+                </div>
+              </article>
+
+              <article class="step">
+                <div class="step-number">04</div>
+                <div>
+                  <h3>Leave a tool your team can run</h3>
+                  <p>Ship QA-backed workflows, train the internal owners, and leave clear handover notes so the tool keeps working when the pilot ends.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="meta-grid">
+            <div class="meta-card">
+              <span>Engagement</span>
+              <strong>Dedicated squad under your engineering lead, with weekly demos and a 10-week pilot scope.</strong>
+            </div>
+            <div class="meta-card">
+              <span>Team Shape</span>
+              <strong>1 tech lead, 2 senior .NET and React engineers, 1 data and integration engineer, 1 QA.</strong>
+            </div>
+            <div class="meta-card">
+              <span>Relevant Stack</span>
+              <strong>C#, .NET, React, Python, and Node.js.</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card elinext-card">
+        <h2>Who Is Elinext</h2>
+        <p>Elinext is a full-cycle software development company that has worked since 1997 with about 700 in-house specialists and no freelancers. We build web, data, QA, and integration systems for complex B2B operations, either as a dedicated team or as a scoped project. We work under ISO 9001 and ISO 27001.</p>
+        <div class="customer-row" aria-label="Selected customers">
+          <div class="customer-pill"><strong>Siemens</strong></div>
+          <div class="customer-pill"><strong>Broadcom</strong></div>
+          <div class="customer-pill"><strong>Volkswagen</strong></div>
+          <div class="customer-pill"><strong>TRUMPF</strong></div>
+        </div>
+        <p>That background fits the work above: careful delivery, secure handling of engineering data, and steady support while your spacecraft teams stay on mission work.</p>
+      </section>
+
+      <section class="section-card">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-manufacturing-execution-system.jpg" alt="Manufacturing execution system case study">
+            <div class="proof-copy">
+              <span>Manufacturing</span>
+              <h3>Manufacturing Execution System</h3>
+              <p>Elinext helped modernize a manufacturing execution system that had become hard to integrate, and the client later reported ROI up to 400%.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/manufacturing-execution-system/" target="_blank" rel="noopener noreferrer">View case study</a>
+            </div>
+          </article>
+
+          <article class="proof-card">
+            <img src="assets/case-lidar-management-solution.jpg" alt="LiDAR management solution case study">
+            <div class="proof-copy">
+              <span>Sensor Platform</span>
+              <h3>LiDAR Management Solution</h3>
+              <p>Elinext delivered two core setup and management modules for a LiDAR platform in six weeks, while staying on time and budget.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/lidar-management-solution/" target="_blank" rel="noopener noreferrer">View case study</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card cta-card">
+        <h2>Talk Through The Bottleneck</h2>
+        <p>We can map the first pilot around one live mission.</p>
+        <div class="cta-action">
+          <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Start the conversation</a>
+        </div>
+        <div class="footnote">Prepared for Andrew Cawthorne and SSTL on 2026-04-17.</div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
