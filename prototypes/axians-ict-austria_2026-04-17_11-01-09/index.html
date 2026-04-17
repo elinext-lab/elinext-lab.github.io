@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A steadier delivery engine for Axians SAP and data analytics | Elinext</title>
+  <meta name="description" content="A short proposal for Markus Morell at Axians ICT Austria on making SAP and data analytics delivery steadier as service load grows.">
+  <meta name="author" content="Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/axians-ict-austria_2026-04-17_11-01-09/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/axians-ict-austria_2026-04-17_11-01-09/">
+  <meta property="og:title" content="A steadier delivery engine for Axians SAP and data analytics">
+  <meta property="og:description" content="A short proposal for Markus Morell at Axians ICT Austria on making SAP and data analytics delivery steadier as service load grows.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/axians-ict-austria_2026-04-17_11-01-09/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A steadier delivery engine for Axians SAP and data analytics">
+  <meta name="twitter:description" content="A short proposal for Markus Morell at Axians ICT Austria on making SAP and data analytics delivery steadier as service load grows.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/axians-ict-austria_2026-04-17_11-01-09/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f1ea;
+      --paper: #fffaf6;
+      --paper-strong: #ffffff;
+      --ink: #22192f;
+      --muted: #6b6276;
+      --plum: #652a8f;
+      --plum-deep: #411760;
+      --cyan: #13a9c3;
+      --cyan-soft: #e8f8fb;
+      --gold: #f2a33b;
+      --line: rgba(34, 25, 47, 0.10);
+      --shadow: 0 20px 42px rgba(39, 24, 59, 0.12);
+      --radius: 26px;
+      --font: "Sora", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+    }
+
+    body {
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      background-image:
+        radial-gradient(circle at top left, rgba(101, 42, 143, 0.10), transparent 26rem),
+        radial-gradient(circle at right 12%, rgba(19, 169, 195, 0.12), transparent 22rem),
+        linear-gradient(180deg, #fbf7f2 0%, #f6f1ea 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 68px 0 52px;
+      background:
+        radial-gradient(circle at 80% 18%, rgba(19, 169, 195, 0.20), transparent 16rem),
+        linear-gradient(145deg, #2b1642 0%, #582885 48%, #6c2994 100%);
+      color: #fbf8ff;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -4rem -6rem auto;
+      width: 16rem;
+      height: 16rem;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.07);
+      filter: blur(4px);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 22px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      max-width: 100%;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.11);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 8px 0 0;
+      max-width: 11ch;
+      font-size: clamp(2.45rem, 10vw, 4.9rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 16px;
+      max-width: 45rem;
+    }
+
+    .hero-copy p {
+      margin: 0;
+      color: rgba(251, 248, 255, 0.88);
+      font-size: 1rem;
+    }
+
+    .why-here {
+      padding-left: 15px;
+      border-left: 4px solid var(--gold);
+      color: #fff8f1;
+      font-weight: 600;
+    }
+
+    main section {
+      padding: 42px 0;
+    }
+
+    .section-head {
+      margin-bottom: 22px;
+      text-align: center;
+    }
+
+    .section-kicker {
+      margin: 0 0 8px;
+      color: var(--plum);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.8rem, 6vw, 2.7rem);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+    }
+
+    .read-panel {
+      width: 100%;
+      max-width: 100%;
+      padding: 28px 22px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(19, 169, 195, 0.22);
+      border-left: 6px solid var(--gold);
+      background: linear-gradient(180deg, #edf9fb 0%, #e5f4f8 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .read-panel p {
+      margin: 0;
+      max-width: 70ch;
+      color: #1b3654;
+      font-size: 1rem;
+    }
+
+    .proposal-note {
+      margin: 0 auto 24px;
+      max-width: 46rem;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .proposal-layout {
+      display: grid;
+      gap: 18px;
+    }
+
+    .panel {
+      padding: 24px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--paper-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .panel h3,
+    .meta-card h3 {
+      margin: 0 0 14px;
+      font-size: 1.12rem;
+      letter-spacing: -0.03em;
+    }
+
+    .meta-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .meta-card {
+      padding: 22px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fffaf6 0%, #fffdfb 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .meta-card p,
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .meta-list,
+    .stack-list,
+    .proof-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .meta-list li,
+    .stack-list li {
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: #f5eefb;
+      color: var(--plum-deep);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .stack-list li {
+      background: #eef9fb;
+      color: #135766;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      gap: 10px;
+      padding: 20px;
+      border-radius: 22px;
+      border: 1px solid rgba(101, 42, 143, 0.12);
+      background: linear-gradient(180deg, #fcf8ff 0%, #f8f3fc 100%);
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--plum);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .step h4 {
+      margin: 0;
+      font-size: 1.06rem;
+      letter-spacing: -0.02em;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .who-card {
+      padding: 28px 22px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(101, 42, 143, 0.12);
+      background: linear-gradient(180deg, #fff8fd 0%, #fffdfd 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .who-card p {
+      margin: 0;
+      color: #3f3550;
+      font-size: 1rem;
+    }
+
+    .customer-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .customer-pills span {
+      display: inline-flex;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: #f3e8fb;
+      color: var(--plum-deep);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--paper-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .proof-body {
+      padding: 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .proof-tag {
+      width: fit-content;
+      max-width: 100%;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: var(--cyan-soft);
+      color: #165f6d;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .proof-body h3 {
+      margin: 0;
+      font-size: 1.16rem;
+      letter-spacing: -0.03em;
+    }
+
+    .proof-body p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--plum);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .cta {
+      padding: 0 0 68px;
+    }
+
+    .cta-card {
+      padding: 30px 22px;
+      border-radius: 30px;
+      text-align: center;
+      color: #fff8ff;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(19, 169, 195, 0.20), transparent 18rem),
+        linear-gradient(145deg, #381d57 0%, #5e2b88 58%, #742aa0 100%);
+      box-shadow: 0 24px 50px rgba(56, 29, 87, 0.28);
+    }
+
+    .cta-card h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.9rem, 6vw, 2.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+
+    .cta-card p {
+      margin: 0 auto 20px;
+      max-width: 28rem;
+      color: rgba(255, 248, 255, 0.86);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #2a183d;
+      font-size: 0.96rem;
+      font-weight: 800;
+      box-shadow: 0 12px 26px rgba(242, 163, 59, 0.28);
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 28px rgba(242, 163, 59, 0.34);
+    }
+
+    @media (min-width: 760px) {
+      .shell {
+        padding: 0 28px;
+      }
+
+      .hero {
+        padding: 88px 0 62px;
+      }
+
+      .proposal-layout {
+        grid-template-columns: 1.12fr 0.88fr;
+      }
+
+      .meta-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="shell">
+      <div class="hero-grid">
+        <div class="eyebrow">For Markus Morell at Axians ICT Austria</div>
+        <h1>A steadier delivery engine for Axians SAP and data analytics</h1>
+        <div class="hero-copy">
+          <p>You already sell SAP one-stop-shop work, advanced analytics, and software made in Austria. The next step is calmer handover and less load on senior leads.</p>
+          <p class="why-here">We saw the Senior Service Management hiring signal around your SAP and Data Analytics division. That usually means project load, incident flow, and customer care are growing at the same time.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="shell">
+        <div class="section-head">
+          <p class="section-kicker">Our Read</p>
+          <h2>You are solving a scaling problem</h2>
+        </div>
+        <div class="read-panel">
+          <p>The signal says Axians is moving from strong delivery into repeatable service operations. That gets hard when one group supports SAP change work, analytics programs, and product lines like lbase with live mobile field flows. If triage, release checks, and customer handover stay too manual, managers become the routing layer, engineers lose focus, and response time gets uneven.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <div class="section-head">
+          <p class="section-kicker">What We’d Do</p>
+          <h2>Put one delivery squad under your lead</h2>
+        </div>
+        <p class="proposal-note">Engagement model: a dedicated squad under your service lead and product owners. We start with one live service line and make the path visible fast.</p>
+        <div class="proposal-layout">
+          <div class="panel">
+            <h3>8-week pilot with weekly demos</h3>
+            <div class="steps">
+              <article class="step">
+                <div class="step-number">01</div>
+                <h4>Map the real service path</h4>
+                <p>Trace one active SAP or analytics service line from intake to release and customer handover, so gaps are visible in week one.</p>
+              </article>
+              <article class="step">
+                <div class="step-number">02</div>
+                <h4>Build one shared backlog</h4>
+                <p>Add a single service backlog with owners, change windows, and clear priorities across SAP, analytics, and mobile delivery work.</p>
+              </article>
+              <article class="step">
+                <div class="step-number">03</div>
+                <h4>Take over one heavy stream</h4>
+                <p>Run one integration-heavy stream with senior engineers and QA so your internal leads stay close to customers and roadmap decisions.</p>
+              </article>
+              <article class="step">
+                <div class="step-number">04</div>
+                <h4>Make release risk visible</h4>
+                <p>Stand up light dashboards for SLA risk, open defects, release readiness, and handover gaps, then review them every week.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="meta-grid">
+            <div class="meta-card">
+              <h3>Team shape</h3>
+              <ul class="meta-list">
+                <li>1 service delivery lead</li>
+                <li>2 senior full-stack engineers</li>
+                <li>1 QA automation engineer</li>
+                <li>1 SAP/data integration engineer</li>
+              </ul>
+            </div>
+            <div class="meta-card">
+              <h3>Relevant stack</h3>
+              <ul class="stack-list">
+                <li>Java</li>
+                <li>.NET</li>
+                <li>React</li>
+                <li>Node.js</li>
+                <li>Python</li>
+              </ul>
+            </div>
+            <div class="meta-card">
+              <h3>Why now</h3>
+              <p>The hiring signal says capacity is the issue. A pilot squad fixes the service path before more work lands on the same leads.</p>
+            </div>
+            <div class="meta-card">
+              <h3>Where we start</h3>
+              <p>One live service line. One weekly demo cadence. One scorecard for handover and release confidence.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <div class="section-head">
+          <p class="section-kicker">Who Is Elinext</p>
+          <h2>A delivery partner, not another layer</h2>
+        </div>
+        <div class="who-card">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Axians, the fit is simple: we can work as a dedicated squad under your own lead, not as a loose vendor. We bring <strong>ISO 27001</strong> and <strong>ISO 9001</strong> discipline, plus enterprise delivery work for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, and <strong>TUI</strong>. Our teams cover web, mobile, QA, and data-heavy backend work in one setup. That is why the squad above is built to remove coordination load, not add another one.</p>
+          <div class="customer-pills">
+            <span>Siemens</span>
+            <span>Broadcom</span>
+            <span>Volkswagen</span>
+            <span>TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <div class="section-head">
+          <p class="section-kicker">Proof</p>
+          <h2>Similar work we already shipped</h2>
+        </div>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-warehouse.jpg" alt="Warehouse management case study image">
+            <div class="proof-body">
+              <div class="proof-tag">Logistics &amp; Consulting</div>
+              <h3>Continuous Microservices Development for Warehouse Management</h3>
+              <p>Elinext supported a live warehouse platform while new modules kept shipping. The result was 40% higher throughput and 70% fewer shipping and packaging errors.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/warehouse-management-solutions/" target="_blank" rel="noreferrer">View case study</a>
+            </div>
+          </article>
+
+          <article class="proof-card">
+            <img src="assets/case-analytics.jpg" alt="Sales analytics case study image">
+            <div class="proof-body">
+              <div class="proof-tag">Data Engineering</div>
+              <h3>Sales Analytics Platform for a Chainsaw Manufacturer Brand</h3>
+              <p>Elinext built a data-heavy sales analytics platform that handled around 30 million records daily and gave marketers a clearer dealer and market view.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/sales-analytics-application-for-chainsaw-manufacturer/" target="_blank" rel="noreferrer">View case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="shell">
+        <div class="cta-card">
+          <h2>Make service delivery calmer</h2>
+          <p>If this reads close, let’s compare the first pilot.</p>
+          <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Talk to Elinext</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
