@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lbase Service Pilot | Elinext</title>
+  <meta name="description" content="Proposal brief for Axians ICT Austria's lbase business unit and its service-management growth moment.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/axians-ict-austria_2026-04-17_15-20-24/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="lbase Service Pilot | Elinext">
+  <meta property="og:description" content="A focused pilot for support load, route exceptions, and service delivery across lbase and addHelix.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/axians-ict-austria_2026-04-17_15-20-24/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/axians-ict-austria_2026-04-17_15-20-24/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="lbase Service Pilot | Elinext">
+  <meta name="twitter:description" content="A focused pilot for support load, route exceptions, and service delivery across lbase and addHelix.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/axians-ict-austria_2026-04-17_15-20-24/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #15243a;
+      --ink-soft: #51627b;
+      --navy: #112746;
+      --navy-deep: #0a1830;
+      --sand: #fff7ef;
+      --paper: rgba(255, 255, 255, 0.96);
+      --mist: rgba(229, 237, 243, 0.94);
+      --mist-strong: rgba(214, 228, 237, 0.98);
+      --orange: #f26a21;
+      --orange-soft: rgba(242, 106, 33, 0.13);
+      --teal: #0f7888;
+      --line: rgba(17, 39, 70, 0.12);
+      --shadow: 0 22px 60px rgba(17, 39, 70, 0.12);
+      --radius: 28px;
+      --radius-sm: 18px;
+      --shell: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: "Sora", "Aptos", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(242, 106, 33, 0.12), transparent 30%),
+        linear-gradient(180deg, #f4f8fb 0%, #eef4f8 35%, #f7fafc 72%, #eef2f5 100%);
+      line-height: 1.38;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(17, 39, 70, 0.045) 1px, transparent 1px),
+        linear-gradient(rgba(17, 39, 70, 0.045) 1px, transparent 1px);
+      background-size: 24px 24px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.32), transparent 78%);
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: var(--shell);
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    .section {
+      padding: 22px 0;
+    }
+
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 26px 0 18px;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 22px 24px;
+      background:
+        radial-gradient(circle at top right, rgba(15, 120, 136, 0.16), transparent 34%),
+        linear-gradient(160deg, rgba(255, 255, 255, 0.99), rgba(245, 249, 252, 0.96));
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 18px 18px auto;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--orange), var(--teal));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      color: var(--navy);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.55;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 11ch;
+      font-size: clamp(2.3rem, 8vw, 4.7rem);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      color: var(--navy-deep);
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-copy p {
+      max-width: 60ch;
+      color: var(--ink-soft);
+      font-size: 1rem;
+    }
+
+    .hero-why {
+      padding: 14px 16px;
+      border-radius: 18px;
+      border-left: 4px solid var(--orange);
+      background: var(--sand);
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .hero-meta {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .meta-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .meta-box {
+      padding: 13px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--line);
+    }
+
+    .meta-label {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink-soft);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      color: var(--navy);
+      font-size: 0.98rem;
+      font-weight: 700;
+    }
+
+    .section-title {
+      margin-bottom: 16px;
+      color: var(--navy-deep);
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      text-align: center;
+    }
+
+    .read-panel {
+      padding: 24px 20px;
+      background: linear-gradient(180deg, var(--mist-strong), rgba(255, 255, 255, 0.98));
+      border-left: 6px solid var(--teal);
+    }
+
+    .read-text {
+      max-width: 72ch;
+      margin: 0 auto;
+      color: var(--navy);
+      font-size: 1.02rem;
+    }
+
+    .proposal {
+      padding: 24px 20px;
+    }
+
+    .proposal-top {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .proposal-top p {
+      color: var(--ink-soft);
+      font-size: 0.98rem;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step-card,
+    .brief-card,
+    .proof-card,
+    .cred-card,
+    .cta-card {
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid var(--line);
+    }
+
+    .step-card {
+      display: grid;
+      gap: 12px;
+      padding: 18px 16px;
+    }
+
+    .step-badge {
+      width: 42px;
+      height: 42px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--orange-soft);
+      color: var(--orange);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .step-title {
+      color: var(--navy-deep);
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    .step-text {
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+    }
+
+    .brief-card {
+      padding: 18px 16px;
+      background:
+        linear-gradient(180deg, rgba(17, 39, 70, 0.98), rgba(14, 26, 46, 0.96));
+      color: #f4f8fb;
+    }
+
+    .brief-card h3,
+    .cred-card h3,
+    .proof-card h3,
+    .cta-card h3 {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brief-card p {
+      color: rgba(244, 248, 251, 0.85);
+      font-size: 0.94rem;
+    }
+
+    .brief-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .brief-item {
+      padding: 12px 13px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .brief-item strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #ffffff;
+      font-size: 0.9rem;
+    }
+
+    .brief-item span {
+      color: rgba(244, 248, 251, 0.82);
+      font-size: 0.88rem;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #f4f8fb;
+    }
+
+    .cred-card {
+      padding: 22px 18px;
+      background: linear-gradient(180deg, rgba(17, 39, 70, 0.05), rgba(255, 255, 255, 0.98));
+    }
+
+    .cred-card p {
+      color: var(--ink-soft);
+      font-size: 0.96rem;
+    }
+
+    .client-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 12px;
+    }
+
+    .client-pill {
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(17, 39, 70, 0.08);
+      border: 1px solid rgba(17, 39, 70, 0.12);
+      color: var(--navy);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .proof-body {
+      padding: 18px 16px 16px;
+    }
+
+    .proof-body p {
+      color: var(--ink-soft);
+      font-size: 0.94rem;
+      margin-bottom: 12px;
+    }
+
+    .proof-link,
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--orange);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .proof-link::after,
+    .cta-link::after {
+      content: "→";
+    }
+
+    .cta-card {
+      padding: 24px 20px;
+      background:
+        radial-gradient(circle at top right, rgba(242, 106, 33, 0.18), transparent 35%),
+        linear-gradient(150deg, rgba(255, 255, 255, 0.99), rgba(245, 249, 252, 0.98));
+      text-align: center;
+    }
+
+    .cta-card h3 {
+      margin-bottom: 8px;
+      color: var(--navy-deep);
+      font-size: 1.45rem;
+    }
+
+    .cta-card p {
+      max-width: 38ch;
+      margin: 0 auto 16px;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 200px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 700;
+      box-shadow: 0 18px 30px rgba(242, 106, 33, 0.22);
+    }
+
+    .footer-note {
+      padding: 8px 0 28px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 0.78rem;
+    }
+
+    @media (min-width: 760px) {
+      .hero-card {
+        padding: 34px 30px 30px;
+      }
+
+      .section {
+        padding: 30px 0;
+      }
+
+      .hero-meta {
+        grid-template-columns: 1.1fr 0.9fr;
+        align-items: start;
+      }
+
+      .proposal-grid {
+        grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.95fr);
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .shell {
+        padding: 0 28px;
+      }
+
+      .hero {
+        padding-top: 34px;
+      }
+
+      .hero-card {
+        padding: 42px 38px 34px;
+      }
+
+      .section-title {
+        font-size: 1.95rem;
+      }
+
+      .proposal,
+      .read-panel,
+      .cred-card,
+      .cta-card {
+        padding-left: 28px;
+        padding-right: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main>
+      <section class="hero">
+        <div class="shell">
+          <div class="panel hero-card">
+            <div class="eyebrow">Proposal Brief</div>
+            <div class="hero-copy">
+              <h1>A sharper service engine for lbase transport software</h1>
+              <p>A focused pilot for lbase. We help Axians cut support noise, surface real driver and dispatcher issues, and give Marcus Eiser a clearer view of where engineering help matters first.</p>
+              <p class="hero-why">We saw the Senior Service Management hiring signal and read it as a scale moment. lbase is growing its transport software stack. The service layer now matters as much as the roadmap.</p>
+            </div>
+            <div class="hero-meta">
+              <div class="meta-row">
+                <div class="meta-box">
+                  <span class="meta-label">Business Unit</span>
+                  <span class="meta-value">lbase / addHelix</span>
+                </div>
+                <div class="meta-box">
+                  <span class="meta-label">Primary Product</span>
+                  <span class="meta-value">lbase Transportmanagement</span>
+                </div>
+              </div>
+              <div class="meta-row">
+                <div class="meta-box">
+                  <span class="meta-label">Pilot Shape</span>
+                  <span class="meta-value">8 weeks, weekly demos</span>
+                </div>
+                <div class="meta-box">
+                  <span class="meta-label">Focus</span>
+                  <span class="meta-value">Support load and route exceptions</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="panel read-panel">
+            <h2 class="section-title">Our Read</h2>
+            <p class="read-text">The service-management hire tells us lbase is not just shipping features. It is scaling support across TMS, driver apps, addHelix services, and new eCMR flows. That mix creates many exception paths: route changes, POD issues, offline sync, and document handoffs. When those paths stay manual, dispatch loses time, tickets bounce, and product work slows. The risk is not missing ideas. It is operational friction in every release.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="panel proposal">
+            <div class="proposal-top">
+              <h2 class="section-title">What We’d Do</h2>
+              <p>We would place one dedicated squad under your PO or service lead.</p>
+            </div>
+            <div class="proposal-grid">
+              <div class="timeline">
+                <article class="step-card">
+                  <span class="step-badge">01</span>
+                  <h3 class="step-title">Map the real service path</h3>
+                  <p class="step-text">Trace lbase, addHelix, driver, and eCMR handoffs. Find the repeat incident paths that drain support time and slow release decisions.</p>
+                </article>
+                <article class="step-card">
+                  <span class="step-badge">02</span>
+                  <h3 class="step-title">Expose route and POD failures early</h3>
+                  <p class="step-text">Build one service view for route changes, proof gaps, unreadable document uploads, and slow sync events before those issues become ticket ping-pong.</p>
+                </article>
+                <article class="step-card">
+                  <span class="step-badge">03</span>
+                  <h3 class="step-title">Tighten release quality around execution flows</h3>
+                  <p class="step-text">Add focused QA and regression checks for driver actions, offline behavior, status updates, signatures, and freight-document edge cases.</p>
+                </article>
+                <article class="step-card">
+                  <span class="step-badge">04</span>
+                  <h3 class="step-title">Turn service work into product evidence</h3>
+                  <p class="step-text">Instrument adoption, failure reasons, and slow screens across web and mobile surfaces, so roadmap calls come from data, not anecdotes.</p>
+                </article>
+              </div>
+              <aside class="brief-card">
+                <h3>Team Shape</h3>
+                <p>1 delivery lead, 1 solution architect, 2 senior web or backend engineers, 1 mobile engineer, 1 QA automation engineer.</p>
+                <div class="brief-list">
+                  <div class="brief-item">
+                    <strong>Cadence</strong>
+                    <span>8-week pilot. Weekly demo. Shared backlog. One service scorecard.</span>
+                  </div>
+                  <div class="brief-item">
+                    <strong>Best Fit</strong>
+                    <span>Support-heavy product work around dispatch, driver, and document flows.</span>
+                  </div>
+                  <div class="brief-item">
+                    <strong>Relevant Stack</strong>
+                    <span>React Native, React, Angular, .NET/C#, Node.js.</span>
+                  </div>
+                </div>
+                <div class="pill-row">
+                  <span class="pill">Driver App</span>
+                  <span class="pill">Route Exceptions</span>
+                  <span class="pill">POD</span>
+                  <span class="pill">eCMR</span>
+                  <span class="pill">Support Ops</span>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="panel cred-card">
+            <h2 class="section-title">Who Is Elinext</h2>
+            <p>Elinext is a full-cycle software development company, active since 1997. We have about 700 in-house specialists and no freelancers. We build enterprise portals, web platforms, and mobile apps for long product cycles. Our teams cover mobile, web, backend, QA, DevOps, and design in one delivery line. We hold ISO 9001 and ISO 27001 for quality and information security.</p>
+            <div class="client-pills">
+              <span class="client-pill"><strong>Siemens</strong></span>
+              <span class="client-pill"><strong>Volkswagen</strong></span>
+              <span class="client-pill"><strong>Broadcom</strong></span>
+            </div>
+            <p>Teams at <strong>Siemens</strong>, <strong>Volkswagen</strong>, and <strong>Broadcom</strong> trust Elinext on complex software products. We can work under your PO or service lead as one squad. That makes the pilot above easier to govern and measure.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <h2 class="section-title">Proof</h2>
+          <div class="proof-grid">
+            <article class="proof-card">
+              <img src="assets/case-fleet-management.jpg" alt="Fleet management case study image">
+              <div class="proof-body">
+                <h3>Fleet Management App</h3>
+                <p>React Native fleet app gave dispatch teams live task acceptance and order tracking.</p>
+                <a class="proof-link" href="https://www.elinext.com/case-study/fleet-management-app-for-logistics-solution-provider-in-the-usa/">View case study</a>
+              </div>
+            </article>
+            <article class="proof-card">
+              <img src="assets/case-it-infrastructure-qa.jpg" alt="Infrastructure QA case study image">
+              <div class="proof-body">
+                <h3>Infrastructure QA Team</h3>
+                <p>QA team for a complex platform raised product quality and testing coverage at scale.</p>
+                <a class="proof-link" href="https://www.elinext.com/case-study/it-infrastructure-management-software-qa/">View case study</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="panel cta-card">
+            <h3>Compare notes with Elinext</h3>
+            <p>If this read is close, we can map the pilot.</p>
+            <a class="cta-button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="footer-note">Prepared for Marcus Eiser and Axians ICT Austria GmbH.</div>
+  </div>
+</body>
+</html>
