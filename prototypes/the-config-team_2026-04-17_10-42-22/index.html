@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PreBilt delivery support for The Config Team | Elinext</title>
+  <meta name="description" content="A short proposal for Chris Hudson at The Config Team on adding delivery capacity around PreBilt for Public Cloud.">
+  <meta name="author" content="Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/the-config-team_2026-04-17_10-42-22/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/the-config-team_2026-04-17_10-42-22/">
+  <meta property="og:title" content="PreBilt delivery support for The Config Team">
+  <meta property="og:description" content="A short proposal for Chris Hudson at The Config Team on adding delivery capacity around PreBilt for Public Cloud.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/the-config-team_2026-04-17_10-42-22/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4efe7;
+      --paper: #fffaf4;
+      --paper-strong: #ffffff;
+      --ink: #16233a;
+      --muted: #5f6878;
+      --line: rgba(22, 35, 58, 0.14);
+      --accent: #e98d34;
+      --accent-deep: #b96514;
+      --navy: #102947;
+      --navy-soft: #e7eef8;
+      --read: #17355f;
+      --shadow: 0 18px 42px rgba(16, 41, 71, 0.10);
+      --radius: 24px;
+      --font: "Manrope", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+    }
+
+    body {
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      background-image:
+        radial-gradient(circle at top left, rgba(233, 141, 52, 0.14), transparent 28rem),
+        linear-gradient(180deg, #f7f2ea 0%, #f4efe7 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      background: rgba(255, 250, 244, 0.86);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(22, 35, 58, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .topbar-note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.95rem;
+      box-shadow: 0 10px 22px rgba(233, 141, 52, 0.24);
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      background: var(--accent-deep);
+      box-shadow: 0 14px 26px rgba(185, 101, 20, 0.28);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 70px 0 52px;
+      background:
+        radial-gradient(circle at right top, rgba(233, 141, 52, 0.22), transparent 22rem),
+        linear-gradient(160deg, #112744 0%, #17345c 52%, #1d426e 100%);
+      color: #fbf7f1;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -120px auto;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      filter: blur(6px);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 24px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      width: fit-content;
+      max-width: 100%;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 10px 0 0;
+      max-width: 12ch;
+      font-size: clamp(2.3rem, 9vw, 4.75rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 42rem;
+      font-size: 1.05rem;
+      color: rgba(251, 247, 241, 0.86);
+    }
+
+    .why-here {
+      padding-left: 16px;
+      border-left: 4px solid var(--accent);
+      color: #fff8ef;
+      font-weight: 600;
+    }
+
+    main section {
+      padding: 44px 0;
+    }
+
+    .section-head {
+      margin-bottom: 22px;
+      text-align: center;
+    }
+
+    .section-kicker {
+      margin: 0 0 8px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-deep);
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.75rem, 6vw, 2.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .read-card {
+      background: linear-gradient(180deg, #f0f5fb 0%, #e9f0f9 100%);
+      border: 1px solid rgba(16, 41, 71, 0.11);
+      border-left: 6px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 28px 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .read-card p {
+      margin: 0;
+      max-width: 68ch;
+      color: var(--read);
+      font-size: 1rem;
+    }
+
+    .proposal-intro {
+      margin: 0 auto 24px;
+      max-width: 48rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--paper-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel h3 {
+      margin: 0 0 14px;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+    }
+
+    .meta-block {
+      display: grid;
+      gap: 14px;
+    }
+
+    .meta-row {
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(22, 35, 58, 0.08);
+    }
+
+    .meta-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .meta-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-deep);
+    }
+
+    .meta-value {
+      display: block;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .role-list,
+    .stack-list,
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      min-height: 38px;
+      border-radius: 999px;
+      background: #f2ede5;
+      border: 1px solid rgba(22, 35, 58, 0.08);
+      color: var(--ink);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .pill.dark {
+      background: rgba(16, 41, 71, 0.08);
+      color: var(--navy);
+    }
+
+    .roadmap {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      background: var(--paper-strong);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .step-badge {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      border-radius: 14px;
+      background: var(--navy);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .who-card {
+      background: linear-gradient(180deg, #fffdf9 0%, #fff7ee 100%);
+      border: 1px solid rgba(22, 35, 58, 0.10);
+      border-radius: var(--radius);
+      padding: 28px 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .who-card p {
+      margin: 0;
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .customer-list {
+      margin-top: 18px;
+      justify-content: center;
+    }
+
+    .customer-list .pill {
+      background: var(--navy);
+      border-color: rgba(16, 41, 71, 0.18);
+      color: #fff;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .proof-card {
+      background: var(--paper-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #d9e1eb;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-tag {
+      display: inline-flex;
+      margin-bottom: 10px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(233, 141, 52, 0.14);
+      color: var(--accent-deep);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .proof-body h3 {
+      margin: 0 0 8px;
+      font-size: 1.18rem;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .proof-body p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.97rem;
+    }
+
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--navy);
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .cta {
+      padding: 18px 0 72px;
+    }
+
+    .cta-card {
+      background:
+        radial-gradient(circle at top right, rgba(233, 141, 52, 0.18), transparent 18rem),
+        linear-gradient(160deg, #0f2641 0%, #17355f 100%);
+      color: #fbf7f1;
+      border-radius: 28px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: 0 24px 46px rgba(16, 41, 71, 0.18);
+    }
+
+    .cta-card h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.85rem, 6vw, 2.7rem);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+
+    .cta-card p {
+      margin: 0 auto 22px;
+      max-width: 32rem;
+      color: rgba(251, 247, 241, 0.84);
+      font-size: 1rem;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: rgba(251, 247, 241, 0.64);
+      font-size: 0.85rem;
+    }
+
+    @media (min-width: 700px) {
+      .hero {
+        padding: 96px 0 70px;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 940px) {
+      .proposal-grid {
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.15fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="topbar-note">Prepared for Chris Hudson, CTO at The Config Team</div>
+      <a class="button" href="https://www.elinext.com/contacts/">Talk with Elinext</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="shell hero-grid">
+      <div class="eyebrow">Proposal Brief · 17 Apr 2026</div>
+      <h1>Extra delivery support for PreBilt as Public Cloud work grows</h1>
+      <p>PreBilt now spans mobile workflows, Public Cloud delivery, and customer rollout work. That mix usually needs more engineering support before it needs another sales deck.</p>
+      <p class="why-here">You are hiring an SAP delivery lead while pushing PreBilt Public Cloud. That looks like a delivery load problem, not a simple headcount gap.</p>
+    </div>
+  </section>
+
+  <main>
+    <section>
+      <div class="shell">
+        <div class="section-head">
+          <p class="section-kicker">Our Read</p>
+          <h2>What we think is happening</h2>
+        </div>
+        <div class="read-card">
+          <p>That signal says your roadmap is moving from product build to repeat delivery. PreBilt Public Cloud adds mobile flows, identity setup, device rollout, and upgrade support in one offer. That is useful for customers, but it also widens the release surface for your team. The public app is new, so early projects will shape trust fast. If delivery rhythm slips, product work, rollout work, and support work start to block each other.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <div class="section-head">
+          <p class="section-kicker">What We'd Do</p>
+          <h2>A focused squad around rollout, QA, and release flow</h2>
+        </div>
+        <p class="proposal-intro">We would place one dedicated squad under your product owner or delivery lead. The goal is simple: keep PreBilt releases steady while customer rollout work grows.</p>
+        <div class="proposal-grid">
+          <div class="panel">
+            <h3>Team shape and model</h3>
+            <div class="meta-block">
+              <div class="meta-row">
+                <span class="meta-label">Engagement Model</span>
+                <span class="meta-value">One dedicated squad working under your PO or delivery lead.</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Team Shape</span>
+                <div class="role-list">
+                  <span class="pill">1 tech lead</span>
+                  <span class="pill">1 mobile engineer</span>
+                  <span class="pill">1 full-stack engineer</span>
+                  <span class="pill">1 QA engineer</span>
+                  <span class="pill">1 product designer</span>
+                </div>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Relevant Stack</span>
+                <div class="stack-list">
+                  <span class="pill dark">React Native</span>
+                  <span class="pill dark">Java</span>
+                  <span class="pill dark">Node.js</span>
+                  <span class="pill dark">QA automation</span>
+                  <span class="pill dark">DevOps</span>
+                </div>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Working Rhythm</span>
+                <span class="meta-value">Six-week pilot, weekly demos, and clear release notes each week.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="roadmap" aria-label="Delivery roadmap">
+            <article class="step">
+              <div class="step-badge">1</div>
+              <div>
+                <h3>Map the release surface</h3>
+                <p>Review PreBilt Public Cloud flows, release steps, and test gaps across app, portal, auth, and SAP touchpoints.</p>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-badge">2</div>
+              <div>
+                <h3>Stabilize core warehouse work</h3>
+                <p>Stabilize key warehouse journeys like count, goods movement, and barcode scan handling on the devices your customers use most.</p>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-badge">3</div>
+              <div>
+                <h3>Build repeatable release checks</h3>
+                <p>Build a regression pack for each SAP change window, with weekly demos, bug burn-down, and clear release notes.</p>
+              </div>
+            </article>
+
+            <article class="step">
+              <div class="step-badge">4</div>
+              <div>
+                <h3>Support the new delivery owner</h3>
+                <p>Hand over dashboards, runbooks, and QA checks so new delivery hires can onboard faster without slowing the product team.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <div class="section-head">
+          <p class="section-kicker">Who Is Elinext</p>
+          <h2>A steady product and delivery partner</h2>
+        </div>
+        <div class="who-card">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build mobile, web, backend, QA, and delivery teams for work like this, and we can join under your product owner just like an internal squad. Our experience includes work for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, and <strong>TUI</strong>. We also work under <strong>ISO 27001</strong> and <strong>ISO 9001</strong>, which matters when products touch core systems and live operations. For this plan, that means extra delivery capacity without extra vendor chaos.</p>
+          <div class="customer-list" aria-label="Selected Elinext customers">
+            <span class="pill">Siemens</span>
+            <span class="pill">Broadcom</span>
+            <span class="pill">Volkswagen</span>
+            <span class="pill">TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <div class="section-head">
+          <p class="section-kicker">Proof</p>
+          <h2>Relevant work we can point to</h2>
+        </div>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-mobile-inventory-app-development.jpg" alt="Elinext mobile inventory app case study cover">
+            <div class="proof-body">
+              <div class="proof-tag">SAP inventory mobile app</div>
+              <h3>Mobile Inventory App Development for Improved Product Categorization</h3>
+              <p>Built a SAP-linked inventory app with barcode scanning, translation support, and CRUD integration into SAP S/4HANA.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/mobile-inventory-app-development/">Read case study</a>
+            </div>
+          </article>
+
+          <article class="proof-card">
+            <img src="assets/case-warehouse-management-solutions.jpg" alt="Elinext warehouse management case study cover">
+            <div class="proof-body">
+              <div class="proof-tag">Warehouse delivery at scale</div>
+              <h3>Continuous Microservices Development for Warehouse Management</h3>
+              <p>Cut manual labels, sped inventory entry, and improved throughput with barcode workflows and ERP integration.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/warehouse-management-solutions/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="shell">
+        <div class="cta-card">
+          <h2>Plan the next release</h2>
+          <p>If delivery is the bottleneck, we can help fast.</p>
+          <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+          <div class="footer-note">Prepared for The Config Team around PreBilt Public Cloud delivery support.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
