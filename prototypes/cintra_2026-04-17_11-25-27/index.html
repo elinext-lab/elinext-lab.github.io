@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Safer Self-Service For Cintra People | Elinext</title>
+  <meta name="description" content="A focused proposal for Cintra on hardening self-service, login flows, and mobile reliability around Cintra People and Employee Hub.">
+  <meta name="author" content="Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/cintra_2026-04-17_11-25-27/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/cintra_2026-04-17_11-25-27/">
+  <meta property="og:title" content="Safer Self-Service For Cintra People">
+  <meta property="og:description" content="A focused proposal for Cintra on hardening self-service, login flows, and mobile reliability around Cintra People and Employee Hub.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/cintra_2026-04-17_11-25-27/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Safer Self-Service For Cintra People">
+  <meta name="twitter:description" content="A focused proposal for Cintra on hardening self-service, login flows, and mobile reliability around Cintra People and Employee Hub.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/cintra_2026-04-17_11-25-27/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #231d45;
+      --ink-soft: #4a4468;
+      --lime: #94c01e;
+      --lime-soft: #edf4d7;
+      --sand: #f7f5ef;
+      --paper: #fffdf8;
+      --line: rgba(35, 29, 69, 0.12);
+      --shadow: 0 20px 48px rgba(35, 29, 69, 0.12);
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; overflow-x: hidden; }
+    body {
+      font-family: "Hanken Grotesk", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(148, 192, 30, 0.14), transparent 34%),
+        radial-gradient(circle at top right, rgba(35, 29, 69, 0.08), transparent 26%),
+        linear-gradient(180deg, #fbfaf6 0%, #f7f5ef 56%, #f0eee6 100%);
+      line-height: 1.45;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    .hero {
+      padding: 28px 0 20px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .brand-chip,
+    .lead-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(10px);
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+    }
+
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--lime) 0%, #719800 100%);
+      box-shadow: 0 0 0 6px rgba(148, 192, 30, 0.14);
+      flex: 0 0 auto;
+    }
+
+    .hero-panel {
+      position: relative;
+      overflow: hidden;
+      padding: 30px 22px;
+      border: 1px solid rgba(35, 29, 69, 0.1);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 247, 242, 0.94) 100%);
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      width: 112px;
+      height: 112px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(148, 192, 30, 0.28), rgba(148, 192, 30, 0.06));
+      transform: rotate(14deg);
+      z-index: -1;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+
+    .kicker::before {
+      content: "";
+      width: 42px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--lime), rgba(148, 192, 30, 0.2));
+      border-radius: 999px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      font-size: clamp(2.3rem, 8vw, 4.6rem);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-copy {
+      margin-top: 18px;
+      max-width: 64ch;
+      font-size: 1.03rem;
+      color: var(--ink-soft);
+    }
+
+    .why-here {
+      margin-top: 14px;
+      max-width: 62ch;
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(148, 192, 30, 0.18), rgba(148, 192, 30, 0.08));
+      border: 1px solid rgba(148, 192, 30, 0.26);
+      font-size: 0.98rem;
+      color: var(--ink);
+    }
+
+    .section {
+      padding: 18px 0 0;
+    }
+
+    .section-card {
+      width: 100%;
+      padding: 26px 20px;
+      border-radius: 26px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 12px 32px rgba(35, 29, 69, 0.08);
+    }
+
+    .section-head {
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .section-head span {
+      display: inline-flex;
+      justify-content: center;
+      margin-bottom: 10px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(35, 29, 69, 0.06);
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-soft);
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.7rem, 5vw, 2.5rem);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .read-box {
+      max-width: 100%;
+      padding: 22px 20px;
+      border-left: 6px solid var(--lime);
+      border-radius: 24px;
+      background: linear-gradient(180deg, #f2f6df 0%, #f8f7f2 100%);
+      color: var(--ink);
+      font-size: 1.02rem;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .model-card,
+    .milestone,
+    .case-card,
+    .proof-note {
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+    }
+
+    .model-card {
+      padding: 20px;
+      background:
+        linear-gradient(180deg, rgba(35, 29, 69, 0.98), rgba(43, 37, 78, 0.96));
+      color: #f7f8f2;
+      box-shadow: var(--shadow);
+    }
+
+    .model-card .eyebrow {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.62);
+    }
+
+    .model-card h3 {
+      font-size: 1.45rem;
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+
+    .model-card p {
+      margin-top: 12px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.98rem;
+    }
+
+    .meta-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .meta-item {
+      display: grid;
+      gap: 4px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .meta-item strong {
+      font-size: 0.83rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.62);
+    }
+
+    .meta-item span {
+      font-size: 0.98rem;
+      color: #ffffff;
+    }
+
+    .stack-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .stack-pill,
+    .client-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stack-pill {
+      background: rgba(148, 192, 30, 0.18);
+      color: var(--ink);
+      border: 1px solid rgba(148, 192, 30, 0.22);
+    }
+
+    .milestone-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .milestone {
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      margin-bottom: 10px;
+      border-radius: 14px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      box-shadow: 0 10px 18px rgba(35, 29, 69, 0.16);
+    }
+
+    .milestone h3 {
+      font-size: 1.1rem;
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+    }
+
+    .milestone p {
+      margin-top: 8px;
+      color: var(--ink-soft);
+      font-size: 0.98rem;
+    }
+
+    .who-copy {
+      max-width: 78ch;
+      margin: 0 auto;
+      color: var(--ink-soft);
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .client-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 18px 0 0;
+    }
+
+    .client-pill {
+      background: rgba(35, 29, 69, 0.08);
+      color: var(--ink);
+      border: 1px solid rgba(35, 29, 69, 0.08);
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 1170 / 508;
+      object-fit: cover;
+      background: #eae6dd;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-tag {
+      display: inline-flex;
+      margin-bottom: 10px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(148, 192, 30, 0.18);
+      color: var(--ink);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .case-body h3 {
+      font-size: 1.15rem;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .case-body p {
+      margin-top: 10px;
+      color: var(--ink-soft);
+      font-size: 0.96rem;
+    }
+
+    .case-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .case-link::after {
+      content: "→";
+    }
+
+    .cta-card {
+      padding: 26px 20px 36px;
+      text-align: center;
+      border-radius: 28px;
+      border: 1px solid rgba(35, 29, 69, 0.1);
+      background:
+        linear-gradient(180deg, rgba(35, 29, 69, 0.98), rgba(47, 40, 84, 0.98));
+      color: #f7f8f2;
+      box-shadow: var(--shadow);
+    }
+
+    .cta-card h2 {
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      letter-spacing: -0.05em;
+    }
+
+    .cta-card p {
+      max-width: 36ch;
+      margin: 10px auto 0;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #b5da49 0%, #93c01e 100%);
+      color: var(--ink);
+      font-weight: 800;
+      box-shadow: 0 14px 30px rgba(148, 192, 30, 0.26);
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.62);
+    }
+
+    @media (min-width: 768px) {
+      .shell {
+        padding: 0 26px;
+      }
+
+      .hero {
+        padding-top: 36px;
+      }
+
+      .hero-panel {
+        padding: 42px 38px;
+      }
+
+      .section-card {
+        padding: 34px 30px;
+      }
+
+      .proposal-grid {
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hero-panel {
+        padding: 48px 46px;
+      }
+
+      .section {
+        padding-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="shell">
+        <div class="brand-row">
+          <div class="brand-chip"><span class="brand-dot"></span> Proposal brief for Cintra</div>
+          <div class="lead-chip">Prepared for Stephen Pearson</div>
+        </div>
+        <div class="hero-panel">
+          <div class="kicker">Hero</div>
+          <h1>A safer, smoother payroll journey for Cintra People users</h1>
+          <p class="hero-copy">Cintra promises one system, one source of truth, and work with no errors or workarounds. We would help your team make that promise feel true in the daily self-service journey too.</p>
+          <p class="why-here"><strong>Why we’re here:</strong> You are hiring an HR Administrator while Cintra keeps growing its HR and payroll service. That usually means more employee records, more support requests, and more pressure on self-service.</p>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section">
+        <div class="shell">
+          <div class="section-card">
+            <div class="section-head">
+              <span>Our Read</span>
+              <h2>Where the load is likely landing</h2>
+            </div>
+            <div class="read-box">
+              The hiring signal tells us Cintra is still adding operational capacity while the product and service base grows. Public reviews show a split picture. Users like easy payslip access when the flow works, but others report login friction, blank screens, and payroll confusion. For a Head of IT and Cyber security, that usually means support noise, identity friction, and release risk landing on one team. If that stays open, trust in self-service drops fast and payroll issues turn into security and brand issues too.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="section-card">
+            <div class="section-head">
+              <span>What We’d Do</span>
+              <h2>A short reliability and self-service hardening sprint</h2>
+            </div>
+            <div class="proposal-grid">
+              <div class="model-card">
+                <span class="eyebrow">Engagement model</span>
+                <h3>Scoped end-to-end project</h3>
+                <p>We would run a six-week project with weekly demos, clear owners, and a small team focused on login flow, release quality, and payslip access.</p>
+                <div class="meta-list">
+                  <div class="meta-item">
+                    <strong>Team shape</strong>
+                    <span>1 Tech Lead, 1 React engineer, 1 mobile engineer, 1 QA, 1 DevOps engineer</span>
+                  </div>
+                  <div class="meta-item">
+                    <strong>Working rhythm</strong>
+                    <span>Weekly demos, shared risk log, and fixes pushed in short release steps</span>
+                  </div>
+                </div>
+                <div class="stack-row" aria-label="Relevant stack">
+                  <span class="stack-pill">React</span>
+                  <span class="stack-pill">Node.js</span>
+                  <span class="stack-pill">Python</span>
+                  <span class="stack-pill">iOS</span>
+                  <span class="stack-pill">Android</span>
+                </div>
+              </div>
+              <div class="milestone-list">
+                <article class="milestone">
+                  <div class="step-num">01</div>
+                  <h3>Map the failure path</h3>
+                  <p>Trace Employee Hub and Cintra People sign-in, session, password reset, and payslip access across mobile, web, and support handoff.</p>
+                </article>
+                <article class="milestone">
+                  <div class="step-num">02</div>
+                  <h3>Fix the sharp edges</h3>
+                  <p>Resolve blank-screen, login persistence, and reset-flow breaks reported in public reviews on iPhone, Android, and mobile web.</p>
+                </article>
+                <article class="milestone">
+                  <div class="step-num">03</div>
+                  <h3>Harden each release</h3>
+                  <p>Add pre-release checks for auth regressions, payslip visibility, crash-free launch, and device coverage before each rollout.</p>
+                </article>
+                <article class="milestone">
+                  <div class="step-num">04</div>
+                  <h3>Give Stephen live visibility</h3>
+                  <p>Set up a simple failure dashboard with top login errors, repeat devices, and weekly incident review for IT and cyber owners.</p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="section-card">
+            <div class="section-head">
+              <span>Who Is Elinext</span>
+              <h2>A delivery team built for this kind of work</h2>
+            </div>
+            <p class="who-copy">Elinext is a full-cycle software development company, active since 1997, with around 700 in-house specialists and no freelancers. For a platform like Cintra People, that matters because the work crosses web, mobile, QA, and delivery control. We also bring <strong>ISO 27001</strong> and <strong>ISO 9001</strong>, which fits Stephen’s IT and cyber scope. Our teams have shipped for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, and other enterprise clients with strict quality needs. That is why the project above is built as a short, practical hardening sprint, not a vague long plan.</p>
+            <div class="client-pills" aria-label="Named customers">
+              <span class="client-pill">Siemens</span>
+              <span class="client-pill">Broadcom</span>
+              <span class="client-pill">Volkswagen</span>
+              <span class="client-pill">TUI</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="section-card">
+            <div class="section-head">
+              <span>Proof</span>
+              <h2>Work that fits the same shape</h2>
+            </div>
+            <div class="proof-grid">
+              <article class="case-card">
+                <img src="assets/case-payroll.jpg" alt="Global Payroll Management Software case study cover">
+                <div class="case-body">
+                  <span class="case-tag">Payroll Platform</span>
+                  <h3>Global Payroll Management Software</h3>
+                  <p>Elinext helped turn a broad payroll concept into a live web product for cross-border payroll logic and heavy business rules.</p>
+                  <a class="case-link" href="https://www.elinext.com/case-study/global-payroll-management-software/">See case study</a>
+                </div>
+              </article>
+              <article class="case-card">
+                <img src="assets/case-talent.png" alt="Elinext talent management system case study cover">
+                <div class="case-body">
+                  <span class="case-tag">HR Operations</span>
+                  <h3>Elinext Talent Management System</h3>
+                  <p>Elinext replaced spreadsheet-led employee tracking with a web system and kept shipping new releases for skills, notes, and permissions.</p>
+                  <a class="case-link" href="https://www.elinext.com/case-study/elinext-talent-management-system/">See case study</a>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="cta-card">
+            <h2>Start the conversation</h2>
+            <p>If this matches what your team is seeing, we can map the risk quickly and show a small plan with clear owners.</p>
+            <a class="cta-button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+            <div class="footer-note">Prepared for Cintra on 2026-04-17</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
