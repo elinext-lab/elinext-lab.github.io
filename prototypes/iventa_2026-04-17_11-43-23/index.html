@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Make STELLA Easier To Scale In Germany | Elinext</title>
+  <meta name="description" content="A focused proposal for Iventa on making STELLA easier to scale across Germany, ATS integrations, reporting, and buyer-facing recruiting workflows.">
+  <meta name="author" content="Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/iventa_2026-04-17_11-43-23/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/iventa_2026-04-17_11-43-23/">
+  <meta property="og:title" content="Make STELLA Easier To Scale In Germany">
+  <meta property="og:description" content="A focused proposal for Iventa on making STELLA easier to scale across Germany, ATS integrations, reporting, and buyer-facing recruiting workflows.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/iventa_2026-04-17_11-43-23/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Make STELLA Easier To Scale In Germany">
+  <meta name="twitter:description" content="A focused proposal for Iventa on making STELLA easier to scale across Germany, ATS integrations, reporting, and buyer-facing recruiting workflows.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/iventa_2026-04-17_11-43-23/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1e1b18;
+      --muted: #625850;
+      --paper: #fffaf3;
+      --paper-2: #fff4e8;
+      --sand: #f5ebe0;
+      --line: rgba(30, 27, 24, 0.12);
+      --accent: #f26f21;
+      --accent-soft: rgba(242, 111, 33, 0.14);
+      --forest: #183027;
+      --forest-soft: rgba(24, 48, 39, 0.08);
+      --shadow: 0 20px 52px rgba(76, 52, 33, 0.12);
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; overflow-x: hidden; }
+    body {
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(242, 111, 33, 0.16), transparent 30%),
+        radial-gradient(circle at top right, rgba(24, 48, 39, 0.08), transparent 24%),
+        linear-gradient(180deg, #fffaf3 0%, #f9f1e8 50%, #f2e7dc 100%);
+      line-height: 1.45;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(30, 27, 24, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30, 27, 24, 0.025) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.18), transparent 78%);
+      z-index: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    .hero {
+      padding: 28px 0 20px;
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 250, 243, 0.78);
+      backdrop-filter: blur(10px);
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .mark {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--accent) 0%, #d95712 100%);
+      box-shadow: 0 0 0 6px rgba(242, 111, 33, 0.16);
+      flex: 0 0 auto;
+    }
+
+    .hero-panel {
+      position: relative;
+      overflow: hidden;
+      padding: 30px 22px;
+      border-radius: 32px;
+      border: 1px solid rgba(30, 27, 24, 0.1);
+      background:
+        linear-gradient(145deg, rgba(255, 251, 246, 0.96) 0%, rgba(255, 244, 232, 0.96) 100%);
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+
+    .hero-panel::before,
+    .hero-panel::after {
+      content: "";
+      position: absolute;
+      border-radius: 28px;
+      z-index: -1;
+    }
+
+    .hero-panel::before {
+      right: 18px;
+      top: 18px;
+      width: 126px;
+      height: 126px;
+      background: linear-gradient(180deg, rgba(242, 111, 33, 0.18), rgba(242, 111, 33, 0.03));
+      transform: rotate(10deg);
+    }
+
+    .hero-panel::after {
+      left: -16px;
+      bottom: -16px;
+      width: 144px;
+      height: 144px;
+      background: linear-gradient(180deg, rgba(24, 48, 39, 0.12), rgba(24, 48, 39, 0.02));
+      transform: rotate(-12deg);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .kicker::before {
+      content: "";
+      width: 46px;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), rgba(242, 111, 33, 0.2));
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      max-width: 11ch;
+      font-size: clamp(2.35rem, 8vw, 4.9rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+    }
+
+    .hero-copy {
+      max-width: 64ch;
+      margin-top: 18px;
+      font-size: 1.04rem;
+      color: var(--muted);
+    }
+
+    .why-here {
+      margin-top: 14px;
+      max-width: 62ch;
+      padding: 16px 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(242, 111, 33, 0.22);
+      background: linear-gradient(180deg, rgba(242, 111, 33, 0.14), rgba(242, 111, 33, 0.06));
+      font-size: 0.98rem;
+      color: var(--ink);
+    }
+
+    .section {
+      padding: 18px 0 0;
+    }
+
+    .card {
+      width: 100%;
+      padding: 26px 20px;
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      background: rgba(255, 251, 246, 0.86);
+      box-shadow: 0 12px 34px rgba(76, 52, 33, 0.08);
+    }
+
+    .section-head {
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .section-head span {
+      display: inline-flex;
+      justify-content: center;
+      margin-bottom: 10px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(24, 48, 39, 0.08);
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.72rem, 5vw, 2.65rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .read-box {
+      max-width: 100%;
+      padding: 22px 20px;
+      border-radius: 26px;
+      border-left: 6px solid var(--accent);
+      background: linear-gradient(180deg, #fff2e2 0%, #fff9f1 100%);
+      font-size: 1.02rem;
+      color: var(--ink);
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .model-card,
+    .milestone,
+    .case-card {
+      border-radius: 26px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+    }
+
+    .model-card {
+      padding: 20px;
+      color: #f8f4ee;
+      background:
+        linear-gradient(180deg, rgba(24, 48, 39, 0.98), rgba(31, 58, 46, 0.96));
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.62);
+    }
+
+    .model-card h3 {
+      font-size: 1.46rem;
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+
+    .model-card p {
+      margin-top: 12px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.98rem;
+    }
+
+    .meta-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .meta-item {
+      display: grid;
+      gap: 4px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .meta-item strong {
+      font-size: 0.83rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.62);
+    }
+
+    .meta-item span {
+      font-size: 0.98rem;
+      color: #ffffff;
+    }
+
+    .stack-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .stack-pill,
+    .client-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .stack-pill {
+      border: 1px solid rgba(242, 111, 33, 0.18);
+      background: rgba(242, 111, 33, 0.16);
+      color: var(--ink);
+    }
+
+    .milestone-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .milestone {
+      padding: 18px;
+      background: rgba(255, 251, 246, 0.96);
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      margin-bottom: 10px;
+      border-radius: 15px;
+      background: linear-gradient(180deg, var(--accent) 0%, #d95712 100%);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      box-shadow: 0 12px 20px rgba(242, 111, 33, 0.2);
+    }
+
+    .milestone h3 {
+      font-size: 1.1rem;
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+    }
+
+    .milestone p {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .who-copy {
+      max-width: 80ch;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .client-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 18px 0 0;
+    }
+
+    .client-pill {
+      border: 1px solid rgba(24, 48, 39, 0.08);
+      background: rgba(24, 48, 39, 0.08);
+      color: var(--ink);
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      background: rgba(255, 251, 246, 0.96);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 1170 / 508;
+      object-fit: cover;
+      background: #eadfd4;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-tag {
+      display: inline-flex;
+      margin-bottom: 10px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(242, 111, 33, 0.14);
+      color: var(--ink);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .case-body h3 {
+      font-size: 1.15rem;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .case-body p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .case-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .case-link::after {
+      content: "→";
+    }
+
+    .cta-card {
+      padding: 28px 20px 36px;
+      text-align: center;
+      border-radius: 30px;
+      border: 1px solid rgba(30, 27, 24, 0.08);
+      color: #f8f4ee;
+      background:
+        linear-gradient(180deg, rgba(30, 27, 24, 0.98), rgba(54, 43, 36, 0.98));
+      box-shadow: var(--shadow);
+    }
+
+    .cta-card h2 {
+      font-size: clamp(1.86rem, 6vw, 2.8rem);
+      letter-spacing: -0.05em;
+    }
+
+    .cta-card p {
+      max-width: 36ch;
+      margin: 10px auto 0;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ff9a58 0%, #f26f21 100%);
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 14px 30px rgba(242, 111, 33, 0.26);
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.62);
+    }
+
+    @media (min-width: 768px) {
+      .shell {
+        padding: 0 26px;
+      }
+
+      .hero {
+        padding-top: 36px;
+      }
+
+      .hero-panel {
+        padding: 42px 38px;
+      }
+
+      .card {
+        padding: 34px 30px;
+      }
+
+      .proposal-grid {
+        grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hero-panel {
+        padding: 48px 46px;
+      }
+
+      .section {
+        padding-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="shell">
+        <div class="topline">
+          <div class="pill"><span class="mark"></span> Proposal brief for Iventa</div>
+          <div class="pill">Prepared for Timm Schröder</div>
+        </div>
+        <div class="hero-panel">
+          <div class="kicker">Hero</div>
+          <h1>Make STELLA easier to scale in Germany</h1>
+          <p class="hero-copy">Iventa already sells process optimization in recruitment marketing. We would help your team make STELLA faster to onboard, easier to demo, and steadier across ATS, reporting, and buyer workflows.</p>
+          <p class="why-here"><strong>Why we’re here:</strong> Saw Iventa is actively running senior IT searches like Head of IT in Germany. That kind of demand usually puts more pressure on your own recruiting tech, client flows, and delivery speed too.</p>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section">
+        <div class="shell">
+          <div class="card">
+            <div class="section-head">
+              <span>Our Read</span>
+              <h2>Where the friction is likely building</h2>
+            </div>
+            <div class="read-box">
+              The signal tells us Iventa Germany is pushing into more complex tech hiring mandates, not only standard media sales. Public STELLA pages promise ATS integration, analytics, SAP SuccessFactors support, and multi-currency billing. TOWA’s case study also shows the platform has to exchange data with two internal systems and live product logic inside a buyer portal. When that stack gets heavy, the risk is slower demos, slower onboarding, and more service work where product scale should carry the load.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="card">
+            <div class="section-head">
+              <span>What We’d Do</span>
+              <h2>A compact squad for product and integration cleanup</h2>
+            </div>
+            <div class="proposal-grid">
+              <div class="model-card">
+                <span class="eyebrow">Engagement model</span>
+                <h3>Dedicated squad under your product owner</h3>
+                <p>We would place a small squad for eight weeks, work in weekly demos, and stay focused on the STELLA path that buyers and sales teams feel first.</p>
+                <div class="meta-list">
+                  <div class="meta-item">
+                    <strong>Team shape</strong>
+                    <span>1 Tech Lead, 2 full-stack engineers, 1 QA engineer, 1 BA or delivery lead</span>
+                  </div>
+                  <div class="meta-item">
+                    <strong>Working rhythm</strong>
+                    <span>Eight-week pilot, weekly demos, shared backlog, and clear release owners inside Iventa</span>
+                  </div>
+                </div>
+                <div class="stack-row" aria-label="Relevant stack">
+                  <span class="stack-pill">React</span>
+                  <span class="stack-pill">Node.js</span>
+                  <span class="stack-pill">.NET</span>
+                  <span class="stack-pill">Python</span>
+                  <span class="stack-pill">QA automation</span>
+                </div>
+              </div>
+              <div class="milestone-list">
+                <article class="milestone">
+                  <div class="step-num">01</div>
+                  <h3>Map the full handoff</h3>
+                  <p>Trace catalog, booking, ATS, and billing flows across STELLA, Smart Transfer, and JobPostAPI so one failure path becomes visible.</p>
+                </article>
+                <article class="milestone">
+                  <div class="step-num">02</div>
+                  <h3>Remove buyer friction</h3>
+                  <p>Clean up package logic, recommendation steps, and job-posting handoff with focus on German recruiting clients and live demo readiness.</p>
+                </article>
+                <article class="milestone">
+                  <div class="step-num">03</div>
+                  <h3>Harden release quality</h3>
+                  <p>Add regression coverage for product catalog, posting, reporting, and partner integrations so changes stop leaking into onboarding work.</p>
+                </article>
+                <article class="milestone">
+                  <div class="step-num">04</div>
+                  <h3>Give leadership a clean view</h3>
+                  <p>Ship a lean dashboard for top integration failures, slow screens, and handoff issues, then close with backlog and ownership map.</p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="card">
+            <div class="section-head">
+              <span>Who Is Elinext</span>
+              <h2>A delivery team built for connected products</h2>
+            </div>
+            <p class="who-copy">Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For a product like STELLA, that matters because the work crosses web delivery, enterprise integrations, QA, and release control. We bring <strong>ISO 27001</strong> and <strong>ISO 9001</strong>, plus teams that have delivered for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, and <strong>TRUMPF</strong> in quality-sensitive environments. We also work well in a dedicated-squad model, so Iventa can keep product ownership while adding delivery weight fast.</p>
+            <div class="client-pills" aria-label="Named customers">
+              <span class="client-pill">Siemens</span>
+              <span class="client-pill">Broadcom</span>
+              <span class="client-pill">Volkswagen</span>
+              <span class="client-pill">TRUMPF</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="card">
+            <div class="section-head">
+              <span>Proof</span>
+              <h2>Work that fits the same problem shape</h2>
+            </div>
+            <div class="proof-grid">
+              <article class="case-card">
+                <img src="assets/case-applicant-tracking.jpg" alt="Applicant tracking case study cover">
+                <div class="case-body">
+                  <span class="case-tag">HR Product</span>
+                  <h3>Elinext. Applicant Tracking</h3>
+                  <p>Elinext built an applicant tracking product with vacancy and candidate modules, and the result was a more streamlined hiring process during active hiring.</p>
+                  <a class="case-link" href="https://www.elinext.com/case-study/elinext-applicant-tracking/">See case study</a>
+                </div>
+              </article>
+              <article class="case-card">
+                <img src="assets/case-job-search-service.jpg" alt="German job portal case study cover">
+                <div class="case-body">
+                  <span class="case-tag">Germany Focus</span>
+                  <h3>Job Search Service for a German Startup</h3>
+                  <p>Elinext built a modern job and applicants search service and brought the richer portal scope to launch readiness for Germany.</p>
+                  <a class="case-link" href="https://www.elinext.com/case-study/job-and-applicants-search-service/">See case study</a>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="cta-card">
+            <h2>Talk through the gaps</h2>
+            <p>We can map the product risk and next sprint in one short call.</p>
+            <a class="cta-button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+            <div class="footer-note">Prepared for Iventa on 2026-04-17</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
