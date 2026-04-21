@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FragPunk proposal brief for Highdive</title>
+  <meta name="description" content="A focused Elinext proposal brief for helping Highdive scale QA, release confidence, and outsourcing flow around its next original game.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/highdive_2026-04-21_16-04-34/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="FragPunk proposal brief for Highdive">
+  <meta property="og:description" content="A focused Elinext proposal brief for helping Highdive scale QA, release confidence, and outsourcing flow around its next original game.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/highdive_2026-04-21_16-04-34/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/highdive_2026-04-21_16-04-34/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FragPunk proposal brief for Highdive">
+  <meta name="twitter:description" content="A focused Elinext proposal brief for helping Highdive scale QA, release confidence, and outsourcing flow around its next original game.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/highdive_2026-04-21_16-04-34/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #08181d;
+      --bg-soft: #10262d;
+      --panel: rgba(8, 24, 29, 0.88);
+      --panel-strong: #0f2229;
+      --paper: #f2efe7;
+      --ink: #ecf2ef;
+      --muted: #a6beb8;
+      --line: rgba(236, 242, 239, 0.14);
+      --teal: #47beb9;
+      --sage: #91b78f;
+      --gold: #d8ad64;
+      --orange: #fc5e29;
+      --shadow: 0 22px 56px rgba(0, 0, 0, 0.28);
+      --radius: 28px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top right, rgba(252, 94, 41, 0.22), transparent 26%),
+        radial-gradient(circle at top left, rgba(71, 190, 185, 0.18), transparent 28%),
+        linear-gradient(180deg, #071419 0%, #0a1f26 100%);
+      color: var(--ink);
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    main,
+    .wrap {
+      position: relative;
+      z-index: 1;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 14px 48px;
+    }
+
+    .orb,
+    .orb::before,
+    .orb::after {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb::before,
+    .orb::after {
+      content: "";
+      border-radius: 999px;
+      filter: blur(18px);
+    }
+
+    .orb::before {
+      top: 72px;
+      right: -28px;
+      width: 150px;
+      height: 150px;
+      background: rgba(252, 94, 41, 0.18);
+    }
+
+    .orb::after {
+      left: -36px;
+      bottom: 60px;
+      width: 190px;
+      height: 190px;
+      background: rgba(145, 183, 143, 0.12);
+    }
+
+    .section {
+      margin-top: 18px;
+      padding: 22px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .section h2 {
+      margin: 0 0 14px;
+      text-align: center;
+      font-size: clamp(1.45rem, 5vw, 2.05rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      font-weight: 700;
+      color: var(--muted);
+      background: rgba(236, 242, 239, 0.06);
+    }
+
+    .hero {
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(7, 20, 25, 0.96), rgba(10, 31, 38, 0.88)),
+        linear-gradient(180deg, #0a1f26 0%, #10262d 100%);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(118deg, transparent 0%, rgba(236, 242, 239, 0.04) 50%, transparent 100%),
+        radial-gradient(circle at 88% 16%, rgba(71, 190, 185, 0.24), transparent 24%);
+      z-index: 0;
+    }
+
+    .hero > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .hero-copy h1 {
+      max-width: 11ch;
+      margin: 18px 0 14px;
+      font-size: clamp(2.4rem, 11vw, 5rem);
+      line-height: 0.92;
+      letter-spacing: -0.06em;
+      text-transform: uppercase;
+    }
+
+    .hero-copy p {
+      max-width: 34rem;
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.45;
+      color: rgba(236, 242, 239, 0.9);
+    }
+
+    .hero-copy p + p {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(236, 242, 239, 0.14);
+    }
+
+    .hero-aside {
+      display: grid;
+      gap: 12px;
+    }
+
+    .signal-card,
+    .note-card {
+      padding: 14px;
+      border-radius: 22px;
+      border: 1px solid rgba(236, 242, 239, 0.12);
+      background: rgba(236, 242, 239, 0.06);
+    }
+
+    .signal-card strong,
+    .note-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .signal-card p,
+    .note-card p {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      color: rgba(236, 242, 239, 0.82);
+    }
+
+    .signal-card {
+      border-color: rgba(252, 94, 41, 0.26);
+      background: linear-gradient(180deg, rgba(252, 94, 41, 0.12), rgba(252, 94, 41, 0.04));
+    }
+
+    .read {
+      background: linear-gradient(180deg, rgba(18, 39, 46, 0.98), rgba(10, 28, 34, 0.98));
+      border-left: 6px solid var(--gold);
+    }
+
+    .read p,
+    .cred p,
+    .cta p {
+      margin: 0;
+      max-width: 100%;
+      font-size: 1rem;
+      line-height: 1.52;
+    }
+
+    .read p {
+      color: rgba(236, 242, 239, 0.94);
+    }
+
+    .plan-top {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .plan-intro {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .mini-grid,
+    .step-grid,
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .mini-card,
+    .step-card,
+    .proof-card {
+      width: 100%;
+      background: rgba(236, 242, 239, 0.04);
+      border: 1px solid rgba(236, 242, 239, 0.1);
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .mini-card {
+      padding: 15px;
+    }
+
+    .mini-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.92rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .mini-card p {
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 9px 11px;
+      border-radius: 999px;
+      background: rgba(71, 190, 185, 0.1);
+      border: 1px solid rgba(71, 190, 185, 0.22);
+      font-size: 0.9rem;
+      color: var(--ink);
+    }
+
+    .tag.stack {
+      background: rgba(216, 173, 100, 0.12);
+      border-color: rgba(216, 173, 100, 0.2);
+    }
+
+    .step-card {
+      padding: 16px;
+    }
+
+    .step-no {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--orange), #ff8c57);
+      color: #fff7f2;
+      font-size: 1.1rem;
+      font-weight: 700;
+      box-shadow: 0 14px 30px rgba(252, 94, 41, 0.22);
+    }
+
+    .step-card h3 {
+      margin: 12px 0 8px;
+      font-size: 1.12rem;
+      line-height: 1.15;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+    }
+
+    .step-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .cred {
+      background:
+        linear-gradient(180deg, rgba(8, 24, 29, 0.96), rgba(9, 33, 42, 0.98)),
+        var(--panel-strong);
+    }
+
+    .cred p {
+      color: rgba(236, 242, 239, 0.92);
+    }
+
+    .client-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .client-pill {
+      display: inline-flex;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(145, 183, 143, 0.14);
+      border: 1px solid rgba(145, 183, 143, 0.22);
+      color: #eff6ed;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: rgba(236, 242, 239, 0.08);
+    }
+
+    .proof-body {
+      padding: 16px;
+    }
+
+    .proof-body h3 {
+      margin: 0 0 8px;
+      font-size: 1.08rem;
+      line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+    }
+
+    .proof-body p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff2e9;
+      font-size: 0.92rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .proof-link::after {
+      content: "↗";
+      color: var(--orange);
+    }
+
+    .cta {
+      text-align: center;
+      background: linear-gradient(180deg, rgba(18, 39, 46, 0.98), rgba(12, 28, 34, 0.98));
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+    }
+
+    .cta p {
+      max-width: 32rem;
+      margin: 0 auto;
+      color: var(--muted);
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+      padding: 14px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--orange), #ff8b46);
+      color: #fff8f2;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      box-shadow: 0 18px 36px rgba(252, 94, 41, 0.24);
+    }
+
+    @media (min-width: 760px) {
+      .wrap {
+        padding: 28px 22px 64px;
+      }
+
+      .section {
+        padding: 28px 24px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1.3fr 0.9fr;
+        align-items: end;
+      }
+
+      .mini-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .step-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .wrap {
+        padding-top: 34px;
+      }
+
+      .section {
+        padding: 32px 30px;
+      }
+
+      .hero-copy h1 {
+        max-width: 10ch;
+      }
+
+      .step-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb" aria-hidden="true"></div>
+  <div class="wrap">
+    <main>
+      <section class="section hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">Proposal Brief For Chris Seddon</span>
+            <h1>A cleaner QA spine for Highdive's next original game</h1>
+            <p>Highdive already shows strong player energy. Your playtest flow is clean. FragPunk and Naraka: Bladepoint show real shipping muscle. The next step is scaling quality work without draining senior engineers.</p>
+            <p>Saw the new QA Game Tester opening in Montreal. It points to a familiar moment. More systems are moving at once. Quality gates need to get firmer on the original IP.</p>
+          </div>
+          <div class="hero-aside">
+            <div class="signal-card">
+              <strong>Why Here</strong>
+              <p>This is process pressure, not a simple staffing gap.</p>
+            </div>
+            <div class="note-card">
+              <strong>Public Read</strong>
+              <p>Public feedback still points to bots, ping, audio, and performance.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section read">
+        <h2>Our Read</h2>
+        <p>The open QA role shows Highdive is entering a harder validation phase. One tester is being asked to cover multiple systems, quality gates, and outsourcing flow. That means the main risk is not only bug count. It is coverage drift, slower triage, and weaker release confidence across teams. Senior engineers then spend more time on repro and handoffs.</p>
+      </section>
+
+      <section class="section">
+        <h2>What We'd Do</h2>
+        <div class="plan-top">
+          <p class="plan-intro">We would run a six-week dedicated squad under your QA Lead. The aim is simple. Cleaner test ownership. Faster bug flow. Clearer release readiness for the original IP.</p>
+          <div class="mini-grid">
+            <div class="mini-card">
+              <strong>Team Shape</strong>
+              <div class="tags">
+                <span class="tag">1 QA Architect</span>
+                <span class="tag">1 Tools Engineer</span>
+                <span class="tag">1 QA Automation Engineer</span>
+                <span class="tag">1 Release Engineer</span>
+                <span class="tag">1 Embedded Analyst</span>
+              </div>
+            </div>
+            <div class="mini-card">
+              <strong>Relevant Stack</strong>
+              <div class="tags">
+                <span class="tag stack">C/C++</span>
+                <span class="tag stack">Python</span>
+                <span class="tag stack">Node.js</span>
+                <span class="tag stack">React</span>
+                <span class="tag stack">QA</span>
+                <span class="tag stack">DevOps</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-grid">
+          <article class="step-card">
+            <span class="step-no">01</span>
+            <h3>Map the gaps</h3>
+            <p>Review current cases, bug paths, build checks, and outsourcing touchpoints. Then define one shared ownership map for system validation.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-no">02</span>
+            <h3>Build one QA view</h3>
+            <p>Link cases, bug state, risk tags, and section owners in one view. Then show release readiness without extra reporting.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-no">03</span>
+            <h3>Automate repeatable checks</h3>
+            <p>Add scripts and dashboards for smoke checks, bug aging, and build health. This keeps manual QA time on harder work.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-no">04</span>
+            <h3>Stabilize the handoff</h3>
+            <p>Run weekly defect reviews with internal and external QA. Then tighten exit rules before milestone builds move forward.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section cred">
+        <h2>Who Is Elinext</h2>
+        <p>Elinext is a full-cycle software development partner, active since 1997, for product and enterprise teams. We have about 700 in-house specialists, with no freelancers, subcontractors, or split delivery ownership. For quality-heavy work, we bring QA, DevOps, web, AI, and C/C++ support together. We work with <strong>Broadcom</strong>, <strong>Siemens</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, <strong>TUI</strong>, and <strong>TransPerfect</strong> on demanding software work. We also operate under <strong>ISO 27001</strong> and <strong>ISO 9001</strong> for secure, reliable delivery. That helps the proposed squad move with secure process, clear reporting, and less management drag.</p>
+        <div class="client-row" aria-hidden="true">
+          <span class="client-pill">Broadcom</span>
+          <span class="client-pill">Siemens</span>
+          <span class="client-pill">Volkswagen</span>
+          <span class="client-pill">TRUMPF</span>
+        </div>
+        <p>That matters here because the squad above needs secure process, steady reporting, and hands-on engineering support, not just more tickets.</p>
+      </section>
+
+      <section class="section">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-internal-testing-tool.png" alt="Internal QA testing tool case study cover">
+            <div class="proof-body">
+              <h3>Custom Randomizer Tool</h3>
+              <p>Elinext built an internal QA tool for game teams. It shortened testing cycles and cut manual effort.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/internal-testing-tool/" target="_blank" rel="noopener noreferrer">View case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-testtrack.webp" alt="Test cases management tool case study cover">
+            <div class="proof-body">
+              <h3>Test Cases Management Tool</h3>
+              <p>Elinext centralized test storage and automated case generation. Project leads got a clearer release-readiness view.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/test-cases-management-tool-development/" target="_blank" rel="noopener noreferrer">View case study</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section cta">
+        <h2>Start The QA Talk</h2>
+        <p>If this matches your next milestone, we can compare notes on a small pilot.</p>
+        <a class="cta-link" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Talk To Elinext</a>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
