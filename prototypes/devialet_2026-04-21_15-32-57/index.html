@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reduce support load around the Devialet app | Elinext</title>
+  <meta name="description" content="A short proposal for Devialet on reducing support load around setup, pairing, and recovery in the Devialet app.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/devialet_2026-04-21_15-32-57/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/devialet_2026-04-21_15-32-57/">
+  <meta property="og:title" content="Reduce support load around the Devialet app">
+  <meta property="og:description" content="A short proposal for Devialet on reducing support load around setup, pairing, and recovery in the Devialet app.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/devialet_2026-04-21_15-32-57/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Reduce support load around the Devialet app">
+  <meta name="twitter:description" content="A short proposal for Devialet on reducing support load around setup, pairing, and recovery in the Devialet app.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/devialet_2026-04-21_15-32-57/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090909;
+      --bg-soft: #121111;
+      --surface: rgba(25, 22, 20, 0.94);
+      --surface-strong: #181412;
+      --surface-warm: #221b16;
+      --border: rgba(255, 255, 255, 0.12);
+      --border-strong: rgba(200, 155, 99, 0.38);
+      --text: #f5efe6;
+      --muted: #b9afa3;
+      --muted-strong: #d8ccbe;
+      --accent: #c89b63;
+      --accent-bright: #ff8a3d;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      --radius: 24px;
+      --font: "Manrope", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(200, 155, 99, 0.16), transparent 28rem),
+        radial-gradient(circle at bottom right, rgba(255, 138, 61, 0.12), transparent 24rem),
+        linear-gradient(180deg, #080808 0%, #11100f 100%);
+      color: var(--text);
+      font-family: var(--font);
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    .hero {
+      padding: 32px 0 28px;
+    }
+
+    .hero-panel {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(23, 20, 18, 0.98), rgba(12, 12, 12, 0.98));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      padding: 28px 20px 24px;
+      isolation: isolate;
+    }
+
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(255, 138, 61, 0.08), transparent 22%),
+        radial-gradient(circle at 92% 12%, rgba(200, 155, 99, 0.22), transparent 20rem);
+      z-index: -1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted-strong);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent-bright);
+      box-shadow: 0 0 16px rgba(255, 138, 61, 0.72);
+      flex: 0 0 auto;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 13ch;
+      margin-top: 20px;
+      font-size: clamp(2.35rem, 8vw, 4.8rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-copy {
+      max-width: 70ch;
+      margin-top: 20px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .lede {
+      color: var(--muted-strong);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .why-here {
+      padding: 16px 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-left: 4px solid var(--accent-bright);
+      border-radius: 18px;
+      color: var(--text);
+      font-size: 0.98rem;
+      line-height: 1.7;
+    }
+
+    .signal-list {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .signal-list span,
+    .stack-list span,
+    .cred-list span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted-strong);
+      font-size: 0.86rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    section {
+      padding: 18px 0;
+    }
+
+    .section-card {
+      width: 100%;
+      max-width: 100%;
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-heading {
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .section-kicker {
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .section-heading h2 {
+      max-width: 14ch;
+      font-size: clamp(1.7rem, 6vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .section-heading p {
+      max-width: 50ch;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.7;
+    }
+
+    .read-block {
+      background:
+        linear-gradient(180deg, rgba(200, 155, 99, 0.14), rgba(200, 155, 99, 0.05)),
+        rgba(30, 24, 21, 0.96);
+      border: 1px solid var(--border-strong);
+      width: 100%;
+      max-width: 100%;
+      padding: 22px 18px;
+      border-radius: 22px;
+    }
+
+    .read-block p {
+      max-width: 72ch;
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.78;
+    }
+
+    .plan-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .plan-meta,
+    .plan-steps {
+      min-width: 0;
+    }
+
+    .meta-card,
+    .step-card,
+    .proof-card,
+    .cta-box {
+      width: 100%;
+      max-width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
+    }
+
+    .meta-card {
+      padding: 20px 18px;
+      display: grid;
+      gap: 16px;
+      background:
+        linear-gradient(180deg, rgba(255, 138, 61, 0.08), rgba(255, 138, 61, 0)),
+        rgba(255, 255, 255, 0.03);
+    }
+
+    .meta-line strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.92rem;
+      color: var(--muted-strong);
+    }
+
+    .meta-line span,
+    .meta-line p {
+      color: var(--text);
+      font-size: 0.97rem;
+      line-height: 1.65;
+    }
+
+    .stack-list,
+    .cred-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .plan-steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step-card {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      background: rgba(19, 17, 16, 0.94);
+    }
+
+    .step-number {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, var(--accent-bright), #a74c16);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 24px rgba(255, 138, 61, 0.26);
+    }
+
+    .step-card h3 {
+      font-size: 1.08rem;
+      line-height: 1.2;
+    }
+
+    .step-card p {
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.7;
+    }
+
+    .who-card {
+      padding: 24px 20px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02)),
+        rgba(18, 15, 14, 0.96);
+    }
+
+    .who-card p {
+      max-width: 72ch;
+      margin: 0 auto;
+      color: var(--muted-strong);
+      font-size: 0.99rem;
+      line-height: 1.76;
+      text-align: center;
+    }
+
+    .who-card strong {
+      color: var(--text);
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      background: rgba(18, 16, 15, 0.96);
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .proof-body {
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .proof-body h3 {
+      font-size: 1.12rem;
+      line-height: 1.25;
+    }
+
+    .proof-body p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.68;
+    }
+
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .cta-box {
+      padding: 26px 20px;
+      text-align: center;
+      background:
+        radial-gradient(circle at top center, rgba(255, 138, 61, 0.18), transparent 18rem),
+        rgba(20, 17, 16, 0.98);
+    }
+
+    .cta-box h2 {
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+    }
+
+    .cta-box p {
+      max-width: 34ch;
+      margin: 14px auto 0;
+      color: var(--muted-strong);
+      font-size: 1rem;
+      line-height: 1.72;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      min-height: 52px;
+      padding: 0 22px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--accent-bright), #cb5d1c);
+      color: #fff;
+      font-size: 0.96rem;
+      font-weight: 800;
+      box-shadow: 0 16px 34px rgba(255, 138, 61, 0.28);
+    }
+
+    footer {
+      padding: 0 0 34px;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: rgba(245, 239, 230, 0.6);
+      font-size: 0.82rem;
+      line-height: 1.6;
+    }
+
+    @media (min-width: 768px) {
+      .wrap {
+        padding: 0 28px;
+      }
+
+      .hero {
+        padding: 42px 0 34px;
+      }
+
+      .hero-panel,
+      .section-card,
+      .who-card,
+      .cta-box {
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+
+      .plan-grid {
+        grid-template-columns: minmax(250px, 0.88fr) minmax(0, 1.12fr);
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hero-panel {
+        padding: 38px 38px 32px;
+      }
+
+      .section-card {
+        padding: 34px 38px;
+      }
+
+      .who-card {
+        padding: 30px 38px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="wrap">
+        <div class="hero-panel">
+          <div class="eyebrow">Prepared for Alexandre Mikhalenkov</div>
+          <h1>Reduce support load around the Devialet app</h1>
+          <div class="hero-copy">
+            <p class="lede">We reviewed your app, public feedback, and recent release notes. The pattern is clear: premium sound is strong, but setup, pairing, and recovery still create avoidable work for support.</p>
+            <p class="why-here">Saw Devialet is adding a Customer Operations &amp; Experience Assistant for 2026. That usually means the installed base is growing, while support teams still spend too much time on app and setup issues.</p>
+          </div>
+          <div class="signal-list" aria-label="Key focus areas">
+            <span>Setup flow</span>
+            <span>Device discovery</span>
+            <span>Stereo pairing</span>
+            <span>Support load</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <div class="wrap">
+          <div class="section-card">
+            <div class="section-heading">
+              <div class="section-kicker">Our Read</div>
+              <h2>Why this looks urgent now</h2>
+            </div>
+            <div class="read-block">
+              <p>That hiring signal points to rising after-sale load, not only rising sales. The Devialet app is now the front door for setup, stereo pairing, firmware, source switching, and account steps across Phantom, Dione, and Mania. Recent iOS and Android reviews still focus on Wi-Fi setup, product discovery, sync loss, and weak recovery when something breaks. When that layer is weak, customer operations absorbs the pain, and the premium promise gets tested in support.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <div class="section-card">
+            <div class="section-heading">
+              <div class="section-kicker">What We'd Do</div>
+              <h2>A small squad with a clear support goal</h2>
+              <p>We would use a dedicated squad under your PO or PM for an 8-week pilot, with weekly demos and a hard focus on setup reliability.</p>
+            </div>
+            <div class="plan-grid">
+              <div class="plan-meta">
+                <div class="meta-card">
+                  <div class="meta-line">
+                    <strong>Team shape</strong>
+                    <p>1 Tech Lead, 1 iOS engineer, 1 Android engineer, 1 embedded integration engineer, 1 QA automation engineer.</p>
+                  </div>
+                  <div class="meta-line">
+                    <strong>Delivery rhythm</strong>
+                    <span>8 weeks, weekly demo, shared backlog, direct work with your product owner.</span>
+                  </div>
+                  <div class="meta-line">
+                    <strong>Relevant stack</strong>
+                    <div class="stack-list">
+                      <span>iOS</span>
+                      <span>Android</span>
+                      <span>C/C++</span>
+                      <span>Python</span>
+                      <span>React</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="plan-steps">
+                <article class="step-card">
+                  <div class="step-number">01</div>
+                  <h3>Map the real failure path</h3>
+                  <p>Track failed onboarding, Wi-Fi join, product discovery, and stereo pairing across iOS, Android, and the main speaker models.</p>
+                </article>
+                <article class="step-card">
+                  <div class="step-number">02</div>
+                  <h3>Fix the flows that hurt support first</h3>
+                  <p>Target missing devices, sync loss, source switching, and weak recovery after updates, resets, or local network changes.</p>
+                </article>
+                <article class="step-card">
+                  <div class="step-number">03</div>
+                  <h3>Make releases safer</h3>
+                  <p>Add device-lab tests, network-condition checks, and rollback rules for onboarding, discovery, and pairing changes before wide release.</p>
+                </article>
+                <article class="step-card">
+                  <div class="step-number">04</div>
+                  <h3>Give support better product signals</h3>
+                  <p>Add clearer error states, self-serve recovery, and structured logs that cut repeat tickets and slow engineering escalations.</p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <div class="section-card who-card">
+            <div class="section-heading">
+              <div class="section-kicker">Who Is Elinext</div>
+              <h2>A delivery team built for product work</h2>
+            </div>
+            <p>Elinext is a full-cycle software development company, working since 1997 with about 700 in-house specialists and no freelancers. For a connected-audio product like Devialet, the fit is our mix of mobile, web, embedded, QA, and DevOps delivery. We hold <strong>ISO 9001</strong> and <strong>ISO 27001</strong>, which matters when account flows, device data, and release discipline touch customer trust. Our teams have delivered software for <strong>Broadcom</strong>, <strong>Volkswagen</strong>, and <strong>Siemens</strong>. That is why we would start with a small squad focused on setup reliability, release safety, and support load reduction.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <div class="section-card">
+            <div class="section-heading">
+              <div class="section-kicker">Proof</div>
+              <h2>Relevant work we have shipped</h2>
+            </div>
+            <div class="proof-grid">
+              <article class="proof-card">
+                <img src="assets/case-rdio.jpg" alt="Rdio case study cover">
+                <div class="proof-body">
+                  <h3>Rdio: Music App for an Automotive Head Unit</h3>
+                  <p>Elinext built a streaming app for an embedded head unit, with reliable playback and pre-caching. The delivered product was later translated into 10 languages.</p>
+                  <a class="proof-link" href="https://www.elinext.com/case-study/music-streaming-app/">View case study</a>
+                </div>
+              </article>
+              <article class="proof-card">
+                <img src="assets/case-router.jpg" alt="Router management case study cover">
+                <div class="proof-body">
+                  <h3>Remote Network and Router Management Platform</h3>
+                  <p>Elinext built and kept improving a platform that helped operators reduce support costs and improve customer communications after launch.</p>
+                  <a class="proof-link" href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">View case study</a>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <div class="cta-box">
+            <h2>Talk through the gaps</h2>
+            <p>We can scope a small pilot around setup, pairing, and recovery.</p>
+            <a class="cta-button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <div class="footer-note">Prepared by Elinext for Devialet on 2026-04-21.</div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
