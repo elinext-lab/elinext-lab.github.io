@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Helping PraxisEins scale secure digital care | Elinext</title>
+  <meta name="description" content="A short proposal for Benjamin Langer and PraxisEins on cross-site IT, InfoSec, and digital care operations.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/praxis-eins_2026-04-21_19-20-34/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/praxis-eins_2026-04-21_19-20-34/">
+  <meta property="og:title" content="Helping PraxisEins scale secure digital care">
+  <meta property="og:description" content="A focused proposal for cross-site IT, InfoSec, and digital practice operations at PraxisEins.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/praxis-eins_2026-04-21_19-20-34/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Helping PraxisEins scale secure digital care">
+  <meta name="twitter:description" content="A focused proposal for cross-site IT, InfoSec, and digital practice operations at PraxisEins.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/praxis-eins_2026-04-21_19-20-34/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f0e8;
+      --surface: #fffaf4;
+      --surface-strong: #fcf6ef;
+      --ink: #163229;
+      --muted: #55685f;
+      --line: rgba(22, 50, 41, 0.12);
+      --accent: #d66a2e;
+      --accent-soft: rgba(214, 106, 46, 0.12);
+      --green: #275b47;
+      --green-soft: rgba(39, 91, 71, 0.09);
+      --shadow: 0 20px 50px rgba(27, 40, 35, 0.08);
+      --max: 1120px;
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-image:
+        radial-gradient(circle at top left, rgba(214, 106, 46, 0.12), transparent 28rem),
+        radial-gradient(circle at bottom right, rgba(39, 91, 71, 0.12), transparent 32rem);
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 250, 244, 0.82);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .brand-mark::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #f0b15f);
+      box-shadow: 0 0 0 8px var(--accent-soft);
+      flex: 0 0 auto;
+    }
+
+    .topbar-note {
+      margin-top: 6px;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 0.94rem;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 12px 0 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      margin: 0 0 18px;
+      max-width: 11ch;
+      font-size: clamp(2.4rem, 7vw, 5.6rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-copy {
+      width: 100%;
+      max-width: 44rem;
+    }
+
+    .hero-copy p {
+      margin: 0 0 14px;
+      font-size: 1.02rem;
+      color: var(--muted);
+    }
+
+    .hero-copy .why {
+      margin-bottom: 0;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: 28px 0;
+    }
+
+    .section-head {
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .section-kicker {
+      margin-bottom: 8px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.7rem, 4.5vw, 2.8rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .our-read {
+      padding: 26px 22px;
+      border: 1px solid rgba(39, 91, 71, 0.18);
+      border-left: 6px solid var(--accent);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(39, 91, 71, 0.08), rgba(255, 250, 244, 0.96));
+      box-shadow: var(--shadow);
+    }
+
+    .our-read p {
+      margin: 0;
+      max-width: 68ch;
+      font-size: 1.02rem;
+      color: var(--ink);
+    }
+
+    .proposal-wrap {
+      display: grid;
+      gap: 18px;
+    }
+
+    .proposal-main,
+    .proposal-side {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .proposal-main {
+      padding: 22px;
+    }
+
+    .proposal-side {
+      padding: 22px;
+      background: linear-gradient(180deg, rgba(214, 106, 46, 0.08), rgba(255, 250, 244, 0.98));
+    }
+
+    .engagement-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .engagement-badge::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .proposal-main h3,
+    .proposal-side h3 {
+      margin: 0 0 10px;
+      font-size: 1.22rem;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .proposal-intro {
+      margin: 0 0 18px;
+      font-size: 0.98rem;
+      color: var(--muted);
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(22, 50, 41, 0.08);
+      background: var(--surface-strong);
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 0.96rem;
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+
+    .step-card strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1rem;
+      line-height: 1.15;
+    }
+
+    .step-card p {
+      margin: 0;
+      font-size: 0.94rem;
+      color: var(--muted);
+    }
+
+    .side-block + .side-block {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(22, 50, 41, 0.12);
+    }
+
+    .side-block p {
+      margin: 0;
+      font-size: 0.96rem;
+      color: var(--muted);
+    }
+
+    .pill-list,
+    .client-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pill,
+    .client-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(22, 50, 41, 0.1);
+      background: rgba(255, 255, 255, 0.82);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .pill {
+      background: rgba(39, 91, 71, 0.08);
+      color: var(--green);
+    }
+
+    .credibility {
+      padding: 22px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 250, 244, 0.95), rgba(252, 246, 239, 0.98));
+      box-shadow: var(--shadow);
+    }
+
+    .credibility p {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    .credibility p + p {
+      margin-top: 14px;
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #eee7de;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-tag {
+      display: inline-flex;
+      margin-bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .case-body h3 {
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .case-body p {
+      margin: 0 0 14px;
+      font-size: 0.94rem;
+      color: var(--muted);
+    }
+
+    .case-link {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    .cta {
+      padding: 30px 22px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, var(--ink), #1f4638);
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 28px 60px rgba(17, 34, 28, 0.24);
+    }
+
+    .cta h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .cta p {
+      max-width: 26rem;
+      margin: 0 auto 18px;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.84);
+    }
+
+    .cta .button {
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .footnote {
+      margin-top: 16px;
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.66);
+    }
+
+    @media (min-width: 760px) {
+      .page-shell {
+        padding: 32px 24px 60px;
+      }
+
+      .hero {
+        padding-top: 18px;
+      }
+
+      .proposal-wrap {
+        grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.9fr);
+        align-items: start;
+      }
+
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .topbar {
+        padding: 16px 20px;
+      }
+
+      .proposal-main {
+        padding: 28px;
+      }
+
+      .proposal-side {
+        padding: 28px;
+      }
+
+      .credibility {
+        padding: 26px 28px;
+      }
+
+      .cta {
+        padding: 40px 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">PraxisEins × Elinext</div>
+        <div class="topbar-note">Prepared for Benjamin Langer on 2026-04-21</div>
+      </div>
+      <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Proposal brief</div>
+        <h1>Helping PraxisEins scale secure digital care</h1>
+        <div class="hero-copy">
+          <p>We looked at PraxisEins and its digital work for doctors, staff, and patients.</p>
+          <p class="why">You are hiring a Head of IT and InfoSec. That usually means scale now needs stronger control.</p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="our-read-title">
+        <div class="section-head">
+          <div class="section-kicker">Our read</div>
+          <h2 id="our-read-title">The next bottleneck is not product vision</h2>
+        </div>
+        <div class="our-read">
+          <p>PraxisEins is moving from startup speed to network discipline. Public sources show booking, video visits, patient communication, and 24/7 support. The hiring signal says these flows now need one stronger IT core. If that base stays uneven, rollouts slow and local fixes spread.</p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="what-we-do-title">
+        <div class="section-head">
+          <div class="section-kicker">What we'd do</div>
+          <h2 id="what-we-do-title">A short project to build the operating base</h2>
+        </div>
+        <div class="proposal-wrap">
+          <div class="proposal-main">
+            <div class="engagement-badge">Scoped 8-week foundation project</div>
+            <h3>One team. One owner. Weekly demos.</h3>
+            <p class="proposal-intro">We would run this as a scoped project. The goal is a safer IT base.</p>
+            <div class="steps">
+              <article class="step-card">
+                <div class="step-number">1</div>
+                <div>
+                  <strong>Map critical systems</strong>
+                  <p>Review booking, video visits, Microsoft 365, Telematik, and local setup. Mark what breaks often, who owns it, and where patient risk sits.</p>
+                </div>
+              </article>
+              <article class="step-card">
+                <div class="step-number">2</div>
+                <div>
+                  <strong>Set one security baseline</strong>
+                  <p>Standardize device, identity, backup, and incident rules for each practice. Close weak spots around shared accounts, vendor access, and endpoints.</p>
+                </div>
+              </article>
+              <article class="step-card">
+                <div class="step-number">3</div>
+                <div>
+                  <strong>Fix support flow</strong>
+                  <p>Create one ticket path, clear severity rules, and a weekly release window. Stop ad hoc fixes from blocking doctors, MFA teams, and operations.</p>
+                </div>
+              </article>
+              <article class="step-card">
+                <div class="step-number">4</div>
+                <div>
+                  <strong>Land two visible wins</strong>
+                  <p>Ship two small but real fixes during the pilot. Good targets are booking handoff, telemedicine support, or site IT reporting.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <aside class="proposal-side">
+            <div class="side-block">
+              <h3>Team shape</h3>
+              <p>1 delivery lead, 1 architect, 1 full-stack engineer, 1 DevOps and SecOps engineer, and 1 QA.</p>
+            </div>
+            <div class="side-block">
+              <h3>Working rhythm</h3>
+              <p>Week 1 is discovery. Weeks 2 to 7 cover rollout and fixes. Week 8 is hardening and handover.</p>
+            </div>
+            <div class="side-block">
+              <h3>Relevant stack</h3>
+              <div class="pill-list">
+                <span class="pill">React</span>
+                <span class="pill">Angular</span>
+                <span class="pill">Node.js</span>
+                <span class="pill">.NET</span>
+                <span class="pill">Python</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="who-title">
+        <div class="section-head">
+          <div class="section-kicker">Who is Elinext</div>
+          <h2 id="who-title">A delivery partner built for complex software work</h2>
+        </div>
+        <div class="credibility">
+          <p>Elinext is a full-cycle software development company. We have worked since 1997. We have about 700 in-house specialists and no freelancers. For healthcare work, control matters. That is why <strong>ISO 27001</strong> and <strong>ISO 9001</strong> matter here.</p>
+          <p>We have delivered software for <span class="client-list"><span class="client-pill">Siemens</span><span class="client-pill">Broadcom</span><span class="client-pill">Volkswagen</span></span>. We also work in long partnerships, not one-off handoffs. We can bring engineering, QA, and delivery into one unit. That fits a project where security, support, and rollout must move together.</p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="proof-title">
+        <div class="section-head">
+          <div class="section-kicker">Proof</div>
+          <h2 id="proof-title">Relevant healthcare work, not generic claims</h2>
+        </div>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-medical-practice-billing.jpg" alt="Medical practice and billing software case study">
+            <div class="case-body">
+              <div class="case-tag">Healthcare software</div>
+              <h3>Medical Practice and Billing Software</h3>
+              <p>Reached ONC Health IT certification. Then stayed in a long product partnership.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/healthcare-crm-system/">View case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-patient-portal.jpg" alt="Patient portal for a healthcare company case study">
+            <div class="case-body">
+              <div class="case-tag">Security and portal</div>
+              <h3>Patient Portal for a Healthcare Company</h3>
+              <p>Built a patient portal with strict PHI and hosting rules. Desktop and mobile access stayed simple.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/patient-portal-for-healthcare-company/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="cta-title">
+        <div class="cta">
+          <h2 id="cta-title">Talk through the rollout</h2>
+          <p>We can scope a first sprint around sites, systems, and risk.</p>
+          <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+          <div class="footnote">Prepared for PraxisEins. This page is a proposal brief, not a product mockup.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
