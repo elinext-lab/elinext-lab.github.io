@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relay Technologies x Elinext | Platform Brief</title>
+  <meta name="description" content="A short proposal for helping Relay harden courier workflows, release quality, and platform feedback loops while the network scales.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/relay-technologies_2026-04-22_17-00-21/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/relay-technologies_2026-04-22_17-00-21/">
+  <meta property="og:title" content="A steadier platform for Relay's next parcel-growth phase">
+  <meta property="og:description" content="A short proposal for helping Relay harden courier workflows, release quality, and platform feedback loops while the network scales.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/relay-technologies_2026-04-22_17-00-21/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A steadier platform for Relay's next parcel-growth phase">
+  <meta name="twitter:description" content="A short proposal for helping Relay harden courier workflows, release quality, and platform feedback loops while the network scales.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/relay-technologies_2026-04-22_17-00-21/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09110d;
+      --bg-soft: #111b16;
+      --panel: #f4f6ee;
+      --panel-strong: #ebf1df;
+      --panel-deep: #d9e8ab;
+      --ink: #102017;
+      --ink-soft: #49594f;
+      --line: rgba(16, 32, 23, 0.11);
+      --line-strong: rgba(213, 235, 143, 0.35);
+      --accent: #d4f266;
+      --accent-deep: #88a71e;
+      --accent-soft: rgba(212, 242, 102, 0.18);
+      --white: #fdfef8;
+      --shadow: 0 20px 60px rgba(8, 16, 12, 0.18);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --max: 1140px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(212, 242, 102, 0.16), transparent 24rem),
+        radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.06), transparent 24rem),
+        linear-gradient(180deg, #09110d 0%, #0e1712 34%, #eef3e7 34%, #eef3e7 100%);
+      color: var(--ink);
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 44px 44px;
+      opacity: 0.45;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      padding: 18px 14px 60px;
+    }
+
+    .shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: lift 0.7s ease both;
+    }
+
+    section:nth-of-type(2) { animation-delay: 0.06s; }
+    section:nth-of-type(3) { animation-delay: 0.12s; }
+    section:nth-of-type(4) { animation-delay: 0.18s; }
+    section:nth-of-type(5) { animation-delay: 0.24s; }
+    section:nth-of-type(6) { animation-delay: 0.3s; }
+
+    @keyframes lift {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-pad {
+      padding: 22px 18px;
+    }
+
+    .eyebrow,
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      max-width: 100%;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .eyebrow {
+      color: rgba(253, 254, 248, 0.88);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .section-kicker {
+      margin: 0 auto 14px;
+      color: var(--accent-deep);
+      background: var(--accent-soft);
+      border: 1px solid rgba(136, 167, 30, 0.2);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      letter-spacing: -0.04em;
+      line-height: 0.96;
+    }
+
+    h1 {
+      font-size: clamp(2.55rem, 9vw, 5.5rem);
+      max-width: 10ch;
+    }
+
+    h2 {
+      font-size: clamp(1.9rem, 5vw, 3rem);
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+    }
+
+    p,
+    li {
+      font-size: 1rem;
+      line-height: 1.56;
+      color: var(--ink-soft);
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at 86% 14%, rgba(212, 242, 102, 0.28), transparent 18rem),
+        linear-gradient(145deg, #0b140f 0%, #132019 54%, #0f1813 100%);
+      border-color: var(--line-strong);
+      color: var(--white);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 22px;
+      position: relative;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 15px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-copy p {
+      color: rgba(253, 254, 248, 0.78);
+      max-width: 38rem;
+    }
+
+    .hero-rail {
+      display: grid;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .hero-card strong,
+    .read strong,
+    .who strong,
+    .case-copy strong {
+      color: var(--ink);
+    }
+
+    .hero-card strong {
+      color: var(--white);
+    }
+
+    .mini-label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(212, 242, 102, 0.86);
+    }
+
+    .hero-list,
+    .stack-list,
+    .team-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .hero-list li,
+    .stack-list li,
+    .team-list li {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: inherit;
+      padding: 9px 11px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .read {
+      background: linear-gradient(180deg, var(--panel-strong) 0%, #f3f7ea 100%);
+    }
+
+    .read-box {
+      max-width: 64ch;
+      margin: 0 auto;
+      padding: 20px 18px 20px 22px;
+      border-left: 5px solid var(--accent-deep);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.48);
+      box-shadow: inset 0 0 0 1px rgba(136, 167, 30, 0.1);
+    }
+
+    .work-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proposal-card,
+    .team-card,
+    .stack-card,
+    .case-card,
+    .cta-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .proposal-card,
+    .team-card,
+    .stack-card {
+      padding: 18px;
+    }
+
+    .proposal-card {
+      background:
+        linear-gradient(180deg, rgba(212, 242, 102, 0.2) 0%, rgba(255, 255, 255, 0.82) 100%);
+    }
+
+    .proposal-card p {
+      max-width: 54ch;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step-card {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border-radius: var(--radius-md);
+      background: #f9fbf3;
+      border: 1px solid rgba(16, 32, 23, 0.08);
+    }
+
+    .step-number {
+      width: 42px;
+      height: 42px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--ink);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .step-card h3 {
+      font-size: 1.12rem;
+    }
+
+    .team-card,
+    .stack-card {
+      display: grid;
+      gap: 12px;
+    }
+
+    .team-list li,
+    .stack-list li {
+      color: var(--ink);
+      background: var(--panel);
+      border: 1px solid rgba(16, 32, 23, 0.1);
+    }
+
+    .who p {
+      max-width: 66ch;
+      margin: 0 auto;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      display: grid;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 1170 / 508;
+      object-fit: cover;
+      background: #dfe7d0;
+    }
+
+    .case-copy {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+    }
+
+    .case-link {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 7px;
+      color: var(--accent-deep);
+      font-weight: 700;
+    }
+
+    .cta {
+      background:
+        radial-gradient(circle at top right, rgba(212, 242, 102, 0.26), transparent 18rem),
+        linear-gradient(160deg, #122119 0%, #0b140f 100%);
+      border-color: rgba(212, 242, 102, 0.16);
+      color: var(--white);
+    }
+
+    .cta-card {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.12);
+      padding: 22px 18px;
+      display: grid;
+      gap: 14px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .cta-card p {
+      color: rgba(253, 254, 248, 0.78);
+      max-width: 30rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 18px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #102017;
+      font-weight: 700;
+      border: 1px solid rgba(212, 242, 102, 0.65);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 14px 28px rgba(10, 18, 13, 0.26);
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 34px rgba(10, 18, 13, 0.28);
+    }
+
+    @media (min-width: 768px) {
+      .page {
+        padding: 28px 22px 72px;
+      }
+
+      .section-pad {
+        padding: 30px 28px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1.15fr 0.85fr;
+        align-items: end;
+      }
+
+      .work-grid {
+        grid-template-columns: 1.2fr 0.8fr;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .section-pad {
+        padding: 34px 32px;
+      }
+
+      .timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="shell">
+      <section class="hero">
+        <div class="section-pad hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">Relay x Elinext</span>
+            <h1>A steadier platform for Relay's next parcel-growth phase</h1>
+            <p>We looked at Relay's public network, courier app, pitstop app, and customer flows. The service promise is strong, but operator tooling still adds drag.</p>
+            <p>Saw Relay is adding workplace and culture leadership while your platform team scales sortation and network capacity. That usually means the system and the org both need cleaner rails.</p>
+          </div>
+          <div class="hero-rail">
+            <div class="hero-card">
+              <span class="mini-label">Why this matters</span>
+              <p>Copilot is where route logic, proof of delivery, support, and parcel state meet. When it breaks, the platform pays twice.</p>
+            </div>
+            <ul class="hero-list" aria-label="Focus areas">
+              <li>Sortation</li>
+              <li>Pitstops</li>
+              <li>Last mile</li>
+              <li>Release safety</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="read">
+        <div class="section-pad">
+          <span class="section-kicker">Our Read</span>
+          <div class="read-box">
+            <p>The signal says Relay is still in build mode. Public job pages show a data-heavy platform, a big tech team, and fast UK expansion. Public Copilot reviews keep pointing to crashes, weak route pins, and slow exception handling. Customer sentiment is still good, so the bigger risk is hidden: internal load grows before the brand score drops.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-pad">
+          <span class="section-kicker">What We'd Do</span>
+          <div class="work-grid">
+            <div class="proposal-card">
+              <p>We would start with a dedicated squad under your platform and product leads. The goal is simple: make live route work steadier, easier to debug, and safer to release.</p>
+              <div class="timeline">
+                <article class="step-card">
+                  <span class="step-number">01</span>
+                  <h3>Map The Failure Path</h3>
+                  <p>Join crash logs, parcel events, and support reasons into one view across sortation, pitstop handover, route work, and proof of delivery.</p>
+                </article>
+                <article class="step-card">
+                  <span class="step-number">02</span>
+                  <h3>Fix Route And Proof Flows</h3>
+                  <p>Harden navigation, session, and proof flows with safer retries, offline fallback, and better handling for bad pins and photo delays.</p>
+                </article>
+                <article class="step-card">
+                  <span class="step-number">03</span>
+                  <h3>Shorten The Ops Loop</h3>
+                  <p>Link courier issues, pitstop issues, and customer complaints back to one service owner fast, with clear triage and small weekly fixes.</p>
+                </article>
+                <article class="step-card">
+                  <span class="step-number">04</span>
+                  <h3>Protect Releases</h3>
+                  <p>Add mobile regression checks and release gates for Flutter, Python, and Node.js changes so updates stop breaking live routes.</p>
+                </article>
+              </div>
+            </div>
+            <div style="display:grid; gap:16px;">
+              <div class="team-card">
+                <span class="mini-label" style="color: var(--accent-deep);">Team Shape</span>
+                <ul class="team-list" aria-label="Suggested team">
+                  <li>1 Tech Lead</li>
+                  <li>2 Platform Engineers</li>
+                  <li>1 Flutter Engineer</li>
+                  <li>1 QA Engineer</li>
+                  <li>1 Data Engineer</li>
+                </ul>
+              </div>
+              <div class="stack-card">
+                <span class="mini-label" style="color: var(--accent-deep);">Relevant Stack</span>
+                <ul class="stack-list" aria-label="Relevant stack">
+                  <li>Python</li>
+                  <li>Node.js</li>
+                  <li>Flutter</li>
+                  <li>React</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="who">
+        <div class="section-pad">
+          <span class="section-kicker">Who Is Elinext</span>
+          <p>Elinext is a full-cycle software development partner. We have worked since 1997 and bring about 700 in-house specialists, with no freelancers. For a platform like Relay, that means one team can cover mobile, backend, QA, data support, and delivery work. We work under <strong>ISO 9001</strong> and <strong>ISO 27001</strong>. Our delivery history includes <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TUI</strong>, and <strong>TRUMPF</strong>. We can plug into your roadmap, keep scope tight, and add senior execution without slowing your core team.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-pad">
+          <span class="section-kicker">Proof</span>
+          <div class="proof-grid">
+            <article class="case-card">
+              <img src="assets/case-warehouse-management.jpg" alt="Warehouse management case study cover">
+              <div class="case-copy">
+                <h3>Continuous Microservices Development for Warehouse Management</h3>
+                <p>Elinext built parcel orchestration and warehouse services. The client cut manual label work, reduced shipping errors, and increased throughput across daily operations.</p>
+                <a class="case-link" href="https://www.elinext.com/case-study/warehouse-management-solutions/">View case study</a>
+              </div>
+            </article>
+            <article class="case-card">
+              <img src="assets/case-fleet-management.jpg" alt="Fleet management app case study cover">
+              <div class="case-copy">
+                <h3>Fleet Management App for a Logistics Solution Provider</h3>
+                <p>Elinext built a driver app with live location streams, task accept flows, and cleaner workflow support for logistics customers and field teams.</p>
+                <a class="case-link" href="https://www.elinext.com/case-study/fleet-management-app-for-logistics-solution-provider-in-the-usa/">View case study</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="section-pad">
+          <div class="cta-card">
+            <span class="section-kicker" style="margin-bottom: 0; color: rgba(212, 242, 102, 0.92); background: rgba(212, 242, 102, 0.12); border-color: rgba(212, 242, 102, 0.2);">Let's Talk</span>
+            <h2>Let's compare notes</h2>
+            <p>If this feels close, we can map a six-week pilot around route reliability, release safety, and faster platform feedback loops.</p>
+            <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
