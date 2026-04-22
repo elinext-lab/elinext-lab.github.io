@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extra Delivery Power for Brightfox | Elinext</title>
+  <meta name="description" content="A short proposal brief for Brightfox Belgium on adding delivery capacity across accelerators, support work, and custom Salesforce projects.">
+  <meta name="author" content="Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/brightfox_2026-04-22_09-31-11/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/brightfox_2026-04-22_09-31-11/">
+  <meta property="og:title" content="Extra Delivery Power for Brightfox">
+  <meta property="og:description" content="A short proposal brief for Brightfox Belgium on adding delivery capacity across accelerators, support work, and custom Salesforce projects.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/brightfox_2026-04-22_09-31-11/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Extra Delivery Power for Brightfox">
+  <meta name="twitter:description" content="A short proposal brief for Brightfox Belgium on adding delivery capacity across accelerators, support work, and custom Salesforce projects.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/brightfox_2026-04-22_09-31-11/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=ibm-plex-sans:400,500,600,700|outfit:500,600,700" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #24164f;
+      --ink-soft: #5b5280;
+      --brand: #342273;
+      --brand-bright: #654dce;
+      --accent: #ff5b29;
+      --accent-soft: #ffe4da;
+      --paper: #fffdf9;
+      --wash: #f4efea;
+      --line: rgba(52, 34, 115, 0.14);
+      --shadow: 0 24px 60px rgba(52, 34, 115, 0.08);
+      --radius: 28px;
+      --max: 1160px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: linear-gradient(180deg, #fffdf9 0%, #f7f2ed 100%);
+      color: var(--ink);
+      font-family: "IBM Plex Sans", sans-serif;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      pointer-events: none;
+      z-index: 0;
+      border-radius: 999px;
+      filter: blur(80px);
+      opacity: 0.22;
+    }
+
+    body::before {
+      width: 16rem;
+      height: 16rem;
+      top: -3rem;
+      left: -4rem;
+      background: #d8cbff;
+    }
+
+    body::after {
+      width: 18rem;
+      height: 18rem;
+      right: -5rem;
+      top: 20rem;
+      background: #ffd4c8;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
+    .shell {
+      width: min(100% - 2rem, var(--max));
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 1.25rem 0 0;
+    }
+
+    .section-head {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      color: var(--brand);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 2.8rem;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 999px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Outfit", sans-serif;
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 10vw, 5.3rem);
+      max-width: 11ch;
+      margin-top: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(1.75rem, 5vw, 2.8rem);
+    }
+
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .hero {
+      padding: 1.2rem 0 0.4rem;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: calc(var(--radius) + 4px);
+      background:
+        radial-gradient(circle at top right, rgba(101, 77, 206, 0.12), transparent 32%),
+        radial-gradient(circle at bottom left, rgba(255, 91, 41, 0.12), transparent 28%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 249, 244, 0.98));
+      box-shadow: var(--shadow);
+      padding: 1.4rem;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), rgba(52, 34, 115, 0.04) calc(100% - 1px)),
+        linear-gradient(180deg, transparent 0, transparent calc(100% - 1px), rgba(52, 34, 115, 0.04) calc(100% - 1px));
+      background-size: 1.35rem 1.35rem;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.65), transparent 78%);
+      pointer-events: none;
+    }
+
+    .hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-bottom: 1rem;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.55rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid var(--line);
+      color: var(--brand);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 0.9rem;
+      max-width: 42rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-copy .intro {
+      max-width: 36rem;
+    }
+
+    .why {
+      border-left: 4px solid var(--accent);
+      padding-left: 0.85rem;
+      color: var(--ink);
+      font-weight: 600;
+      max-width: 38rem;
+    }
+
+    .hero-note {
+      display: grid;
+      gap: 0.65rem;
+      margin-top: 1.35rem;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .mini-card {
+      padding: 0.95rem;
+      border-radius: 1.1rem;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .mini-card strong {
+      display: block;
+      color: var(--brand);
+      font-size: 0.84rem;
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .mini-card span {
+      color: var(--ink);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .read-panel {
+      margin-top: 1.25rem;
+      padding: 1.4rem;
+      border: 1px solid rgba(52, 34, 115, 0.14);
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #efe8ff 0%, #fff6f2 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    .read-body {
+      max-width: 64ch;
+      margin: 0 auto;
+      text-align: left;
+      color: var(--ink);
+      font-size: 1.06rem;
+    }
+
+    .plan {
+      margin-top: 1.25rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .plan-side,
+    .proof-card,
+    .cta-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: var(--shadow);
+    }
+
+    .plan-side {
+      padding: 1.35rem;
+    }
+
+    .plan-intro {
+      margin-top: 0.9rem;
+      margin-bottom: 1.1rem;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .key-line {
+      display: grid;
+      gap: 0.3rem;
+      padding: 0.9rem 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .key-line:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .key-label {
+      color: var(--brand);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .key-value {
+      color: var(--ink);
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 0.6rem;
+    }
+
+    .stack span,
+    .pill-list span {
+      padding: 0.48rem 0.72rem;
+      border-radius: 999px;
+      background: var(--wash);
+      border: 1px solid rgba(52, 34, 115, 0.1);
+      color: var(--brand);
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+
+    .plan-steps {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .step {
+      position: relative;
+      padding: 1.15rem 1rem 1.15rem 4.4rem;
+      border: 1px solid var(--line);
+      border-radius: 1.3rem;
+      background: rgba(255, 255, 255, 0.92);
+    }
+
+    .step-num {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      width: 2.35rem;
+      height: 2.35rem;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--brand);
+      color: white;
+      font-family: "Outfit", sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .step h3 {
+      margin-bottom: 0.45rem;
+      color: var(--ink);
+    }
+
+    .step p {
+      color: var(--ink-soft);
+    }
+
+    .cred {
+      margin-top: 1.25rem;
+      padding: 1.35rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 239, 234, 0.95));
+    }
+
+    .cred p {
+      max-width: 70ch;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.55rem;
+      margin: 1rem auto 0;
+      max-width: 48rem;
+    }
+
+    .pill-list span {
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .proof-grid {
+      margin-top: 1.25rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .proof-card {
+      overflow: hidden;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      background: #ece6df;
+    }
+
+    .proof-copy {
+      padding: 1.1rem;
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .proof-copy p {
+      color: var(--ink-soft);
+    }
+
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.94rem;
+    }
+
+    .proof-link::after {
+      content: "↗";
+      font-size: 1rem;
+    }
+
+    .cta-card {
+      margin: 1.25rem 0 2rem;
+      padding: 1.5rem;
+      text-align: center;
+      background: linear-gradient(135deg, #342273 0%, #201342 100%);
+      color: white;
+    }
+
+    .cta-card p,
+    .cta-card h2 {
+      color: white;
+    }
+
+    .cta-card p {
+      max-width: 28rem;
+      margin: 0.75rem auto 0;
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1rem;
+      padding: 0.95rem 1.25rem;
+      border-radius: 999px;
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 12px 30px rgba(255, 91, 41, 0.24);
+    }
+
+    .hero-card,
+    .read-panel,
+    .plan-side,
+    .step,
+    .cred,
+    .proof-card,
+    .cta-card {
+      animation: rise 700ms ease both;
+    }
+
+    .step:nth-child(2) {
+      animation-delay: 100ms;
+    }
+
+    .step:nth-child(3) {
+      animation-delay: 160ms;
+    }
+
+    .step:nth-child(4) {
+      animation-delay: 220ms;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (min-width: 720px) {
+      .hero-card {
+        padding: 2rem;
+      }
+
+      .mini-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .plan {
+        grid-template-columns: minmax(17rem, 24rem) minmax(0, 1fr);
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .cta-card {
+        padding: 2rem;
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .hero {
+        padding-top: 1.7rem;
+      }
+
+      .hero-card {
+        padding: 2.4rem;
+      }
+
+      .hero-copy {
+        max-width: 46rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero shell">
+      <div class="hero-card">
+        <div class="hero-top">
+          <span class="chip">Brightfox Belgium</span>
+          <span class="chip">For Tommy de Haan</span>
+          <span class="chip">April 22, 2026</span>
+        </div>
+        <div class="hero-copy">
+          <span class="eyebrow">Proposal Brief</span>
+          <h1>Extra delivery power for Brightfox's next Salesforce rollout</h1>
+          <p class="intro">Brightfox already sells a clear Salesforce story. The pressure now looks operational: more accelerators, more support work, and less room for manual follow-up inside each client project.</p>
+          <p class="why">Your Senior Project/Program Manager role was updated on February 17, 2026. That usually means delivery load is rising across implementations, support work, and change requests.</p>
+        </div>
+        <div class="hero-note">
+          <div class="mini-grid">
+            <div class="mini-card">
+              <strong>Current public offer</strong>
+              <span>Sales Accelerator</span>
+            </div>
+            <div class="mini-card">
+              <strong>Delivery promise</strong>
+              <span>3-5 week rollout</span>
+            </div>
+            <div class="mini-card">
+              <strong>Support model</strong>
+              <span>Secure ticket portal</span>
+            </div>
+            <div class="mini-card">
+              <strong>Main signal</strong>
+              <span>Portfolio pressure</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="read-panel">
+        <div class="section-head">
+          <span class="eyebrow">Our Read</span>
+          <h2>What we think is happening</h2>
+        </div>
+        <p class="read-body">The signal says Brightfox is scaling delivery, not only hiring around the edges. Your own PM profile shows one person tracking scope, budget, quality, risks, and customer wishes across a portfolio. Your support page adds a small team handling tickets, integrations, and enhancement requests through a service portal. When accelerators, support, and custom work grow together, manual follow-up becomes the real bottleneck.</p>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="section-head">
+        <span class="eyebrow">What We'd Do</span>
+        <h2>A small squad that removes build pressure fast</h2>
+      </div>
+      <div class="plan">
+        <aside class="plan-side">
+          <p class="plan-intro">Dedicated squad under your Delivery Lead. Six-week pilot. Weekly demos. Clear handover.</p>
+          <div class="key-line">
+            <span class="key-label">Team shape</span>
+            <span class="key-value">1 Tech Lead, 2 senior web engineers, 1 QA automation engineer, part-time release support.</span>
+          </div>
+          <div class="key-line">
+            <span class="key-label">Best fit work</span>
+            <span class="key-value">Accelerator add-ons, portal changes, data flows, QA checks, and client-specific web backlog.</span>
+          </div>
+          <div class="key-line">
+            <span class="key-label">Relevant stack</span>
+            <div class="stack">
+              <span>React</span>
+              <span>Node.js</span>
+              <span>Python</span>
+              <span>.NET</span>
+              <span>Angular</span>
+            </div>
+          </div>
+        </aside>
+
+        <div class="plan-steps">
+          <article class="step">
+            <div class="step-num">1</div>
+            <h3>Map the real backlog</h3>
+            <p>Review Sales, Service, and Agentforce work, support tickets, and client escalations. Set one intake board and one demo rhythm with your Delivery Lead.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">2</div>
+            <h3>Build reusable pieces</h3>
+            <p>Create repeatable web parts for forms, dashboards, portal changes, and integration-heavy requests so each new project starts faster and cleaner.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">3</div>
+            <h3>Add release control</h3>
+            <p>Put QA checks around lead flow, data import, ticket updates, and go-live steps. Catch defects earlier and reduce support noise after launch.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">4</div>
+            <h3>Ship two pilot streams</h3>
+            <p>Deliver two workstreams with joint demos and clear notes. Brightfox stays in front of the client while we absorb build pressure.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="cred">
+        <div class="section-head">
+          <span class="eyebrow">Who Is Elinext</span>
+          <h2>The delivery bench behind the brief</h2>
+        </div>
+        <p>Elinext is a full-cycle software development company, active since 1997. We have about 700 in-house specialists, with no freelancers. We hold ISO 27001 and ISO 9001. Our teams have delivered software for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. We run dedicated squads in React, Node.js, Python, .NET, QA, and DevOps. You keep the customer relationship and scope control. We add build power, weekly demos, and clean handover. That model fits accelerator rollouts, support changes, and client-specific add-ons.</p>
+        <div class="pill-list" aria-label="Selected Elinext customers and delivery signals">
+          <span>ISO 27001</span>
+          <span>ISO 9001</span>
+          <span>Siemens</span>
+          <span>Broadcom</span>
+          <span>Volkswagen</span>
+          <span>TRUMPF</span>
+          <span>TUI</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="section-head">
+        <span class="eyebrow">Proof</span>
+        <h2>Relevant delivery proof</h2>
+      </div>
+      <div class="proof-grid">
+        <article class="proof-card">
+          <img src="assets/case-ai-lead.png" alt="AI-powered lead management software case study">
+          <div class="proof-copy">
+            <h3>AI-powered Lead Management Software</h3>
+            <p>We built an AI lead workflow that raised productivity, cut misclassification, and pushed teams toward high-priority leads faster.</p>
+            <a class="proof-link" href="https://www.elinext.com/case-study/ai-powered-lead-management-software/" target="_blank" rel="noreferrer">View case study</a>
+          </div>
+        </article>
+        <article class="proof-card">
+          <img src="assets/case-doc-collab.jpg" alt="Document collaboration platform case study">
+          <div class="proof-copy">
+            <h3>Document Collaboration Platform</h3>
+            <p>We staffed a cross-functional team for a document platform, then improved workflows, stability, scalability, and QA speed.</p>
+            <a class="proof-link" href="https://www.elinext.com/case-study/document-collaboration-platform/" target="_blank" rel="noreferrer">View case study</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="cta-card">
+        <div class="section-head">
+          <span class="eyebrow" style="color:#ffd9cf;">Let's Talk</span>
+          <h2>Start the conversation</h2>
+        </div>
+        <p>A small squad can remove pressure fast, without changing your client-facing model.</p>
+        <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
