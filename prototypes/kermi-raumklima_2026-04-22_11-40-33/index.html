@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kermi Raumklima x Elinext</title>
+  <meta name="description" content="A short proposal for Kermi Raumklima on hiring, workflow visibility, and people systems during process change.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/kermi-raumklima_2026-04-22_11-40-33/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Kermi Raumklima x Elinext">
+  <meta property="og:description" content="A short proposal for hiring, workflow visibility, and people systems during process change.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/kermi-raumklima_2026-04-22_11-40-33/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/kermi-raumklima_2026-04-22_11-40-33/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kermi Raumklima x Elinext">
+  <meta name="twitter:description" content="A short proposal for hiring, workflow visibility, and people systems during process change.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/kermi-raumklima_2026-04-22_11-40-33/og-image.jpg">
+  <style>
+    :root {
+      --bg: #f3efe4;
+      --paper: #fbf8f1;
+      --ink: #1a2018;
+      --muted: #55604d;
+      --line: rgba(35, 45, 31, 0.16);
+      --olive: #778e1c;
+      --olive-deep: #42530f;
+      --sand: #e8dcc2;
+      --rust: #b6612c;
+      --shadow: 0 20px 48px rgba(31, 37, 28, 0.12);
+      --radius: 24px;
+      --max: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(119, 142, 28, 0.18), transparent 32rem),
+        radial-gradient(circle at top right, rgba(182, 97, 44, 0.14), transparent 28rem),
+        var(--bg);
+      color: var(--ink);
+      font-family: "Trebuchet MS", "Gill Sans", "Segoe UI", sans-serif;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(66, 83, 15, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(66, 83, 15, 0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), transparent 85%);
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      padding: 24px 16px 56px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(23, 28, 20, 0.96), rgba(62, 77, 18, 0.94));
+      color: #f8f6f0;
+      border-radius: 28px;
+      padding: 28px 20px 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -4rem;
+      top: -4rem;
+      width: 12rem;
+      height: 12rem;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(232, 220, 194, 0.26), transparent 68%);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 18px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #d7e3a8;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 2px;
+      background: var(--rust);
+      border-radius: 999px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 14ch;
+      font-size: clamp(2rem, 7vw, 4.6rem);
+      line-height: 0.94;
+      letter-spacing: -0.04em;
+    }
+
+    .why {
+      max-width: 34rem;
+      margin-top: 18px;
+      font-size: 1rem;
+      line-height: 1.55;
+      color: #eef2e2;
+    }
+
+    .hero-note {
+      max-width: 33rem;
+      margin-top: 18px;
+      font-size: 0.98rem;
+      line-height: 1.55;
+      color: #d9decd;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .signal-card,
+    .mini-card,
+    .read-card,
+    .plan,
+    .who,
+    .proof,
+    .cta {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .signal-card {
+      padding: 16px;
+      background: rgba(250, 247, 238, 0.14);
+      border-color: rgba(247, 244, 234, 0.18);
+      color: #f3f4ee;
+    }
+
+    .signal-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: #d8e1af;
+    }
+
+    .signal-card p {
+      font-size: 0.96rem;
+      line-height: 1.5;
+      color: #f6f3ea;
+    }
+
+    section {
+      margin-top: 18px;
+    }
+
+    .section-head {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.45rem, 5vw, 2.3rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      max-width: 40rem;
+      margin: 10px auto 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.98rem;
+    }
+
+    .read-card {
+      padding: 22px 18px;
+      background: linear-gradient(180deg, #efe8d7, #f8f4eb);
+      border-left: 6px solid var(--olive);
+    }
+
+    .read-card p {
+      max-width: 64ch;
+      color: #2c3428;
+      line-height: 1.65;
+      font-size: 1rem;
+    }
+
+    .plan {
+      padding: 22px 18px;
+    }
+
+    .plan-top {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .mini-card {
+      padding: 14px 16px;
+      background: #f7f3e8;
+      box-shadow: none;
+    }
+
+    .mini-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: var(--olive-deep);
+    }
+
+    .mini-card p {
+      color: #374133;
+      line-height: 1.5;
+      font-size: 0.96rem;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fcfaf5, #f1eadb);
+    }
+
+    .step-num {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--olive);
+      color: #fffdf6;
+      font-weight: 800;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .step h3 {
+      margin-bottom: 4px;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .step p {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
+    .who,
+    .proof,
+    .cta {
+      padding: 22px 18px;
+    }
+
+    .who p {
+      max-width: 70ch;
+      margin: 0 auto;
+      color: #31392d;
+      line-height: 1.65;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #e9f0c9;
+      border: 1px solid rgba(119, 142, 28, 0.26);
+      color: var(--olive-deep);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: #fcfaf4;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #e9e4d6;
+    }
+
+    .case-copy {
+      padding: 16px;
+    }
+
+    .case-copy span {
+      display: inline-block;
+      margin-bottom: 8px;
+      font-size: 0.74rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--olive-deep);
+      font-weight: 800;
+    }
+
+    .case-copy h3 {
+      font-size: 1.05rem;
+      line-height: 1.25;
+    }
+
+    .case-copy p {
+      margin-top: 8px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
+    .case-copy a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--rust);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      background: linear-gradient(180deg, #1c231b, #2d3816);
+      color: #f6f2e8;
+    }
+
+    .cta h2 {
+      font-size: clamp(1.45rem, 5vw, 2.3rem);
+    }
+
+    .cta p {
+      max-width: 34rem;
+      margin: 12px auto 0;
+      line-height: 1.55;
+      color: #dde3ce;
+      font-size: 1rem;
+    }
+
+    .cta a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      margin-top: 18px;
+      padding: 0 18px;
+      border-radius: 999px;
+      background: #f4f0e6;
+      color: #1d2619;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+    }
+
+    .cta a:hover,
+    .cta a:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+    }
+
+    @media (min-width: 768px) {
+      .page {
+        padding: 32px 24px 72px;
+      }
+
+      .hero {
+        padding: 36px 32px 32px;
+      }
+
+      .hero-grid,
+      .plan-top,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      section {
+        margin-top: 22px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hero {
+        padding: 42px 40px 38px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1.2fr 0.8fr;
+        align-items: end;
+      }
+
+      .plan,
+      .who,
+      .proof,
+      .cta,
+      .read-card {
+        padding: 28px 28px;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="shell">
+      <header class="hero">
+        <p class="eyebrow">Kermi Raumklima proposal brief</p>
+        <div class="hero-grid">
+          <div>
+            <h1>Build the people layer for Kermi's next process shift</h1>
+            <p class="why">Kermi is hiring an IT process architect for logistics, warehouse flow, material management, and procurement. That usually means process change is moving faster than current hiring tools.</p>
+            <p class="hero-note">Kermi already runs a wide indoor climate business. It also supports specialist partners, service teams, and x-center users. When operations change, HR feels that pressure early.</p>
+          </div>
+          <aside class="signal-card">
+            <strong>Why this matters now</strong>
+            <p>Kerstin Sticht sits near that pressure point. Business change becomes headcount plans, role design, onboarding, and internal mobility. A short systems project can remove drag early.</p>
+          </aside>
+        </div>
+      </header>
+
+      <section aria-labelledby="our-read">
+        <div class="section-head">
+          <h2 id="our-read">Our read</h2>
+        </div>
+        <div class="read-card">
+          <p>The hiring signal says Kermi is tightening core process work around logistics and procurement. That usually creates strain outside IT too. Hiring managers need better vacancy flow, faster approvals, and a clear view of internal skills. If those links stay manual, open roles sit longer, onboarding slows down, and the business spends more time chasing status than moving work forward.</p>
+        </div>
+      </section>
+
+      <section aria-labelledby="what-we-do">
+        <div class="section-head">
+          <h2 id="what-we-do">What we'd do</h2>
+          <p>A scoped end-to-end project. We would ship a first working internal platform release with your HR and business owners.</p>
+        </div>
+        <div class="plan">
+          <div class="plan-top">
+            <div class="mini-card">
+              <strong>Team shape</strong>
+              <p>1 business analyst, 1 solution architect, 2 senior web engineers, and 1 QA engineer.</p>
+            </div>
+            <div class="mini-card">
+              <strong>6-week pilot</strong>
+              <p>Weekly demos. Shared backlog. A release ready for real recruiting and onboarding work.</p>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="step-num">01</div>
+              <div>
+                <h3>Map the real workflow</h3>
+                <p>We map vacancy approval, candidate routing, and onboarding steps. We focus on logistics and procurement roles across HR, managers, and support teams.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step-num">02</div>
+              <div>
+                <h3>Build one working flow</h3>
+                <p>We deliver one web flow for role intake and candidate status. It replaces spreadsheet and mail chains with clear task handoff.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step-num">03</div>
+              <div>
+                <h3>Add skill visibility</h3>
+                <p>We add a simple internal skills layer. HR can spot nearby talent before every new process role goes external.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step-num">04</div>
+              <div>
+                <h3>Prepare the next rollout</h3>
+                <p>We close with QA, admin controls, and a rollout roadmap. The next wave can cover service, partner support, and nearby teams.</p>
+              </div>
+            </article>
+          </div>
+          <div class="pill-row" aria-label="Relevant stack">
+            <span class="pill">React</span>
+            <span class="pill">.NET / C#</span>
+            <span class="pill">Node.js</span>
+            <span class="pill">QA automation</span>
+            <span class="pill">Business analysis</span>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="who-we-are">
+        <div class="section-head">
+          <h2 id="who-we-are">Who is Elinext</h2>
+        </div>
+        <div class="who">
+          <p>Elinext is a full-cycle software development company. We have worked since 1997 with about 700 in-house specialists and no freelancers. For Kermi, the fit is practical. We know enterprise web delivery, and we work well under client product owners. We also bring ISO 9001 and ISO 27001 discipline. The customer list is also familiar: <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. That is the delivery base behind the proposal above.</p>
+        </div>
+      </section>
+
+      <section aria-labelledby="proof">
+        <div class="section-head">
+          <h2 id="proof">Proof</h2>
+          <p>Two public cases that match the people-systems and industrial context behind this brief.</p>
+        </div>
+        <div class="proof">
+          <div class="proof-grid">
+            <article class="case-card">
+              <img src="assets/case-applicant-tracking.jpg" alt="Applicant tracking case study cover">
+              <div class="case-copy">
+                <span>HR systems</span>
+                <h3>Applicant Tracking</h3>
+                <p>Elinext built candidate, vacancy, and admin modules for active hiring. It is solid proof for role flow and recruiting visibility.</p>
+                <a href="https://www.elinext.com/case-study/elinext-applicant-tracking/">View case study</a>
+              </div>
+            </article>
+            <article class="case-card">
+              <img src="assets/case-manufacturing-execution-system.jpg" alt="Manufacturing execution system case study cover">
+              <div class="case-copy">
+                <span>Manufacturing systems</span>
+                <h3>Manufacturing Execution System</h3>
+                <p>Elinext helped modernize an aging MES in an industrial setting. It shows comfort with long-lived process software.</p>
+                <a href="https://www.elinext.com/case-study/manufacturing-execution-system/">View case study</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="lets-talk" class="cta">
+        <h2 id="lets-talk">Start the conversation</h2>
+        <p>If this matches Kermi's current push, we can map the pilot in one working session.</p>
+        <a href="https://www.elinext.com/contacts/">Talk with Elinext</a>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
