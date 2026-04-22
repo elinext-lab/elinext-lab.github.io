@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PharmaXnet Delivery Support | Elinext</title>
+  <meta name="description" content="A short proposal brief for Markus Gottschlich and LOXXESS on supporting PharmaXnet rollout, partner onboarding, and regulated delivery work.">
+  <meta name="author" content="Elinext">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/loxxess_2026-04-22_11-22-57/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/loxxess_2026-04-22_11-22-57/">
+  <meta property="og:title" content="PharmaXnet Delivery Support">
+  <meta property="og:description" content="A focused proposal brief for LOXXESS on partner onboarding, reporting gateway work, and safe rollout support.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/loxxess_2026-04-22_11-22-57/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6efe6;
+      --bg-deep: #10253f;
+      --surface: #fffdfa;
+      --surface-strong: #ffffff;
+      --surface-warm: #f4ede4;
+      --surface-dark: #132f4f;
+      --ink: #112137;
+      --muted: #5b6572;
+      --line: #d8dfe7;
+      --accent: #f06d2f;
+      --accent-soft: #fff0e6;
+      --shadow: 0 24px 60px rgba(17, 33, 55, 0.12);
+      --radius: 28px;
+      --radius-sm: 18px;
+      --wrap: 1120px;
+      --font: "Space Grotesk", "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(240, 109, 47, 0.14), transparent 30%),
+        radial-gradient(circle at right 10% top 12%, rgba(16, 37, 63, 0.12), transparent 28%),
+        linear-gradient(180deg, #fbf6ef 0%, #f5eee4 100%);
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      padding: 20px 14px 48px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: var(--wrap);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #f4dccb;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow.light {
+      background: var(--accent-soft);
+      color: #a64a1d;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 20px 26px;
+      background:
+        linear-gradient(145deg, rgba(240, 109, 47, 0.14), transparent 36%),
+        linear-gradient(180deg, #17375b 0%, #112742 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -20% auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(240, 109, 47, 0.12);
+      filter: blur(12px);
+      pointer-events: none;
+    }
+
+    .hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .brand {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      font-size: clamp(2.2rem, 7vw, 4.8rem);
+      line-height: 0.97;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-copy {
+      margin-top: 18px;
+      max-width: 64ch;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero-copy p {
+      max-width: 58ch;
+      font-size: 1.02rem;
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .hero-copy .why {
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-sm);
+      color: #fff2eb;
+    }
+
+    .hero-actions {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .button.secondary {
+      border-color: rgba(255, 255, 255, 0.24);
+      color: #fff;
+      background: transparent;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    section {
+      margin-top: 18px;
+      padding: 28px 20px;
+      background: var(--surface-strong);
+      border-radius: var(--radius);
+      border: 1px solid rgba(17, 33, 55, 0.08);
+      box-shadow: 0 18px 40px rgba(17, 33, 55, 0.06);
+    }
+
+    section h2 {
+      margin-top: 10px;
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+      text-align: center;
+    }
+
+    section > p.lead {
+      max-width: 64ch;
+      margin: 12px auto 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .read {
+      background: var(--surface-warm);
+      border-left: 6px solid var(--accent);
+      padding-left: 22px;
+      padding-right: 22px;
+    }
+
+    .read .read-box {
+      max-width: 70ch;
+      margin: 16px auto 0;
+      color: var(--ink);
+      font-size: 1.02rem;
+    }
+
+    .proposal {
+      background:
+        linear-gradient(180deg, #17375b 0%, #112742 100%);
+      color: #fff;
+    }
+
+    .proposal .lead {
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .proposal-grid {
+      margin-top: 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .summary-card,
+    .step,
+    .cred-panel,
+    .case {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .summary-card h3,
+    .step h3,
+    .case h3 {
+      font-size: 1rem;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .summary-card p,
+    .step p {
+      margin-top: 10px;
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 0.94rem;
+    }
+
+    .summary-label {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(240, 109, 47, 0.16);
+      color: #ffd3bc;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .team-list,
+    .stack-list,
+    .customer-list {
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .team-list li,
+    .stack-list li,
+    .customer-list li {
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 500;
+    }
+
+    .team-list li,
+    .stack-list li {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #f7fbff;
+    }
+
+    .steps {
+      margin-top: 14px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .step p {
+      margin-top: 8px;
+    }
+
+    .cred {
+      background: var(--surface-strong);
+    }
+
+    .cred-panel {
+      margin-top: 18px;
+      background: #fffaf5;
+      border-color: rgba(17, 33, 55, 0.08);
+      color: var(--ink);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    .cred-panel p {
+      color: var(--ink);
+      font-size: 0.99rem;
+    }
+
+    .customer-list li {
+      background: var(--accent-soft);
+      border: 1px solid rgba(240, 109, 47, 0.18);
+      color: #9b4318;
+      font-weight: 700;
+    }
+
+    .proof-grid {
+      margin-top: 20px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .case {
+      overflow: hidden;
+      padding: 0;
+      background: #fffdfb;
+      border-color: rgba(17, 33, 55, 0.08);
+      color: var(--ink);
+    }
+
+    .case-body {
+      padding: 20px;
+    }
+
+    .case img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #ece8e1;
+    }
+
+    .case-tag {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #a34a1e;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .case p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .case a {
+      display: inline-flex;
+      margin-top: 14px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .cta {
+      background:
+        linear-gradient(145deg, rgba(240, 109, 47, 0.12), transparent 45%),
+        #fffaf4;
+      text-align: center;
+    }
+
+    .cta .button.primary {
+      margin-top: 18px;
+    }
+
+    .footer-note {
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    @media (min-width: 720px) {
+      .page {
+        padding: 28px 22px 56px;
+      }
+
+      .hero {
+        padding: 34px 32px 34px;
+      }
+
+      section {
+        padding: 34px 32px;
+      }
+
+      .proposal-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 980px) {
+      .hero {
+        padding: 40px 42px 40px;
+      }
+
+      section {
+        margin-top: 22px;
+        padding: 38px 42px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="shell">
+      <section class="hero">
+        <div class="hero-top">
+          <div class="brand">LOXXESS × Elinext</div>
+          <div class="eyebrow">For Markus Gottschlich</div>
+        </div>
+        <h1>Support PharmaXnet growth without slowing core IT planning</h1>
+        <div class="hero-copy">
+          <p>PharmaXnet is new. Site growth is active. The work now is clean rollout, partner onboarding, and safe delivery in a regulated network.</p>
+          <p class="why">We saw LOXXESS hiring a site manager in Haiming while PharmaXnet launches. That points to more handoffs between site operations, partner setup, and IT planning.</p>
+        </div>
+        <div class="hero-actions">
+          <a class="button primary" href="#proposal">See the proposal</a>
+          <a class="button secondary" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+        </div>
+      </section>
+
+      <section class="read">
+        <div class="eyebrow light">Our read</div>
+        <h2>Planning pressure comes before platform pain becomes public</h2>
+        <div class="read-box">
+          The hiring signal tells us LOXXESS is scaling the pharma network on the ground. PharmaXnet adds one contract partner, central governance, and one reporting gateway across Europe. That creates hard work for IT planning. New sites, partner data, WMS links, and GDP checks must stay aligned. If this slips, teams start using email, calls, and local workarounds. Then support grows and rollouts slow down. Markus’ team spends time on control, not progress.
+        </div>
+      </section>
+
+      <section class="proposal" id="proposal">
+        <div class="eyebrow">What we'd do</div>
+        <h2>A small squad for rollout work that should not block your planners</h2>
+        <p class="lead">Dedicated squad under your PO or PM. Start with an eight-week pilot. Focus on partner onboarding, gateway work, and site-ready integrations.</p>
+
+        <div class="proposal-grid">
+          <div class="summary-card">
+            <div class="summary-label">Engagement model</div>
+            <h3>Dedicated delivery squad</h3>
+            <p>Join your existing planning flow. Work in weekly demos. Hand over clean, tested slices.</p>
+          </div>
+          <div class="summary-card">
+            <div class="summary-label">Team shape</div>
+            <h3>Built for regulated rollout work</h3>
+            <ul class="team-list">
+              <li>Tech lead</li>
+              <li>Business analyst</li>
+              <li>2 full-stack engineers</li>
+              <li>QA engineer</li>
+            </ul>
+          </div>
+          <div class="summary-card">
+            <div class="summary-label">Relevant stack</div>
+            <h3>Ready for enterprise web and integration work</h3>
+            <ul class="stack-list">
+              <li>Java</li>
+              <li>.NET</li>
+              <li>Node.js</li>
+              <li>React</li>
+              <li>Angular</li>
+              <li>QA automation</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="steps">
+          <article class="step">
+            <div class="step-number">01</div>
+            <h3>Map the risky handoffs first</h3>
+            <p>Map PharmaXnet partner flows, site handoffs, and the highest-risk manual controls around onboarding, reporting, and validation.</p>
+          </article>
+          <article class="step">
+            <div class="step-number">02</div>
+            <h3>Ship one real integration slice</h3>
+            <p>Build the first integration slice for gateway data, WMS or ERP events, and partner status tracking.</p>
+          </article>
+          <article class="step">
+            <div class="step-number">03</div>
+            <h3>Make release safety part of the work</h3>
+            <p>Add QA checks, audit-ready logging, and release gates so rollout work stays safe in GDP-sensitive paths.</p>
+          </article>
+          <article class="step">
+            <div class="step-number">04</div>
+            <h3>Leave a usable next-site playbook</h3>
+            <p>Ship a pilot with weekly demos, clear handover notes, and a backlog for the next sites.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="cred">
+        <div class="eyebrow light">Who is Elinext</div>
+        <h2>Stable delivery support for live systems</h2>
+        <div class="cred-panel">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For regulated delivery, that matters because one team can cover backend, web, QA, and DevOps without handoff gaps. We hold ISO 9001 and ISO 27001 certifications. Our client list includes Siemens, Volkswagen, TUI, Broadcom, and TRUMPF. We support both dedicated squads and scoped projects. That fits live logistics systems better than a big reset.</p>
+          <ul class="customer-list" aria-label="Selected Elinext customers and certifications">
+            <li>ISO 9001</li>
+            <li>ISO 27001</li>
+            <li>Siemens</li>
+            <li>Volkswagen</li>
+            <li>TUI</li>
+            <li>Broadcom</li>
+            <li>TRUMPF</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <div class="eyebrow light">Proof</div>
+        <h2>Relevant work we can point to</h2>
+        <p class="lead">Two examples matter here: pharma operations and warehouse delivery.</p>
+        <div class="proof-grid">
+          <article class="case">
+            <img src="assets/case-pharma.jpg" alt="Pharmaceutical software project by Elinext">
+            <div class="case-body">
+              <div class="case-tag">Pharma operations</div>
+              <h3>Optimizing and Speeding Up Software Development for Pharmaceutical Companies</h3>
+              <p>Elinext improved CI/CD flow, reduced build and deploy time, and cut cloud waste for a pharma software client.</p>
+              <a href="https://www.elinext.com/case-study/optimizing-and-speeding-up-software-development-for-pharmaceutical-companies/">Read case study</a>
+            </div>
+          </article>
+          <article class="case">
+            <img src="assets/case-warehouse.jpg" alt="Warehouse management project by Elinext">
+            <div class="case-body">
+              <div class="case-tag">Warehouse delivery</div>
+              <h3>Continuous Microservices Development for Warehouse Management</h3>
+              <p>Elinext helped automate labels, reduce shipping errors, and improve warehouse throughput through connected services.</p>
+              <a href="https://www.elinext.com/case-study/warehouse-management-solutions/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="eyebrow light">Let’s talk</div>
+        <h2>Talk through the rollout</h2>
+        <p class="lead">If this reads right, we can scope a small pilot.</p>
+        <a class="button primary" href="https://www.elinext.com/contacts/">Start the conversation</a>
+        <p class="footer-note">Prepared for LOXXESS Pharma &amp; Healthcare on April 22, 2026.</p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
