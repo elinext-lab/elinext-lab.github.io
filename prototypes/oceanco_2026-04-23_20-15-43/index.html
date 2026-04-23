@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A clearer delivery layer for Oceanco's next Simply Custom builds | Elinext</title>
+  <meta name="description" content="A focused Elinext proposal brief for helping Oceanco align outfit, facility, and co-maker delivery around Simply Custom and late-stage yacht execution.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/oceanco_2026-04-23_20-15-43/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="A clearer delivery layer for Oceanco's next Simply Custom builds">
+  <meta property="og:description" content="A focused Elinext proposal brief for helping Oceanco align outfit, facility, and co-maker delivery around Simply Custom and late-stage yacht execution.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/oceanco_2026-04-23_20-15-43/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/oceanco_2026-04-23_20-15-43/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A clearer delivery layer for Oceanco's next Simply Custom builds">
+  <meta name="twitter:description" content="A focused Elinext proposal brief for helping Oceanco align outfit, facility, and co-maker delivery around Simply Custom and late-stage yacht execution.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/oceanco_2026-04-23_20-15-43/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #13263a;
+      --ink-soft: #536679;
+      --sea: #0f1d31;
+      --sea-2: #17314a;
+      --sand: #efe6d8;
+      --sand-2: #f7f1e8;
+      --shell: rgba(248, 243, 235, 0.96);
+      --line: rgba(19, 38, 58, 0.12);
+      --foam: rgba(255, 255, 255, 0.72);
+      --accent: #c77441;
+      --accent-soft: rgba(199, 116, 65, 0.16);
+      --teal: #7eb3ae;
+      --shadow: 0 24px 44px rgba(9, 21, 35, 0.14);
+      --radius: 26px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(126, 179, 174, 0.14), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(199, 116, 65, 0.15), transparent 22%),
+        linear-gradient(180deg, #f6efe6 0%, #eadfce 100%);
+      color: var(--ink);
+      font-family: "Barlow", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 16px 48px;
+    }
+
+    main {
+      display: grid;
+      gap: 18px;
+    }
+
+    .section {
+      position: relative;
+      width: 100%;
+      padding: 24px 18px;
+      background: var(--shell);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.24), transparent 45%),
+        repeating-linear-gradient(
+          120deg,
+          transparent 0,
+          transparent 18px,
+          rgba(19, 38, 58, 0.018) 18px,
+          rgba(19, 38, 58, 0.018) 20px
+        );
+      pointer-events: none;
+    }
+
+    .section > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section h2 {
+      margin: 0 0 14px;
+      text-align: center;
+      font-family: "Libre Baskerville", serif;
+      font-size: clamp(1.4rem, 4.5vw, 2rem);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 248, 240, 0.9);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      padding: 26px 18px;
+      background:
+        radial-gradient(circle at top right, rgba(126, 179, 174, 0.18), transparent 24%),
+        linear-gradient(135deg, rgba(10, 25, 40, 0.98), rgba(24, 49, 74, 0.95));
+      color: #f8f1e7;
+    }
+
+    .hero::before {
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 35%),
+        repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.05) 0,
+          rgba(255, 255, 255, 0.05) 1px,
+          transparent 1px,
+          transparent 44px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 0.03) 0,
+          rgba(255, 255, 255, 0.03) 1px,
+          transparent 1px,
+          transparent 44px
+        );
+    }
+
+    .hero h1 {
+      max-width: 11ch;
+      margin: 18px 0 12px;
+      font-family: "Libre Baskerville", serif;
+      font-size: clamp(2.25rem, 9vw, 4.8rem);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+    }
+
+    .hero p {
+      max-width: 62ch;
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.48;
+      color: rgba(248, 241, 231, 0.92);
+    }
+
+    .hero p + p {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(248, 241, 231, 0.18);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 16px;
+      align-items: end;
+    }
+
+    .hero-aside {
+      display: grid;
+      gap: 10px;
+    }
+
+    .hero-card {
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff5e6;
+      font-size: 0.98rem;
+    }
+
+    .hero-card span {
+      display: block;
+      font-size: 0.93rem;
+      line-height: 1.42;
+      color: rgba(248, 241, 231, 0.9);
+    }
+
+    .read {
+      background: linear-gradient(180deg, #efe1ce 0%, #f8f0e4 100%);
+      border-left: 6px solid var(--accent);
+    }
+
+    .read p,
+    .credibility p,
+    .cta p {
+      max-width: 66ch;
+      margin: 0 auto;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .plan {
+      background:
+        radial-gradient(circle at top left, rgba(126, 179, 174, 0.18), transparent 20%),
+        linear-gradient(180deg, rgba(249, 245, 239, 0.98), rgba(241, 234, 223, 0.96));
+    }
+
+    .plan-intro {
+      max-width: 65ch;
+      margin: 0 auto 18px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 1rem;
+      line-height: 1.48;
+    }
+
+    .model {
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .model strong {
+      color: var(--sea);
+    }
+
+    .plan-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .team-card,
+    .stack-card,
+    .step-card,
+    .case-card,
+    .cta-card {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #fffaf2;
+    }
+
+    .team-card,
+    .stack-card {
+      padding: 18px;
+    }
+
+    .team-card h3,
+    .stack-card h3,
+    .step-card h3,
+    .case-card h3,
+    .cta-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.04rem;
+      line-height: 1.2;
+    }
+
+    .team-list,
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: var(--sand-2);
+      border: 1px solid rgba(19, 38, 58, 0.08);
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--sea);
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step-card {
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(247, 242, 235, 0.95));
+    }
+
+    .step-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .step-no {
+      flex: 0 0 auto;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      background: var(--sea);
+      color: #f8f1e7;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .step-card h3 {
+      margin: 2px 0 0;
+      color: var(--sea);
+      font-size: 1.02rem;
+    }
+
+    .step-card p,
+    .case-card p,
+    .cta-card p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.98rem;
+      line-height: 1.48;
+    }
+
+    .credibility strong {
+      color: var(--sea);
+    }
+
+    .customer-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .customer-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(199, 116, 65, 0.18);
+      color: var(--sea);
+      font-weight: 700;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-image {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      border-bottom: 1px solid var(--line);
+      background: #dcd4c7;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-meta {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .case-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      font-weight: 700;
+      color: var(--sea);
+    }
+
+    .cta {
+      background:
+        radial-gradient(circle at top left, rgba(126, 179, 174, 0.16), transparent 20%),
+        linear-gradient(135deg, #14253a, #1b3550);
+      color: #f8f1e7;
+      text-align: center;
+    }
+
+    .cta .section::before,
+    .cta::before {
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 36%),
+        repeating-linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.03) 0,
+          rgba(255, 255, 255, 0.03) 1px,
+          transparent 1px,
+          transparent 36px
+        );
+    }
+
+    .cta-card {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 22px 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .cta-card h2 {
+      color: #fff4e3;
+    }
+
+    .cta-card p {
+      color: rgba(248, 241, 231, 0.88);
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+      padding: 12px 18px;
+      min-height: 48px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #d5844e, #bb6b3b);
+      color: #fff8f0;
+      font-weight: 800;
+      box-shadow: 0 16px 30px rgba(9, 21, 35, 0.22);
+    }
+
+    @media (min-width: 768px) {
+      .page {
+        padding: 26px 20px 64px;
+      }
+
+      .section {
+        padding: 28px 24px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
+      }
+
+      .plan-grid {
+        grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.8fr);
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      main {
+        gap: 22px;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main>
+      <section class="section hero">
+        <div class="hero-grid">
+          <div>
+            <span class="eyebrow">Prepared for Oceanco</span>
+            <h1>A clearer delivery layer for Oceanco's next Simply Custom builds</h1>
+            <p>We reviewed Simply Custom, the Y729 outfitting move, and current Oceanco hiring. The same signal appears in each place. Delivery pressure is rising across facilities, outfit work, and partner handoffs.</p>
+            <p>We're here because Senior Facility Engineer and Lead Engineer - Outfit are both open. That usually means status, changes, and field issues are moving too slowly.</p>
+          </div>
+          <div class="hero-aside">
+            <div class="hero-card">
+              <strong>Lead in view</strong>
+              <span>Annemarie Manger, programme-driven operator with board ties to Oceanco.</span>
+            </div>
+            <div class="hero-card">
+              <strong>Public product</strong>
+              <span>Simply Custom by Oceanco, with Y729 now in outfitting.</span>
+            </div>
+            <div class="hero-card">
+              <strong>Why now</strong>
+              <span>Oceanco is scaling custom execution while promising a calmer owner journey.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section read">
+        <h2>Our Read</h2>
+        <p>Your hiring points to more delivery load at Alblasserdam and Zwijndrecht. Simply Custom is meant to make a hard build feel simpler for owners. That promise gets harder when outfit, facility, engineering, and co-maker teams work through many tools. Then status moves late, changes spread slowly, and small misses become costly delays. The risk is not only schedule pain. It also weakens the calm, controlled experience Oceanco sells so well.</p>
+      </section>
+
+      <section class="section plan">
+        <h2>What We'd Do</h2>
+        <p class="plan-intro">We would start with a dedicated squad under your project leadership. The goal is one delivery layer for outfit, facility, and co-maker execution, not another dashboard.</p>
+        <div class="model"><strong>Engagement model:</strong> dedicated squad under Oceanco's programme and facility leads. Weekly demos and live handover into your working rhythm.</div>
+        <div class="plan-grid">
+          <div class="steps">
+            <article class="step-card">
+              <div class="step-top">
+                <span class="step-no">1</span>
+                <h3>Map the real handoffs</h3>
+              </div>
+              <p>We map Y729, Life Cycle Support, and new-build handoffs. Then we set one source for package status and ownership.</p>
+            </article>
+            <article class="step-card">
+              <div class="step-top">
+                <span class="step-no">2</span>
+                <h3>Build the control layer</h3>
+              </div>
+              <p>We build one workspace for blockers, changes, approvals, snags, and readiness. Project managers stop chasing updates across mail and sheets.</p>
+            </article>
+            <article class="step-card">
+              <div class="step-top">
+                <span class="step-no">3</span>
+                <h3>Connect live delivery data</h3>
+              </div>
+              <p>We connect planning files, QA checks, supplier inputs, and field issues. Leadership gets one daily risk view before delays harden.</p>
+            </article>
+            <article class="step-card">
+              <div class="step-top">
+                <span class="step-no">4</span>
+                <h3>Roll out in ten weeks</h3>
+              </div>
+              <p>Week two brings the data model. Week five brings the first workflow. Week ten gives outfit and facility teams a live pilot.</p>
+            </article>
+          </div>
+          <div>
+            <div class="team-card">
+              <h3>Team Shape</h3>
+              <div class="team-list">
+                <span class="pill">1 Solution Architect</span>
+                <span class="pill">2 Senior Full-Stack Engineers</span>
+                <span class="pill">1 Data Engineer</span>
+                <span class="pill">1 QA Engineer</span>
+              </div>
+            </div>
+            <div class="stack-card" style="margin-top:16px;">
+              <h3>Relevant Stack</h3>
+              <div class="stack-list">
+                <span class="pill">React</span>
+                <span class="pill">.NET</span>
+                <span class="pill">Python</span>
+                <span class="pill">Node.js</span>
+                <span class="pill">DevOps</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section credibility">
+        <h2>Who Is Elinext</h2>
+        <p>Elinext is a full-cycle software development partner, active since 1997. We have about 700 in-house specialists and no freelancers. For controlled delivery work, that matters. We support demanding clients such as <strong>Siemens</strong>, <strong>Volkswagen</strong>, and <strong>TRUMPF</strong>. We also work under <strong>ISO 27001</strong> and <strong>ISO 9001</strong>. For Oceanco, that means a stable squad can build the delivery layer without extra noise.</p>
+        <div class="customer-row">
+          <span class="customer-pill">Siemens</span>
+          <span class="customer-pill">Volkswagen</span>
+          <span class="customer-pill">TRUMPF</span>
+          <span class="customer-pill">ISO 27001</span>
+        </div>
+      </section>
+
+      <section class="section proof">
+        <h2>Proven Track Record</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img class="case-image" src="assets/case-port-ops.jpg" alt="Port operations case study visual">
+            <div class="case-body">
+              <span class="case-meta">Logistics And Transportation</span>
+              <h3>Real-time HMI management for port operations</h3>
+              <p>Elinext built a live status and alarms layer for straddle carriers and ship-to-shore cranes. The work cut the initial budget by 50%.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/streamlining-port-operations-hmi-management/" target="_blank" rel="noreferrer">View case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img class="case-image" src="assets/case-machine-insights.jpg" alt="Machine performance case study visual">
+            <div class="case-body">
+              <span class="case-meta">Manufacturing</span>
+              <h3>Machine-performance insights for industrial teams</h3>
+              <p>Elinext helped build a platform that reads machine data directly. It gave factories better OEE insight and tighter process control.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/" target="_blank" rel="noreferrer">View case study</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section cta">
+        <div class="cta-card">
+          <h2>Talk Through The Gaps</h2>
+          <p>If useful, we can map a first pilot around outfit and facility control.</p>
+          <a class="cta-link" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Start the conversation</a>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
