@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keep Akkar High-Touch as More Client Accounts Grow | Elinext</title>
+  <meta name="description" content="A short proposal for Akkar's client operations flow, built around Global EOR growth and the new Client Partner hiring signal.">
+  <meta name="author" content="Elinext">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Keep Akkar High-Touch as More Client Accounts Grow">
+  <meta property="og:description" content="A short proposal for Akkar's client operations flow, built around Global EOR growth and the new Client Partner hiring signal.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/akkar_2026-04-23_17-50-45/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/akkar_2026-04-23_17-50-45/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/akkar_2026-04-23_17-50-45/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f5f1;
+      --panel: rgba(255, 255, 255, 0.92);
+      --panel-strong: #ffffff;
+      --read: #e7f1ed;
+      --line: rgba(17, 39, 31, 0.12);
+      --ink: #102118;
+      --muted: #5b6b62;
+      --accent: #246f5b;
+      --accent-soft: rgba(36, 111, 91, 0.12);
+      --accent-warm: #e68545;
+      --shadow: 0 18px 48px rgba(16, 33, 24, 0.08);
+      --radius: 24px;
+      --shell: min(1120px, calc(100vw - 32px));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(36, 111, 91, 0.14), transparent 34%),
+        radial-gradient(circle at top right, rgba(230, 133, 69, 0.12), transparent 28%),
+        var(--bg);
+      color: var(--ink);
+      font-family: "Sora", sans-serif;
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(16, 33, 24, 0.02) 1px, transparent 1px),
+        linear-gradient(rgba(16, 33, 24, 0.02) 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.4;
+      z-index: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      padding: 24px 0 56px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: var(--shell);
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 16px 0;
+    }
+
+    .card {
+      width: 100%;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      padding-top: 8px;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 20px;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 20px 0;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-warm));
+    }
+
+    .eyebrow,
+    .section-kicker {
+      margin: 0 0 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 14ch;
+      margin: 0 auto;
+      font-size: clamp(2rem, 8vw, 4.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+      text-align: center;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .hero-copy p {
+      font-size: 0.98rem;
+      color: var(--muted);
+    }
+
+    .hero-copy .lead {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .why-box {
+      border-left: 4px solid var(--accent-warm);
+      padding: 14px 14px 14px 16px;
+      background: rgba(230, 133, 69, 0.08);
+      border-radius: 16px;
+    }
+
+    .hero-actions {
+      margin-top: 22px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: var(--ink);
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 600;
+      text-align: center;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      background: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .section-title {
+      margin: 0 auto 14px;
+      max-width: 14ch;
+      text-align: center;
+      font-size: clamp(1.65rem, 5vw, 2.6rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .read-card {
+      width: 100%;
+      background: var(--read);
+      border: 1px solid rgba(36, 111, 91, 0.18);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .read-card p {
+      max-width: 70ch;
+      margin: 0 auto;
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .proposal-wrap {
+      display: grid;
+      gap: 18px;
+    }
+
+    .proposal-card,
+    .side-card,
+    .cred-card,
+    .proof-card,
+    .cta-card {
+      padding: 22px 20px;
+    }
+
+    .proposal-intro {
+      margin: 0 0 18px;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px 16px;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .step h3 {
+      margin-top: 12px;
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+
+    .step p {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .side-card {
+      background: linear-gradient(180deg, #102118 0%, #1a3529 100%);
+      color: #f6f5f1;
+    }
+
+    .side-card h3 {
+      font-size: 1.08rem;
+    }
+
+    .side-card p {
+      margin-top: 10px;
+      color: rgba(246, 245, 241, 0.78);
+      font-size: 0.94rem;
+    }
+
+    .mini-title {
+      margin-top: 18px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(246, 245, 241, 0.72);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .cred-card p {
+      max-width: 70ch;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 0.98rem;
+      color: var(--ink);
+    }
+
+    .customer-pills {
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .customer-pills .pill {
+      background: var(--accent-soft);
+      border-color: rgba(36, 111, 91, 0.14);
+      color: var(--accent);
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+    }
+
+    .proof-card img {
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      margin-bottom: 16px;
+    }
+
+    .proof-card h3 {
+      font-size: 1.06rem;
+      line-height: 1.2;
+    }
+
+    .proof-card p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .proof-link {
+      display: inline-flex;
+      margin-top: 14px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .cta-card {
+      text-align: center;
+      background: linear-gradient(180deg, rgba(36, 111, 91, 0.1), rgba(255, 255, 255, 0.95));
+    }
+
+    .cta-card p {
+      max-width: 32ch;
+      margin: 12px auto 0;
+      color: var(--muted);
+    }
+
+    .cta-card .button {
+      margin-top: 22px;
+    }
+
+    @media (min-width: 768px) {
+      main {
+        padding: 34px 0 80px;
+      }
+
+      .hero-card,
+      .proposal-card,
+      .side-card,
+      .cred-card,
+      .proof-card,
+      .cta-card,
+      .read-card {
+        padding: 30px;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .proposal-wrap {
+        grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.9fr);
+        align-items: start;
+      }
+
+      .section {
+        padding: 22px 0;
+      }
+
+      .hero-card {
+        padding: 40px;
+      }
+
+      .hero-copy {
+        grid-template-columns: 1.05fr 0.95fr;
+        align-items: start;
+        gap: 18px;
+      }
+
+      .hero-copy .lead {
+        padding-right: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="section hero">
+      <div class="shell">
+        <div class="card hero-card">
+          <p class="eyebrow">Proposal Brief for Akkar</p>
+          <h1>Keep Akkar high-touch as more client accounts grow</h1>
+          <div class="hero-copy">
+            <p class="lead">Akkar wins with specialist talent, fast relocation, and real human support. As more accounts open, the workflow must stay clear. That matters across staffing, Global EOR, and strategic expansion.</p>
+            <div class="why-box">
+              <p>You are hiring a Client Partner to grow mobility accounts into long-term partnerships. That usually means demand is rising faster than handoff, onboarding, and client visibility tools.</p>
+            </div>
+          </div>
+          <div class="hero-actions">
+            <a class="button" href="#what-we-do">See the project scope</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <p class="section-kicker">Our Read</p>
+        <h2 class="section-title">The next bottleneck is not demand</h2>
+        <div class="read-card">
+          <p>The role tells us Akkar is moving from single placements to deeper account growth. That adds pressure on client planning, candidate handoff, visa steps, payroll setup, and worker updates. Your site sells a relationship model, not a generic portal. That promise is strong. It gets harder to keep as more accounts run at once. If visibility stays manual, client partners spend time chasing status instead of growing trust.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="what-we-do">
+      <div class="shell">
+        <p class="section-kicker">What We'd Do</p>
+        <h2 class="section-title">A short build for client flow</h2>
+        <div class="proposal-wrap">
+          <div class="card proposal-card">
+            <p class="proposal-intro">We would start with a scoped six-week project. The goal is simple. Give each Client Partner one live view of account health, worker progress, and next actions.</p>
+            <div class="step-list">
+              <article class="step">
+                <span class="step-number">01</span>
+                <h3>Map the real handoff</h3>
+                <p>Map the full path from client brief to placed worker. Find duplicate steps across sales, recruitment, visa, payroll, and support.</p>
+              </article>
+              <article class="step">
+                <span class="step-number">02</span>
+                <h3>Build one account workspace</h3>
+                <p>Build one shared workspace with milestones, risks, owner notes, and worker status. Keep the human touch, but remove inbox chasing.</p>
+              </article>
+              <article class="step">
+                <span class="step-number">03</span>
+                <h3>Join forms and data</h3>
+                <p>Connect forms and documents so clients, recruiters, and operations share the same facts. No re-keying across WordPress, forms, and onboarding tools.</p>
+              </article>
+              <article class="step">
+                <span class="step-number">04</span>
+                <h3>Give leaders calm reporting</h3>
+                <p>Set weekly views for account load, onboarding blockers, and time to start. Leaders see risk early, before clients feel it.</p>
+              </article>
+            </div>
+          </div>
+          <aside class="card side-card">
+            <h3>Project shape</h3>
+            <p>One scoped end-to-end project. Weekly demos. One Akkar owner.</p>
+            <p class="mini-title">Team</p>
+            <div class="pill-row">
+              <span class="pill">1 BA / Product Lead</span>
+              <span class="pill">1 Tech Lead</span>
+              <span class="pill">2 Full-Stack Engineers</span>
+              <span class="pill">1 Designer</span>
+              <span class="pill">1 QA</span>
+            </div>
+            <p class="mini-title">Stack</p>
+            <div class="pill-row">
+              <span class="pill">React</span>
+              <span class="pill">Node.js</span>
+              <span class="pill">PHP</span>
+              <span class="pill">Python</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <p class="section-kicker">Who Is Elinext</p>
+        <h2 class="section-title">A delivery team built for controlled change</h2>
+        <div class="card cred-card">
+          <p>Elinext is a full-cycle software development company. We have worked since 1997 with about 700 in-house specialists, with no freelancers. For workflow tools like this, we bring React, Node.js, PHP, and Python. Design, QA, and delivery stay in the same team. ISO 27001 helps protect sensitive data. ISO 9001 supports stable delivery. We have shipped products for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. We can run the work as one scoped project with weekly demos. That mix fits a short build for client operations, onboarding, and account visibility.</p>
+          <div class="pill-row customer-pills">
+            <span class="pill"><strong>Siemens</strong></span>
+            <span class="pill"><strong>Broadcom</strong></span>
+            <span class="pill"><strong>Volkswagen</strong></span>
+            <span class="pill"><strong>TRUMPF</strong></span>
+            <span class="pill"><strong>TUI</strong></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <p class="section-kicker">Proof</p>
+        <h2 class="section-title">Relevant work in payroll and hiring flows</h2>
+        <div class="proof-grid">
+          <article class="card proof-card">
+            <img src="assets/case-global-payroll.jpg" alt="Global Payroll Management Software case study">
+            <h3>Global Payroll Management Software</h3>
+            <p>Elinext built a web product for cross-border payroll rules and employer deductions. Outcome: better cash-flow handling for global payroll work.</p>
+            <a class="proof-link" href="https://www.elinext.com/case-study/global-payroll-management-software/" target="_blank" rel="noopener noreferrer">View case study</a>
+          </article>
+          <article class="card proof-card">
+            <img src="assets/case-applicant-tracking.jpg" alt="Applicant Tracking case study">
+            <h3>Applicant Tracking</h3>
+            <p>Elinext built a web hiring system with vacancy and candidate modules. Outcome: smoother hiring during active growth and clearer recruitment flow.</p>
+            <a class="proof-link" href="https://www.elinext.com/case-study/elinext-applicant-tracking/" target="_blank" rel="noopener noreferrer">View case study</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="card cta-card">
+          <p class="section-kicker">Start The Conversation</p>
+          <h2 class="section-title">Let's fix the flow</h2>
+          <p>A short call can test this scope against your plan.</p>
+          <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Talk with Elinext</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
