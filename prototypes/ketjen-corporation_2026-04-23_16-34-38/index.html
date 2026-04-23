@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A focused build plan for Ketjen's E-Cat portal | Elinext</title>
+  <meta name="description" content="A practical Elinext proposal brief for helping Ketjen strengthen the E-Cat portal, data flow, and release work around refinery technical services.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/ketjen-corporation_2026-04-23_16-34-38/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="A focused build plan for Ketjen's E-Cat portal">
+  <meta property="og:description" content="A practical Elinext proposal brief for helping Ketjen strengthen the E-Cat portal, data flow, and release work around refinery technical services.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/ketjen-corporation_2026-04-23_16-34-38/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/ketjen-corporation_2026-04-23_16-34-38/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A focused build plan for Ketjen's E-Cat portal">
+  <meta name="twitter:description" content="A practical Elinext proposal brief for helping Ketjen strengthen the E-Cat portal, data flow, and release work around refinery technical services.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/ketjen-corporation_2026-04-23_16-34-38/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #132133;
+      --ink-soft: #45556b;
+      --paper: #f5efe6;
+      --paper-2: #fbf8f2;
+      --panel: rgba(255, 251, 245, 0.96);
+      --line: rgba(19, 33, 51, 0.12);
+      --accent: #d56b2f;
+      --accent-deep: #a24d18;
+      --accent-soft: rgba(213, 107, 47, 0.12);
+      --navy: #0f1826;
+      --navy-2: #1d2d43;
+      --shadow: 0 22px 48px rgba(19, 33, 51, 0.12);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(213, 107, 47, 0.16), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(30, 58, 99, 0.12), transparent 22%),
+        linear-gradient(180deg, #f7f2ea 0%, #efe4d4 100%);
+      color: var(--ink);
+      font-family: "Barlow", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 22px 16px 52px;
+    }
+
+    main {
+      display: grid;
+      gap: 18px;
+    }
+
+    .section {
+      position: relative;
+      width: 100%;
+      padding: 24px 18px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section h2 {
+      margin: 0 0 14px;
+      text-align: center;
+      font-size: clamp(1.45rem, 4vw, 2rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 248, 240, 0.88);
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      padding: 28px 18px;
+      background:
+        linear-gradient(135deg, rgba(15, 24, 38, 0.98), rgba(31, 48, 71, 0.94)),
+        var(--navy);
+      color: #fbf7f0;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 86% 18%, rgba(213, 107, 47, 0.28), transparent 24%),
+        linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.04) 52%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      max-width: 11ch;
+      margin: 18px 0 14px;
+      font-size: clamp(2.4rem, 10vw, 5rem);
+      line-height: 0.94;
+      letter-spacing: -0.05em;
+    }
+
+    .hero p {
+      max-width: 62ch;
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: rgba(251, 247, 240, 0.9);
+    }
+
+    .hero p + p {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(251, 247, 240, 0.16);
+    }
+
+    .hero-meta {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .hero-chip {
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      font-size: 0.94rem;
+      color: rgba(251, 247, 240, 0.92);
+    }
+
+    .hero-chip strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1rem;
+      color: #fff6ea;
+    }
+
+    .read {
+      background: linear-gradient(180deg, #efe1c9 0%, #f7ecd9 100%);
+      border-left: 6px solid var(--accent);
+    }
+
+    .read p,
+    .credibility p,
+    .cta p {
+      max-width: 66ch;
+      margin: 0 auto;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .plan-head {
+      max-width: 64ch;
+      margin: 0 auto 18px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .plan-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .summary-card,
+    .step-card,
+    .case-card,
+    .cta-card {
+      width: 100%;
+      background: #fffaf2;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+    }
+
+    .summary-card {
+      padding: 18px;
+      background: linear-gradient(180deg, #fff8ed 0%, #f6eddf 100%);
+    }
+
+    .summary-card h3,
+    .case-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.2rem;
+      line-height: 1.1;
+    }
+
+    .summary-card p {
+      margin: 8px 0 0;
+      line-height: 1.45;
+      color: var(--ink-soft);
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .team-card {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(19, 33, 51, 0.04);
+      border: 1px solid rgba(19, 33, 51, 0.08);
+    }
+
+    .team-card strong {
+      display: block;
+      font-size: 0.98rem;
+      margin-bottom: 3px;
+    }
+
+    .team-card span {
+      display: block;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .stack span,
+    .client-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-deep);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step-card {
+      padding: 18px;
+    }
+
+    .step-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .step-no {
+      flex: 0 0 auto;
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--navy);
+      color: #fff7ec;
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .step-title {
+      display: block;
+      margin-top: 2px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1.15;
+    }
+
+    .step-text {
+      display: block;
+      margin-top: 8px;
+      color: var(--ink-soft);
+      font-size: 0.98rem;
+      line-height: 1.45;
+    }
+
+    .credibility .client-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 16px 0 14px;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 1170 / 508;
+      object-fit: cover;
+      background: #e9dfcf;
+    }
+
+    .case-copy {
+      padding: 18px;
+    }
+
+    .case-copy p {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.45;
+      font-size: 0.98rem;
+    }
+
+    .case-link {
+      display: inline-flex;
+      margin-top: 14px;
+      color: var(--accent-deep);
+      font-weight: 700;
+    }
+
+    .cta {
+      background:
+        linear-gradient(140deg, rgba(15, 24, 38, 0.98), rgba(31, 48, 71, 0.95)),
+        var(--navy);
+      color: #fbf7f0;
+    }
+
+    .cta-card {
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.12);
+      text-align: center;
+    }
+
+    .cta h2 {
+      color: #fff7ec;
+    }
+
+    .cta p {
+      color: rgba(251, 247, 240, 0.84);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff7ef;
+      font-size: 0.98rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      box-shadow: 0 12px 26px rgba(213, 107, 47, 0.25);
+    }
+
+    .btn:hover {
+      background: var(--accent-deep);
+    }
+
+    @media (min-width: 720px) {
+      .shell {
+        padding: 28px 24px 64px;
+      }
+
+      .section {
+        padding: 30px 24px;
+      }
+
+      .hero-meta {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 980px) {
+      .hero {
+        padding: 34px 28px;
+      }
+
+      .hero h1 {
+        max-width: 10ch;
+      }
+
+      .plan-grid {
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr);
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <main>
+      <section class="section hero">
+        <span class="eyebrow">For Bob Leliveld, CTO at Ketjen</span>
+        <h1>A focused build plan for Ketjen's E-Cat portal</h1>
+        <p>We looked at Ketjen's portal and technical-service story. The need is not a new concept. It is a steadier workflow around results, trends, and plant data.</p>
+        <p>You are hiring an Electrical and Instrumentation Engineer. That usually means plant signals and response speed matter more now. We think the E-Cat portal will feel that pressure first.</p>
+        <div class="hero-meta" aria-label="Summary facts">
+          <div class="hero-chip">
+            <strong>Digital surface</strong>
+            Result access and trend views for refinery users
+          </div>
+          <div class="hero-chip">
+            <strong>Trigger</strong>
+            More plant data and more support load
+          </div>
+          <div class="hero-chip">
+            <strong>Proposal frame</strong>
+            Six-week pilot under Ketjen's own owners
+          </div>
+        </div>
+      </section>
+
+      <section class="section read">
+        <h2>Our read</h2>
+        <p>The hiring signal tells us Ketjen is carrying more load at the plant-data edge. Your public story ties customer value to technical services, digital tools, and predictive insights. That makes the portal more than a support page. It is part of the service itself. If data flows stay manual or slow, refinery teams wait longer, experts chase context, and the customer sees less value from Ketjen's advice.</p>
+      </section>
+
+      <section class="section">
+        <h2>What we'd do</h2>
+        <p class="plan-head">We would start with a dedicated squad under Ketjen's product and technical owners. The pilot stays small and fixes real work around the live portal.</p>
+        <div class="plan-grid">
+          <article class="summary-card">
+            <h3>Squad and frame</h3>
+            <p><strong>Engagement model:</strong> one dedicated squad, six weeks, weekly demos, and a clear handoff at the end.</p>
+            <div class="team-grid">
+              <div class="team-card">
+                <strong>1 Tech Lead</strong>
+                <span>Owns scope and release choices</span>
+              </div>
+              <div class="team-card">
+                <strong>2 Full-stack engineers</strong>
+                <span>Handle portal flows, APIs, and data work</span>
+              </div>
+              <div class="team-card">
+                <strong>1 QA engineer</strong>
+                <span>Builds repeat checks for live paths</span>
+              </div>
+              <div class="team-card">
+                <strong>1 Delivery analyst</strong>
+                <span>Keeps plant and portal needs aligned</span>
+              </div>
+            </div>
+            <div class="stack" aria-label="Relevant stack">
+              <span>React</span>
+              <span>Node.js</span>
+              <span>Python</span>
+              <span>Java</span>
+              <span>.NET</span>
+            </div>
+          </article>
+
+          <div class="steps" aria-label="Pilot steps">
+            <article class="step-card">
+              <div class="step-top">
+                <div class="step-no">01</div>
+                <div>
+                  <span class="step-title">Map the result path</span>
+                  <span class="step-text">Trace the route from sample input to portal view, then rank slow handoffs, weak checks, and manual work around result delivery.</span>
+                </div>
+              </div>
+            </article>
+            <article class="step-card">
+              <div class="step-top">
+                <div class="step-no">02</div>
+                <div>
+                  <span class="step-title">Harden portal basics</span>
+                  <span class="step-text">Add repeat checks, clearer error notes, and support logs around login, result views, exports, and the most used customer actions.</span>
+                </div>
+              </div>
+            </article>
+            <article class="step-card">
+              <div class="step-top">
+                <div class="step-no">03</div>
+                <div>
+                  <span class="step-title">Clean one data flow</span>
+                  <span class="step-text">Build one small service for trend or alert inputs, so teams see cleaner signals without changing refinery-side systems first.</span>
+                </div>
+              </div>
+            </article>
+            <article class="step-card">
+              <div class="step-top">
+                <div class="step-no">04</div>
+                <div>
+                  <span class="step-title">Leave a safe handoff</span>
+                  <span class="step-text">Ship a test pack, release notes, and weekly demo rhythm so Ketjen keeps control after the pilot ends.</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section credibility">
+        <h2>Who is Elinext</h2>
+        <p>Elinext is a full-cycle software development partner, active since 1997, with about 700 in-house specialists and no freelancers. For industrial work, that depth matters when a live customer portal cannot pause. We bring web, backend, QA, and DevOps support in one team, backed by ISO 9001 and ISO 27001. The same company group has delivered for Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. That makes the plan above practical: help Ketjen ship safely while your own experts stay close to operations and customer service.</p>
+        <div class="client-list" aria-label="Named customers">
+          <span class="client-pill">Siemens</span>
+          <span class="client-pill">Broadcom</span>
+          <span class="client-pill">Volkswagen</span>
+          <span class="client-pill">TRUMPF</span>
+          <span class="client-pill">TUI</span>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-machine-insights.webp" alt="Real-time Data Insights of Machines Performance case study cover">
+            <div class="case-copy">
+              <h3>Real-time Data Insights of Machines Performance</h3>
+              <p>Elinext built a manufacturing web platform that pulls machine data and gives improvement insight. The result helped users connect line data and cut production cost.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">View case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-mes.webp" alt="Manufacturing Execution System case study cover">
+            <div class="case-copy">
+              <h3>Manufacturing Execution System</h3>
+              <p>Elinext helped modernize and support a live MES with strong integration needs. The client reported ROI up to 400% and kept growing the product with Elinext teams.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/manufacturing-execution-system/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section cta">
+        <div class="cta-card">
+          <h2>Plan the next sprint</h2>
+          <p>If this feels close, we can map a six-week pilot.</p>
+          <a class="btn" href="https://www.elinext.com/contacts/">Start the conversation</a>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
