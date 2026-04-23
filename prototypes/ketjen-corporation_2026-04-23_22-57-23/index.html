@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A steadier build plan for Ketjen's FCC data tools | Elinext</title>
+  <meta name="description" content="A practical Elinext proposal brief for Ketjen's E-Cat portal, FCC data flow, and Digital Services delivery work.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/ketjen-corporation_2026-04-23_22-57-23/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="A steadier build plan for Ketjen's FCC data tools">
+  <meta property="og:description" content="A practical Elinext proposal brief for Ketjen's E-Cat portal, FCC data flow, and Digital Services delivery work.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/ketjen-corporation_2026-04-23_22-57-23/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/ketjen-corporation_2026-04-23_22-57-23/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A steadier build plan for Ketjen's FCC data tools">
+  <meta name="twitter:description" content="A practical Elinext proposal brief for Ketjen's E-Cat portal, FCC data flow, and Digital Services delivery work.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/ketjen-corporation_2026-04-23_22-57-23/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4efe6;
+      --bg-soft: #fffaf2;
+      --paper: #fffdf8;
+      --ink: #0d2342;
+      --muted: #5e6a78;
+      --line: rgba(13, 35, 66, 0.12);
+      --accent: #ea6a2c;
+      --accent-soft: #ffe4d5;
+      --blue-soft: #e7f0fa;
+      --blue-line: rgba(28, 83, 145, 0.18);
+      --shadow: 0 24px 60px rgba(13, 35, 66, 0.12);
+      --radius: 28px;
+      --radius-sm: 18px;
+      --max: 1140px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: "IBM Plex Sans", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(234, 106, 44, 0.10), transparent 32%),
+        radial-gradient(circle at left 80%, rgba(13, 35, 66, 0.08), transparent 30%),
+        linear-gradient(180deg, #f7f1e8 0%, #f4efe6 100%);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: min(calc(100% - 1.5rem), var(--max));
+      margin: 0 auto;
+      padding: 1rem 0 3rem;
+    }
+
+    section {
+      position: relative;
+      margin-top: 1rem;
+      padding: 1.25rem;
+      background: rgba(255, 253, 248, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      z-index: 1;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h2.section-title {
+      text-align: center;
+      font-size: clamp(1.6rem, 3vw, 2.25rem);
+      line-height: 1.08;
+      margin-bottom: 1rem;
+      letter-spacing: -0.03em;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 2.5rem;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 999px;
+    }
+
+    .hero {
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(13, 35, 66, 0.98), rgba(18, 54, 99, 0.92));
+      color: #f7f3ec;
+      padding: 1.4rem;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -3rem -4rem auto;
+      width: 15rem;
+      height: 15rem;
+      border-radius: 50%;
+      background: rgba(234, 106, 44, 0.16);
+      z-index: 0;
+    }
+
+    .hero-grid {
+      position: relative;
+      display: grid;
+      gap: 1rem;
+      z-index: 1;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.15rem, 7vw, 4.5rem);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      max-width: 10ch;
+    }
+
+    .hero .lead {
+      max-width: 36rem;
+      color: rgba(247, 243, 236, 0.9);
+      font-size: 1rem;
+    }
+
+    .hero .why {
+      max-width: 40rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid rgba(247, 243, 236, 0.18);
+      color: #fff3ea;
+      font-size: 1rem;
+    }
+
+    .hero-card {
+      align-self: end;
+      background: rgba(255, 252, 246, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 24px;
+      padding: 1rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-card h2 {
+      font-size: 0.92rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(247, 243, 236, 0.72);
+      margin-bottom: 0.8rem;
+    }
+
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .signal {
+      padding: 0.85rem;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      min-width: 0;
+    }
+
+    .signal span {
+      display: block;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(247, 243, 236, 0.62);
+      margin-bottom: 0.35rem;
+    }
+
+    .signal strong {
+      display: block;
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+
+    .read {
+      background: linear-gradient(180deg, rgba(231, 240, 250, 0.98), rgba(255, 253, 248, 0.96));
+      border: 1px solid var(--blue-line);
+    }
+
+    .read-wrap {
+      position: relative;
+      max-width: 68ch;
+      margin: 0 auto;
+      padding: 0.4rem 0 0.1rem 1rem;
+    }
+
+    .read-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--accent), #214f86);
+    }
+
+    .read p {
+      color: var(--ink);
+      font-size: 1.05rem;
+    }
+
+    .plan-header {
+      max-width: 45rem;
+      margin: 0 auto 1.1rem;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .plan-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .steps {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.9rem;
+      align-items: start;
+      padding: 1rem;
+      border-radius: 24px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+    }
+
+    .step-number {
+      width: 2.55rem;
+      height: 2.55rem;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      flex: 0 0 auto;
+    }
+
+    .step h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+      line-height: 1.15;
+    }
+
+    .step p {
+      color: var(--muted);
+    }
+
+    .aside-cards {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .aside-card {
+      padding: 1rem;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #fffaf2, #fff);
+      border: 1px solid rgba(234, 106, 44, 0.18);
+    }
+
+    .aside-card h3 {
+      font-size: 0.92rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 0.7rem;
+    }
+
+    .aside-card ul {
+      margin: 0;
+      padding-left: 1.1rem;
+      color: var(--ink);
+    }
+
+    .aside-card li + li {
+      margin-top: 0.35rem;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 0.8rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--ink);
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .who p {
+      max-width: 56rem;
+      margin: 0 auto;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .customer-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .customer-pills strong {
+      padding: 0.55rem 0.85rem;
+      border-radius: 999px;
+      background: rgba(13, 35, 66, 0.92);
+      color: #fff;
+      font-size: 0.92rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 1170 / 508;
+      object-fit: cover;
+      background: #dde5ef;
+    }
+
+    .proof-copy {
+      padding: 1rem;
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .proof-copy span {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .proof-copy h3 {
+      font-size: 1.2rem;
+      line-height: 1.12;
+    }
+
+    .proof-copy p {
+      color: var(--muted);
+    }
+
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      width: fit-content;
+      text-decoration: none;
+      font-weight: 700;
+      color: #214f86;
+    }
+
+    .cta {
+      text-align: center;
+      background:
+        linear-gradient(135deg, rgba(13, 35, 66, 0.98), rgba(24, 74, 135, 0.92));
+      color: #f7f3ec;
+      padding: 1.5rem 1.25rem;
+    }
+
+    .cta p {
+      max-width: 32rem;
+      margin: 0.6rem auto 0;
+      color: rgba(247, 243, 236, 0.82);
+    }
+
+    .cta a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1.1rem;
+      padding: 0.9rem 1.35rem;
+      border-radius: 999px;
+      background: #fff3ea;
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 700;
+      min-width: 11rem;
+    }
+
+    @media (min-width: 768px) {
+      .page {
+        width: min(calc(100% - 2rem), var(--max));
+        padding-top: 1.4rem;
+      }
+
+      section,
+      .hero,
+      .cta {
+        padding: 1.7rem;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
+        align-items: stretch;
+      }
+
+      .plan-grid {
+        grid-template-columns: minmax(0, 1.35fr) minmax(16rem, 0.8fr);
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      section,
+      .hero,
+      .cta {
+        padding: 2rem;
+      }
+
+      .hero-card {
+        padding: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">For Arjan Boomert, FCC Technology Director</span>
+          <h1>A steadier build plan for Ketjen's FCC data tools</h1>
+          <p class="lead">Ketjen now sells more than catalyst chemistry. Your public pages promise faster answers, live unit visibility, and stronger technical service through digital tools, dashboards, and portal access around FCC performance.</p>
+          <p class="why">We saw Ketjen hiring an Electrical and Instrumentation Engineer. That usually means more plant signals, more project work, and more pressure on the systems that turn data into faster customer decisions.</p>
+        </div>
+
+        <aside class="hero-card" aria-label="Why we are focused here">
+          <h2>Why we're here</h2>
+          <div class="signal-grid">
+            <div class="signal">
+              <span>Primary Product</span>
+              <strong>E-Cat Portal</strong>
+            </div>
+            <div class="signal">
+              <span>Product Type</span>
+              <strong>Private web app</strong>
+            </div>
+            <div class="signal">
+              <span>Public Story</span>
+              <strong>Digital Services</strong>
+            </div>
+            <div class="signal">
+              <span>Current Read</span>
+              <strong>Data flow and release control</strong>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="read">
+      <h2 class="section-title">Our read</h2>
+      <div class="read-wrap">
+        <p>That hiring move suggests the FCC team is adding capacity at the plant-data edge. At the same time, Ketjen promotes Digital Services, predictive insights, and an E-Cat portal built for faster access to results and trends. The hard part is not collecting more data. The hard part is keeping portal logic, models, and customer reporting in step while engineering work grows. If that gap stays, your experts spend time stitching context together and customers wait longer for clear guidance.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">What we'd do</h2>
+      <p class="plan-header">We would start with a dedicated squad under Ketjen's technical owner. The pilot stays narrow and works on the live E-Cat portal plus the data services behind it.</p>
+
+      <div class="plan-grid">
+        <div class="steps">
+          <article class="step">
+            <div class="step-number">1</div>
+            <div>
+              <h3>Map the flow</h3>
+              <p>Trace FCC sample and plant-signal data into portal views, then mark slow handoffs, manual checks, and duplicated report paths.</p>
+            </div>
+          </article>
+
+          <article class="step">
+            <div class="step-number">2</div>
+            <div>
+              <h3>Stabilize core portal paths</h3>
+              <p>Harden results, trends, and cross-plot journeys, then add regression tests before new Digital Services changes reach refinery customers.</p>
+            </div>
+          </article>
+
+          <article class="step">
+            <div class="step-number">3</div>
+            <div>
+              <h3>Split risky logic</h3>
+              <p>Move fragile benchmark, alert, and derived-value rules into cleaner services so portal releases stop breaking analysis views.</p>
+            </div>
+          </article>
+
+          <article class="step">
+            <div class="step-number">4</div>
+            <div>
+              <h3>Add release control</h3>
+              <p>Set weekly demos, release notes, and basic telemetry so Ketjen sees where users still leave the portal for email or spreadsheets.</p>
+            </div>
+          </article>
+        </div>
+
+        <aside class="aside-cards">
+          <div class="aside-card">
+            <h3>Team shape</h3>
+            <ul>
+              <li>1 Tech Lead</li>
+              <li>2 senior full-stack engineers</li>
+              <li>1 QA engineer</li>
+              <li>1 DevOps engineer</li>
+            </ul>
+          </div>
+
+          <div class="aside-card">
+            <h3>Delivery frame</h3>
+            <ul>
+              <li>6-week pilot</li>
+              <li>Weekly demo cadence</li>
+              <li>Ketjen keeps product control</li>
+            </ul>
+          </div>
+
+          <div class="aside-card">
+            <h3>Relevant stack</h3>
+            <div class="stack">
+              <span class="chip">React</span>
+              <span class="chip">Angular</span>
+              <span class="chip">.NET / C#</span>
+              <span class="chip">Python</span>
+              <span class="chip">Node.js</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="who">
+      <h2 class="section-title">Who is Elinext</h2>
+      <p>Elinext is a full-cycle software development partner, active since 1997. We have about 700 in-house specialists and no freelancers. For work like this, that means one team can cover web, backend, QA, and DevOps without extra handoffs. We work under ISO 9001 and ISO 27001, and our teams have delivered for companies such as Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. That mix fits this plan: help Ketjen ship careful portal and data changes while your FCC experts stay close to operations.</p>
+      <div class="customer-pills" aria-label="Selected Elinext customers">
+        <strong>Siemens</strong>
+        <strong>Broadcom</strong>
+        <strong>Volkswagen</strong>
+        <strong>TRUMPF</strong>
+        <strong>TUI</strong>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Proof</h2>
+      <div class="proof-grid">
+        <article class="proof-card">
+          <img src="assets/case-real-time-data-insights.jpg" alt="Real-time Data Insights of Machines Performance case study cover">
+          <div class="proof-copy">
+            <span>Manufacturing case study</span>
+            <h3>Real-time Data Insights of Machines Performance</h3>
+            <p>Built a manufacturing analytics platform that reads machine data in real time and gives teams improvement insight for better OEE decisions.</p>
+            <a class="proof-link" href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">View case study</a>
+          </div>
+        </article>
+
+        <article class="proof-card">
+          <img src="assets/case-manufacturing-execution-system.jpg" alt="Manufacturing Execution System case study cover">
+          <div class="proof-copy">
+            <span>Manufacturing case study</span>
+            <h3>Manufacturing Execution System</h3>
+            <p>Helped modernize and support a legacy MES that had grown hard to integrate, while keeping release work moving for client environments.</p>
+            <a class="proof-link" href="https://www.elinext.com/case-study/manufacturing-execution-system/">View case study</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta">
+      <h2 class="section-title">Discuss the first sprint</h2>
+      <p>If this read feels close, we can compare notes and scope a small pilot.</p>
+      <a href="https://www.elinext.com/contacts/">Start the conversation</a>
+    </section>
+  </main>
+</body>
+</html>
