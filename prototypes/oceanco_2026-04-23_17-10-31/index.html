@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital support for faster yacht engineering and outfitting | Elinext</title>
+  <meta name="description" content="A short proposal for Oceanco on reducing friction across engineering, outfitting, and facility workflows during active custom yacht programs.">
+  <meta name="author" content="Elinext">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/oceanco_2026-04-23_17-10-31/">
+  <meta property="og:title" content="Digital support for faster yacht engineering and outfitting">
+  <meta property="og:description" content="A short proposal for Oceanco on reducing friction across engineering, outfitting, and facility workflows during active custom yacht programs.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/oceanco_2026-04-23_17-10-31/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/oceanco_2026-04-23_17-10-31/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #08111d;
+      --bg-soft: #101c2d;
+      --panel: rgba(8, 17, 29, 0.9);
+      --panel-strong: #0e1a2a;
+      --card: #132235;
+      --card-soft: #15283f;
+      --line: rgba(212, 179, 118, 0.22);
+      --text: #f2eee7;
+      --muted: #bfd1e6;
+      --muted-2: #9bb0c8;
+      --accent: #d4b376;
+      --accent-2: #8fc6ff;
+      --ink: #06101a;
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+      --radius: 24px;
+      --radius-sm: 18px;
+      --wrap: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      font-family: "Manrope", sans-serif;
+      line-height: 1.55;
+      background:
+        radial-gradient(circle at top left, rgba(143, 198, 255, 0.12), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(212, 179, 118, 0.16), transparent 30%),
+        linear-gradient(180deg, #08111d 0%, #0a1420 42%, #091019 100%);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5), transparent 88%);
+      opacity: 0.18;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: var(--wrap);
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    .hero {
+      padding: 28px 0 34px;
+    }
+
+    .masthead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .brand-mark {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), #f0dcc2);
+      box-shadow: 0 0 0 6px rgba(212, 179, 118, 0.08);
+    }
+
+    .prepared {
+      color: var(--muted-2);
+      font-size: 0.82rem;
+      text-align: right;
+    }
+
+    .hero-shell {
+      background: linear-gradient(180deg, rgba(13, 23, 37, 0.92), rgba(12, 22, 35, 0.98));
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(212, 179, 118, 0.14), transparent 36%),
+        radial-gradient(circle at 88% 14%, rgba(143, 198, 255, 0.18), transparent 28%);
+      z-index: -1;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 26px;
+      padding: 28px 22px 24px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 16px;
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 1px;
+      background: currentColor;
+    }
+
+    h1, h2, h3 {
+      font-family: "Cormorant Garamond", serif;
+      margin: 0;
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      font-size: clamp(2.7rem, 7vw, 5rem);
+      line-height: 0.95;
+      max-width: 10ch;
+      margin-bottom: 18px;
+    }
+
+    .hero-copy p {
+      margin: 0;
+      max-width: 40rem;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .hero-copy p + p {
+      margin-top: 14px;
+    }
+
+    .why {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(20, 34, 53, 0.74);
+      border: 1px solid rgba(212, 179, 118, 0.2);
+    }
+
+    .why-label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .hero-rail {
+      display: grid;
+      gap: 14px;
+      align-self: stretch;
+    }
+
+    .signal-card,
+    .quote-card {
+      background: rgba(19, 34, 53, 0.86);
+      border: 1px solid rgba(212, 179, 118, 0.16);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .signal-card h2,
+    .quote-card h2,
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1;
+    }
+
+    .signal-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .signal-item {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(8, 17, 29, 0.62);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .signal-item strong,
+    .quote-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.98rem;
+    }
+
+    .signal-item span,
+    .quote-card p,
+    .quote-card small {
+      color: var(--muted-2);
+      font-size: 0.92rem;
+    }
+
+    .quote-card p {
+      margin-top: 12px;
+      margin-bottom: 10px;
+    }
+
+    section {
+      padding: 20px 0;
+    }
+
+    .section-shell {
+      background: var(--panel);
+      border: 1px solid rgba(212, 179, 118, 0.16);
+      border-radius: 28px;
+      padding: 26px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-kicker {
+      margin: 0 0 8px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .read-card {
+      max-width: 100%;
+      margin: 0;
+      padding: 22px 20px;
+      border-left: 4px solid var(--accent);
+      background: linear-gradient(180deg, rgba(21, 40, 63, 0.98), rgba(18, 34, 54, 0.98));
+      border-radius: 20px;
+    }
+
+    .read-card p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 64ch;
+      font-size: 1rem;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .proposal-intro {
+      margin: 0 0 16px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .proposal-card,
+    .team-card {
+      background: linear-gradient(180deg, rgba(19, 34, 53, 0.98), rgba(16, 29, 45, 0.98));
+      border: 1px solid rgba(212, 179, 118, 0.16);
+      border-radius: 22px;
+      padding: 20px;
+    }
+
+    .engagement {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(8, 17, 29, 0.64);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .step-num {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), #e8d2ad);
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .step h3 {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted-2);
+      font-size: 0.95rem;
+    }
+
+    .team-card h3,
+    .proof-card h3,
+    .cta-shell h2 {
+      font-size: 1.7rem;
+      margin-bottom: 12px;
+    }
+
+    .team-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pill,
+    .stack-tag,
+    .client-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .pill {
+      background: rgba(212, 179, 118, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(212, 179, 118, 0.2);
+    }
+
+    .stack-wrap,
+    .client-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .stack-tag {
+      background: rgba(143, 198, 255, 0.12);
+      color: #d7ebff;
+      border: 1px solid rgba(143, 198, 255, 0.18);
+    }
+
+    .team-copy,
+    .elinext-copy {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .client-tag {
+      background: rgba(242, 238, 231, 0.08);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(19, 34, 53, 0.98), rgba(16, 29, 45, 0.98));
+      border: 1px solid rgba(212, 179, 118, 0.16);
+      border-radius: 22px;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 1170 / 508;
+      object-fit: cover;
+      background: #0f1722;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-kicker {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .proof-body p {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .elinext-copy {
+      max-width: 64ch;
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .cta-shell {
+      text-align: center;
+      background:
+        linear-gradient(180deg, rgba(20, 34, 53, 0.98), rgba(14, 24, 38, 0.98)),
+        var(--panel-strong);
+      border: 1px solid rgba(212, 179, 118, 0.2);
+      border-radius: 28px;
+      padding: 28px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .cta-shell p {
+      margin: 0 auto 18px;
+      max-width: 34rem;
+      color: var(--muted);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 0 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), #f0dcc2);
+      color: var(--ink);
+      font-weight: 800;
+      box-shadow: 0 12px 30px rgba(212, 179, 118, 0.24);
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted-2);
+      font-size: 0.85rem;
+    }
+
+    @media (min-width: 768px) {
+      .wrap {
+        padding: 0 28px;
+      }
+
+      .hero {
+        padding-top: 34px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.8fr);
+        gap: 28px;
+        padding: 34px 30px 30px;
+      }
+
+      .section-shell {
+        padding: 34px 30px;
+      }
+
+      .proposal-grid {
+        grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.82fr);
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .hero-grid {
+        padding: 40px 36px 34px;
+      }
+
+      .section-shell {
+        padding: 40px 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="wrap">
+        <div class="masthead">
+          <div class="brand">
+            <span class="brand-mark"></span>
+            <span>Elinext proposal brief</span>
+          </div>
+          <div class="prepared">Prepared for Diana Cohen, Manager IT</div>
+        </div>
+        <div class="hero-shell">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <p class="eyebrow">Oceanco</p>
+              <h1>Digital support for faster yacht engineering and outfitting</h1>
+              <p>Your team builds custom yachts with heavy engineering, outfitting, and life cycle support work. This note shows where extra software help could remove friction without changing Oceanco's build model.</p>
+              <p class="why"><span class="why-label">Why we're here</span>We noticed Oceanco is hiring a Senior Facility Engineer and a Lead Engineer - Outfit. Project Y729 is also moving from Zwijndrecht to Alblasserdam for outfitting. That usually means more handoffs, more approvals, and more pressure on IT.</p>
+            </div>
+            <aside class="hero-rail">
+              <div class="signal-card">
+                <h2>Current moment</h2>
+                <div class="signal-list">
+                  <div class="signal-item">
+                    <strong>Hiring in facilities and outfit</strong>
+                    <span>Good sign of active load, but also a sign of coordination risk.</span>
+                  </div>
+                  <div class="signal-item">
+                    <strong>Live cross-site program</strong>
+                    <span>Y729 is moving into outfitting, where status gaps get expensive fast.</span>
+                  </div>
+                  <div class="signal-item">
+                    <strong>Digital ambition is public</strong>
+                    <span>Oceanco talks about smart yachts, AI, and digital twins on its site.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="quote-card">
+                <h2>What the market says</h2>
+                <p>Yacht operators still talk about too many logs, part numbers, and maintenance records. That is a familiar place for build and support data to slip.</p>
+                <small>Industry context from r/Yachts maintenance discussion.</small>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <div class="wrap">
+          <div class="section-shell">
+            <p class="section-kicker">Our read</p>
+            <h2 class="section-title">Where the pressure likely sits</h2>
+            <div class="read-card">
+              <p>Oceanco is scaling work across engineering, outfitting, and facilities at the same time. The public site also shows a push into smart yachts, AI, and digital twins. That mix usually creates one problem first: data moves slower than the build. When drawings, parts, approvals, and field updates split, rework follows quickly.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <div class="section-shell">
+            <p class="section-kicker">What we'd do</p>
+            <h2 class="section-title">Start with one controlled pilot</h2>
+            <p class="proposal-intro">A dedicated squad under Diana's team. Ten weeks. One active build or facility flow.</p>
+            <div class="proposal-grid">
+              <div class="proposal-card">
+                <p class="engagement">Engagement model: a dedicated squad working under your internal owner, with weekly demos and clear rollback options.</p>
+                <div class="steps">
+                  <article class="step">
+                    <div class="step-num">01</div>
+                    <div>
+                      <h3>Map the real flow</h3>
+                      <p>Map how engineering, outfitting, and facility requests move between teams, sites, and co-makers. Mark duplicate entry, offline files, and approval waits.</p>
+                    </div>
+                  </article>
+                  <article class="step">
+                    <div class="step-num">02</div>
+                    <div>
+                      <h3>Build one shared workbench</h3>
+                      <p>Build one shared workbench for change requests, document status, and punch items, so blockers appear before they affect fabrication or sea-trial dates.</p>
+                    </div>
+                  </article>
+                  <article class="step">
+                    <div class="step-num">03</div>
+                    <div>
+                      <h3>Connect the current systems</h3>
+                      <p>Connect core systems and role-based alerts for engineering, procurement, and site leads. Keep every handoff searchable, dated, and easy to audit.</p>
+                    </div>
+                  </article>
+                  <article class="step">
+                    <div class="step-num">04</div>
+                    <div>
+                      <h3>Prove the model</h3>
+                      <p>Run the pilot on one yacht or facility flow, with weekly demos, baseline timing, and rollout notes for the next stream.</p>
+                    </div>
+                  </article>
+                </div>
+              </div>
+              <aside class="team-card">
+                <h3>Team shape</h3>
+                <div class="team-line">
+                  <span class="pill">1 solution architect</span>
+                  <span class="pill">2 full-stack engineers</span>
+                  <span class="pill">1 business analyst</span>
+                  <span class="pill">1 QA</span>
+                </div>
+                <p class="team-copy">Relevant stack for this work: practical web layers, stable integrations, and audit-friendly delivery.</p>
+                <div class="stack-wrap" aria-label="Relevant stack">
+                  <span class="stack-tag">.NET</span>
+                  <span class="stack-tag">C#</span>
+                  <span class="stack-tag">React</span>
+                  <span class="stack-tag">Node.js</span>
+                  <span class="stack-tag">Python</span>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <div class="section-shell">
+            <p class="section-kicker">Who is Elinext</p>
+            <h2 class="section-title">A steady delivery team</h2>
+            <p class="elinext-copy">Elinext is a full-cycle software development company, active since 1997. We have about 700 in-house specialists, with no freelancers or subcontractors. For industrial work, that matters because integrations, QA, and change control need steady teams. We also bring ISO 9001 and ISO 27001 discipline to delivery. Our teams have shipped for <span class="client-wrap"><span class="client-tag"><strong>Siemens</strong></span><span class="client-tag"><strong>TRUMPF</strong></span><span class="client-tag"><strong>Volkswagen</strong></span><span class="client-tag"><strong>Broadcom</strong></span><span class="client-tag"><strong>TUI</strong></span></span> We know how to support live operations while modernizing the system underneath. You keep product control. We bring delivery speed and clean execution.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <div class="section-shell">
+            <p class="section-kicker">Proof</p>
+            <h2 class="section-title">Similar industrial work</h2>
+            <div class="proof-grid">
+              <article class="proof-card">
+                <img src="assets/case-machines-performance.jpg" alt="Case study image for machine performance data platform">
+                <div class="proof-body">
+                  <p class="proof-kicker">Manufacturing data platform</p>
+                  <h3>Real-time data insights of machines performance</h3>
+                  <p>Elinext built a web solution that reads machine data and turns it into OEE improvement insight for factory teams.</p>
+                  <a class="proof-link" href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/" target="_blank" rel="noopener noreferrer">See case study</a>
+                </div>
+              </article>
+              <article class="proof-card">
+                <img src="assets/case-manufacturing-execution-system.jpg" alt="Case study image for manufacturing execution system">
+                <div class="proof-body">
+                  <p class="proof-kicker">Manufacturing execution</p>
+                  <h3>Manufacturing execution system</h3>
+                  <p>Elinext supported a core MES modernization and integration effort that reached ROI of up to 400%.</p>
+                  <a class="proof-link" href="https://www.elinext.com/case-study/manufacturing-execution-system/" target="_blank" rel="noopener noreferrer">See case study</a>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <div class="cta-shell">
+            <h2>Start a short talk</h2>
+            <p>A 20-minute call is enough to test the fit.</p>
+            <a class="btn" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Talk to Elinext</a>
+            <div class="footer-note">Focused on one pilot, one flow, and clear handoff wins.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
