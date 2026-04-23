@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A clearer build flow for Oceanco's outfit and facility teams | Elinext</title>
+  <meta name="description" content="A focused Elinext proposal for Erwin Kooistra on reducing coordination drag across outfitting, facilities, and co-maker work while Oceanco scales Simply Custom and Life Cycle Support.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/oceanco_2026-04-23_16-53-33/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/oceanco_2026-04-23_16-53-33/">
+  <meta property="og:title" content="A clearer build flow for Oceanco's outfit and facility teams">
+  <meta property="og:description" content="A focused Elinext proposal for Erwin Kooistra on reducing coordination drag across outfitting, facilities, and co-maker work while Oceanco scales Simply Custom and Life Cycle Support.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/oceanco_2026-04-23_16-53-33/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A clearer build flow for Oceanco's outfit and facility teams">
+  <meta name="twitter:description" content="A focused Elinext proposal for Erwin Kooistra on reducing coordination drag across outfitting, facilities, and co-maker work while Oceanco scales Simply Custom and Life Cycle Support.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/oceanco_2026-04-23_16-53-33/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f3ede2;
+      --bg-deep: #102038;
+      --bg-deep-2: #1c355c;
+      --paper: rgba(255, 249, 239, 0.96);
+      --paper-strong: #fbf6ec;
+      --paper-warm: #eee2ce;
+      --paper-soft: #f8f3ea;
+      --line: rgba(16, 32, 56, 0.12);
+      --ink: #15253d;
+      --muted: #5f6e82;
+      --brand: #c97a3f;
+      --brand-strong: #a8612d;
+      --brand-soft: rgba(201, 122, 63, 0.14);
+      --sea: #446b96;
+      --shadow: 0 24px 64px rgba(16, 32, 56, 0.12);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(201, 122, 63, 0.16), transparent 22rem),
+        radial-gradient(circle at bottom right, rgba(68, 107, 150, 0.14), transparent 26rem),
+        linear-gradient(180deg, #f7f1e6 0%, #ece3d2 100%);
+      color: var(--ink);
+      font-family: "Work Sans", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(21, 37, 61, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(21, 37, 61, 0.025) 1px, transparent 1px);
+      background-size: 36px 36px;
+      z-index: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Sora", sans-serif;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    p,
+    li {
+      font-size: 0.98rem;
+      line-height: 1.56;
+      color: var(--muted);
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      padding: 14px 12px 56px;
+    }
+
+    .shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      width: 100%;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-pad {
+      padding: 22px 18px;
+    }
+
+    .kicker,
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      max-width: 100%;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .kicker {
+      margin: 0 auto 14px;
+      background: rgba(16, 32, 56, 0.06);
+      color: var(--ink);
+      border: 1px solid rgba(16, 32, 56, 0.08);
+    }
+
+    .eyebrow {
+      color: rgba(255, 246, 236, 0.88);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at 88% 16%, rgba(201, 122, 63, 0.32), transparent 16rem),
+        linear-gradient(140deg, #102038 0%, #193255 58%, #22466f 100%);
+      color: #fdf6ec;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero h1 {
+      max-width: 11ch;
+      font-size: clamp(2.4rem, 9vw, 5rem);
+    }
+
+    .hero p {
+      max-width: 45rem;
+      color: rgba(253, 246, 236, 0.88);
+    }
+
+    .hero .why {
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .hero-panel {
+      display: grid;
+      gap: 12px;
+    }
+
+    .signal-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .signal-card {
+      padding: 14px 15px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .signal-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.96rem;
+      color: #fff7ef;
+    }
+
+    .signal-card span {
+      display: block;
+      color: rgba(255, 246, 236, 0.82);
+      font-size: 0.92rem;
+      line-height: 1.4;
+    }
+
+    .section-head {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.85rem, 5vw, 3rem);
+    }
+
+    .section-head p {
+      max-width: 48rem;
+      margin: 0 auto;
+    }
+
+    .read {
+      background: linear-gradient(180deg, #ead9c2 0%, #f3e7d6 100%);
+      border-left: 6px solid var(--brand);
+    }
+
+    .read p {
+      max-width: 68ch;
+      margin: 0 auto;
+      color: #30445f;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .summary-card,
+    .step-card,
+    .proof-card,
+    .cta-card {
+      width: 100%;
+      background: var(--paper-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+    }
+
+    .summary-card {
+      padding: 18px;
+      background:
+        linear-gradient(180deg, #fdf7ed 0%, #f3eadc 100%);
+    }
+
+    .summary-card h3,
+    .proof-card h3 {
+      margin-bottom: 12px;
+      font-size: 1.22rem;
+    }
+
+    .summary-card p {
+      color: var(--muted);
+    }
+
+    .summary-meta {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .summary-block {
+      padding: 12px 13px;
+      border-radius: var(--radius-sm);
+      background: rgba(16, 32, 56, 0.04);
+      border: 1px solid rgba(16, 32, 56, 0.08);
+    }
+
+    .summary-block strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 0.95rem;
+    }
+
+    .role-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 14px;
+    }
+
+    .role-card {
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      background: rgba(68, 107, 150, 0.08);
+      border: 1px solid rgba(68, 107, 150, 0.12);
+    }
+
+    .role-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.94rem;
+      color: var(--ink);
+    }
+
+    .role-card span {
+      display: block;
+      font-size: 0.88rem;
+      line-height: 1.35;
+      color: var(--muted);
+    }
+
+    .stack-row,
+    .customer-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .stack-chip,
+    .customer-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 100%;
+      min-width: 0;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .stack-chip {
+      background: var(--brand-soft);
+      color: var(--brand-strong);
+      border: 1px solid rgba(201, 122, 63, 0.16);
+    }
+
+    .steps-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step-card {
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .step-no {
+      width: 44px;
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #183458, #2b567f);
+      color: #fff8ef;
+      font-family: "Sora", sans-serif;
+      font-size: 1.08rem;
+      font-weight: 700;
+    }
+
+    .step-card h3 {
+      margin-bottom: 8px;
+      font-size: 1.12rem;
+      color: var(--ink);
+    }
+
+    .credibility p {
+      max-width: 66ch;
+      margin: 0 auto 16px;
+      text-align: center;
+    }
+
+    .customer-row {
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .customer-chip {
+      background: rgba(16, 32, 56, 0.08);
+      color: var(--ink);
+      border: 1px solid rgba(16, 32, 56, 0.12);
+      font-weight: 700;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 1170 / 508;
+      object-fit: cover;
+      background: #d8dde4;
+    }
+
+    .proof-copy {
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .proof-copy p {
+      color: var(--muted);
+    }
+
+    .proof-link,
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      max-width: 100%;
+      padding: 13px 18px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: transform 0.2s ease;
+    }
+
+    .proof-link:hover,
+    .cta-link:hover {
+      transform: translateY(-1px);
+    }
+
+    .proof-link {
+      background: rgba(16, 32, 56, 0.08);
+      color: var(--ink);
+    }
+
+    .cta {
+      background:
+        radial-gradient(circle at 88% 14%, rgba(201, 122, 63, 0.26), transparent 17rem),
+        linear-gradient(140deg, #132742 0%, #17365f 100%);
+      color: #fdf7ef;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .cta-card {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.12);
+      padding: 18px;
+      text-align: center;
+    }
+
+    .cta h2,
+    .cta h3 {
+      color: #fff7ef;
+    }
+
+    .cta p {
+      max-width: 40rem;
+      margin: 0 auto 16px;
+      color: rgba(253, 247, 239, 0.84);
+    }
+
+    .cta-link {
+      background: var(--brand);
+      color: #1c2130;
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: rgba(253, 247, 239, 0.7);
+    }
+
+    @media (min-width: 760px) {
+      .page {
+        padding: 22px 18px 68px;
+      }
+
+      .section-pad {
+        padding: 28px 28px;
+      }
+
+      .hero-grid,
+      .proposal-grid {
+        grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+        align-items: start;
+      }
+
+      .steps-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .section-pad {
+        padding: 34px 36px;
+      }
+
+      .hero h1 {
+        max-width: 10ch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main class="shell">
+      <section class="card hero">
+        <div class="section-pad hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">Proposal Brief for Erwin Kooistra</span>
+            <h1>A clearer build flow for Oceanco's outfit and facility teams</h1>
+            <p>A short plan for one clearer way to manage changes, inspections, and blockers across Alblasserdam, Zwijndrecht, and co-makers.</p>
+            <p class="why">You are hiring a Senior Facility Engineer and a Lead Engineer - Outfit while Y729 has moved into outfitting. That points to a live handoff and capacity moment.</p>
+          </div>
+          <div class="hero-panel">
+            <div class="signal-list">
+              <div class="signal-card">
+                <strong>Live signal</strong>
+                <span>Simply Custom is live, and Y729 is deep in the final build stage.</span>
+              </div>
+              <div class="signal-card">
+                <strong>Pressure point</strong>
+                <span>Facilities, outfit, and co-maker work all have to stay in step.</span>
+              </div>
+              <div class="signal-card">
+                <strong>Why software</strong>
+                <span>Better workflow visibility protects pace and cuts daily chasing.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card read">
+        <div class="section-pad">
+          <div class="section-head">
+            <span class="kicker">Our Read</span>
+            <h2>The bottleneck looks operational</h2>
+          </div>
+          <p>The signal tells us Oceanco is carrying more work where facilities, engineering, and outfitting must stay in step. Y729, Life Cycle Support, and rebuild work mean the same teams are juggling build pace, technical change, and service response. In that setup, small status gaps turn into waiting, rework, or late decisions. If that drag grows, senior leads spend more time aligning people than moving delivery.</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-pad">
+          <div class="section-head">
+            <span class="kicker">What We'd Do</span>
+            <h2>Set one shared delivery layer</h2>
+            <p>A dedicated squad under your project and operations leads, starting with an eight-week pilot.</p>
+          </div>
+          <div class="proposal-grid">
+            <div class="summary-card">
+              <h3>Squad and scope</h3>
+              <p>We would support the handoff between construction, outfitting, and facility work without taking control away from Oceanco.</p>
+              <div class="summary-meta">
+                <div class="summary-block">
+                  <strong>Engagement model</strong>
+                  <span>Dedicated squad under Oceanco's project and operations leadership.</span>
+                </div>
+                <div class="summary-block">
+                  <strong>Duration</strong>
+                  <span>8-week pilot, then extend if the workflow layer proves value.</span>
+                </div>
+                <div class="summary-block">
+                  <strong>Relevant stack</strong>
+                  <div class="stack-row">
+                    <span class="stack-chip">React</span>
+                    <span class="stack-chip">.NET</span>
+                    <span class="stack-chip">C#</span>
+                    <span class="stack-chip">Node.js</span>
+                    <span class="stack-chip">Python</span>
+                  </div>
+                </div>
+              </div>
+              <div class="role-grid">
+                <div class="role-card">
+                  <strong>Tech Lead</strong>
+                  <span>Owns flow and delivery quality.</span>
+                </div>
+                <div class="role-card">
+                  <strong>Business Analyst</strong>
+                  <span>Maps work packs and handoff rules.</span>
+                </div>
+                <div class="role-card">
+                  <strong>2 Senior Engineers</strong>
+                  <span>Build the workflow layer and interfaces.</span>
+                </div>
+                <div class="role-card">
+                  <strong>QA Engineer</strong>
+                  <span>Protects active builds with release checks.</span>
+                </div>
+              </div>
+            </div>
+            <div class="steps-grid">
+              <article class="step-card">
+                <div class="step-no">01</div>
+                <h3>Map the real handoffs</h3>
+                <p>Trace how drawings, inspections, and blockers move between Zwijndrecht, Alblasserdam, and co-makers for Simply Custom and Life Cycle Support work.</p>
+              </article>
+              <article class="step-card">
+                <div class="step-no">02</div>
+                <h3>Build one status model</h3>
+                <p>Create a shared workflow for work packs, change requests, and open issues, so outfit and facility leads stop chasing updates across separate tools.</p>
+              </article>
+              <article class="step-card">
+                <div class="step-no">03</div>
+                <h3>Add role-based views</h3>
+                <p>Give project, outfit, and facility teams simple views of risk, blocked tasks, and supplier dependencies tied to yacht stage and location.</p>
+              </article>
+              <article class="step-card">
+                <div class="step-no">04</div>
+                <h3>Protect releases and changes</h3>
+                <p>Set test and release routines around the new workflow layer, so process changes land safely while active builds and rebuilds continue.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card credibility">
+        <div class="section-pad">
+          <div class="section-head">
+            <span class="kicker">Who Is Elinext</span>
+            <h2>Built for complex delivery</h2>
+          </div>
+          <div class="customer-row">
+            <span class="customer-chip">Siemens</span>
+            <span class="customer-chip">TRUMPF</span>
+            <span class="customer-chip">Volkswagen</span>
+          </div>
+          <p>Elinext is a full-cycle software development partner, working since 1997 with about 700 in-house specialists and no freelancers. For industrial work, we bring product analysis, React, .NET, Python, QA, and delivery management in one team. Our work with <strong>Siemens</strong>, <strong>TRUMPF</strong>, and <strong>Volkswagen</strong> shows we can support complex products with long lifecycles and exact quality needs. We also work under ISO 9001 and ISO 27001. The squad above is designed to fit Oceanco's build rhythm.</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-pad">
+          <div class="section-head">
+            <span class="kicker">Proof</span>
+            <h2>Related delivery work</h2>
+            <p>Two cases that match the mix of operational visibility, engineering change, and manufacturing context behind this proposal.</p>
+          </div>
+          <div class="proof-grid">
+            <article class="proof-card">
+              <img src="assets/case-port-ops.jpg" alt="Port operations case study">
+              <div class="proof-copy">
+                <h3>Port operations HMI</h3>
+                <p>Elinext built a real-time HMI layer for straddle carriers and ship-to-shore cranes. The case says it saved 50% of the initial budget.</p>
+                <a class="proof-link" href="https://www.elinext.com/case-study/streamlining-port-operations-hmi-management/" target="_blank" rel="noreferrer">Read case study</a>
+              </div>
+            </article>
+            <article class="proof-card">
+              <img src="assets/case-machine-insights.jpg" alt="Machine performance case study">
+              <div class="proof-copy">
+                <h3>Machine performance insight</h3>
+                <p>Elinext delivered a machine-data platform that turned factory signals into OEE insight and helped reduce extra production cost.</p>
+                <a class="proof-link" href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/" target="_blank" rel="noreferrer">Read case study</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="card cta">
+        <div class="section-pad">
+          <div class="section-head">
+            <span class="eyebrow">Let's Talk</span>
+            <h2>Compare the workflow gaps</h2>
+          </div>
+          <div class="cta-card">
+            <p>If this matches the load behind your current hiring, we can sketch a short pilot around outfit, facility, and co-maker coordination.</p>
+            <a class="cta-link" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Start the conversation</a>
+          </div>
+          <div class="footer-note">Prepared for Oceanco on April 23, 2026</div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
