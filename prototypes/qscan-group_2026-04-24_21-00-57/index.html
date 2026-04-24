@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Helping Qscan Steady Patient Results And Clinic Handoffs | Elinext</title>
+  <meta name="description" content="A focused proposal for Qscan on patient-results reliability, clinic handoffs, and release discipline.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/qscan-group_2026-04-24_21-00-57/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/qscan-group_2026-04-24_21-00-57/">
+  <meta property="og:title" content="Helping Qscan Steady Patient Results And Clinic Handoffs">
+  <meta property="og:description" content="A focused proposal for Qscan on patient-results reliability, clinic handoffs, and release discipline.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/qscan-group_2026-04-24_21-00-57/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Helping Qscan Steady Patient Results And Clinic Handoffs">
+  <meta name="twitter:description" content="A focused proposal for Qscan on patient-results reliability, clinic handoffs, and release discipline.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/qscan-group_2026-04-24_21-00-57/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f3f8f5;
+      --bg-2: #deefe9;
+      --surface: rgba(255, 255, 255, 0.94);
+      --surface-strong: #ffffff;
+      --surface-deep: #0f4137;
+      --surface-soft: #eff7f4;
+      --ink: #17322d;
+      --muted: #56706a;
+      --line: rgba(23, 50, 45, 0.12);
+      --brand: #0c8a6d;
+      --brand-deep: #0f5f50;
+      --accent: #f2a83a;
+      --accent-soft: rgba(242, 168, 58, 0.16);
+      --shadow: 0 20px 50px rgba(14, 50, 43, 0.12);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(12, 138, 109, 0.14), transparent 28%),
+        radial-gradient(circle at 86% 14%, rgba(242, 168, 58, 0.12), transparent 22%),
+        linear-gradient(180deg, var(--bg) 0%, #edf5f2 100%);
+      color: var(--ink);
+      font-family: "Sora", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(12, 138, 109, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(12, 138, 109, 0.03) 1px, transparent 1px);
+      background-size: 28px 28px;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    .hero {
+      padding: 22px 0 26px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #ffd89a, var(--accent));
+      flex: 0 0 auto;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 20px;
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(18, 79, 66, 0.98), rgba(14, 58, 49, 0.98)),
+        var(--surface-deep);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -48px;
+      top: -54px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 219, 157, 0.24), transparent 68%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    h1 {
+      max-width: 13ch;
+      margin-top: 16px;
+      color: #f9fffd;
+      font-size: clamp(2.3rem, 10vw, 5rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-copy,
+    .hero-why {
+      max-width: 60ch;
+      margin-top: 16px;
+      font-size: 1rem;
+      line-height: 1.58;
+    }
+
+    .hero-copy {
+      color: rgba(241, 251, 248, 0.86);
+    }
+
+    .hero-why {
+      padding-left: 14px;
+      border-left: 3px solid var(--accent);
+      color: #ffffff;
+    }
+
+    .hero-notes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .note-chip {
+      padding: 9px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.82rem;
+    }
+
+    section {
+      padding: 18px 0;
+    }
+
+    .section-head {
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .kicker {
+      display: inline-block;
+      margin-bottom: 10px;
+      color: var(--brand);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      line-height: 1.04;
+      letter-spacing: -0.05em;
+    }
+
+    .read-card,
+    .proposal-card,
+    .who-card,
+    .case-card,
+    .cta-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .read-card {
+      padding: 24px 20px;
+      background:
+        linear-gradient(180deg, rgba(12, 138, 109, 0.08), rgba(255, 255, 255, 0.96)),
+        var(--surface-strong);
+    }
+
+    .read-copy {
+      width: 100%;
+      max-width: 74ch;
+      margin: 0 auto;
+      padding-left: 16px;
+      border-left: 4px solid var(--brand);
+      color: var(--ink);
+      font-size: 1rem;
+      line-height: 1.64;
+    }
+
+    .proposal-card {
+      padding: 22px 18px;
+      background:
+        linear-gradient(180deg, rgba(243, 248, 245, 0.96), rgba(255, 255, 255, 0.98)),
+        var(--surface-strong);
+    }
+
+    .proposal-top {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .proposal-summary,
+    .team-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: var(--surface-soft);
+      border: 1px solid rgba(23, 50, 45, 0.1);
+    }
+
+    .proposal-summary p,
+    .team-card p {
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.58;
+    }
+
+    .proposal-summary strong,
+    .team-card strong,
+    .case-body strong {
+      color: var(--ink);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid rgba(23, 50, 45, 0.1);
+      font-size: 0.84rem;
+      color: var(--ink);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .step {
+      position: relative;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(23, 50, 45, 0.1);
+      background: #ffffff;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      color: #8b5400;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .step h3 {
+      font-size: 1.08rem;
+      line-height: 1.22;
+    }
+
+    .step p {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    .who-card {
+      padding: 24px 20px;
+      background:
+        linear-gradient(180deg, rgba(15, 65, 55, 0.04), rgba(255, 255, 255, 0.96)),
+        var(--surface-strong);
+    }
+
+    .logo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .logo-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(12, 138, 109, 0.1);
+      color: var(--brand-deep);
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    .who-card p {
+      max-width: 74ch;
+      color: var(--ink);
+      font-size: 0.98rem;
+      line-height: 1.62;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      background: var(--surface-strong);
+    }
+
+    .case-media {
+      aspect-ratio: 16 / 9;
+      background: #dfeee7;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      font-size: 1.08rem;
+      line-height: 1.3;
+    }
+
+    .case-body p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.56;
+    }
+
+    .case-link {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 14px;
+      color: var(--brand-deep);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .cta-card {
+      padding: 26px 20px;
+      text-align: center;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(231, 245, 239, 0.96)),
+        var(--surface-strong);
+    }
+
+    .cta-card p {
+      max-width: 42ch;
+      margin: 10px auto 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      margin-top: 18px;
+      padding: 13px 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--brand), #12a27f);
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 14px 26px rgba(12, 138, 109, 0.22);
+    }
+
+    @media (min-width: 768px) {
+      .hero-card {
+        padding: 34px 32px;
+      }
+
+      .proposal-top {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hero {
+        padding-top: 28px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+        align-items: end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-card">
+          <div class="hero-grid">
+            <div>
+              <div class="eyebrow">Prepared for Nicole Harmse, General Manager Digital &amp; Experience</div>
+              <h1>Helping Qscan steady patient results and clinic handoffs</h1>
+              <p class="hero-copy">Qscan gives patients secure access to reports and images. Public feedback shows the app and portal still fail too often. Sharing reports is also harder than patients expect.</p>
+              <p class="hero-why">We saw Qscan is hiring a Head of Medical Services Operations. That often means patient access and clinic handoffs need one standard across the network.</p>
+            </div>
+            <div>
+              <div class="hero-notes">
+                <span class="note-chip">80+ clinics in group</span>
+                <span class="note-chip">Patient app + portal</span>
+                <span class="note-chip">Ops leader hire</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker">Our Read</span>
+          <h2>The signal points to service consistency</h2>
+        </div>
+        <div class="read-card">
+          <p class="read-copy">Hiring an operations lead suggests Qscan wants tighter control across care delivery. Qscan is also pushing online bookings, patient results, and referrer access at group scale. Public reviews show the patient-results journey still breaks on login, loading, and report access. When that happens, patients call clinics, staff improvise fixes, and trust drops.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker">What We'd Do</span>
+          <h2>A dedicated hardening squad for Qscan Patient Results</h2>
+        </div>
+        <div class="proposal-card">
+          <div class="proposal-top">
+            <div class="proposal-summary">
+              <p><strong>Engagement model:</strong> dedicated squad under Nicole's team and the new operations lead.</p>
+              <p style="margin-top:10px;"><strong>Initial scope:</strong> one 12-week hardening sprint.</p>
+              <div class="pill-row">
+                <span class="pill">1 tech lead</span>
+                <span class="pill">1 mobile engineer</span>
+                <span class="pill">1 web engineer</span>
+                <span class="pill">1 backend engineer</span>
+                <span class="pill">1 QA engineer</span>
+                <span class="pill">Part-time BA / designer</span>
+              </div>
+            </div>
+            <div class="team-card">
+              <p><strong>Relevant stack:</strong> React Native, Angular, Node.js, .NET, and Python.</p>
+              <p style="margin-top:10px;">Weekly demos. Shared backlog. Clear release gates. One owner for each defect path.</p>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="step-num">01</div>
+              <h3>Map the live failure path</h3>
+              <p>Trace SMS activation, login, portal fallback, and clinic escalation. Find where patients lose access and staff create manual work.</p>
+            </article>
+            <article class="step">
+              <div class="step-num">02</div>
+              <h3>Fix the top access blockers</h3>
+              <p>Stabilize password reset, session handling, and account linking. Remove the top launch and loading failures across devices.</p>
+            </article>
+            <article class="step">
+              <div class="step-num">03</div>
+              <h3>Improve result delivery and sharing</h3>
+              <p>Tighten result availability checks and image delivery. Add safer sharing for families, insurers, and other clinicians.</p>
+            </article>
+            <article class="step">
+              <div class="step-num">04</div>
+              <h3>Put release discipline in place</h3>
+              <p>Add regression coverage before each release. Give clinic and support teams issue scripts and clear rollback rules.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker">Who Is Elinext</span>
+          <h2>One in-house team for regulated digital work</h2>
+        </div>
+        <div class="who-card">
+          <div class="logo-row">
+            <span class="logo-pill">Siemens</span>
+            <span class="logo-pill">Broadcom</span>
+            <span class="logo-pill">Volkswagen</span>
+            <span class="logo-pill">TUI</span>
+            <span class="logo-pill">TRUMPF</span>
+          </div>
+          <p>Elinext is a full-cycle software development company. Since 1997, we have worked with about 700 in-house specialists. We use no freelancers, and we deliver under <strong>ISO 27001</strong> and <strong>ISO 9001</strong>. We support web, mobile, QA, DevOps, and integration work. Customers include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TUI</strong>, and <strong>TRUMPF</strong>. That helps when patient apps, portals, support teams, and clinic flows must change together. For Qscan, that means one accountable team can improve patient access and release quality together.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker">Proof</span>
+          <h2>Relevant healthcare delivery work</h2>
+        </div>
+        <div class="proof-grid">
+          <article class="case-card">
+            <div class="case-media">
+              <img src="assets/case-patient-portal.jpg" alt="Patient Portal for a Healthcare Company">
+            </div>
+            <div class="case-body">
+              <h3>Patient Portal for a Healthcare Company</h3>
+              <p>Built a secure portal for hospital staff and patients. The work covered desktop, mobile, DevOps, and privacy-heavy healthcare rules.</p>
+              <p><strong>Why it matches:</strong> good fit for patient access, secure result delivery, and regulated workflows.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/patient-portal-for-healthcare-company/" target="_blank" rel="noopener noreferrer">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <div class="case-media">
+              <img src="assets/case-patient-survey.jpg" alt="Real-time Patient Satisfaction Survey Platform">
+            </div>
+            <div class="case-body">
+              <h3>Real-time Patient Satisfaction Survey Platform</h3>
+              <p>Built a tablet survey flow and admin dashboard for healthcare teams. The product helped clinics collect feedback much faster.</p>
+              <p><strong>Outcome:</strong> reported outcome: 95% faster feedback collection and 40% fewer negative reviews.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/real-time-patient-satisfaction-survey-platform/" target="_blank" rel="noopener noreferrer">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="cta-card">
+          <div class="section-head" style="margin-bottom:0;">
+            <span class="kicker">Start The Conversation</span>
+            <h2>Compare notes on the weak spots</h2>
+          </div>
+          <p>If this is on your 2026 brief, we can map a fast repair path.</p>
+          <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noopener noreferrer">Talk to Elinext</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
