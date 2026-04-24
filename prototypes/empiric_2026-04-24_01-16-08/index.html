@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A stronger application setup for Empiric's growing delivery work | Elinext</title>
+  <meta name="description" content="A focused Elinext proposal brief for helping Empiric improve application service delivery around its job board, candidate flow, and internal support systems.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/empiric_2026-04-24_01-16-08/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="A stronger application setup for Empiric's growing delivery work">
+  <meta property="og:description" content="A focused Elinext proposal brief for helping Empiric improve application service delivery around its job board, candidate flow, and internal support systems.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/empiric_2026-04-24_01-16-08/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/empiric_2026-04-24_01-16-08/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A stronger application setup for Empiric's growing delivery work">
+  <meta name="twitter:description" content="A focused Elinext proposal brief for helping Empiric improve application service delivery around its job board, candidate flow, and internal support systems.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/empiric_2026-04-24_01-16-08/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f7f0;
+      --surface: rgba(255, 255, 255, 0.94);
+      --surface-strong: #ffffff;
+      --ink: #121414;
+      --muted: #5f665f;
+      --line: rgba(18, 20, 20, 0.12);
+      --line-strong: rgba(255, 255, 255, 0.14);
+      --panel-dark: #141714;
+      --panel-dark-2: #1d211d;
+      --brand: #edf45e;
+      --brand-deep: #cad334;
+      --brand-soft: rgba(237, 244, 94, 0.18);
+      --warm: #fff8d7;
+      --shadow: 0 24px 60px rgba(18, 20, 20, 0.1);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --max: 1140px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(237, 244, 94, 0.22), transparent 22rem),
+        radial-gradient(circle at bottom right, rgba(18, 20, 20, 0.06), transparent 24rem),
+        linear-gradient(180deg, #f9faf4 0%, #f1f3ea 100%);
+      color: var(--ink);
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(18, 20, 20, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(18, 20, 20, 0.03) 1px, transparent 1px);
+      background-size: 44px 44px;
+      opacity: 0.35;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      padding: 16px 14px 56px;
+    }
+
+    .shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    section {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-pad {
+      padding: 22px 18px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      max-width: 100%;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at 88% 12%, rgba(237, 244, 94, 0.24), transparent 16rem),
+        linear-gradient(135deg, rgba(20, 23, 20, 0.98), rgba(29, 33, 29, 0.97));
+      border-color: var(--line-strong);
+      color: #f8faf1;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .hero .kicker {
+      color: rgba(248, 250, 241, 0.82);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    h1 {
+      margin-top: 16px;
+      max-width: 11ch;
+      font-size: clamp(2.4rem, 9vw, 5.2rem);
+      line-height: 0.94;
+      letter-spacing: -0.05em;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      text-align: center;
+      font-size: clamp(1.8rem, 5vw, 2.9rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-copy p {
+      max-width: 42rem;
+      color: rgba(248, 250, 241, 0.88);
+      font-size: 1rem;
+      line-height: 1.52;
+    }
+
+    .hero-copy .why {
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+    }
+
+    .hero-cards {
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-card {
+      min-width: 0;
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .hero-card strong,
+    .summary-card strong,
+    .step-title,
+    .case-card strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .hero-card p,
+    .summary-card p,
+    .step-card p,
+    .case-card p,
+    .cta-copy p,
+    .cred-copy p {
+      color: var(--muted);
+      font-size: 0.97rem;
+      line-height: 1.55;
+    }
+
+    .hero-card p {
+      color: rgba(248, 250, 241, 0.84);
+    }
+
+    .read {
+      background: linear-gradient(180deg, #f3f6d8 0%, #fafbe9 100%);
+      border-left: 6px solid var(--brand-deep);
+    }
+
+    .section-kicker {
+      margin: 0 auto 14px;
+      color: #2f3210;
+      background: rgba(237, 244, 94, 0.18);
+      border: 1px solid rgba(47, 50, 16, 0.08);
+    }
+
+    .read .section-body {
+      max-width: 70ch;
+      margin: 0 auto;
+      font-size: 1rem;
+      line-height: 1.62;
+      color: #202513;
+    }
+
+    .what .plan-intro,
+    .proof .proof-intro,
+    .cta-copy {
+      max-width: 64ch;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .what-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .summary-grid,
+    .step-grid,
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .summary-card,
+    .step-card,
+    .case-card,
+    .cta-card {
+      width: 100%;
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+    }
+
+    .summary-card {
+      padding: 18px;
+      background: linear-gradient(180deg, #fffffc 0%, #fbfcee 100%);
+    }
+
+    .summary-card strong {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #596014;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .chip,
+    .logo-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--brand-soft);
+      border: 1px solid rgba(89, 96, 20, 0.1);
+      font-size: 0.83rem;
+      font-weight: 700;
+    }
+
+    .step-card {
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .step-number {
+      width: 42px;
+      height: 42px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--panel-dark);
+      color: var(--brand);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .step-title {
+      font-size: 1.06rem;
+      color: var(--ink);
+    }
+
+    .cred .section-pad {
+      padding-top: 24px;
+      padding-bottom: 24px;
+    }
+
+    .cred-copy {
+      max-width: 68ch;
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+    }
+
+    .logo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .proof-grid {
+      margin-top: 18px;
+    }
+
+    .case-card {
+      display: grid;
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #eef0e4;
+    }
+
+    .case-copy {
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .case-link {
+      font-weight: 700;
+      color: #202513;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .cta {
+      background:
+        radial-gradient(circle at top left, rgba(237, 244, 94, 0.26), transparent 15rem),
+        linear-gradient(180deg, #ffffff 0%, #f6f8ee 100%);
+    }
+
+    .cta-card {
+      padding: 22px 18px;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(10px);
+    }
+
+    .cta h2 {
+      margin-bottom: 8px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      margin-top: 16px;
+      padding: 0 18px;
+      border-radius: 999px;
+      background: var(--panel-dark);
+      color: #f8faf1;
+      font-weight: 700;
+      border: 1px solid rgba(18, 20, 20, 0.2);
+      box-shadow: 0 14px 30px rgba(18, 20, 20, 0.12);
+    }
+
+    @media (min-width: 768px) {
+      .page {
+        padding: 22px 20px 72px;
+      }
+
+      .section-pad {
+        padding: 28px 26px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.85fr);
+        align-items: end;
+      }
+
+      .hero-cards,
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .step-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .cta-card {
+        padding: 28px 26px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .what-grid {
+        grid-template-columns: 320px minmax(0, 1fr);
+        align-items: start;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main class="shell">
+      <section class="hero">
+        <div class="section-pad hero-grid">
+          <div class="hero-copy">
+            <span class="kicker">Proposal Brief for Sam Kamyar</span>
+            <h1>A stronger application setup for Empiric's growing delivery work</h1>
+            <p>Empiric already runs a global community across data, digital, cloud, security, and transformation hiring. As that reach grows, the candidate journey needs steadier rules. The apps behind it need cleaner handoffs and better visibility.</p>
+            <p class="why">We saw Empiric is hiring an Operational Service Delivery Manager for applications. That usually means the public job board, recruiter tools, and back-office systems are under strain. One process owner can no longer carry the full load.</p>
+          </div>
+          <div class="hero-cards">
+            <article class="hero-card">
+              <strong>Signal</strong>
+              <p>Operational service delivery ownership for applications.</p>
+            </article>
+            <article class="hero-card">
+              <strong>Product</strong>
+              <p>Empiric Job Board and candidate-facing web flow.</p>
+            </article>
+            <article class="hero-card">
+              <strong>Focus</strong>
+              <p>Candidate handoffs, status control, and app support visibility.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="read">
+        <div class="section-pad">
+          <span class="kicker section-kicker">Our Read</span>
+          <h2>Our read</h2>
+          <p class="section-body">That hiring signal points to scale. Empiric now serves many countries, practices, and client needs from one brand. The jobs page already carries a large role list and browser-side filters. That is fine early on. It gets harder when hiring, consent, support, and reporting all depend on separate application steps. Then delivery slows, candidate trust drops, and teams spend time chasing status.</p>
+        </div>
+      </section>
+
+      <section class="what">
+        <div class="section-pad">
+          <span class="kicker section-kicker">What We'd Do</span>
+          <h2>What we'd do</h2>
+          <div class="plan-intro">
+            <p>We would start with a dedicated squad under your delivery or product owner. A six-week pilot is enough to map the flow. It also removes the riskiest gaps and leaves a clearer service model behind.</p>
+          </div>
+          <div class="what-grid">
+            <div class="summary-grid">
+              <article class="summary-card">
+                <strong>Engagement Model</strong>
+                <p>Dedicated squad under your owner, with weekly demos and one clear work backlog.</p>
+              </article>
+              <article class="summary-card">
+                <strong>Team Shape</strong>
+                <p>1 tech lead, 2 senior web engineers, 1 business analyst, 1 QA engineer.</p>
+              </article>
+              <article class="summary-card">
+                <strong>Relevant Stack</strong>
+                <div class="chips">
+                  <span class="chip">Angular</span>
+                  <span class="chip">React</span>
+                  <span class="chip">.NET</span>
+                  <span class="chip">C#</span>
+                  <span class="chip">Node.js</span>
+                </div>
+              </article>
+            </div>
+            <div class="step-grid">
+              <article class="step-card">
+                <span class="step-number">01</span>
+                <strong class="step-title">Map the full flow</strong>
+                <p>Map every handoff across the job board, recruiter workflow, CV sharing, application support, and reporting so one delivery owner can see where work stalls.</p>
+              </article>
+              <article class="step-card">
+                <span class="step-number">02</span>
+                <strong class="step-title">Tighten status control</strong>
+                <p>Stabilize the candidate and consultant flow with clearer statuses, audit points, and rule-based routing for jobs, submissions, and follow-up tasks.</p>
+              </article>
+              <article class="step-card">
+                <span class="step-number">03</span>
+                <strong class="step-title">Build one operations view</strong>
+                <p>Build an operations view for service delivery with backlog, SLA risk, stuck applications, and cross-country ownership in one place.</p>
+              </article>
+              <article class="step-card">
+                <span class="step-number">04</span>
+                <strong class="step-title">Make releases safer</strong>
+                <p>Set a release rhythm, test coverage, and support playbook so changes to core applications stop creating manual rework for recruiters and managers.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cred">
+        <div class="section-pad">
+          <span class="kicker section-kicker">Who Is Elinext</span>
+          <h2>Who is Elinext</h2>
+          <div class="cred-copy">
+            <p>Elinext is a full-cycle software development company. We have worked since 1997 with about 700 in-house specialists and no freelancers. For work like this, we bring web engineers, QA, analysts, and delivery support in one team. We also bring ISO 27001 and ISO 9001. That matters when candidate data, internal apps, and client reporting need clear controls. <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong> have trusted Elinext on business-critical software. That is why the squad above is not a theory deck. It is a delivery model we already run.</p>
+            <div class="logo-row">
+              <span class="logo-pill">Siemens</span>
+              <span class="logo-pill">Broadcom</span>
+              <span class="logo-pill">Volkswagen</span>
+              <span class="logo-pill">TRUMPF</span>
+              <span class="logo-pill">TUI</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="proof">
+        <div class="section-pad">
+          <span class="kicker section-kicker">Proof</span>
+          <h2>Proof</h2>
+          <div class="proof-intro">
+            <p>Two close examples from Elinext's HR and workflow work.</p>
+          </div>
+          <div class="proof-grid">
+            <article class="case-card">
+              <img src="assets/case-applicant-tracking.jpg" alt="Applicant Tracking case study image">
+              <div class="case-copy">
+                <strong>Applicant Tracking</strong>
+                <p>Candidate and vacancy modules built to streamline hiring.</p>
+                <a class="case-link" href="https://www.elinext.com/case-study/elinext-applicant-tracking/" target="_blank" rel="noreferrer">View case study</a>
+              </div>
+            </article>
+            <article class="case-card">
+              <img src="assets/case-leave-management.jpg" alt="Leave Management case study image">
+              <div class="case-copy">
+                <strong>Leave Management</strong>
+                <p>Role-based workflow built to simplify internal approvals.</p>
+                <a class="case-link" href="https://www.elinext.com/case-study/elinext-leave-management/" target="_blank" rel="noreferrer">View case study</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="section-pad">
+          <div class="cta-card">
+            <div class="cta-copy">
+              <span class="kicker section-kicker">Next Step</span>
+              <h2>Let's fix the handoffs</h2>
+              <p>Start with a six-week pilot around core applications.</p>
+              <a class="button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Start the conversation</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
