@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fruition Group x Elinext | Proposal Brief</title>
+  <meta name="description" content="A short proposal for removing workflow noise across Fruition's candidate portal, online timesheets, and reporting as delivery-led hiring grows.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/fruition-group_2026-04-24_03-20-21/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/fruition-group_2026-04-24_03-20-21/">
+  <meta property="og:title" content="Steadier delivery across Fruition's hiring and contractor workflows">
+  <meta property="og:description" content="A short proposal for removing workflow noise across Fruition's candidate portal, online timesheets, and reporting as delivery-led hiring grows.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/fruition-group_2026-04-24_03-20-21/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Steadier delivery across Fruition's hiring and contractor workflows">
+  <meta name="twitter:description" content="A short proposal for removing workflow noise across Fruition's candidate portal, online timesheets, and reporting as delivery-led hiring grows.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/fruition-group_2026-04-24_03-20-21/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f6ed;
+      --ink: #112438;
+      --muted: #5e6d7a;
+      --panel: rgba(255, 255, 255, 0.9);
+      --panel-strong: #ffffff;
+      --line: rgba(17, 36, 56, 0.12);
+      --line-strong: rgba(255, 255, 255, 0.14);
+      --navy: #10283f;
+      --navy-2: #183855;
+      --lime: #d7ff69;
+      --lime-soft: rgba(215, 255, 105, 0.22);
+      --sand: #f7f0dc;
+      --accent: #2f8f83;
+      --shadow: 0 20px 60px rgba(11, 29, 46, 0.12);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --max: 1160px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: "Sora", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(215, 255, 105, 0.25), transparent 22rem),
+        radial-gradient(circle at bottom right, rgba(47, 143, 131, 0.18), transparent 18rem),
+        linear-gradient(180deg, #f7f8f0 0%, #eff2e8 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(17, 36, 56, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(17, 36, 56, 0.03) 1px, transparent 1px);
+      background-size: 34px 34px;
+      z-index: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      padding: 16px 14px 56px;
+    }
+
+    .shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    section {
+      min-width: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+
+    .section-pad {
+      padding: 22px 18px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      max-width: 100%;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .kicker.dark {
+      color: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .kicker.light {
+      margin: 0 auto 14px;
+      color: var(--navy);
+      background: rgba(17, 36, 56, 0.06);
+      border: 1px solid rgba(17, 36, 56, 0.09);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.03;
+      letter-spacing: -0.04em;
+    }
+
+    h1 {
+      font-size: clamp(2.55rem, 9vw, 5.1rem);
+      max-width: 11ch;
+    }
+
+    h2 {
+      font-size: clamp(1.9rem, 5vw, 3rem);
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+    }
+
+    p,
+    li {
+      font-size: 0.98rem;
+      line-height: 1.58;
+      color: var(--muted);
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at top right, rgba(215, 255, 105, 0.24), transparent 18rem),
+        linear-gradient(145deg, #10283f 0%, #183855 62%, #102e4a 100%);
+      border-color: var(--line-strong);
+      color: #fefefe;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-copy p {
+      color: rgba(255, 255, 255, 0.84);
+      max-width: 44rem;
+    }
+
+    .why {
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .hero-cards {
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-card {
+      min-width: 0;
+      display: grid;
+      gap: 8px;
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .hero-card .mini {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.66);
+    }
+
+    .hero-card p,
+    .hero-card li {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .signal-list {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .read {
+      background: linear-gradient(180deg, #fbfbe9 0%, #f4f6df 100%);
+    }
+
+    .read-copy {
+      max-width: 74ch;
+      margin: 0 auto;
+      padding: 18px 18px 18px 22px;
+      border-left: 5px solid #9bcc22;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: inset 0 0 0 1px rgba(17, 36, 56, 0.05);
+    }
+
+    .plan {
+      background: linear-gradient(180deg, #fffdfa 0%, #f8f6ef 100%);
+    }
+
+    .plan-intro {
+      max-width: 66ch;
+      margin: 0 auto 8px;
+      text-align: center;
+    }
+
+    .plan-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      min-width: 0;
+      display: grid;
+      gap: 9px;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: var(--panel-strong);
+      border: 1px solid rgba(17, 36, 56, 0.09);
+      box-shadow: 0 12px 34px rgba(17, 36, 56, 0.06);
+    }
+
+    .step-no {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      font-weight: 700;
+      color: var(--navy);
+      background: var(--lime-soft);
+      border: 1px solid rgba(155, 204, 34, 0.28);
+    }
+
+    .step p {
+      color: #5d6875;
+    }
+
+    .summary {
+      display: grid;
+      gap: 12px;
+    }
+
+    .summary-card {
+      min-width: 0;
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: #10283f;
+      color: #fefefe;
+      border: 1px solid rgba(16, 40, 63, 0.18);
+    }
+
+    .summary-card p {
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .summary-card .label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--lime);
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .pill-list li {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fefefe;
+      font-size: 0.92rem;
+      line-height: 1.3;
+    }
+
+    .stack-list li {
+      background: rgba(215, 255, 105, 0.12);
+      border-color: rgba(215, 255, 105, 0.18);
+      color: #f3ffd0;
+    }
+
+    .who {
+      background:
+        radial-gradient(circle at bottom left, rgba(215, 255, 105, 0.18), transparent 18rem),
+        linear-gradient(160deg, #11273b 0%, #17324a 58%, #122536 100%);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .who h2,
+    .who p {
+      color: #fefefe;
+    }
+
+    .who p {
+      max-width: 74ch;
+      margin: 0 auto;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.86);
+    }
+
+    .customer-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .customer-row span {
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .proof {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 249, 243, 0.96) 100%);
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .case-card {
+      min-width: 0;
+      display: grid;
+      background: #ffffff;
+      border: 1px solid rgba(17, 36, 56, 0.08);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 12px 34px rgba(17, 36, 56, 0.06);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 1170 / 508;
+      object-fit: cover;
+      background: #eaf0d0;
+    }
+
+    .case-copy {
+      display: grid;
+      gap: 9px;
+      padding: 18px;
+    }
+
+    .case-meta {
+      display: inline-flex;
+      width: fit-content;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(16, 40, 63, 0.07);
+      color: var(--navy);
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .case-link {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .cta {
+      background:
+        radial-gradient(circle at top right, rgba(47, 143, 131, 0.18), transparent 16rem),
+        linear-gradient(180deg, #fff7e8 0%, #fffdf7 100%);
+    }
+
+    .cta-wrap {
+      display: grid;
+      gap: 16px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      background: var(--navy);
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 14px 30px rgba(16, 40, 63, 0.22);
+    }
+
+    @media (min-width: 760px) {
+      main {
+        padding: 28px 22px 80px;
+      }
+
+      .section-pad {
+        padding: 30px 28px;
+      }
+
+      .hero-grid,
+      .plan-grid {
+        grid-template-columns: minmax(0, 1.45fr) minmax(290px, 0.9fr);
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .shell {
+        gap: 22px;
+      }
+
+      .section-pad {
+        padding: 34px;
+      }
+
+      .summary {
+        position: sticky;
+        top: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="shell">
+      <section class="hero">
+        <div class="section-pad hero-grid">
+          <div class="hero-copy">
+            <span class="kicker dark">Fruition Group x Elinext</span>
+            <h1>Steadier delivery across Fruition's hiring and contractor workflows</h1>
+            <p>This brief focuses on the candidate portal, online timesheets, and reporting that sit behind Fruition's delivery-led hiring work.</p>
+            <p class="why">We saw the Delivery Manager signal on your live board. It points to teams handling .NET, PHP, and Azure change, with more need for clear ownership and fewer blockers.</p>
+          </div>
+          <div class="hero-cards">
+            <article class="hero-card">
+              <span class="mini">What we saw</span>
+              <ul class="signal-list">
+                <li>Candidate login, job alerts, and application tracking</li>
+                <li>Online timesheets and client performance reporting</li>
+                <li>A self-service contractor pool for managed programs</li>
+              </ul>
+            </article>
+            <article class="hero-card">
+              <span class="mini">Why it matters</span>
+              <p>When those steps drift apart, consultants lose time and delivery work feels slower than it should.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="read">
+        <div class="section-pad">
+          <span class="kicker light">Our Read</span>
+          <h2>Where the pressure sits</h2>
+          <div class="read-copy">
+            <p>The signal says Fruition is working around more delivery-led software change. Your own site also promises a single, repeatable process, self-service access, online timesheets, and performance reporting. That means the real pressure sits in the workflow behind the portal, not only in recruiter effort. If sign-in, application status, shortlist updates, or timesheets stay split, delivery teams work harder and client trust gets harder to protect.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="plan">
+        <div class="section-pad">
+          <span class="kicker light">What We'd Do</span>
+          <h2>A six-week workflow reset</h2>
+          <p class="plan-intro">We would run one scoped end-to-end project with a Fruition operations owner. The goal is simple: fewer handoffs, cleaner status, and safer changes on the live workflow layer.</p>
+          <div class="plan-grid">
+            <div class="steps">
+              <article class="step">
+                <span class="step-no">1</span>
+                <h3>Map the real journey</h3>
+                <p>Map candidate, consultant, and contractor journeys across sign-in, alerts, applications, timesheets, and reports. Mark every blocker, repeat step, and missing owner.</p>
+              </article>
+              <article class="step">
+                <span class="step-no">2</span>
+                <h3>Clean the handoffs</h3>
+                <p>Review the Eploy flow, portal forms, and report logic. Keep what works, then remove duplicate entry and status gaps that slow consultants.</p>
+              </article>
+              <article class="step">
+                <span class="step-no">3</span>
+                <h3>Ship focused fixes</h3>
+                <p>Improve account setup, application progress, shortlist updates, and online timesheets. Add clearer views for delivery teams and client-facing managers.</p>
+              </article>
+              <article class="step">
+                <span class="step-no">4</span>
+                <h3>Harden weekly release work</h3>
+                <p>Add QA checks, release gates, and one small delivery dashboard. Track failed steps, stalled applications, and report delays before clients chase updates.</p>
+              </article>
+            </div>
+            <aside class="summary">
+              <div class="summary-card">
+                <span class="label">Engagement model</span>
+                <p>Scoped end-to-end project. Six weeks. Weekly demos. Clear handoff when the first workflow fixes are live.</p>
+              </div>
+              <div class="summary-card">
+                <span class="label">Team shape</span>
+                <ul class="pill-list">
+                  <li>1 Delivery Lead</li>
+                  <li>1 Business Analyst</li>
+                  <li>2 Senior Web Engineers</li>
+                  <li>1 QA Automation Engineer</li>
+                  <li>1 DevOps Engineer</li>
+                </ul>
+              </div>
+              <div class="summary-card">
+                <span class="label">Relevant stack</span>
+                <ul class="pill-list stack-list">
+                  <li>.NET</li>
+                  <li>PHP</li>
+                  <li>Azure</li>
+                  <li>React</li>
+                  <li>QA Automation</li>
+                </ul>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="who">
+        <div class="section-pad">
+          <span class="kicker light">Who Is Elinext</span>
+          <h2>Built for delivery work</h2>
+          <p>Elinext is a full-cycle software development company. We have worked since 1997 with about 700 in-house specialists and no freelancers. Teams at <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, and <strong>TUI</strong> trust us with web, data, QA, and release work. We work under <strong>ISO 27001</strong> and <strong>ISO 9001</strong> when process control and security matter. For Fruition, that means one partner who can improve workflow logic, ship tested changes, and leave a cleaner release path behind.</p>
+          <div class="customer-row" aria-hidden="true">
+            <span>Siemens</span>
+            <span>Broadcom</span>
+            <span>Volkswagen</span>
+            <span>TUI</span>
+            <span>ISO 27001</span>
+            <span>ISO 9001</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="proof">
+        <div class="section-pad">
+          <span class="kicker light">Proof</span>
+          <h2>Relevant delivered work</h2>
+          <div class="proof-grid">
+            <article class="case-card">
+              <img src="assets/case-applicant-tracking.jpg" alt="Applicant tracking case study cover">
+              <div class="case-copy">
+                <span class="case-meta">HR &amp; Recruiting</span>
+                <h3>Elinext. Applicant Tracking</h3>
+                <p>Built candidate, vacancy, and admin modules that streamlined hiring during active vacancy growth.</p>
+                <a class="case-link" href="https://www.elinext.com/case-study/elinext-applicant-tracking/" target="_blank" rel="noreferrer">View case study</a>
+              </div>
+            </article>
+            <article class="case-card">
+              <img src="assets/case-cicd.jpg" alt="CI/CD optimization case study cover">
+              <div class="case-copy">
+                <span class="case-meta">DevOps &amp; Delivery</span>
+                <h3>CI/CD Optimization and Automatization</h3>
+                <p>Reduced development time by 40% for a complex infrastructure delivery environment.</p>
+                <a class="case-link" href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/" target="_blank" rel="noreferrer">View case study</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="section-pad cta-wrap">
+          <span class="kicker light">Start The Conversation</span>
+          <h2>Talk through the workflow</h2>
+          <p>If this is close, we can scope the first fixes fast.</p>
+          <a class="cta-button" href="https://www.elinext.com/contacts/" target="_blank" rel="noreferrer">Start the conversation</a>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
