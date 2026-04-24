@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Parloa rollout scale proposal | Elinext</title>
+  <meta name="description" content="A short proposal for Parloa on enterprise rollout scale, adoption, and value realization.">
+  <meta name="author" content="Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/parloa_2026-04-24_03-38-46/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/parloa_2026-04-24_03-38-46/">
+  <meta property="og:title" content="Parloa rollout scale proposal | Elinext">
+  <meta property="og:description" content="A short proposal for Parloa on enterprise rollout scale, adoption, and value realization.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/parloa_2026-04-24_03-38-46/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Parloa rollout scale proposal | Elinext">
+  <meta name="twitter:description" content="A short proposal for Parloa on enterprise rollout scale, adoption, and value realization.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/parloa_2026-04-24_03-38-46/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4ede3;
+      --bg-soft: #efe2cf;
+      --ink: #0d1830;
+      --ink-soft: #44506a;
+      --panel: #0f1a32;
+      --panel-2: #162440;
+      --panel-3: #fff9f0;
+      --line: rgba(13, 24, 48, 0.12);
+      --line-strong: rgba(13, 24, 48, 0.2);
+      --warm: #ea6b2d;
+      --warm-soft: rgba(234, 107, 45, 0.14);
+      --cream: #fff9f0;
+      --shadow: 0 24px 60px rgba(15, 26, 50, 0.14);
+      --radius: 24px;
+      --content: min(1120px, calc(100% - 32px));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: "Sora", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(234, 107, 45, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(13, 24, 48, 0.1), transparent 30%),
+        linear-gradient(180deg, #f7f1e7 0%, #f2eadf 48%, #efe5d9 100%);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .page-shell::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(13, 24, 48, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(13, 24, 48, 0.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .page-shell::after {
+      content: "";
+      position: fixed;
+      inset: auto -8% 6% auto;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(234, 107, 45, 0.16), transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .wrap {
+      width: var(--content);
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 28px 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow.light {
+      background: var(--warm-soft);
+      color: var(--ink);
+    }
+
+    .hero {
+      padding-top: 22px;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 20px;
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at top right, rgba(234, 107, 45, 0.28), transparent 26%),
+        linear-gradient(145deg, #081121 0%, #14223e 60%, #0c1730 100%);
+      color: #fff8f0;
+      box-shadow: var(--shadow);
+      animation: rise 0.8s ease both;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-copy {
+      max-width: 42rem;
+    }
+
+    .hero h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(2.35rem, 7vw, 4.8rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
+
+    .hero h1 span {
+      color: #ffb489;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 40rem;
+      color: rgba(255, 248, 240, 0.82);
+      font-size: 0.98rem;
+    }
+
+    .hero p + p {
+      margin-top: 14px;
+    }
+
+    .hero-note {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      max-width: 420px;
+    }
+
+    .hero-note strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.84rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ffcfb2;
+    }
+
+    .hero-note p {
+      font-size: 0.92rem;
+    }
+
+    .intro {
+      display: grid;
+      gap: 20px;
+      animation: rise 0.8s ease both;
+      animation-delay: 0.08s;
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: clamp(1.55rem, 4vw, 2.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .read-card {
+      width: 100%;
+      padding: 24px 20px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, #fff7ee 0%, #f9eedf 100%);
+      border: 1px solid rgba(234, 107, 45, 0.22);
+      box-shadow: 0 16px 40px rgba(13, 24, 48, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .read-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 6px;
+      background: linear-gradient(180deg, var(--warm) 0%, #ffb489 100%);
+    }
+
+    .read-card p {
+      margin: 0;
+      max-width: 64ch;
+      padding-left: 8px;
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    .proposal {
+      animation: rise 0.8s ease both;
+      animation-delay: 0.16s;
+    }
+
+    .proposal-card {
+      padding: 26px 20px;
+      border-radius: 32px;
+      background: linear-gradient(180deg, #0f1a32 0%, #13233f 100%);
+      color: #fff8f0;
+      box-shadow: var(--shadow);
+    }
+
+    .proposal-lead {
+      max-width: 42rem;
+      margin: 0 auto 24px;
+      color: rgba(255, 248, 240, 0.78);
+      text-align: center;
+      font-size: 0.98rem;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .team-card,
+    .steps-card {
+      min-width: 0;
+      padding: 20px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .team-card h3,
+    .steps-card h3,
+    .who-card h3,
+    .proof-card h3,
+    .cta-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.08rem;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+    }
+
+    .engagement {
+      margin: 0 0 18px;
+      font-size: 0.96rem;
+      color: rgba(255, 248, 240, 0.78);
+    }
+
+    .role-list,
+    .stack-list,
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .role-list li,
+    .stack-list li,
+    .customer-list li {
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.85rem;
+    }
+
+    .stack-list {
+      margin-top: 18px;
+    }
+
+    .stack-list li {
+      background: rgba(234, 107, 45, 0.12);
+      color: #ffd3bb;
+      border-color: rgba(234, 107, 45, 0.22);
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .step-top {
+      display: grid;
+      gap: 10px;
+      align-items: center;
+      grid-template-columns: auto 1fr;
+    }
+
+    .step-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, #ff9a64 0%, var(--warm) 100%);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .step strong {
+      display: block;
+      font-size: 1rem;
+      line-height: 1.15;
+    }
+
+    .step p {
+      margin: 0;
+      color: rgba(255, 248, 240, 0.78);
+      font-size: 0.92rem;
+    }
+
+    .who {
+      animation: rise 0.8s ease both;
+      animation-delay: 0.24s;
+    }
+
+    .who-card {
+      padding: 24px 20px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 44px rgba(13, 24, 48, 0.08);
+    }
+
+    .who-card p {
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .customer-list {
+      margin: 16px 0;
+    }
+
+    .customer-list li {
+      background: #fff;
+      color: var(--ink);
+      border-color: var(--line);
+      font-weight: 700;
+    }
+
+    .proof {
+      animation: rise 0.8s ease both;
+      animation-delay: 0.32s;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 44px rgba(13, 24, 48, 0.08);
+    }
+
+    .proof-media {
+      aspect-ratio: 16 / 9;
+      background: #e8ddce;
+      overflow: hidden;
+    }
+
+    .proof-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .proof-body {
+      padding: 20px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .proof-tag {
+      display: inline-flex;
+      width: fit-content;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--warm-soft);
+      color: var(--ink);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .proof-body p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.94rem;
+    }
+
+    .proof-link,
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      margin-top: 4px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .proof-link {
+      color: var(--ink);
+      background: rgba(13, 24, 48, 0.06);
+    }
+
+    .cta {
+      padding-bottom: 32px;
+      animation: rise 0.8s ease both;
+      animation-delay: 0.4s;
+    }
+
+    .cta-card {
+      display: grid;
+      gap: 14px;
+      padding: 26px 20px;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at top right, rgba(234, 107, 45, 0.28), transparent 26%),
+        linear-gradient(145deg, #111c35 0%, #0b152a 100%);
+      color: #fff8f0;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .cta-card p {
+      margin: 0 auto;
+      max-width: 32rem;
+      color: rgba(255, 248, 240, 0.78);
+      font-size: 0.98rem;
+    }
+
+    .cta-button {
+      justify-self: center;
+      background: linear-gradient(180deg, #ff9358 0%, var(--warm) 100%);
+      color: #fff;
+      border: 0;
+    }
+
+    .proof-link:hover,
+    .cta-button:hover {
+      transform: translateY(-1px);
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (min-width: 720px) {
+      .section {
+        padding: 40px 0;
+      }
+
+      .hero {
+        padding-top: 34px;
+      }
+
+      .hero-card {
+        padding: 36px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.9fr);
+        align-items: end;
+      }
+
+      .proposal-card,
+      .who-card,
+      .cta-card {
+        padding: 34px;
+      }
+
+      .proposal-grid {
+        grid-template-columns: minmax(280px, 0.92fr) minmax(0, 1.3fr);
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .hero-card {
+        padding: 44px;
+      }
+
+      .proposal-card,
+      .who-card,
+      .cta-card {
+        padding: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <main>
+      <section class="hero section">
+        <div class="wrap">
+          <div class="hero-card">
+            <div class="hero-grid">
+              <div class="hero-copy">
+                <span class="eyebrow">Prepared for Malte Kosub and Parloa</span>
+                <h1>Scale enterprise rollouts <span>without slowing</span> product or customer teams.</h1>
+                <p>Parloa is winning larger enterprise work. The hard part now is repeatable delivery, clean handoffs, and clear value proof after go-live.</p>
+                <p>Saw Parloa hiring senior enterprise engagement leaders in New York. That usually means more complex launches, more executive reviews, and more pressure to prove ROI fast.</p>
+              </div>
+              <aside class="hero-note" aria-label="Why this page">
+                <div>
+                  <strong>Why we're here</strong>
+                  <p>Your March hiring wave points to post-sale scale, not early product fit.</p>
+                </div>
+                <div>
+                  <strong>What this brief covers</strong>
+                  <p>A small delivery plan to help rollouts, adoption, and expansion move with less drag.</p>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="intro section">
+        <div class="wrap">
+          <span class="eyebrow light">Our read</span>
+          <h2 class="section-title">The signal says Parloa is scaling the hard part.</h2>
+          <div class="read-card">
+            <p>Your March hiring push points to faster US enterprise scale. That brings heavy work in implementation, adoption, and executive value reviews. Customer teams get pulled into delivery, while engineers handle one-off integrations and fixes. If that stays manual, go-lives slow and QBRs depend on hero work. The result is less time for repeatable product improvement.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="proposal section">
+        <div class="wrap">
+          <span class="eyebrow light">What we'd do</span>
+          <h2 class="section-title">A focused delivery squad for rollout speed and value proof.</h2>
+          <div class="proposal-card">
+            <p class="proposal-lead">We would place a dedicated squad under your product and deployment leads. The goal is simple: faster enterprise launches, less custom drag, and cleaner proof for renewals and expansion.</p>
+            <div class="proposal-grid">
+              <div class="team-card">
+                <h3>Team shape</h3>
+                <p class="engagement">Engagement model: one dedicated squad, working inside your weekly delivery rhythm for a six-week pilot.</p>
+                <ul class="role-list">
+                  <li>1 Solution Architect / Tech Lead</li>
+                  <li>2 Senior TypeScript Engineers</li>
+                  <li>1 DevOps Engineer</li>
+                  <li>1 QA Automation Engineer</li>
+                </ul>
+                <ul class="stack-list">
+                  <li>TypeScript</li>
+                  <li>Node.js</li>
+                  <li>Azure</li>
+                  <li>Kubernetes</li>
+                  <li>Terraform</li>
+                  <li>OpenAI</li>
+                </ul>
+              </div>
+              <div class="steps-card">
+                <h3>Six-week pilot</h3>
+                <div class="steps">
+                  <article class="step">
+                    <div class="step-top">
+                      <span class="step-badge">01</span>
+                      <strong>Map one target rollout path.</strong>
+                    </div>
+                    <p>Map one target account from kickoff to go-live, including integrations, risk gates, and owner handoffs across product, deployment, and engagement teams.</p>
+                  </article>
+                  <article class="step">
+                    <div class="step-top">
+                      <span class="step-badge">02</span>
+                      <strong>Standardize custom service delivery.</strong>
+                    </div>
+                    <p>Build reusable Azure and Kubernetes service templates, so forward deployed teams ship custom work faster and with less setup drift.</p>
+                  </article>
+                  <article class="step">
+                    <div class="step-top">
+                      <span class="step-badge">03</span>
+                      <strong>Catch failures before production.</strong>
+                    </div>
+                    <p>Add simulation packs, transcript review, and alerting for escalation loops, failed tool calls, and weak handoff moments before customers feel them.</p>
+                  </article>
+                  <article class="step">
+                    <div class="step-top">
+                      <span class="step-badge">04</span>
+                      <strong>Give engagement leaders cleaner proof.</strong>
+                    </div>
+                    <p>Create a lean value dashboard for QBRs, so engagement leaders can show adoption, containment, and next expansion moves with less manual prep.</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="who section">
+        <div class="wrap">
+          <span class="eyebrow light">Who is Elinext</span>
+          <h2 class="section-title">A steady engineering team for enterprise delivery work.</h2>
+          <div class="who-card">
+            <h3>Built for long enterprise programs</h3>
+            <p>Elinext is a full-cycle software company, active since 1997. We have about 700 in-house specialists and no freelancers. That gives one team for backend, frontend, QA, AI, and DevOps. We hold ISO 27001 and ISO 9001. We also build with React, Angular, Vue, Java, .NET, Node.js, Python, and mobile stacks. For security-sensitive work, we know how to support enterprise controls and audits. We can work as a dedicated squad under your leaders. That fits the rollout, integration, and value-proof work on this page.</p>
+            <ul class="customer-list" aria-label="Selected Elinext customers">
+              <li><strong>Siemens</strong></li>
+              <li><strong>Broadcom</strong></li>
+              <li><strong>Volkswagen</strong></li>
+              <li><strong>TUI</strong></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="proof section">
+        <div class="wrap">
+          <span class="eyebrow light">Proof</span>
+          <h2 class="section-title">Relevant work in conversational support and call handling.</h2>
+          <div class="proof-grid">
+            <article class="proof-card">
+              <div class="proof-media">
+                <img src="assets/case-helpdesk.jpg" alt="Conversational bot for help desk case study">
+              </div>
+              <div class="proof-body">
+                <span class="proof-tag">AI support workflow</span>
+                <h3>Conversational bot for help desk ticket creation</h3>
+                <p>Built a conversational support bot with FastAPI, LangChain, and OpenAI. Result: 60% less routine ticket creation work and round-the-clock issue reporting.</p>
+                <a class="proof-link" href="https://www.elinext.com/case-study/elinext-conversational-bot-for-help-desk/">View case study</a>
+              </div>
+            </article>
+            <article class="proof-card">
+              <div class="proof-media">
+                <img src="assets/case-voice.jpg" alt="Voice sentiment analysis case study">
+              </div>
+              <div class="proof-body">
+                <span class="proof-tag">Call center insight</span>
+                <h3>Voice sentiment analysis for call center teams</h3>
+                <p>Built an application that reads emotion in speech, helping call center teams understand conversations better and spot service risk sooner.</p>
+                <a class="proof-link" href="https://www.elinext.com/case-study/sentiment-analysis-of-voice/">View case study</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta section">
+        <div class="wrap">
+          <div class="cta-card">
+            <span class="eyebrow">Let's talk</span>
+            <h2 class="section-title">Compare rollout plans in one short call.</h2>
+            <p>We can turn this into a real six-week pilot scope for Parloa's next enterprise wave.</p>
+            <a class="cta-button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
