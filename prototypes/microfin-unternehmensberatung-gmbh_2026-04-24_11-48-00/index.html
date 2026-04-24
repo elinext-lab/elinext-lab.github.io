@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>microfin x Elinext | CloudGate Architecture Brief</title>
+  <meta name="description" content="A focused Elinext proposal for Michael Wendt on supporting CloudGate's architecture, integrations, and release flow as its compliance scope grows.">
+  <meta name="author" content="Elinext">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/microfin-unternehmensberatung-gmbh_2026-04-24_11-48-00/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="microfin x Elinext | CloudGate Architecture Brief">
+  <meta property="og:description" content="A focused Elinext proposal for Michael Wendt on supporting CloudGate's architecture, integrations, and release flow as its compliance scope grows.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/microfin-unternehmensberatung-gmbh_2026-04-24_11-48-00/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/microfin-unternehmensberatung-gmbh_2026-04-24_11-48-00/og-image.jpg">
+  <meta property="og:image:alt" content="microfin proposal brief by Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="microfin x Elinext | CloudGate Architecture Brief">
+  <meta name="twitter:description" content="A focused Elinext proposal for Michael Wendt on supporting CloudGate's architecture, integrations, and release flow as its compliance scope grows.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/microfin-unternehmensberatung-gmbh_2026-04-24_11-48-00/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #edf5f6;
+      --bg-deep: #0f3145;
+      --card: rgba(255, 255, 255, 0.96);
+      --card-strong: #ffffff;
+      --ink: #0d1822;
+      --muted: #4d6272;
+      --line: rgba(13, 24, 34, 0.12);
+      --brand: #89d33c;
+      --brand-deep: #5fa90b;
+      --sea: #173d59;
+      --sea-soft: #d7ecf1;
+      --mist: #f7fbfb;
+      --accent: #ff9d3f;
+      --shadow: 0 18px 50px rgba(17, 42, 58, 0.12);
+      --radius: 1.5rem;
+      --max: 74rem;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(137, 211, 60, 0.22), transparent 24rem),
+        radial-gradient(circle at top right, rgba(23, 61, 89, 0.14), transparent 26rem),
+        linear-gradient(180deg, #f6fafb 0%, #e9f2f4 100%);
+      color: var(--ink);
+      font-family: "Sora", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(23, 61, 89, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 61, 89, 0.035) 1px, transparent 1px);
+      background-size: 1.25rem 1.25rem;
+      opacity: 0.45;
+      z-index: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration-thickness: 0.08em;
+      text-underline-offset: 0.18em;
+    }
+
+    p,
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      padding: 1rem 1rem 2.75rem;
+    }
+
+    .shell {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .intro-bar,
+    .hero,
+    .section,
+    .cta {
+      width: 100%;
+    }
+
+    .intro-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.35rem;
+      color: var(--sea);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .intro-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .intro-brand img {
+      width: auto;
+      height: 1rem;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 1.35rem;
+      border-radius: 2rem;
+      background:
+        linear-gradient(135deg, rgba(14, 46, 67, 0.98), rgba(18, 63, 82, 0.96));
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: var(--shadow);
+      color: #f8fcfc;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      border-radius: 999px;
+    }
+
+    .hero::before {
+      top: -4.5rem;
+      right: -3rem;
+      width: 12rem;
+      height: 12rem;
+      background: radial-gradient(circle, rgba(137, 211, 60, 0.3), transparent 72%);
+    }
+
+    .hero::after {
+      left: 1.25rem;
+      bottom: 1.25rem;
+      width: 5.5rem;
+      height: 0.35rem;
+      background: var(--accent);
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #d6f3ae;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 0.6rem;
+      height: 0.6rem;
+      border-radius: 999px;
+      background: var(--brand);
+      flex: 0 0 auto;
+    }
+
+    h1 {
+      max-width: 14ch;
+      font-size: clamp(2.3rem, 8vw, 4.75rem);
+      line-height: 0.95;
+      letter-spacing: -0.07em;
+    }
+
+    .hero-intro,
+    .hero-why,
+    .section p,
+    .cta p {
+      font-size: 1rem;
+      line-height: 1.58;
+    }
+
+    .hero-intro {
+      max-width: 40rem;
+      color: rgba(248, 252, 252, 0.9);
+    }
+
+    .hero-why {
+      max-width: 39rem;
+      padding-left: 0.95rem;
+      border-left: 3px solid var(--brand);
+      color: #ffffff;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 0.85rem;
+      padding: 1rem;
+      border-radius: 1.3rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(16px);
+    }
+
+    .hero-side h3,
+    .eyebrow,
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .hero-side h3 {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .hero-facts {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .hero-fact {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.7rem;
+      align-items: start;
+      color: rgba(248, 252, 252, 0.92);
+      font-size: 0.94rem;
+      line-height: 1.48;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2.2rem;
+      padding: 0.3rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(137, 211, 60, 0.18);
+      color: #e8f8cb;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .section {
+      padding: 1.35rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--card);
+      box-shadow: 0 10px 30px rgba(17, 42, 58, 0.06);
+    }
+
+    .section-title {
+      margin-bottom: 0.75rem;
+      color: var(--sea);
+      text-align: center;
+    }
+
+    .read {
+      background: linear-gradient(180deg, rgba(215, 236, 241, 0.92), rgba(245, 251, 251, 0.98));
+      border-color: rgba(23, 61, 89, 0.14);
+    }
+
+    .read-copy {
+      max-width: 64ch;
+      padding: 0.2rem 0 0.1rem 1rem;
+      border-left: 4px solid var(--brand-deep);
+      color: var(--ink);
+    }
+
+    .plan {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 250, 251, 0.98));
+    }
+
+    .plan-lead {
+      margin-bottom: 1rem;
+      color: var(--ink);
+    }
+
+    .engagement-card {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 1.1rem;
+      background: #f7fbfb;
+      border: 1px solid rgba(23, 61, 89, 0.09);
+    }
+
+    .engagement-card strong {
+      color: var(--sea);
+    }
+
+    .team-grid,
+    .proof-grid {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .team-card {
+      padding: 0.95rem;
+      border-radius: 1rem;
+      border: 1px solid rgba(23, 61, 89, 0.1);
+      background: var(--mist);
+    }
+
+    .team-card h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--sea);
+      margin-bottom: 0.25rem;
+    }
+
+    .team-card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .steps {
+      display: grid;
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .step {
+      display: grid;
+      gap: 0.55rem;
+      padding: 1rem;
+      border-radius: 1rem;
+      background: #ffffff;
+      border: 1px solid rgba(23, 61, 89, 0.11);
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 999px;
+      background: var(--sea);
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 800;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+
+    .step h3 {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .step p {
+      color: var(--muted);
+    }
+
+    .stack-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .stack-chip,
+    .customer-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.48rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .stack-chip {
+      background: rgba(23, 61, 89, 0.08);
+      color: var(--sea);
+    }
+
+    .who {
+      background: linear-gradient(180deg, rgba(17, 49, 69, 0.98), rgba(18, 63, 82, 0.98));
+      border-color: rgba(255, 255, 255, 0.08);
+      color: #f5fbfc;
+    }
+
+    .who .section-title {
+      color: #dff6cb;
+    }
+
+    .who-copy {
+      max-width: 68ch;
+      margin: 0 auto;
+      color: rgba(245, 251, 252, 0.92);
+      text-align: center;
+    }
+
+    .customer-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .customer-pill {
+      background: rgba(137, 211, 60, 0.14);
+      color: #edf9d9;
+      border: 1px solid rgba(137, 211, 60, 0.22);
+    }
+
+    .proof {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(243, 248, 250, 0.98));
+    }
+
+    .proof-card {
+      overflow: hidden;
+      display: grid;
+      gap: 0.85rem;
+      border-radius: 1.15rem;
+      border: 1px solid rgba(23, 61, 89, 0.11);
+      background: #ffffff;
+      box-shadow: 0 10px 25px rgba(17, 42, 58, 0.05);
+    }
+
+    .proof-media img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #eef4f6;
+    }
+
+    .proof-body {
+      padding: 0 1rem 1rem;
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .proof-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: var(--sea);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .proof-tag::before {
+      content: "";
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 999px;
+      background: var(--brand);
+      flex: 0 0 auto;
+    }
+
+    .proof-card h3 {
+      font-size: 1.06rem;
+      color: var(--ink);
+    }
+
+    .proof-card p {
+      color: var(--muted);
+    }
+
+    .proof-link {
+      color: var(--sea);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .cta {
+      position: relative;
+      overflow: hidden;
+      padding: 1.35rem;
+      border-radius: 1.7rem;
+      background:
+        linear-gradient(135deg, rgba(137, 211, 60, 0.92), rgba(218, 241, 186, 0.98));
+      border: 1px solid rgba(16, 46, 28, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .cta::before {
+      content: "";
+      position: absolute;
+      inset: auto -3rem -4rem auto;
+      width: 12rem;
+      height: 12rem;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(23, 61, 89, 0.14), transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-copy {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 0.75rem;
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-size: clamp(1.7rem, 6vw, 2.6rem);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+      color: #122738;
+    }
+
+    .cta p {
+      color: rgba(18, 39, 56, 0.88);
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 3.2rem;
+      padding: 0.9rem 1.2rem;
+      border-radius: 999px;
+      background: #122738;
+      color: #f7fbfb;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 12px 24px rgba(18, 39, 56, 0.18);
+    }
+
+    .fade {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: rise 0.8s ease forwards;
+    }
+
+    .fade.delay-1 { animation-delay: 0.08s; }
+    .fade.delay-2 { animation-delay: 0.16s; }
+    .fade.delay-3 { animation-delay: 0.24s; }
+    .fade.delay-4 { animation-delay: 0.32s; }
+    .fade.delay-5 { animation-delay: 0.4s; }
+
+    @keyframes rise {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (min-width: 760px) {
+      .page {
+        padding: 1.25rem 1.25rem 3rem;
+      }
+
+      .hero {
+        padding: 1.7rem;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.8fr);
+        align-items: end;
+      }
+
+      .section,
+      .cta {
+        padding: 1.6rem;
+      }
+
+      .team-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .cta-link {
+        width: auto;
+        justify-self: center;
+        padding-inline: 1.5rem;
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .page {
+        padding-top: 1.5rem;
+      }
+
+      .shell {
+        gap: 1.15rem;
+      }
+
+      .team-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="shell">
+      <div class="intro-bar fade">
+        <div class="intro-brand">
+          <img src="assets/microfin-logo.svg" alt="microfin logo">
+          <span>Proposal Brief</span>
+        </div>
+        <span>Prepared for Michael Wendt</span>
+      </div>
+
+      <section class="hero fade delay-1">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="kicker">CloudGate Delivery Brief</span>
+            <h1>CloudGate Needs Strong Architecture For Wider Compliance Work</h1>
+            <p class="hero-intro">CloudGate now sells more than cloud onboarding. It carries DORA, NIS-2, AI, and audit proof. That adds more product and integration load to each release.</p>
+            <p class="hero-why">We noticed the open senior IT architecture role. It points to CloudGate needing more architecture depth, safer integrations, and cleaner release work.</p>
+          </div>
+
+          <aside class="hero-side">
+            <h3>Why This Matters</h3>
+            <div class="hero-facts">
+              <div class="hero-fact">
+                <span class="hero-pill">1</span>
+                <span>CloudGate now spans TPRM, IT-GRC, resilience, and AI governance.</span>
+              </div>
+              <div class="hero-fact">
+                <span class="hero-pill">2</span>
+                <span>The platform must stay clear for buyers and safe for audits.</span>
+              </div>
+              <div class="hero-fact">
+                <span class="hero-pill">3</span>
+                <span>The architecture hire suggests the current load is already visible.</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section read fade delay-2">
+        <div class="section-title">Our Read</div>
+        <p class="read-copy">The hiring signal says your product and advisory work are growing together. CloudGate now has to keep DORA, NIS-2, AI, and third-party workflows simple for buyers. That creates pressure on integrations, audit evidence, and release safety. If the architecture layer stays thin, delivery slows. Teams chase manual checks. Buyer trust gets harder to keep.</p>
+      </section>
+
+      <section class="section plan fade delay-3">
+        <div class="section-title">What We’d Do</div>
+        <p class="plan-lead">We would start with a dedicated squad under your product and consulting leads.</p>
+
+        <div class="engagement-card">
+          <p><strong>Team shape:</strong> 1 solution architect, 2 senior full-stack engineers, 1 QA automation engineer, 1 DevOps engineer.</p>
+          <p><strong>Shape:</strong> 6-week pilot, with weekly demos and one shared action list.</p>
+        </div>
+
+        <div class="team-grid">
+          <article class="team-card">
+            <h3>Solution Architect</h3>
+            <p>Owns product shape, risk points, and system fit.</p>
+          </article>
+          <article class="team-card">
+            <h3>Senior Engineer 1</h3>
+            <p>Handles workflow and integration-heavy delivery work.</p>
+          </article>
+          <article class="team-card">
+            <h3>Senior Engineer 2</h3>
+            <p>Stabilizes UI, APIs, and shared product paths.</p>
+          </article>
+          <article class="team-card">
+            <h3>QA + DevOps</h3>
+            <p>Builds test cover, release checks, and deployment safety.</p>
+          </article>
+        </div>
+
+        <div class="steps">
+          <article class="step">
+            <span class="step-num">01</span>
+            <h3>Map The High-Risk Paths</h3>
+            <p>Map CloudGate flows across DORA, NIS-2, and AI work. Mark fragile joins, manual handoffs, and data points that break audit speed.</p>
+          </article>
+          <article class="step">
+            <span class="step-num">02</span>
+            <h3>Harden The Core Layer</h3>
+            <p>Harden the core integration layer for IAM, REST, exports, and reporting. Add tests around the workflows buyers touch first.</p>
+          </article>
+          <article class="step">
+            <span class="step-num">03</span>
+            <h3>Clean Up The Release Path</h3>
+            <p>Set a safer release path with branch rules, smoke tests, and weekly demos. Keep product, consulting, and operations on one view.</p>
+          </article>
+          <article class="step">
+            <span class="step-num">04</span>
+            <h3>Lower Delivery Friction</h3>
+            <p>Cut time lost in support and delivery. Build clearer logs, handover notes, and checklists for onboarding, audits, and change reviews.</p>
+          </article>
+        </div>
+
+        <div class="stack-row" aria-label="Relevant stack">
+          <span class="stack-chip">React</span>
+          <span class="stack-chip">.NET</span>
+          <span class="stack-chip">Node.js</span>
+          <span class="stack-chip">QA Automation</span>
+          <span class="stack-chip">DevOps</span>
+        </div>
+      </section>
+
+      <section class="section who fade delay-4">
+        <div class="section-title">Who Is Elinext</div>
+        <p class="who-copy">Elinext is a full-cycle software development company, working since 1997. We have about 700 in-house specialists, with no freelancers. For work like CloudGate, the useful part is simple. We bring regulated web, QA, and DevOps depth in one team. We work under ISO 27001 and ISO 9001. We also support large firms such as <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TUI</strong>, and <strong>TRUMPF</strong>. We can join under your product lead or own a scoped delivery block. That matches the architecture and release work outlined above.</p>
+        <div class="customer-row" aria-label="Selected Elinext customers">
+          <span class="customer-pill">Siemens</span>
+          <span class="customer-pill">Broadcom</span>
+          <span class="customer-pill">Volkswagen</span>
+          <span class="customer-pill">TUI</span>
+          <span class="customer-pill">TRUMPF</span>
+        </div>
+      </section>
+
+      <section class="section proof fade delay-5">
+        <div class="section-title">Proof</div>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <div class="proof-media">
+              <img src="assets/case-docs.jpg" alt="Document collaboration platform case study image">
+            </div>
+            <div class="proof-body">
+              <div class="proof-tag">Financial Services</div>
+              <h3>Document Collaboration Platform Development</h3>
+              <p>Built a regulated financial web platform. Helped cut third-party tool costs and speed bond document workflows.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/document-collaboration-platform/">View case study</a>
+            </div>
+          </article>
+
+          <article class="proof-card">
+            <div class="proof-media">
+              <img src="assets/case-cicd.jpg" alt="CI/CD optimization case study image">
+            </div>
+            <div class="proof-body">
+              <div class="proof-tag">Release Flow</div>
+              <h3>CI/CD Optimization For Infrastructure Software</h3>
+              <p>Reduced development time by 40% and set a faster, safer pipeline for regular release work.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="cta fade delay-5">
+        <div class="cta-copy">
+          <h2>Talk Through CloudGate Next</h2>
+          <p>We can review the architecture load with your team.</p>
+          <a class="cta-link" href="https://www.elinext.com/contacts/">Start the conversation</a>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
