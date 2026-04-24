@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>East Side Games x Elinext | Squishmallows Match QA Proposal</title>
+    <meta
+      name="description"
+      content="A short proposal for East Side Games on making Squishmallows Match live releases safer as QA and live ops scale."
+    />
+    <link
+      rel="canonical"
+      href="https://elinext-lab.github.io/prototypes/east-side-games_2026-04-24_14-17-33/"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="East Side Games x Elinext | Squishmallows Match QA Proposal"
+    />
+    <meta
+      property="og:description"
+      content="A short proposal for East Side Games on making Squishmallows Match live releases safer as QA and live ops scale."
+    />
+    <meta
+      property="og:url"
+      content="https://elinext-lab.github.io/prototypes/east-side-games_2026-04-24_14-17-33/"
+    />
+    <meta
+      property="og:image"
+      content="https://elinext-lab.github.io/prototypes/east-side-games_2026-04-24_14-17-33/og-image.jpg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0f1629" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #1a2745;
+        --ink-soft: #55627d;
+        --navy: #0f1629;
+        --navy-2: #1f355f;
+        --sky: #eef6ff;
+        --paper: rgba(255, 255, 255, 0.84);
+        --read-bg: #fff0dc;
+        --peach: #ff9755;
+        --pink: #ffcadc;
+        --line: rgba(26, 39, 69, 0.1);
+        --shadow: 0 24px 60px rgba(15, 22, 41, 0.14);
+        --radius-lg: 30px;
+        --radius-md: 22px;
+        --radius-sm: 16px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        overflow-x: hidden;
+      }
+
+      body {
+        font-family: "Sora", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(255, 202, 220, 0.5), transparent 20rem),
+          radial-gradient(circle at top right, rgba(255, 151, 85, 0.24), transparent 18rem),
+          linear-gradient(180deg, #f5fbff 0%, #fffdf8 46%, #fdf7ef 100%);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      .page {
+        padding: 1rem 0 3rem;
+      }
+
+      .wrap {
+        width: min(100% - 1.5rem, 74rem);
+        margin: 0 auto;
+      }
+
+      .hero {
+        position: relative;
+        padding-top: 0.5rem;
+      }
+
+      .hero::before,
+      .hero::after {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        border-radius: 999px;
+        filter: blur(8px);
+      }
+
+      .hero::before {
+        top: 1rem;
+        left: -3rem;
+        width: 9rem;
+        height: 9rem;
+        background: rgba(255, 202, 220, 0.5);
+      }
+
+      .hero::after {
+        right: -2rem;
+        bottom: 2rem;
+        width: 10rem;
+        height: 10rem;
+        background: rgba(134, 211, 255, 0.3);
+      }
+
+      .hero-panel {
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+        border-radius: var(--radius-lg);
+        padding: 1.4rem;
+        color: #f8fbff;
+        background:
+          radial-gradient(circle at top right, rgba(255, 202, 220, 0.32), transparent 18rem),
+          linear-gradient(145deg, var(--navy) 0%, var(--navy-2) 78%);
+        box-shadow: var(--shadow);
+      }
+
+      .hero-panel::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0 0;
+        height: 0.24rem;
+        background: linear-gradient(90deg, var(--peach), #ffd17d, transparent 80%);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.45rem 0.85rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.11);
+        color: #ffdcb8;
+        font-size: 0.76rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 11ch;
+        margin-top: 1rem;
+        font-size: clamp(2rem, 8vw, 4.2rem);
+        line-height: 0.98;
+        letter-spacing: -0.05em;
+      }
+
+      .hero-copy,
+      .why {
+        max-width: 39rem;
+        font-size: 0.99rem;
+        line-height: 1.62;
+      }
+
+      .hero-copy {
+        margin-top: 1rem;
+        color: rgba(248, 251, 255, 0.88);
+      }
+
+      .why {
+        margin-top: 0.95rem;
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+      }
+
+      .hero-grid {
+        display: grid;
+        gap: 0.9rem;
+        margin-top: 1.1rem;
+      }
+
+      .signal-card {
+        padding: 1rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .signal-label {
+        display: block;
+        margin-bottom: 0.35rem;
+        color: #ffdcb8;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .signal-value {
+        font-size: 0.95rem;
+        line-height: 1.45;
+      }
+
+      section {
+        position: relative;
+        z-index: 1;
+        margin-top: 1rem;
+      }
+
+      .section-card {
+        padding: 1.35rem;
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(26, 39, 69, 0.08);
+        background: var(--paper);
+        box-shadow: 0 14px 34px rgba(15, 22, 41, 0.06);
+        backdrop-filter: blur(12px);
+      }
+
+      .section-title {
+        margin-bottom: 1rem;
+        text-align: center;
+        font-size: clamp(1.35rem, 4vw, 2rem);
+        letter-spacing: -0.03em;
+      }
+
+      .read-card {
+        position: relative;
+        overflow: hidden;
+        padding: 1.45rem 1.35rem 1.35rem 1.55rem;
+        background: var(--read-bg);
+        border-color: rgba(255, 151, 85, 0.18);
+      }
+
+      .read-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 0.4rem;
+        background: var(--peach);
+      }
+
+      .read-copy {
+        max-width: 64ch;
+        font-size: 1rem;
+        line-height: 1.72;
+      }
+
+      .delivery-top {
+        display: grid;
+        gap: 0.9rem;
+        margin-bottom: 1rem;
+      }
+
+      .summary-row,
+      .stack-row {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .summary-card {
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        background: #ffffff;
+        border: 1px solid var(--line);
+      }
+
+      .summary-card strong {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-size: 0.88rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--ink-soft);
+      }
+
+      .summary-card span {
+        display: block;
+        font-size: 0.98rem;
+        line-height: 1.5;
+      }
+
+      .stack-list,
+      .customer-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+      }
+
+      .chip {
+        padding: 0.52rem 0.82rem;
+        border-radius: 999px;
+        background: #edf5ff;
+        border: 1px solid rgba(31, 53, 95, 0.1);
+        color: var(--ink);
+        font-size: 0.82rem;
+      }
+
+      .team-strip {
+        display: grid;
+        gap: 0.8rem;
+        margin-top: 1rem;
+      }
+
+      .team-card,
+      .step {
+        background: #ffffff;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+      }
+
+      .team-card {
+        padding: 1rem;
+      }
+
+      .team-title {
+        margin-bottom: 0.8rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--ink-soft);
+      }
+
+      .team-grid {
+        display: grid;
+        gap: 0.7rem;
+        grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+      }
+
+      .role-pill {
+        padding: 0.85rem 0.8rem;
+        border-radius: var(--radius-sm);
+        background: linear-gradient(180deg, #f8fbff, #eef5ff);
+        border: 1px solid rgba(31, 53, 95, 0.1);
+      }
+
+      .role-name {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      .role-note {
+        display: block;
+        margin-top: 0.22rem;
+        font-size: 0.78rem;
+        line-height: 1.45;
+        color: var(--ink-soft);
+      }
+
+      .steps {
+        display: grid;
+        gap: 0.85rem;
+        margin-top: 1rem;
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.85rem;
+        align-items: start;
+        padding: 1rem;
+      }
+
+      .step-badge {
+        width: 2.3rem;
+        height: 2.3rem;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--peach), #ffbc72);
+        color: var(--navy);
+        font-weight: 800;
+      }
+
+      .step-title {
+        display: block;
+        margin-bottom: 0.3rem;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+
+      .step-copy {
+        color: var(--ink-soft);
+        font-size: 0.94rem;
+        line-height: 1.62;
+      }
+
+      .cred-card {
+        background:
+          radial-gradient(circle at top right, rgba(255, 202, 220, 0.18), transparent 16rem),
+          linear-gradient(180deg, #fbfdff 0%, #eef4ff 100%);
+      }
+
+      .cred-copy {
+        font-size: 0.98rem;
+        line-height: 1.68;
+      }
+
+      .customer-list {
+        margin: 0.9rem 0;
+      }
+
+      .customer-tag {
+        padding: 0.45rem 0.72rem;
+        border-radius: 999px;
+        background: rgba(255, 151, 85, 0.12);
+        color: var(--ink);
+        font-size: 0.82rem;
+      }
+
+      .proof-grid {
+        display: grid;
+        gap: 0.9rem;
+      }
+
+      .proof-card {
+        overflow: hidden;
+        border-radius: var(--radius-md);
+        background: #ffffff;
+        border: 1px solid var(--line);
+      }
+
+      .proof-image {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        background: #edf4ff;
+      }
+
+      .proof-body {
+        padding: 1rem;
+      }
+
+      .proof-label {
+        display: inline-block;
+        margin-bottom: 0.5rem;
+        color: var(--ink-soft);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .proof-card h3 {
+        font-size: 1.08rem;
+        line-height: 1.3;
+      }
+
+      .proof-card p {
+        margin-top: 0.55rem;
+        color: var(--ink-soft);
+        font-size: 0.92rem;
+        line-height: 1.58;
+      }
+
+      .proof-link {
+        display: inline-flex;
+        margin-top: 0.75rem;
+        font-size: 0.86rem;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .cta-card {
+        text-align: center;
+        color: #f8fbff;
+        background:
+          radial-gradient(circle at top left, rgba(255, 202, 220, 0.25), transparent 18rem),
+          linear-gradient(135deg, #142038 0%, #26426f 100%);
+      }
+
+      .cta-card p {
+        max-width: 30rem;
+        margin: 0.7rem auto 0;
+        font-size: 0.98rem;
+        line-height: 1.6;
+        color: rgba(248, 251, 255, 0.9);
+      }
+
+      .cta-button {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 1rem;
+        padding: 0.9rem 1.3rem;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--peach), #ffbc72);
+        color: var(--navy);
+        text-decoration: none;
+        font-weight: 800;
+      }
+
+      .footnote {
+        margin-top: 1rem;
+        text-align: center;
+        color: var(--ink-soft);
+        font-size: 0.78rem;
+        line-height: 1.5;
+      }
+
+      @media (min-width: 760px) {
+        .hero-panel {
+          padding: 1.8rem;
+        }
+
+        .hero-grid,
+        .delivery-top,
+        .proof-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .summary-row {
+          grid-template-columns: 1.2fr 1fr;
+        }
+
+        .stack-row {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .steps {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .hero-grid {
+          grid-template-columns: 1.3fr 0.9fr 0.9fr;
+        }
+
+        .hero-copy,
+        .why {
+          max-width: 41rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="wrap">
+        <section class="hero">
+          <div class="hero-panel">
+            <div class="eyebrow">Proposal Brief for Will Chan</div>
+            <h1>Help Squishmallows Match ship live events with fewer QA misses</h1>
+            <p class="hero-copy">
+              You are scaling a live match title with passes, drops, and fast
+              events. That puts release quality and player trust under pressure.
+            </p>
+            <p class="why">
+              <strong>Why we&apos;re here.</strong> We saw East Side Games hiring
+              for QA leadership while Squishmallows Match grows its live ops
+              work. That usually means the team needs stronger release control
+              before more content ships.
+            </p>
+            <div class="hero-grid">
+              <div class="signal-card">
+                <span class="signal-label">Public signal</span>
+                <span class="signal-value">
+                  QA leadership hiring plus open roles around automation and
+                  live event delivery.
+                </span>
+              </div>
+              <div class="signal-card">
+                <span class="signal-label">Product focus</span>
+                <span class="signal-value">
+                  Squishmallows Match, a live match-3 game with passes, drops,
+                  rewards, and player feedback.
+                </span>
+              </div>
+              <div class="signal-card">
+                <span class="signal-label">Player friction</span>
+                <span class="signal-value">
+                  Missed rewards, broken ad returns, and hard late-game levels
+                  show up in public feedback.
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-card read-card">
+            <h2 class="section-title">Our read</h2>
+            <p class="read-copy">
+              The signal says live ops is moving faster than the current QA
+              lane. Squishmallows Match mixes event content, reward rules,
+              ad moments, and purchase paths in one release rhythm. Public
+              reviews show players notice when rewards arrive late, progress
+              disappears, or ads do not return them to the game. If that stays,
+              each event can raise pressure on support and engineering.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-card">
+            <h2 class="section-title">What we&apos;d do</h2>
+            <div class="delivery-top">
+              <div class="summary-row">
+                <div class="summary-card">
+                  <strong>Engagement model</strong>
+                  <span>
+                    A dedicated squad under your PO or producer, run as a
+                    six-week pilot with weekly demos.
+                  </span>
+                </div>
+                <div class="summary-card">
+                  <strong>Milestone goal</strong>
+                  <span>
+                    Set one release gate for events, rewards, ads, and update
+                    migrations.
+                  </span>
+                </div>
+              </div>
+              <div class="stack-row">
+                <div class="summary-card">
+                  <strong>Relevant stack</strong>
+                  <div class="stack-list">
+                    <span class="chip">C#</span>
+                    <span class="chip">.NET</span>
+                    <span class="chip">Node.js</span>
+                    <span class="chip">React</span>
+                    <span class="chip">Python</span>
+                  </div>
+                </div>
+                <div class="summary-card">
+                  <strong>Delivery rhythm</strong>
+                  <span>
+                    Weekly risk review, weekly demo, and one shared defect and
+                    release view for production and engineering.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="team-strip">
+              <div class="team-card">
+                <div class="team-title">Pilot team</div>
+                <div class="team-grid">
+                  <div class="role-pill">
+                    <span class="role-name">QA Lead</span>
+                    <span class="role-note">Owns release gate and coverage map</span>
+                  </div>
+                  <div class="role-pill">
+                    <span class="role-name">SDET</span>
+                    <span class="role-note">Builds event and reward checks</span>
+                  </div>
+                  <div class="role-pill">
+                    <span class="role-name">Tooling Engineer</span>
+                    <span class="role-note">Creates config helpers</span>
+                  </div>
+                  <div class="role-pill">
+                    <span class="role-name">QA Analyst</span>
+                    <span class="role-note">Runs smoke passes and triage</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="steps">
+                <article class="step">
+                  <div class="step-badge">1</div>
+                  <div>
+                    <span class="step-title">Map the live release path</span>
+                    <p class="step-copy">
+                      Trace passes, drops, rewards, update checks, and ad
+                      returns into one release map with owners, gates, and
+                      rollback rules.
+                    </p>
+                  </div>
+                </article>
+                <article class="step">
+                  <div class="step-badge">2</div>
+                  <div>
+                    <span class="step-title">Add event and reward checks</span>
+                    <p class="step-copy">
+                      Build a light harness for event configs, reward tables,
+                      duplicate states, and lost-progress cases before each
+                      content push.
+                    </p>
+                  </div>
+                </article>
+                <article class="step">
+                  <div class="step-badge">3</div>
+                  <div>
+                    <span class="step-title">Stabilize ad and purchase flows</span>
+                    <p class="step-copy">
+                      Focus test coverage on reward ads, purchase restore,
+                      device-change migration, and update flows that players
+                      already call out in public reviews.
+                    </p>
+                  </div>
+                </article>
+                <article class="step">
+                  <div class="step-badge">4</div>
+                  <div>
+                    <span class="step-title">Give the team one quality view</span>
+                    <p class="step-copy">
+                      Set a weekly dashboard for defect trends, release risk,
+                      and player issue themes so production can act sooner.
+                    </p>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-card cred-card">
+            <h2 class="section-title">Who is Elinext</h2>
+            <p class="cred-copy">
+              Elinext is a full-cycle software development company, working
+              since 1997 with about 700 in-house specialists and no
+              freelancers. We can add a dedicated squad under your lead and
+              cover QA, tooling, backend, and front-end work in one lane. We
+              hold ISO 9001 and ISO 27001, and we have delivered for
+            </p>
+            <div class="customer-list">
+              <span class="customer-tag"><strong>Siemens</strong></span>
+              <span class="customer-tag"><strong>Broadcom</strong></span>
+              <span class="customer-tag"><strong>Volkswagen</strong></span>
+              <span class="customer-tag"><strong>TUI</strong></span>
+            </div>
+            <p class="cred-copy">
+              using React, .NET, C#, Node.js, and Python when release speed and
+              product quality must rise together. That fits here because
+              Squishmallows Match needs stronger release control without
+              slowing fresh content.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-card">
+            <h2 class="section-title">Proof</h2>
+            <div class="proof-grid">
+              <article class="proof-card">
+                <img
+                  class="proof-image"
+                  src="assets/case-internal-testing-tool.jpg"
+                  alt="Internal testing tool case study"
+                />
+                <div class="proof-body">
+                  <span class="proof-label">Media and QA</span>
+                  <h3>Custom Randomizer Tool for Internal Testing</h3>
+                  <p>
+                    Elinext built a QA tool for a media client. It cut manual
+                    effort and shortened testing cycles.
+                  </p>
+                  <a
+                    class="proof-link"
+                    href="https://www.elinext.com/case-study/internal-testing-tool/"
+                    target="_blank"
+                    rel="noreferrer"
+                    >Read case study</a
+                  >
+                </div>
+              </article>
+              <article class="proof-card">
+                <img
+                  class="proof-image"
+                  src="assets/case-allin1social.jpg"
+                  alt="Allin1social testing case study"
+                />
+                <div class="proof-body">
+                  <span class="proof-label">Media platform testing</span>
+                  <h3>Testing of the Allin1social SMM Platform</h3>
+                  <p>
+                    Elinext ran 500+ test cases, found blocking defects early,
+                    and helped cut customer complaints.
+                  </p>
+                  <a
+                    class="proof-link"
+                    href="https://www.elinext.com/case-study/allin1social-smm-platform/"
+                    target="_blank"
+                    rel="noreferrer"
+                    >Read case study</a
+                  >
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-card cta-card">
+            <h2 class="section-title">Talk through the gaps</h2>
+            <p>We can map the first six weeks together.</p>
+            <a
+              class="cta-button"
+              href="https://www.elinext.com/contacts/"
+              target="_blank"
+              rel="noreferrer"
+              >Start the conversation</a
+            >
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
