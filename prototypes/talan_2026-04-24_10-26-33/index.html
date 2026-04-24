@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Talan Ship AI and Trading Work Without Stretching Architecture | Elinext</title>
+  <meta name="description" content="A short proposal for Talan UK & Ireland, built around current hiring for AI web apps and energy trading systems.">
+  <meta name="author" content="Elinext">
+  <meta name="theme-color" content="#111827">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Help Talan Ship AI and Trading Work Without Stretching Architecture">
+  <meta property="og:description" content="A short proposal for Talan UK & Ireland, built around current hiring for AI web apps and energy trading systems.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/talan_2026-04-24_10-26-33/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/talan_2026-04-24_10-26-33/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/talan_2026-04-24_10-26-33/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --ink: #172033;
+      --muted: #566074;
+      --panel: rgba(255, 255, 255, 0.9);
+      --panel-strong: #ffffff;
+      --line: rgba(23, 32, 51, 0.12);
+      --read-bg: #eaf1f7;
+      --accent: #165d73;
+      --accent-soft: rgba(22, 93, 115, 0.12);
+      --warm: #d86b2d;
+      --warm-soft: rgba(216, 107, 45, 0.1);
+      --shadow: 0 22px 58px rgba(23, 32, 51, 0.1);
+      --radius: 28px;
+      --shell: min(1120px, calc(100vw - 28px));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(22, 93, 115, 0.16), transparent 32%),
+        radial-gradient(circle at top right, rgba(216, 107, 45, 0.14), transparent 28%),
+        linear-gradient(180deg, #faf7f1 0%, var(--bg) 100%);
+      color: var(--ink);
+      font-family: "Manrope", sans-serif;
+      line-height: 1.55;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.25;
+      background:
+        linear-gradient(90deg, rgba(23, 32, 51, 0.025) 1px, transparent 1px),
+        linear-gradient(rgba(23, 32, 51, 0.025) 1px, transparent 1px);
+      background-size: 28px 28px;
+      z-index: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      padding: 22px 0 54px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: var(--shell);
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 14px 0;
+    }
+
+    .card,
+    .read-card,
+    .focus-card,
+    .proof-card,
+    .cta-card {
+      width: 100%;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .card,
+    .proof-card,
+    .cta-card {
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 18px;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 18px 0;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--warm));
+    }
+
+    .eyebrow,
+    .section-kicker {
+      margin: 0 0 10px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 14ch;
+      margin: 0 auto;
+      text-align: center;
+      font-size: clamp(2rem, 8vw, 4.45rem);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .hero-copy p {
+      font-size: 0.98rem;
+      color: var(--muted);
+    }
+
+    .hero-copy .lead {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .why-box {
+      padding: 14px 14px 14px 16px;
+      border-left: 4px solid var(--warm);
+      border-radius: 18px;
+      background: var(--warm-soft);
+    }
+
+    .hero-actions {
+      margin-top: 22px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 20px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: #fff;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      font-weight: 700;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      background: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .section-title {
+      margin: 0 auto 14px;
+      max-width: 15ch;
+      text-align: center;
+      font-size: clamp(1.68rem, 5.5vw, 2.7rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .read-card {
+      background: var(--read-bg);
+      padding: 22px 18px;
+      border-left: 6px solid var(--accent);
+    }
+
+    .read-card p {
+      max-width: 72ch;
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    .focus-card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 249, 252, 0.98));
+      padding: 24px 18px;
+    }
+
+    .proposal-intro {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .team-card,
+    .stack-card {
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .mini-title {
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+    }
+
+    .team-line {
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 16px;
+    }
+
+    .step-no {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 12px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+      line-height: 1.15;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .who-card {
+      padding: 24px 18px;
+    }
+
+    .who-card p {
+      max-width: 76ch;
+      margin: 0 auto;
+      color: var(--ink);
+      font-size: 0.98rem;
+      text-align: center;
+    }
+
+    .customer-pills {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .customer-pills span {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(23, 32, 51, 0.08);
+      color: var(--ink);
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+    }
+
+    .proof-media {
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #e7edf3;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .proof-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .proof-body {
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .proof-body h3 {
+      font-size: 1.1rem;
+      line-height: 1.2;
+    }
+
+    .proof-body p {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .cta-card {
+      padding: 28px 18px;
+      text-align: center;
+    }
+
+    .cta-card h2 {
+      margin-bottom: 10px;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .cta-card p {
+      margin: 0 auto 18px;
+      max-width: 34ch;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    @media (min-width: 768px) {
+      main {
+        padding: 32px 0 72px;
+      }
+
+      .section {
+        padding: 18px 0;
+      }
+
+      .hero-card,
+      .focus-card,
+      .who-card,
+      .cta-card {
+        padding: 34px 30px;
+      }
+
+      .read-card {
+        padding: 28px 30px;
+      }
+
+      .proposal-grid {
+        grid-template-columns: 1.05fr 1.35fr;
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hero-card,
+      .focus-card,
+      .who-card,
+      .cta-card {
+        padding: 42px 42px;
+      }
+
+      .read-card {
+        padding: 32px 36px;
+      }
+
+      .team-card,
+      .stack-card,
+      .step,
+      .proof-body {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="shell">
+      <section class="section hero">
+        <div class="card hero-card">
+          <p class="eyebrow">For Mateusz Siatrak</p>
+          <h1>Help Talan ship AI and trading work without stretching architecture</h1>
+          <div class="hero-copy">
+            <p class="lead">A short proposal for Talan UK &amp; Ireland. Built around current hiring across AI web apps and energy trading systems.</p>
+            <div class="why-box">
+              <p>Saw you are hiring Python-React and C# / Orchestrade talent. That usually means architecture is covering two fast tracks at once.</p>
+            </div>
+          </div>
+          <div class="hero-actions">
+            <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="section-kicker">Our Read</p>
+        <h2 class="section-title">The pressure looks split, not small</h2>
+        <div class="read-card">
+          <p>The signal shows two hard delivery lines growing together. One line is AI web work in FastAPI and React. The other is C# and Orchestrade work for trading teams. Both demand tight integration, release control, and clear technical ownership. If that load stays split, architecture becomes the safety net. Then releases slow, new hires ramp slowly, and client work starts to queue.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="section-kicker">What We'd Do</p>
+        <h2 class="section-title">One focused squad, under your lead</h2>
+        <div class="focus-card">
+          <p class="proposal-intro">We would start with a dedicated squad under your architecture lead for an eight-week pilot.</p>
+          <div class="proposal-grid">
+            <div class="proposal-side">
+              <div class="team-card">
+                <p class="mini-title">Team Shape</p>
+                <p class="team-line">1 delivery lead, 1 senior C# engineer, 2 senior full-stack engineers, 1 QA.</p>
+              </div>
+              <div class="stack-card">
+                <p class="mini-title">Relevant Stack</p>
+                <div class="chips">
+                  <span class="chip">C#</span>
+                  <span class="chip">.NET</span>
+                  <span class="chip">Python</span>
+                  <span class="chip">React</span>
+                  <span class="chip">Angular</span>
+                  <span class="chip">QA</span>
+                </div>
+              </div>
+            </div>
+            <div class="steps">
+              <article class="step">
+                <div class="step-no">1</div>
+                <h3>Map one delivery lane</h3>
+                <p>Week 1 maps the AI web flow, trading flow, release steps, and key handoffs, then turns them into one delivery plan with owners, tests, and escalation paths.</p>
+              </article>
+              <article class="step">
+                <div class="step-no">2</div>
+                <h3>Stabilise AI web shipping</h3>
+                <p>Weeks 2-3 stabilise FastAPI, React, and data contracts so AI features ship with cleaner APIs, safer rollouts, and less rework between architecture and engineering.</p>
+              </article>
+              <article class="step">
+                <div class="step-no">3</div>
+                <h3>Harden trading changes</h3>
+                <p>Weeks 3-5 harden C# trading change delivery with integration checks for market data, exchange feeds, and middle-office workflows before code reaches production.</p>
+              </article>
+              <article class="step">
+                <div class="step-no">4</div>
+                <h3>Leave a lighter support path</h3>
+                <p>Weeks 6-8 add shared QA, runbooks, and support signals so your team can measure release health, spot blockers early, and onboard new developers faster.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="section-kicker">Who Is Elinext</p>
+        <h2 class="section-title">A senior team that can fit into your flow</h2>
+        <div class="card who-card">
+          <p>Elinext is a full-cycle software development company, active since 1997. We work with about 700 in-house specialists, with no freelancers or subcontractors. Our teams cover .NET, Python, React, Angular, QA, DevOps, and delivery management. We hold <strong>ISO 27001</strong> and <strong>ISO 9001</strong>, which matters for high-trust work. Our delivery record includes:</p>
+          <div class="customer-pills" aria-label="Elinext customers">
+            <span>Siemens</span>
+            <span>Broadcom</span>
+            <span>Volkswagen</span>
+            <span>TUI</span>
+          </div>
+          <p>That gives us a practical way to add capacity without adding more coordination weight for your architects.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="section-kicker">Proof</p>
+        <h2 class="section-title">Related delivery work</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <div class="proof-media">
+              <img src="assets/case-applicant-tracking.jpg" alt="Applicant tracking case study">
+            </div>
+            <div class="proof-body">
+              <h3>Elinext. Applicant Tracking</h3>
+              <p>Built with C#, ASP.NET, Angular, and MSSQL. A six-person team shipped the first version in six months and streamlined hiring work during active growth.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/elinext-applicant-tracking/">View case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <div class="proof-media">
+              <img src="assets/case-securities-management.jpg" alt="Securities platform case study">
+            </div>
+            <div class="proof-body">
+              <h3>Processing and Management of Securities</h3>
+              <p>Built dashboard features for a global fintech platform and worked with the client product team so releases and upgrades stayed on time.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/solution-for-processing-and-management-of-securities-for-fintech/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="cta-card">
+          <p class="section-kicker">Let's Talk</p>
+          <h2>Start with one focused squad</h2>
+          <p>We can align on scope, team shape, and a first eight-week pilot.</p>
+          <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
