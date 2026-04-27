@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TipTopJob support proposal by Elinext</title>
+  <meta name="description" content="A short Elinext proposal for supporting and improving TipTopJob's web job-board platform.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/tiptopjob_2026-04-27_21-30-39/">
+  <meta property="og:title" content="TipTopJob support proposal by Elinext">
+  <meta property="og:description" content="A focused web-platform support plan for TipTopJob.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/tiptopjob_2026-04-27_21-30-39/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/tiptopjob_2026-04-27_21-30-39/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5b6472;
+      --paper: #fffaf4;
+      --white: #ffffff;
+      --navy: #10172a;
+      --purple: #4b1f64;
+      --orange: #f1772a;
+      --green: #dff3e9;
+      --line: #ded8cf;
+      --soft: #f5efe7;
+      --radius: 8px;
+      color-scheme: light;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    body {
+      min-width: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+
+    section {
+      padding: 56px 0;
+      background: var(--paper);
+    }
+
+    .hero {
+      padding: 56px 0 48px;
+      background:
+        linear-gradient(135deg, rgba(75, 31, 100, 0.96), rgba(16, 23, 42, 0.98)),
+        var(--navy);
+      color: var(--white);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #ffd2b6;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 720px;
+      margin-bottom: 18px;
+      font-size: clamp(2rem, 8vw, 4.8rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      font-size: clamp(1.65rem, 5vw, 2.6rem);
+      line-height: 1.1;
+      text-align: center;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin-bottom: 14px;
+      color: #f4edf8;
+      font-size: 1.05rem;
+    }
+
+    .why {
+      border-left: 4px solid var(--orange);
+      padding-left: 14px;
+    }
+
+    .hero-note {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .note-label {
+      margin: 0 0 8px;
+      color: #ffd2b6;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .hero-note ul {
+      display: grid;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      color: #ffffff;
+    }
+
+    .read-card {
+      max-width: 76ch;
+      margin: 0 auto;
+      border: 1px solid #e6d7c8;
+      border-left: 6px solid var(--orange);
+      border-radius: var(--radius);
+      padding: 24px;
+      background: #fff2e4;
+      box-shadow: 0 18px 36px rgba(23, 32, 51, 0.08);
+    }
+
+    .read-card p {
+      margin-bottom: 0;
+      color: #293246;
+      font-size: 1.02rem;
+    }
+
+    .proposal {
+      background: #ffffff;
+    }
+
+    .proposal-panel {
+      border: 1px solid #d6dde8;
+      border-radius: var(--radius);
+      background: #f8fbff;
+      box-shadow: 0 22px 45px rgba(16, 23, 42, 0.1);
+      overflow: hidden;
+    }
+
+    .proposal-head {
+      display: grid;
+      gap: 14px;
+      padding: 22px;
+      background: #172033;
+      color: var(--white);
+    }
+
+    .proposal-head p {
+      margin: 0;
+      color: #dbe5f5;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: #ffffff;
+      font-size: 0.86rem;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      border: 1px solid #dfe6ee;
+      border-radius: var(--radius);
+      padding: 16px;
+      background: var(--white);
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .elinext {
+      background: #eef8f2;
+    }
+
+    .elinext-box {
+      max-width: 900px;
+      margin: 0 auto;
+      border: 1px solid #bfdccc;
+      border-radius: var(--radius);
+      padding: 24px;
+      background: #ffffff;
+    }
+
+    .elinext-box p {
+      margin-bottom: 14px;
+    }
+
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .customer-list strong {
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #172033;
+      color: #ffffff;
+      font-size: 0.9rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow: 0 16px 34px rgba(23, 32, 51, 0.08);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body p {
+      color: var(--muted);
+    }
+
+    .case-body a {
+      color: var(--purple);
+      font-weight: 700;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .talk {
+      padding: 52px 0 64px;
+      background: #172033;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .talk p {
+      max-width: 520px;
+      margin: 0 auto 22px;
+      color: #dbe5f5;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .wrap {
+        width: min(100% - 56px, 1120px);
+      }
+
+      section {
+        padding: 76px 0;
+      }
+
+      .hero {
+        padding: 78px 0 68px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr);
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 22px;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 960px) {
+      .proposal-head {
+        grid-template-columns: minmax(320px, 0.8fr) minmax(0, 1.2fr);
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Proposal brief for Mike Dauncey</p>
+        <h1>Support TipTopJob's job board while it keeps growing</h1>
+        <p>TipTopJob already serves jobseekers and recruiters across many countries. This brief focuses on keeping the web platform faster, clearer, and easier to support as data grows.</p>
+        <p class="why">We saw the 1st Line IT Support signal and your live job-board activity. That points to a platform that needs steady care while recruiters and candidates keep using it.</p>
+      </div>
+      <aside class="hero-note" aria-label="Focus areas">
+        <p class="note-label">Focus for a first sprint</p>
+        <ul>
+          <li>Search and job alerts</li>
+          <li>CV upload and profile flows</li>
+          <li>Recruiter posting and CV search</li>
+          <li>Performance, QA, and support reports</li>
+        </ul>
+      </aside>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p>The support signal tells us TipTopJob is keeping a live job-board engine stable, not just publishing content. Your site spans many countries, industries, alerts, CVs, and recruiter products. That breadth can create slow fixes, hard QA, and unclear support data. If it stays that way, paid posting, candidate trust, and any investment talks can lose speed.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-panel">
+          <div class="proposal-head">
+            <div>
+              <h3>Dedicated squad under your product or operations owner</h3>
+              <p>We would start with a six-week pilot and weekly demos, then keep the squad if the work proves useful.</p>
+            </div>
+            <div class="tags" aria-label="Team and stack">
+              <span class="tag">1 Tech Lead</span>
+              <span class="tag">2 Web Engineers</span>
+              <span class="tag">1 QA</span>
+              <span class="tag">UX part time</span>
+              <span class="tag">.NET</span>
+              <span class="tag">Node.js</span>
+              <span class="tag">React or Angular</span>
+              <span class="tag">SQL</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Map support pain</h3>
+                <p>Review support tickets, alert issues, CV upload errors, and recruiter complaints to find the highest-cost defects.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Fix core flows</h3>
+                <p>Improve search, job alerts, apply paths, and recruiter posting with small releases that your team can review weekly.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Add QA cover</h3>
+                <p>Build smoke tests for login, CVs, job ads, CV search, payments, and country-specific pages.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Improve platform health</h3>
+                <p>Track failed actions, slow pages, stale jobs, and duplicate listings in one simple weekly report.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="elinext-box">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For TipTopJob, the fit is web platforms, QA, DevOps, and long-running support under your own owner. We hold ISO 9001 and ISO 27001, which helps when quality and data security matter. Our teams have served customers such as <strong>Siemens</strong>, <strong>Broadcom</strong>, and <strong>Volkswagen</strong>. That experience fits a careful sprint on recruiter and candidate flows, without forcing a full rebuild.</p>
+          <div class="customer-list" aria-label="Named customers">
+            <strong>Siemens</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-applicant.jpg" alt="Applicant tracking case study preview">
+            <div class="case-body">
+              <h3>Applicant Tracking</h3>
+              <p>Elinext built vacancy and candidate modules for a hiring workflow, including planning, design, development, and release.</p>
+              <a href="https://www.elinext.com/case-study/elinext-applicant-tracking/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-resume.jpg" alt="Resume builder and job-search case study preview">
+            <div class="case-body">
+              <h3>Resume Builder and Job Search Platform</h3>
+              <p>Elinext helped create a job-search platform integrated with an existing recruitment and assessment system.</p>
+              <a href="https://www.elinext.com/case-study/resume-builder-and-job-search-platform-for-education-in-usa-and-canada/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk">
+      <div class="wrap">
+        <h2>Talk through next sprint</h2>
+        <p>A short call can set the first support scope.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
