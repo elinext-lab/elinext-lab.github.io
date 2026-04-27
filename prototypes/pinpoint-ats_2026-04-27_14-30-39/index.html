@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pinpoint ATS implementation proposal by Elinext</title>
+  <meta name="description" content="A focused proposal for helping Pinpoint scale implementation, internal tooling, integration readiness, and analytics without slowing product delivery.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/pinpoint-ats_2026-04-27_14-30-39/">
+  <meta property="og:title" content="Pinpoint ATS implementation proposal by Elinext">
+  <meta property="og:description" content="A focused implementation tooling and analytics proposal for Pinpoint ATS.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/pinpoint-ats_2026-04-27_14-30-39/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/pinpoint-ats_2026-04-27_14-30-39/og-image.jpg">
+  <style>
+    :root {
+      --ink: #102033;
+      --muted: #5b6b7d;
+      --navy: #092b45;
+      --teal: #0a6f78;
+      --teal-soft: #e8f5f3;
+      --orange: #f47b45;
+      --paper: #ffffff;
+      --mist: #f6f8fb;
+      --line: #dbe3ea;
+      --shadow: 0 18px 44px rgba(13, 42, 66, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      background: var(--paper);
+    }
+
+    .section.alt {
+      background: var(--mist);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      padding: 40px 18px 64px;
+      color: #fff;
+      background: linear-gradient(135deg, #092b45 0%, #0a4d5d 58%, #173349 100%);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 30px;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #b9e7e1;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: clamp(2.35rem, 6vw, 5.1rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 680px;
+      font-size: 1.04rem;
+    }
+
+    .why {
+      margin-bottom: 0;
+      padding-left: 16px;
+      border-left: 4px solid var(--orange);
+      color: #eef8f7;
+    }
+
+    .hero-panel {
+      width: 100%;
+      align-self: end;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-panel strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #fff;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .hero-panel span {
+      display: block;
+      color: #d6efed;
+      font-size: 0.98rem;
+    }
+
+    .section h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      line-height: 1.12;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 88ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #b9dcd8;
+      border-left: 6px solid var(--teal);
+      background: var(--teal-soft);
+      box-shadow: 0 10px 28px rgba(10, 111, 120, 0.08);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      color: #203849;
+      font-size: 1.06rem;
+    }
+
+    .proposal {
+      display: grid;
+      gap: 22px;
+    }
+
+    .proposal-intro {
+      max-width: 760px;
+      margin: 0 auto 8px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .team-grid,
+    .steps,
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .team-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .role,
+    .step,
+    .proof-card {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(16, 32, 51, 0.06);
+    }
+
+    .role {
+      padding: 18px;
+    }
+
+    .role strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--navy);
+      font-size: 1rem;
+    }
+
+    .role span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .steps {
+      margin-top: 8px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .num {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+      line-height: 1.2;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .stack span,
+    .customer {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 11px;
+      border: 1px solid #cbd8e2;
+      background: #f8fbfd;
+      color: #244158;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .elinext-copy {
+      max-width: 78ch;
+      margin: 0 auto;
+      color: #263d50;
+      font-size: 1.03rem;
+    }
+
+    .elinext-copy p {
+      margin-bottom: 14px;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+
+    .customer {
+      border-color: #b8c9d7;
+      background: #eef5f8;
+      color: var(--navy);
+    }
+
+    .proof-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .proof-card {
+      overflow: hidden;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
+
+    .proof-body p {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .proof-body a {
+      color: var(--teal);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      color: #fff;
+      background: var(--navy);
+      text-align: center;
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+    }
+
+    .cta p {
+      max-width: 480px;
+      margin: 0 auto 22px;
+      color: #d8e8ee;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 20px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 76px 28px;
+      }
+
+      .hero {
+        padding: 56px 28px 72px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.7fr);
+        align-items: end;
+      }
+
+      .team-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">For Pinpoint ATS</p>
+          <h1>Scale Pinpoint implementations without slowing product momentum this quarter</h1>
+          <p>Pinpoint is adding customers, integrations, and complex workflows. This brief shows how Elinext would help turn implementation into a clear, repeatable delivery system.</p>
+          <p class="why">Saw you are hiring a Head of Implementation. That points to a real scaling moment: more customers, more handoffs, and more pressure on delivery.</p>
+        </div>
+        <aside class="hero-panel" aria-label="Engagement focus">
+          <strong>Focus</strong>
+          <span>Implementation tooling, integration readiness, reporting data, and fewer support-to-engineering escalations.</span>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Hiring a Head of Implementation says Pinpoint is moving past ad hoc onboarding. Your customers span SMB and enterprise teams with different workflows, data, and integrations. That creates handoff risk for Sales, CS, Technical Success, Engineering, and analytics. If the playbook stays manual, live dates slip and small issues reach Engineering. Victory's analytics work can turn this into a measurable system, not another status meeting.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap proposal">
+        <h2>What we'd do</h2>
+        <p class="proposal-intro">A dedicated squad under your Product and Implementation owners for a six-week pilot. We would focus on implementation flow, integration readiness, and reporting data.</p>
+
+        <div class="team-grid" aria-label="Suggested team">
+          <div class="role"><strong>Tech Lead</strong><span>Ruby on Rails and delivery ownership</span></div>
+          <div class="role"><strong>Frontend</strong><span>React and TypeScript admin tools</span></div>
+          <div class="role"><strong>Data Engineer</strong><span>Metrics, events, and dashboards</span></div>
+          <div class="role"><strong>QA Engineer</strong><span>Integration and regression checks</span></div>
+        </div>
+
+        <div class="steps">
+          <article class="step">
+            <div class="num">1</div>
+            <div>
+              <h3>Map the handoff</h3>
+              <p>Trace Sales, CS, Technical Success, and Engineering handoffs, then define entry checks for each customer tier.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">2</div>
+            <div>
+              <h3>Build admin tooling</h3>
+              <p>Add safe Rails admin actions for bulk setup, config checks, and migration notes your team can trust.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">3</div>
+            <div>
+              <h3>Harden integrations</h3>
+              <p>Test API and webhook paths for HRIS, calendar, assessment, and background-check partners before each go-live.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">4</div>
+            <div>
+              <h3>Close the data loop</h3>
+              <p>Create dashboards for implementation duration, blockers, escalations, and adoption trends using clean shared event definitions.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="stack" aria-label="Relevant stack">
+          <span>Ruby on Rails</span>
+          <span>React</span>
+          <span>TypeScript</span>
+          <span>MySQL</span>
+          <span>APIs</span>
+          <span>Webhooks</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="elinext-copy">
+          <p>Elinext is a full-cycle software development provider, active since 1997, with global delivery. We bring about 700 in-house specialists across engineering, QA, design, DevOps, data, and delivery. We use no freelancers and no subcontractors, so ownership stays clear. For a security-sensitive ATS, our ISO 9001 and ISO 27001 practices support trust. Teams from Elinext have delivered work for Broadcom, Siemens, Volkswagen, TUI, and TransPerfect. For Pinpoint, our squad supports tooling while your engineers keep roadmap control.</p>
+        </div>
+        <div class="customers" aria-label="Named customers">
+          <span class="customer">Broadcom</span>
+          <span class="customer">Siemens</span>
+          <span class="customer">Volkswagen</span>
+          <span class="customer">TUI</span>
+          <span class="customer">TransPerfect</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-elinext-applicant-tracking.jpg" alt="Applicant tracking case study preview">
+            <div class="proof-body">
+              <h3>Elinext. Applicant Tracking</h3>
+              <p>Six-person team planned, designed, built, and released a first ATS version in six months.</p>
+              <a href="https://www.elinext.com/case-study/elinext-applicant-tracking/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <div class="proof-body">
+              <h3>Internal Talent Management System</h3>
+              <p>Web system replaced spreadsheets for employee records, CV data, documents, notes, skills, and permissions.</p>
+              <a href="https://www.elinext.com/case-study/talent-management-system/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Start the implementation conversation</h2>
+        <p>A short call can test the fit and scope.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
