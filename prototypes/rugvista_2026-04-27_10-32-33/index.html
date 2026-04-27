@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rugvista CTO Platform Proposal | Elinext</title>
+  <meta name="description" content="A short proposal for helping Rugvista evolve its in-house commerce platform without slowing daily growth.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/rugvista_2026-04-27_10-32-33/">
+  <meta property="og:title" content="Rugvista CTO Platform Proposal">
+  <meta property="og:description" content="A practical Elinext plan for Rugvista's CTO platform change.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/rugvista_2026-04-27_10-32-33/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/rugvista_2026-04-27_10-32-33/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      --ink: #18202b;
+      --muted: #586372;
+      --paper: #fbfaf7;
+      --white: #ffffff;
+      --line: #dfe5dd;
+      --green: #2e5e4e;
+      --copper: #c96332;
+      --blue: #1f4f7a;
+      --dark: #101827;
+      --soft: #eef5ef;
+      --gold: #f0b35a;
+      --shadow: 0 18px 50px rgba(16, 24, 39, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at 86% 12%, rgba(240, 179, 90, 0.2), transparent 34%),
+        linear-gradient(135deg, #101827 0%, #18273c 56%, #244336 100%);
+      color: var(--white);
+      padding: 32px 0 44px;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 44px;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: var(--white);
+    }
+
+    .mark::before {
+      content: "";
+      width: 28px;
+      height: 3px;
+      background: var(--copper);
+      border-radius: 999px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 30px;
+      align-items: center;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: clamp(2.25rem, 6vw, 4.9rem);
+      line-height: 1.03;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 690px;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 1.02rem;
+    }
+
+    .why {
+      margin-bottom: 0;
+      padding-left: 16px;
+      border-left: 4px solid var(--gold);
+    }
+
+    .signal-map {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .signal-map strong {
+      color: var(--white);
+      font-size: 0.95rem;
+    }
+
+    .map-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 58px;
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.93rem;
+    }
+
+    .dot {
+      flex: 0 0 auto;
+      width: 14px;
+      height: 14px;
+      border: 3px solid var(--gold);
+      border-radius: 50%;
+      background: var(--dark);
+    }
+
+    section {
+      padding: 54px 0;
+      background: var(--paper);
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: clamp(1.55rem, 4vw, 2.4rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #c9d7ca;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      background: var(--soft);
+      color: #22352d;
+      font-size: 1.02rem;
+    }
+
+    .work {
+      background: #ffffff;
+    }
+
+    .work-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .team-card,
+    .step,
+    .proof-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 12px 30px rgba(16, 24, 39, 0.08);
+    }
+
+    .team-card {
+      padding: 22px;
+      border-top: 6px solid var(--blue);
+    }
+
+    .eyebrow {
+      margin-bottom: 8px;
+      color: var(--copper);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #eef4f8;
+      color: #20364a;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin-bottom: 5px;
+      font-size: 1.02rem;
+      line-height: 1.25;
+    }
+
+    .step p,
+    .team-card p,
+    .proof-card p,
+    .who p,
+    .cta p {
+      color: var(--muted);
+    }
+
+    .stack-line {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .who {
+      background: #f4f7f9;
+    }
+
+    .who-box {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 24px;
+      border-radius: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+    }
+
+    .who strong {
+      display: inline-block;
+      margin: 2px 2px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #f7e5d8;
+      color: #853b1e;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 2.3 / 1;
+      object-fit: cover;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-body h3 {
+      font-size: 1.05rem;
+      line-height: 1.3;
+    }
+
+    .proof-body a {
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .cta {
+      color: var(--white);
+      background: var(--dark);
+      text-align: center;
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      letter-spacing: 0;
+    }
+
+    .cta p {
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      margin-top: 12px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--copper);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .hero {
+        padding: 42px 0 60px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1.45fr 0.9fr;
+      }
+
+      section {
+        padding: 72px 0;
+      }
+
+      .work-grid {
+        grid-template-columns: 0.82fr 1.18fr;
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="brand-row">
+        <span>Rugvista</span>
+        <span class="mark">Elinext</span>
+      </div>
+      <div class="hero-grid">
+        <div>
+          <h1>Help Rugvista evolve its platform without slowing growth</h1>
+          <p>Rugvista has a strong online shop, broad product range, and high growth. The next step is changing the platform while customers keep buying every day.</p>
+          <p class="why">Saw Rugvista is hiring a CTO to lead a mostly in-house platform, vendor choices, DevOps, security, and AI work. This is where Elinext can help.</p>
+        </div>
+        <div class="signal-map" aria-label="CTO platform change map">
+          <strong>CTO change map</strong>
+          <div class="map-item"><span class="dot"></span><span>Keep what makes the shop special.</span></div>
+          <div class="map-item"><span class="dot"></span><span>Move standard parts with less risk.</span></div>
+          <div class="map-item"><span class="dot"></span><span>Make releases safer before migration.</span></div>
+          <div class="map-item"><span class="dot"></span><span>Pilot AI where it saves real work.</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Our read</h2>
+        <div class="read-box">
+          Your CTO search says Rugvista is entering a platform change, not a simple hiring cycle. The in-house shop gives control across the buying journey. It also puts pressure on architecture, releases, and support work. Strong growth raises the cost of slow change. It can hurt checkout, search, delivery updates, and team focus.
+        </div>
+      </div>
+    </section>
+
+    <section class="work">
+      <div class="wrap">
+        <h2 class="section-title">What we'd do</h2>
+        <div class="work-grid">
+          <div class="team-card">
+            <div class="eyebrow">Engagement model</div>
+            <h3>A dedicated squad under your Product Owners.</h3>
+            <p>Start with a six-week pilot, weekly demos, and one clear transformation backlog.</p>
+            <div class="roles">
+              <span class="pill">Tech Lead</span>
+              <span class="pill">2 Web Engineers</span>
+              <span class="pill">QA Automation</span>
+              <span class="pill">DevOps</span>
+              <span class="pill">Business Analyst</span>
+            </div>
+            <div class="stack-line">Stack fit: Node.js, .NET or Java, React or Vue, Playwright, Docker, cloud DevOps.</div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Map the platform</h3>
+                <p>Map the in-house platform, vendor candidates, and release risks across shop, cart, payment, warehouse, and support flows.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Decide custom vs vendor</h3>
+                <p>Choose what stays custom and what moves to vendors, with clear checks for cost, speed, security, and customer impact.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Harden delivery</h3>
+                <p>Harden delivery with CI/CD, automated tests, observability, and rollback paths before larger migrations start safely.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Pilot useful AI</h3>
+                <p>Pilot AI where it saves real work, such as search, personalisation, service answers, or operations triage.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="who">
+      <div class="wrap">
+        <h2 class="section-title">Who is Elinext</h2>
+        <div class="who-box">
+          <p>Elinext is a full-cycle software development company, active across global markets since 1997. We have about 700 in-house specialists across web, mobile, backend, QA, DevOps, and AI. We use no freelancers or subcontractors, so the team stays clear and accountable. Our teams have served <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong> on serious software work. We work under ISO 9001 and ISO 27001 for secure, controlled platform change. For Rugvista, that means one squad, with weekly demos, focused on the CTO roadmap above.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-cicd.jpg" alt="CI/CD case study cover">
+            <div class="proof-body">
+              <h3>CI/CD optimisation for infrastructure software</h3>
+              <p>Elinext rebuilt delivery pipelines and helped reduce development time while protecting quality and security.</p>
+              <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-retail.jpg" alt="Retail platform case study cover">
+            <div class="proof-body">
+              <h3>Retail platform used by global clients</h3>
+              <p>Elinext supports a commerce solution with web, DevOps, data work, and ongoing feature delivery.</p>
+              <a href="https://www.elinext.com/case-study/gamification-solution-for-retailers-worldwide/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Start the platform talk</h2>
+        <p>A short call can map the safest first step.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
