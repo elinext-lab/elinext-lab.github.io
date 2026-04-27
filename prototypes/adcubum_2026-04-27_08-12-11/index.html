@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claims Health delivery support for Adcubum</title>
+  <meta name="description" content="A short Elinext proposal for Adcubum Syrius Claims Health delivery, QA, and CI/CD support.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/adcubum_2026-04-27_08-12-11/">
+  <meta property="og:title" content="Claims Health delivery support for Adcubum">
+  <meta property="og:description" content="A focused Elinext proposal for Adcubum Syrius Claims Health delivery.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/adcubum_2026-04-27_08-12-11/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/adcubum_2026-04-27_08-12-11/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      --ink: #182033;
+      --muted: #5d677c;
+      --blue: #153e7e;
+      --blue-deep: #0f1629;
+      --teal: #1f7a76;
+      --orange: #f28a2e;
+      --paper: #ffffff;
+      --soft: #f4f7fb;
+      --warm: #fff6ed;
+      --line: #dce3ef;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .section {
+      width: 100%;
+      padding: 58px 0;
+      background: var(--paper);
+    }
+
+    .wrap {
+      width: calc(100% - 32px);
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      background:
+        linear-gradient(145deg, rgba(15, 22, 41, .94), rgba(21, 62, 126, .86)),
+        radial-gradient(circle at 85% 15%, rgba(31, 122, 118, .28), transparent 34%),
+        var(--blue-deep);
+      color: #fff;
+      padding: 54px 0 70px;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 10px;
+      background: linear-gradient(90deg, var(--orange), var(--teal));
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: #b8c7e6;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 18px;
+      font-size: 2.45rem;
+      line-height: .98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 1.85rem;
+      line-height: 1.08;
+      margin-bottom: 26px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      color: #e5ecfb;
+      font-size: 1.12rem;
+    }
+
+    .why {
+      max-width: 720px;
+      margin: 0;
+      padding-left: 18px;
+      color: #ffffff;
+      border-left: 4px solid var(--orange);
+      font-size: 1rem;
+    }
+
+    .read {
+      background: var(--soft);
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 74ch;
+      margin: 0 auto;
+      padding: 24px;
+      background: #eaf0f8;
+      border-left: 5px solid var(--teal);
+      border-radius: 8px;
+      color: #26324a;
+    }
+
+    .proposal {
+      background: #fbfcff;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .model {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .team {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .role {
+      min-height: 72px;
+      padding: 14px;
+      border-radius: 8px;
+      background: #eef7f6;
+      border: 1px solid #cfe7e4;
+      font-weight: 700;
+      color: #174d4a;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      padding: 16px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .num {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: .95rem;
+    }
+
+    .step p,
+    .case p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .stack li,
+    .customer {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--warm);
+      color: #8a4a10;
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .elinext {
+      background: var(--blue-deep);
+      color: #ffffff;
+    }
+
+    .elinext h2 { color: #ffffff; }
+
+    .elinext-box {
+      max-width: 82ch;
+      margin: 0 auto;
+      color: #d9e2f5;
+      font-size: 1.02rem;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .customer {
+      background: rgba(242, 138, 46, .16);
+      color: #ffd7ae;
+      border: 1px solid rgba(242, 138, 46, .35);
+    }
+
+    .proof {
+      background: #ffffff;
+    }
+
+    .cases {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case a {
+      display: inline-block;
+      margin-top: 12px;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .talk {
+      text-align: center;
+      background: var(--soft);
+    }
+
+    .talk p {
+      max-width: 42ch;
+      margin: 0 auto 22px;
+      color: var(--muted);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #211307;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section { padding: 78px 0; }
+      h1 { font-size: 4.4rem; }
+      h2 { font-size: 2.45rem; }
+      .proposal-grid { grid-template-columns: .85fr 1.15fr; align-items: start; }
+      .cases { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .steps { margin-top: 0; }
+      .hero { min-height: 86vh; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Adcubum Syrius Claims Health</p>
+      <h1>Keep Claims Health delivery moving while teams scale</h1>
+      <p class="hero-copy">Adcubum Syrius is a core platform for insurers. Its Claims Health work must stay fast, stable, and clear for customers.</p>
+      <p class="why">We saw the Engineering Manager role for Claims Health. It points to multi-team delivery, process quality, and release reliability.</p>
+    </div>
+  </header>
+
+  <section class="section read">
+    <div class="wrap">
+      <h2>Our read</h2>
+      <div class="read-box">
+        Adcubum is scaling a key Syrius domain, not only filling a seat. Claims Health touches customer trust, cost, and service quality. The hard part is keeping many teams aligned while customer-specific versions still need safe change. If that flow slows, releases slip. Senior engineers then spend less time on product work.
+      </div>
+    </div>
+  </section>
+
+  <section class="section proposal">
+    <div class="wrap">
+      <h2>What we'd do</h2>
+      <div class="proposal-grid">
+        <div class="model">
+          <h3>Engagement model</h3>
+          <p>Use a dedicated squad under your Product Owner and Platform Unit.</p>
+          <div class="team" aria-label="Proposed team shape">
+            <div class="role">Tech Lead</div>
+            <div class="role">2 Java Engineers</div>
+            <div class="role">QA Automation</div>
+            <div class="role">DevOps Engineer</div>
+          </div>
+          <ul class="stack" aria-label="Relevant stack">
+            <li>Java</li>
+            <li>React</li>
+            <li>Jenkins</li>
+            <li>Playwright</li>
+            <li>JMeter</li>
+            <li>SQL</li>
+          </ul>
+        </div>
+
+        <div class="steps" aria-label="Eight week pilot milestones">
+          <div class="step">
+            <span class="num">1</span>
+            <div>
+              <h3>Map the Claims path</h3>
+              <p>Review Claims Health flow and release steps. Map handoffs with Adcubum leads, product managers, and QA owners.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="num">2</span>
+            <div>
+              <h3>Strengthen regression checks</h3>
+              <p>Add automated checks for high-risk Syrius changes. Cover test data, customer-specific rules, and repeated Claims Health paths.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="num">3</span>
+            <div>
+              <h3>Tune the release flow</h3>
+              <p>Improve CI/CD gates and build feedback. Give engineers earlier signals before defects reach shared release work.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="num">4</span>
+            <div>
+              <h3>Hand over cleanly</h3>
+              <p>Leave playbooks, test notes, and simple dashboards. Help Adcubum engineers keep the pilot gains inside daily work.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section elinext">
+    <div class="wrap">
+      <h2>Who is Elinext</h2>
+      <div class="elinext-box">
+        Elinext is a full-cycle software development company since 1997. We have about 700 in-house specialists and no freelancers. We build web, backend, QA, DevOps, and data teams for long-running products. For Adcubum, ISO 27001 and ISO 9001 matter because Syrius serves regulated insurance work. Our client list includes <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, and <strong>TRUMPF</strong>. We can work beside your engineers and follow your release rules from day one. This fits a squad that supports your platform team without changing your ownership model.
+        <div class="customers" aria-label="Named customers">
+          <span class="customer">Siemens</span>
+          <span class="customer">Broadcom</span>
+          <span class="customer">Volkswagen</span>
+          <span class="customer">TRUMPF</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section proof">
+    <div class="wrap">
+      <h2>Proof</h2>
+      <div class="cases">
+        <article class="case">
+          <img src="assets/case-insurtech-qa.jpg" alt="Insurtech QA case study preview">
+          <div class="case-body">
+            <h3>QA for a US insurtech platform</h3>
+            <p>Elinext ran manual and automated testing for a regulated insurance platform.</p>
+            <a href="https://www.elinext.com/case-study/dedicated-quality-assurance-services-for-us-insuretech/">Read the case</a>
+          </div>
+        </article>
+        <article class="case">
+          <img src="assets/case-ci-cd.jpg" alt="CI/CD optimization case study preview">
+          <div class="case-body">
+            <h3>CI/CD optimization for complex releases</h3>
+            <p>Elinext improved pipeline flow for a product with regular tests and releases.</p>
+            <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">Read the case</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section talk">
+    <div class="wrap">
+      <h2>Start the conversation</h2>
+      <p>Talk with Elinext about a small Claims Health pilot.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
