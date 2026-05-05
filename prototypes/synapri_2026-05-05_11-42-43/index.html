@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Service Architecture Support for Synapri</title>
+  <meta name="description" content="A short Elinext proposal for Synapri around Service Architect capacity and Business Applications delivery.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/synapri_2026-05-05_11-42-43/">
+  <meta property="og:title" content="Service Architecture Support for Synapri">
+  <meta property="og:description" content="How Elinext can support Synapri with Service Architect capacity and Business Applications delivery.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/synapri_2026-05-05_11-42-43/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/synapri_2026-05-05_11-42-43/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/synapri_2026-05-05_11-42-43/og-image.jpg">
+  <style>
+    :root {
+      --ink: #151821;
+      --muted: #5e6676;
+      --paper: #fbfaf7;
+      --white: #ffffff;
+      --line: #d9ded7;
+      --navy: #111827;
+      --teal: #0f766e;
+      --orange: #ee6a35;
+      --cream: #f4efe6;
+      --green-soft: #e5f1ec;
+      --shadow: 0 18px 50px rgba(17, 24, 39, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .page { width: 100%; }
+    .section {
+      width: 100%;
+      padding: 54px 20px;
+      background: var(--paper);
+    }
+    .inner {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 34px 20px 58px;
+    }
+    .hero-inner {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      gap: 34px;
+    }
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.72);
+    }
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .brand-mark span:first-child {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      background: var(--orange);
+      display: grid;
+      place-items: center;
+      color: #1a130f;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 32px;
+      align-items: stretch;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 780px;
+      font-size: clamp(36px, 7vw, 68px);
+      line-height: 1.02;
+      margin-bottom: 22px;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 690px;
+      color: rgba(255,255,255,0.82);
+      font-size: 17px;
+      margin-bottom: 14px;
+    }
+    .why {
+      border-left: 4px solid var(--orange);
+      padding-left: 15px;
+    }
+    .signal-panel {
+      background: #f7f2ea;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      align-self: end;
+    }
+    .signal-panel h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .mini-map {
+      display: grid;
+      gap: 10px;
+    }
+    .mini-map div {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+      font-size: 14px;
+    }
+    .mini-map div:last-child { border-bottom: 0; padding-bottom: 0; }
+    .mini-map strong { color: var(--teal); }
+    .section h2 {
+      text-align: center;
+      font-size: clamp(27px, 4vw, 40px);
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: 0;
+    }
+    .read-band {
+      background: #eaf1ec;
+      border-top: 1px solid #cfdcd4;
+      border-bottom: 1px solid #cfdcd4;
+    }
+    .read-box {
+      max-width: 78ch;
+      border-left: 5px solid var(--teal);
+      padding: 22px 0 22px 18px;
+      font-size: 18px;
+      color: #2b3340;
+    }
+    .work {
+      background: var(--white);
+    }
+    .proposal-card {
+      width: 100%;
+      background: #fcfbf8;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .proposal-head {
+      display: grid;
+      gap: 18px;
+      padding: 24px;
+      background: #14201f;
+      color: var(--white);
+    }
+    .team-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pill {
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: rgba(255,255,255,0.86);
+      font-size: 13px;
+    }
+    .steps {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+    .num {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #20120b;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .step h3 {
+      font-size: 17px;
+      margin-bottom: 4px;
+    }
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .stack {
+      padding: 0 18px 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .stack span {
+      background: var(--green-soft);
+      border: 1px solid #b7d7cb;
+      color: #153c38;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .elinext {
+      background: #f1eee7;
+    }
+    .cred {
+      max-width: 82ch;
+      margin: 0 auto;
+      font-size: 17px;
+      color: #2c3340;
+    }
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+    .customers strong {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 14px;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+    .case-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(17, 24, 39, 0.08);
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #d9ded7;
+    }
+    .case-body {
+      padding: 18px;
+    }
+    .case-body h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .case-body p {
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+    .case-body a {
+      color: var(--teal);
+      font-weight: 700;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    .talk {
+      background: var(--navy);
+      color: var(--white);
+      text-align: center;
+      padding-bottom: 62px;
+    }
+    .talk h2 { color: var(--white); }
+    .talk p {
+      max-width: 40ch;
+      margin: 0 auto 22px;
+      color: rgba(255,255,255,0.78);
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #1c120c;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section { padding: 72px 32px; }
+      .hero { padding: 38px 32px 78px; }
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      }
+      .proposal-head { padding: 30px; }
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 24px;
+      }
+      .stack { padding: 0 24px 28px; }
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 920px) {
+      .proposal-head {
+        grid-template-columns: minmax(0, 1fr) minmax(260px, auto);
+        align-items: center;
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .step { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="brand-row">
+          <div class="brand-mark"><span>S</span><span>Synapri x Elinext</span></div>
+          <div>Prepared for Michael Parker</div>
+        </div>
+        <div class="hero-grid">
+          <div>
+            <h1>Service architecture capacity for complex Lead-to-Cash client teams</h1>
+            <p>Synapri already owns the hard part: access to niche Salesforce and Business Applications talent. Elinext can support the build work when roles become scoped delivery.</p>
+            <p class="why">We saw the Service Architect signal and Michael's Lead-to-Cash focus. That points to client demand for Salesforce, CPQ, ERP, billing, and revenue systems expertise.</p>
+          </div>
+          <aside class="signal-panel" aria-label="Service architecture focus">
+            <h2>Where the work sits</h2>
+            <div class="mini-map">
+              <div><span>Client need</span><strong>Service design</strong></div>
+              <div><span>Systems</span><strong>Salesforce to ERP</strong></div>
+              <div><span>Risk</span><strong>Integration gaps</strong></div>
+              <div><span>Support</span><strong>Build and handover</strong></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section read-band">
+      <div class="inner">
+        <h2>Our read</h2>
+        <div class="read-box">
+          Your signal points to Service Architect demand around business applications and revenue systems. That usually means clients need design cover, not only more candidate flow. The hard part is connecting Salesforce, CPQ, billing, ERP, and delivery teams cleanly. If that gap stays open, projects slow down and senior recruiters carry technical risk alone.
+        </div>
+      </div>
+    </section>
+
+    <section class="section work">
+      <div class="inner">
+        <h2>What we'd do</h2>
+        <div class="proposal-card">
+          <div class="proposal-head">
+            <div>
+              <h3>Dedicated architecture squad under your client lead</h3>
+              <p>A six-week pilot would turn one hard brief into a clear design, build plan, and working delivery path.</p>
+            </div>
+            <div class="team-line" aria-label="Team shape">
+              <span class="pill">Solution Architect</span>
+              <span class="pill">2 Full-stack Engineers</span>
+              <span class="pill">Business Analyst</span>
+              <span class="pill">QA Engineer</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="num">01</div>
+              <div>
+                <h3>Map the journey</h3>
+                <p>Map the Service Architect brief to the client journey from lead, quote, order, billing, and revenue.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">02</div>
+              <div>
+                <h3>Show the risk</h3>
+                <p>Produce a delivery plan that shows integration risks, data owners, APIs, and handover points.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">03</div>
+              <div>
+                <h3>Build the pieces</h3>
+                <p>Build or extend the needed web services, portals, and automation with weekly review sessions for stakeholders.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">04</div>
+              <div>
+                <h3>Stabilise release</h3>
+                <p>Stabilise releases with test coverage, access checks, and a handover pack for support teams.</p>
+              </div>
+            </article>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span>Azure</span>
+            <span>.NET</span>
+            <span>React</span>
+            <span>Angular</span>
+            <span>Java</span>
+            <span>QA automation</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section elinext">
+      <div class="inner">
+        <h2>Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, active since 1997. We have about 700 in-house specialists, with no freelancers or subcontractors. Our work spans web, backend, mobile, QA, DevOps, business analysis, AI/ML, and enterprise support. For Synapri, the fit is enterprise delivery depth, clear security practice, and steady handover. Elinext is ISO 9001 and ISO 27001 certified, with clients including Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. This model supports Service Architect work during urgent client programmes while Synapri keeps the relationship.</p>
+          <div class="customers" aria-label="Named customers">
+            <strong>Siemens</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proof">
+      <div class="inner">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-saas-platform-design.jpg" alt="SaaS platform design case study visual">
+            <div class="case-body">
+              <h3>SaaS Platform Design for M365 Security Monitoring</h3>
+              <p>Elinext designed a Microsoft 365 security SaaS with Azure, .NET, Angular, and Microsoft Graph API.</p>
+              <a href="https://www.elinext.com/case-study/saas-platform-design/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-web-application-builder.jpg" alt="Application builder case study visual">
+            <div class="case-body">
+              <h3>App Builder for a Microsoft Services Provider</h3>
+              <p>Elinext rebuilt a reusable application builder for a services company with Azure, React, Nest.js, and TypeScript.</p>
+              <a href="https://www.elinext.com/case-study/web-application-builder/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="inner">
+        <h2>Talk through the gap</h2>
+        <p>A short call can test fit and scope.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
