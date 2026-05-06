@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mission Lane Data Science Execution Brief | Elinext</title>
+  <meta name="description" content="A short proposal for Mission Lane on building the production data and ML base behind fairer credit decisions.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/mission-lane_2026-05-06_22-04-49/">
+  <meta property="og:title" content="Mission Lane Data Science Execution Brief">
+  <meta property="og:description" content="A practical Elinext proposal for Mission Lane's next data science push.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/mission-lane_2026-05-06_22-04-49/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/mission-lane_2026-05-06_22-04-49/og-image.jpg">
+  <style>
+    :root {
+      --ink: #13202c;
+      --muted: #56636f;
+      --paper: #f7f8f4;
+      --white: #ffffff;
+      --navy: #17243a;
+      --line: #dce2dd;
+      --teal: #0f766e;
+      --orange: #f28a2e;
+      --green-soft: #e8f3ee;
+      --gold-soft: #fff3dc;
+      --shadow: 0 18px 50px rgba(19, 32, 44, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: clamp(3rem, 7vw, 5.8rem) 1rem;
+    }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: clamp(3.5rem, 8vw, 6.4rem) 1rem clamp(3rem, 6vw, 4.6rem);
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 8px;
+      background: var(--orange);
+      z-index: -1;
+    }
+
+    .hero-inner {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      display: grid;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.9rem;
+      color: #bedbd3;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 13ch;
+      margin-bottom: 1rem;
+      font-size: 2.55rem;
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 48rem;
+      margin-bottom: 0;
+      color: #dbe6e2;
+      font-size: 1.05rem;
+    }
+
+    .hero-mark {
+      width: min(100%, 20rem);
+      margin: 0;
+      justify-self: start;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .hero-mark img {
+      width: clamp(5.8rem, 24vw, 9rem);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-mark figcaption {
+      color: #becbd4;
+      font-size: 0.94rem;
+      max-width: 18rem;
+    }
+
+    .section h2 {
+      margin-bottom: 1.4rem;
+      text-align: center;
+      font-size: 1.85rem;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .read-band {
+      background: var(--green-soft);
+    }
+
+    .read-box {
+      width: min(100%, 70ch);
+      margin: 0 auto;
+      padding: clamp(1.3rem, 4vw, 2rem);
+      background: #f2faf6;
+      border: 1px solid #bad9cc;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+    }
+
+    .read-box p {
+      margin: 0;
+      color: #243845;
+      font-size: 1.05rem;
+    }
+
+    .proposal {
+      background: var(--white);
+    }
+
+    .proposal-lead {
+      max-width: 64ch;
+      margin: 0 auto 1.6rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .squad {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin: 0 0 1.4rem;
+    }
+
+    .role {
+      min-width: 0;
+      padding: 0.9rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--gold-soft);
+      font-weight: 700;
+      color: #513212;
+      text-align: center;
+    }
+
+    .steps {
+      display: grid;
+      gap: 0.9rem;
+      margin-top: 1rem;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 0.85rem;
+      align-items: start;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfa;
+    }
+
+    .num {
+      width: 2.1rem;
+      height: 2.1rem;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--teal);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin: 0 0 0.25rem;
+      font-size: 1.02rem;
+      line-height: 1.25;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .stack {
+      margin: 1.2rem 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      justify-content: center;
+    }
+
+    .tag,
+    .customer {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      padding: 0.42rem 0.7rem;
+      font-weight: 700;
+      color: #263746;
+    }
+
+    .who {
+      background: #eef1ed;
+    }
+
+    .who-copy {
+      width: min(100%, 74ch);
+      margin: 0 auto;
+      color: #273844;
+      font-size: 1.02rem;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem auto 0;
+      justify-content: center;
+    }
+
+    .proof {
+      background: var(--paper);
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: 0 14px 36px rgba(19, 32, 44, 0.08);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 2.3 / 1;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 1.1rem;
+    }
+
+    .case-body h3 {
+      margin-bottom: 0.45rem;
+      font-size: 1.08rem;
+      line-height: 1.25;
+    }
+
+    .case-body p {
+      margin-bottom: 0.75rem;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .case-body a {
+      color: var(--teal);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .talk {
+      background: var(--navy);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .talk h2 {
+      margin-bottom: 0.6rem;
+    }
+
+    .talk p {
+      margin: 0 auto 1.2rem;
+      max-width: 38rem;
+      color: #d9e3e0;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 3rem;
+      max-width: 100%;
+      padding: 0.78rem 1.1rem;
+      border-radius: 6px;
+      background: var(--orange);
+      color: #1a1d21;
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      h1 {
+        font-size: 4.4rem;
+      }
+
+      .why {
+        font-size: 1.16rem;
+      }
+
+      .section h2 {
+        font-size: 2.35rem;
+      }
+
+      .hero-inner {
+        grid-template-columns: minmax(0, 1.1fr) minmax(12rem, 0.55fr);
+      }
+
+      .hero-mark {
+        justify-self: end;
+      }
+
+      .squad {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      h1 {
+        font-size: 5.15rem;
+      }
+
+      .section h2 {
+        font-size: 2.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <p class="eyebrow">Proposal brief for Mission Lane</p>
+          <h1>Build reliable data systems for fairer credit decisions</h1>
+          <p class="why">Saw Mission Lane hiring a Head of Data Science. That points to a larger push across underwriting, fraud, collections, and customer care.</p>
+        </div>
+        <figure class="hero-mark">
+          <img src="assets/mission-lane-app-icon.jpg" alt="Mission Lane Card app icon">
+          <figcaption>Mission Lane Card is the customer front door for credit progress.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section read-band">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Your Head of Data Science search says Mission Lane is scaling applied ML beyond single models. The hard part is turning new data sources, experiments, and risk controls into production systems that pass review. Reviews also show pain around payments, access, disputes, and credit-line trust. If data work stays slow, product teams wait longer and customers see progress later.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <p class="proposal-lead">We would place a dedicated squad under your product or platform lead. The first pilot runs six weeks, with weekly demos and clear release notes.</p>
+        <div class="squad" aria-label="Proposed team shape">
+          <div class="role">Data tech lead</div>
+          <div class="role">Two Python ML engineers</div>
+          <div class="role">Backend platform engineer</div>
+          <div class="role">QA automation specialist</div>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <span class="num">1</span>
+            <div>
+              <h3>Map data sources</h3>
+              <p>Audit underwriting, payment, fraud, and collections paths. Mark gaps that block safe model training and clear customer actions.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="num">2</span>
+            <div>
+              <h3>Build production pipelines</h3>
+              <p>Ship tested Python services and batch pipelines for model features. Add checks for drift, missing fields, and audit trails.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="num">3</span>
+            <div>
+              <h3>Put models behind controls</h3>
+              <p>Wrap scoring logic with approvals, rollback, and QA cases. Keep compliance records clear for each release.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="num">4</span>
+            <div>
+              <h3>Improve payment signals</h3>
+              <p>Use app and support events to find failed logins, slow payment posting, and dispute handoff issues.</p>
+            </div>
+          </article>
+        </div>
+        <div class="stack" aria-label="Relevant stack">
+          <span class="tag">Python</span>
+          <span class="tag">Java</span>
+          <span class="tag">.NET</span>
+          <span class="tag">React</span>
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">Docker</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section who">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="who-copy">
+          <p>Elinext is a full-cycle software development company, active since 1997. We have about 700 in-house specialists, with no freelancers or subcontractors. For Mission Lane, the fit is secure fintech delivery and senior data work. We work under your PO and keep your cadence. Our teams work with ISO 27001 and ISO 9001 practices for security and quality. We can add QA, DevOps, Python, Java, and .NET skills without changing your roadmap. This helps Srki add capacity without extra vendor sprawl.</p>
+        </div>
+        <div class="customers" aria-label="Named Elinext customers">
+          <strong class="customer">Siemens</strong>
+          <strong class="customer">Broadcom</strong>
+          <strong class="customer">Volkswagen</strong>
+          <strong class="customer">TRUMPF</strong>
+          <strong class="customer">TUI</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proof">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-fintech-securities.jpg" alt="FinTech securities processing case study cover">
+            <div class="case-body">
+              <h3>FinTech securities processing</h3>
+              <p>Elinext built analytics, filters, and actions across a complex financial transaction lifecycle.</p>
+              <a href="https://www.elinext.com/case-study/solution-for-processing-and-management-of-securities-for-fintech/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-document-review.jpg" alt="Data-heavy document review case study cover">
+            <div class="case-body">
+              <h3>Data-heavy review platform</h3>
+              <p>Elinext helped rebuild a faster financial services app using Kafka, ElasticSearch, Angular, and Docker.</p>
+              <a href="https://www.elinext.com/case-study/app-for-legal-document-review-and-production/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="wrap">
+        <h2>Talk through the squad</h2>
+        <p>A short call can test scope and timing.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
