@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QA Tooling Pilot for Ubisoft Montpellier</title>
+  <meta name="description" content="A focused QA tooling proposal for Ubisoft Montpellier and Beyond Good & Evil 2 character production.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/ubisoft-montpellier_2026-05-06_17-32-28/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="QA Tooling Pilot for Ubisoft Montpellier">
+  <meta property="og:description" content="A focused proposal for BGE2 character QA, asset checks, and production handoffs.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/ubisoft-montpellier_2026-05-06_17-32-28/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/ubisoft-montpellier_2026-05-06_17-32-28/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="QA Tooling Pilot for Ubisoft Montpellier">
+  <meta name="twitter:description" content="A focused proposal for BGE2 character QA, asset checks, and production handoffs.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/ubisoft-montpellier_2026-05-06_17-32-28/og-image.jpg">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #111827;
+      --muted: #526070;
+      --line: #dce3eb;
+      --paper: #f7f9fc;
+      --panel: #ffffff;
+      --blue: #1768d1;
+      --cyan: #13a8b5;
+      --orange: #ff7a1a;
+      --green: #2f8f62;
+      --dark: #101624;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .page {
+      width: 100%;
+      background:
+        linear-gradient(180deg, #ffffff 0%, #f7f9fc 38%, #eef4f8 100%);
+    }
+
+    section {
+      width: 100%;
+      padding: 56px 18px;
+      background: transparent;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      background:
+        linear-gradient(135deg, #101624 0%, #172033 58%, #12363d 100%);
+      color: #f8fbff;
+      padding-top: 72px;
+      padding-bottom: 70px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .mark {
+      width: fit-content;
+      max-width: 100%;
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      color: #d8e6f7;
+      background: rgba(255,255,255,.08);
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    .mark img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 14px rgba(0,0,0,.25));
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 820px;
+      margin-top: 24px;
+      font-size: clamp(40px, 8vw, 82px);
+      line-height: .98;
+      font-weight: 800;
+    }
+
+    .hero-copy {
+      max-width: 680px;
+      margin-top: 24px;
+      color: #d9e3f0;
+      font-size: 18px;
+    }
+
+    .why {
+      max-width: 760px;
+      margin-top: 18px;
+      padding-left: 16px;
+      border-left: 4px solid var(--orange);
+      color: #ffffff;
+      font-size: 17px;
+    }
+
+    .signal-card {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--ink);
+      box-shadow: 0 28px 80px rgba(12, 18, 32, .22);
+      overflow: hidden;
+      border: 1px solid rgba(18, 27, 42, .08);
+    }
+
+    .signal-top {
+      padding: 18px;
+      background: #f0f6ff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .signal-top strong {
+      display: block;
+      font-size: 17px;
+    }
+
+    .signal-top span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .signal-rows {
+      display: grid;
+      gap: 1px;
+      background: var(--line);
+    }
+
+    .signal-row {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 16px 18px;
+      background: #ffffff;
+    }
+
+    .signal-row b {
+      color: var(--blue);
+      font-size: 13px;
+    }
+
+    .signal-row span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .section-title {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.08;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #b9d6df;
+      border-left: 6px solid var(--cyan);
+      border-radius: 8px;
+      background: #e8f5f7;
+      color: #19303a;
+      font-size: 18px;
+    }
+
+    .proposal {
+      background: #ffffff;
+    }
+
+    .plan-shell {
+      width: 100%;
+      display: grid;
+      gap: 18px;
+      padding: 18px;
+      border-radius: 8px;
+      background: #111827;
+      color: #f8fbff;
+      box-shadow: 0 24px 70px rgba(20, 31, 48, .18);
+    }
+
+    .plan-head {
+      display: grid;
+      gap: 12px;
+      padding: 8px;
+    }
+
+    .plan-head p {
+      max-width: 760px;
+      color: #cfd9e8;
+      font-size: 17px;
+    }
+
+    .team-grid,
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .team-card,
+    .step {
+      min-width: 0;
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--ink);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .team-card {
+      padding: 16px;
+    }
+
+    .team-card strong {
+      display: block;
+      color: var(--blue);
+      font-size: 15px;
+    }
+
+    .team-card span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .step-num {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: #ffead8;
+      color: #9a4600;
+      font-weight: 800;
+    }
+
+    .step-title {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 6px 8px 8px;
+    }
+
+    .stack span,
+    .customer {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      background: #eaf1fb;
+      color: #164b8f;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .stack span { padding: 7px 10px; }
+
+    .elinext {
+      background: #f5f0e9;
+    }
+
+    .cred {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 24px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid #eadfce;
+      font-size: 18px;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .customer {
+      padding: 7px 11px;
+      background: #fff3e8;
+      color: #8d4206;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-card {
+      min-width: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 36px rgba(20, 31, 48, .08);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #e9eef5;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .case-body p {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .case-body a {
+      display: inline-block;
+      margin-top: 14px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .close {
+      background: var(--dark);
+      color: #f8fbff;
+      text-align: center;
+    }
+
+    .close p {
+      max-width: 460px;
+      margin: 10px auto 0;
+      color: #cbd6e6;
+    }
+
+    .button {
+      display: inline-flex;
+      width: 100%;
+      max-width: 260px;
+      justify-content: center;
+      margin-top: 24px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #1f1208;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      section { padding: 76px 28px; }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+      }
+
+      .team-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .button {
+        width: auto;
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .steps {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .step {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="mark">
+            <img src="assets/bge2-logo.png" alt="">
+            <span>Ubisoft Montpellier / Beyond Good & Evil 2</span>
+          </div>
+          <h1>Stabilize character QA for System 3 at production scale</h1>
+          <p class="hero-copy">Beyond Good & Evil 2 is a rare project with rich characters and co-op play. It also uses a proprietary engine. We would help QA find character issues earlier, without slowing art leads.</p>
+          <p class="why">Saw Ubisoft Montpellier is hiring a Team Lead Character for Beyond Good & Evil 2. That role points to asset flow, partner handoffs, and quality checks under pressure.</p>
+        </div>
+
+        <aside class="signal-card" aria-label="Proposal focus">
+          <div class="signal-top">
+            <strong>Proposal focus</strong>
+            <span>A practical QA pilot, not a fake product demo.</span>
+          </div>
+          <div class="signal-rows">
+            <div class="signal-row"><b>Product</b><span>Beyond Good & Evil 2</span></div>
+            <div class="signal-row"><b>Moment</b><span>Character team leadership hire</span></div>
+            <div class="signal-row"><b>Need</b><span>Earlier checks for asset risk</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Our Read</h2>
+        <p class="read-box">That search tells us Montpellier is making character work more stable for Beyond Good & Evil 2. The role asks for clear priorities, partner control, and asset quality. It spans concept, high resolution, low resolution, and integration. For QA, the hard part is not more review meetings. It is seeing risk before build review, where fixes cost more and delay teams.</p>
+      </div>
+    </section>
+
+    <section class="proposal">
+      <div class="wrap">
+        <h2 class="section-title">What We'd Do</h2>
+        <div class="plan-shell">
+          <div class="plan-head">
+            <p>Engagement model: a dedicated QA tools squad under your producer and QA leads. Duration: an 8-week pilot with weekly demos.</p>
+            <div class="stack" aria-label="Relevant stack">
+              <span>React</span>
+              <span>Node.js</span>
+              <span>Python</span>
+              <span>C/C++</span>
+              <span>C#</span>
+            </div>
+          </div>
+
+          <div class="team-grid" aria-label="Team shape">
+            <div class="team-card"><strong>Tech Lead</strong><span>Keeps scope clear and reviews rules.</span></div>
+            <div class="team-card"><strong>QA Automation</strong><span>Finds repeat checks and writes tests.</span></div>
+            <div class="team-card"><strong>Full-Stack Engineers</strong><span>Build the tool and service layer.</span></div>
+            <div class="team-card"><strong>UI/UX Designer</strong><span>Keeps the flow simple for artists.</span></div>
+          </div>
+
+          <div class="steps" aria-label="Pilot milestones">
+            <article class="step">
+              <div class="step-num">1</div>
+              <div><span class="step-title">Map The Flow</span><p>Map concept, high-res, low-res, integration, outsourcing, and QA handoffs for BGE2 assets, with owners named.</p></div>
+            </article>
+            <article class="step">
+              <div class="step-num">2</div>
+              <div><span class="step-title">Create One View</span><p>Build a small React view for asset status, test evidence, owner, and open risk together.</p></div>
+            </article>
+            <article class="step">
+              <div class="step-num">3</div>
+              <div><span class="step-title">Automate Checks</span><p>Add Python checks for naming, version drift, missing metadata, and build-ready rules before QA review starts.</p></div>
+            </article>
+            <article class="step">
+              <div class="step-num">4</div>
+              <div><span class="step-title">Review Weekly</span><p>Run weekly demos with QA, art, and production, so fixes match the Voyager engine workflow.</p></div>
+            </article>
+            <article class="step">
+              <div class="step-num">5</div>
+              <div><span class="step-title">Hand Over</span><p>Hand over source, tests, and runbooks, so Ubisoft keeps control and can extend the pilot.</p></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext">
+      <div class="wrap">
+        <h2 class="section-title">Who Is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, founded in 1997, with about 700 in-house specialists. We do not use freelancers or subcontractors in delivery. For Ubisoft, the useful part is QA automation, DevOps support, and web tools. Our teams also cover React, Node.js, Python, C/C++, and C# work. We work under ISO 9001 and ISO 27001 when quality, security, and partner access matter. Clients include Siemens, Broadcom, Volkswagen, TRUMPF, TUI, and Parrot across demanding product programs. That depth fits a QA tools squad, while Montpellier keeps ownership.</p>
+          <div class="customers" aria-label="Named customers">
+            <strong class="customer">Siemens</strong>
+            <strong class="customer">Broadcom</strong>
+            <strong class="customer">Volkswagen</strong>
+            <strong class="customer">TRUMPF</strong>
+            <strong class="customer">TUI</strong>
+            <strong class="customer">Parrot</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-internal-testing-tool.jpg" alt="">
+            <div class="case-body">
+              <h3>Custom Randomizer Tool Designed to Streamline Internal Testing Processes</h3>
+              <p>Reduced manual QA effort with a custom testing tool.</p>
+              <a href="https://www.elinext.com/case-study/internal-testing-tool/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-smartfish.jpg" alt="">
+            <div class="case-body">
+              <h3>SmartFish: Relaxing Game for Kids and Adults</h3>
+              <p>Built 3D game assets with Maya and 3D Max.</p>
+              <a href="https://www.elinext.com/case-study/smartfish/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="close">
+      <div class="wrap">
+        <h2 class="section-title">Start The QA Pilot</h2>
+        <p>A short call can define the first useful slice.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
