@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AssetWatch engineering proposal by Elinext</title>
+  <meta name="description" content="A focused engineering proposal for AssetWatch as customer success scales.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/assetwatch_2026-05-06_20-28-24/">
+  <meta property="og:title" content="AssetWatch engineering proposal by Elinext">
+  <meta property="og:description" content="A focused engineering squad for platform workflow, mobile companion, data quality, and QA work.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/assetwatch_2026-05-06_20-28-24/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/assetwatch_2026-05-06_20-28-24/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/assetwatch_2026-05-06_20-28-24/og-image.jpg">
+  <style>
+    :root {
+      --ink: #13201d;
+      --muted: #52625d;
+      --line: #d9e1de;
+      --paper: #f6f8f6;
+      --white: #ffffff;
+      --teal: #005b5f;
+      --teal-dark: #073638;
+      --mint: #dfeee8;
+      --orange: #f26a21;
+      --gold: #f3c75e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 88svh;
+      display: grid;
+      align-items: center;
+      padding: 60px 18px 48px;
+      color: var(--white);
+      background:
+        linear-gradient(135deg, rgba(7, 54, 56, .97), rgba(15, 22, 41, .96)),
+        radial-gradient(circle at 75% 30%, rgba(242, 106, 33, .18), transparent 32%);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #a8d4c8;
+      font-size: .78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 18px;
+      font-size: clamp(2.4rem, 7vw, 5.8rem);
+      line-height: .98;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin-bottom: 0;
+      color: #d6e5e1;
+      font-size: 1.08rem;
+    }
+
+    .hero-mark {
+      width: 100%;
+      min-height: 240px;
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .06);
+      padding: 20px;
+      display: grid;
+      align-content: end;
+      gap: 14px;
+    }
+
+    .signal-line {
+      height: 5px;
+      width: 96px;
+      background: var(--orange);
+    }
+
+    .hero-stat {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      color: #eef6f3;
+      font-weight: 750;
+      font-size: 1.05rem;
+    }
+
+    .hero-stat span {
+      color: #aacfc3;
+      font-size: .84rem;
+      font-weight: 650;
+    }
+
+    .section-title {
+      max-width: 720px;
+      margin: 0 auto 26px;
+      text-align: center;
+    }
+
+    .section-title h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1.04;
+    }
+
+    .section-title p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      border-left: 6px solid var(--orange);
+      border-radius: 8px;
+      background: #eaf3ef;
+      box-shadow: 0 18px 50px rgba(19, 32, 29, .08);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      color: #243630;
+      font-size: 1.02rem;
+    }
+
+    .plan-band {
+      background: var(--white);
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .team-shape,
+    .stack-row,
+    .step,
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .team-shape {
+      padding: 22px;
+      border-color: #b6ccc6;
+      background: #f3faf6;
+    }
+
+    .team-shape h3,
+    .stack-row h3 {
+      margin-bottom: 12px;
+      font-size: 1rem;
+    }
+
+    .team-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .team-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0;
+      border-top: 1px solid #cbded7;
+      color: #27433d;
+      font-weight: 700;
+    }
+
+    .team-list span {
+      color: var(--muted);
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .stack-row {
+      padding: 22px;
+    }
+
+    .tags,
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .tags li,
+    .customer-tags li {
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--teal-dark);
+      color: var(--white);
+      font-size: .88rem;
+      font-weight: 750;
+    }
+
+    .customer-tags li {
+      background: #fff1e8;
+      color: #87370f;
+    }
+
+    .model-note {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 18px 20px;
+      border-radius: 8px;
+      background: var(--teal-dark);
+      color: #dcebe7;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      padding: 18px;
+    }
+
+    .step-number {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 12px;
+      border-radius: 999px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 850;
+    }
+
+    .step h3 {
+      margin-bottom: 6px;
+      font-size: 1.03rem;
+      line-height: 1.2;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: .96rem;
+    }
+
+    .elinext {
+      background: #13201d;
+      color: var(--white);
+    }
+
+    .elinext .section-title p,
+    .elinext-copy {
+      color: #d6e4df;
+    }
+
+    .elinext-copy {
+      max-width: 82ch;
+      margin: 0 auto 18px;
+      text-align: center;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
+
+    .case-body p {
+      margin-bottom: 14px;
+      color: var(--muted);
+    }
+
+    .case-body a {
+      color: var(--teal);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .talk {
+      text-align: center;
+      background: var(--mint);
+    }
+
+    .talk h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.9rem, 4vw, 3rem);
+    }
+
+    .talk p {
+      margin-bottom: 22px;
+      color: var(--muted);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 13px 18px;
+      border-radius: 6px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 72px 28px;
+      }
+
+      .hero {
+        padding: 72px 28px 64px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.5fr) minmax(260px, .75fr);
+      }
+
+      .proposal-grid {
+        grid-template-columns: minmax(260px, .8fr) minmax(0, 1.2fr);
+      }
+
+      .model-note {
+        grid-column: 1 / -1;
+        grid-row: 1;
+      }
+
+      .team-shape {
+        grid-column: 1;
+        grid-row: 2;
+      }
+
+      .stack-row {
+        grid-column: 1;
+        grid-row: 3;
+      }
+
+      .steps {
+        grid-column: 2;
+        grid-row: 2 / span 2;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .section {
+        padding-top: 86px;
+        padding-bottom: 86px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">For Matt Longhouse and AssetWatch</p>
+        <h1>Scale AssetWatch without slowing core platform work down</h1>
+        <p>Saw AssetWatch expanding Customer Success while the platform is growing fast. That usually means more plant feedback reaches product, and more pressure lands on engineering to close the gaps customers feel.</p>
+      </div>
+      <div class="hero-mark" aria-label="Proposal focus">
+        <div class="signal-line"></div>
+        <div class="hero-stat"><span>Focus</span> Platform workflow, mobile companion, data quality, and QA</div>
+        <div class="hero-stat"><span>Model</span> Dedicated engineering squad under your product owner</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="wrap">
+        <div class="section-title">
+          <h2>Our read</h2>
+        </div>
+        <div class="read-box">
+          <p>Your Customer Success growth says AssetWatch is moving from product adoption to wider customer coverage. That shift puts more weight on the platform: alerts, CME chat, mobile field use, sensor state, and CMMS handoff all have to feel clear. Public reviews already point to navigation, chat continuity, and feature-depth asks. If those gaps stay open, CSMs become the workaround, and engineering loses time to support-driven fixes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section plan-band">
+      <div class="wrap">
+        <div class="section-title">
+          <h2>What we'd do</h2>
+          <p>Run a six-week pilot that clears field workflow backlog while your team keeps core IP.</p>
+        </div>
+        <div class="proposal-grid">
+          <p class="model-note">Engagement model: a dedicated squad under your PM or engineering manager, built to extend delivery capacity without owning proprietary prediction logic.</p>
+          <div class="team-shape">
+            <h3>Team shape</h3>
+            <ul class="team-list">
+              <li>Tech Lead <span>1</span></li>
+              <li>Backend and data engineers <span>2</span></li>
+              <li>Full-stack engineer <span>1</span></li>
+              <li>QA automation engineer <span>1</span></li>
+            </ul>
+          </div>
+          <div class="stack-row">
+            <h3>Relevant stack</h3>
+            <ul class="tags">
+              <li>Python</li>
+              <li>.NET</li>
+              <li>Java</li>
+              <li>React</li>
+              <li>Playwright</li>
+              <li>AWS</li>
+            </ul>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="step-number">1</div>
+              <h3>Find the friction</h3>
+              <p>Map alert, chat, sensor, and CMMS handoff paths with your team, then pick the highest-friction customer workflows for the pilot.</p>
+            </article>
+            <article class="step">
+              <div class="step-number">2</div>
+              <h3>Ship focused fixes</h3>
+              <p>Ship platform fixes around asset navigation, alert context, and traceable CME conversations, without touching core prediction IP.</p>
+            </article>
+            <article class="step">
+              <div class="step-number">3</div>
+              <h3>Harden data quality</h3>
+              <p>Add data quality checks for vibration, oil, temperature, and nameplate inputs, so noisy states fail early.</p>
+            </article>
+            <article class="step">
+              <div class="step-number">4</div>
+              <h3>Automate regression</h3>
+              <p>Build Playwright and API regression tests for alerts, mobile field flows, sensor state, and work order handoff.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section elinext">
+      <div class="wrap">
+        <div class="section-title">
+          <h2>Who is Elinext</h2>
+        </div>
+        <p class="elinext-copy">Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For an industrial platform like AssetWatch, the fit is dedicated product engineering, QA, data work, and secure delivery under your PM. We hold ISO 9001 and ISO 27001, and our teams have served clients like these:</p>
+        <ul class="customer-tags" aria-label="Named Elinext customers">
+          <li>Siemens</li>
+          <li>Broadcom</li>
+          <li>Volkswagen</li>
+          <li>TRUMPF</li>
+          <li>TUI</li>
+        </ul>
+        <p class="elinext-copy" style="margin-top:18px;margin-bottom:0">That mix lets you keep core asset risk IP in-house while we move platform, mobile, data, and test backlog faster. It is a practical extension of your team, not a handoff.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-title">
+          <h2>Proof</h2>
+          <p>Two nearby projects from the Elinext case study library.</p>
+        </div>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-industrial-data-insights.jpg" alt="Industrial machinery software case study image">
+            <div class="case-body">
+              <h3>Real-time machine data insights</h3>
+              <p>Built a manufacturing web platform that pulls operational data from factory machines and helps teams improve OEE performance.</p>
+              <a href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-iot-monitoring.jpg" alt="IoT monitoring web app case study image">
+            <div class="case-body">
+              <h3>Real-time IoT monitoring web app</h3>
+              <p>Improved a monitoring web app for large datasets, access management, and responsive user workflows.</p>
+              <a href="https://www.elinext.com/case-study/web-app-for-iot-devices-monitoring/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>We can scope the first six weeks together.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
