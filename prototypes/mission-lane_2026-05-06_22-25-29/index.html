@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mission Lane data engineering proposal by Elinext</title>
+  <meta name="description" content="A short proposal for Mission Lane: a secure data and ML engineering squad to support the next phase of credit decisioning.">
+  <meta property="og:title" content="Mission Lane data engineering proposal">
+  <meta property="og:description" content="A secure data squad for the Head of Data Science moment.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/mission-lane_2026-05-06_22-25-29/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/mission-lane_2026-05-06_22-25-29/og-image.jpg">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/mission-lane_2026-05-06_22-25-29/">
+  <style>
+    :root {
+      --ink: #13201c;
+      --muted: #5d6b65;
+      --green: #007459;
+      --green-dark: #073f35;
+      --mint: #e8f6ef;
+      --line: #cfe1d9;
+      --paper: #fbfdfb;
+      --white: #ffffff;
+      --orange: #f27a1a;
+      --navy: #0f1629;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      background: var(--paper);
+      padding: 56px 18px;
+    }
+
+    .section.alt {
+      background: var(--white);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      color: var(--white);
+      background:
+        radial-gradient(circle at 88% 18%, rgba(242, 122, 26, 0.28), transparent 30%),
+        linear-gradient(135deg, var(--navy), var(--green-dark) 72%);
+      padding: 68px 18px 58px;
+    }
+
+    .hero .wrap {
+      max-width: 980px;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #b5e5da;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 980px;
+      margin-bottom: 18px;
+      font-size: clamp(2.15rem, 5vw, 4rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin-bottom: 28px;
+      color: #e9f6f1;
+      font-size: 1.05rem;
+    }
+
+    .hero-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      max-width: 760px;
+    }
+
+    .hero-strip span {
+      border: 1px solid rgba(181, 229, 218, 0.36);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #effaf6;
+      font-size: 0.92rem;
+    }
+
+    .section h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(1.65rem, 4vw, 2.45rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .read-card {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      padding: 22px;
+      background: var(--mint);
+      color: #18352e;
+      font-size: 1rem;
+    }
+
+    .proposal {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .proposal-intro {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      background: var(--white);
+    }
+
+    .team {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .role {
+      border-radius: 8px;
+      padding: 12px;
+      background: #eef7f3;
+      color: var(--green-dark);
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: var(--white);
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin-bottom: 5px;
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+
+    .step p,
+    .proposal-intro p,
+    .proof-card p,
+    .identity p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .tag,
+    .customer {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: #fff2e8;
+      color: #7d3600;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .identity {
+      max-width: 910px;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      background: var(--white);
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 0;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #e7eee9;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-card h3 {
+      margin-bottom: 8px;
+      color: var(--green-dark);
+      font-size: 1.05rem;
+      line-height: 1.25;
+    }
+
+    .proof-card a {
+      display: inline-block;
+      margin-top: 14px;
+      color: var(--green);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--green-dark), var(--navy));
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+      color: var(--white);
+    }
+
+    .cta p {
+      margin-bottom: 24px;
+      color: #dceee8;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      border-radius: 8px;
+      padding: 12px 18px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 680px) {
+      .section {
+        padding: 72px 28px;
+      }
+
+      .hero {
+        padding: 86px 28px 74px;
+      }
+
+      .hero-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .proposal {
+        grid-template-columns: 0.85fr 1.15fr;
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .section {
+        padding: 86px 36px;
+      }
+
+      .hero {
+        padding: 104px 36px 88px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">For Mission Lane</p>
+        <h1>A secure data squad for Mission Lane's next credit chapter</h1>
+        <p>Why we're here: Mission Lane is hiring a Head of Data Science to push machine learning across underwriting, fraud, portfolio management, and collections. This is where data ideas need strong production delivery.</p>
+        <div class="hero-strip" aria-label="proposal focus">
+          <span>Data and ML delivery</span>
+          <span>Regulated release checks</span>
+          <span>Portfolio systems support</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <p class="read-card">Hiring this role says Mission Lane is scaling data science into a company system. The hard part is not only model ideas. It is clean data, release checks, and proof that each change is safe. If that layer lags, underwriting, fraud, collections, and portfolio teams wait. Antoine's team can keep control while a focused squad clears the engineering work.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal">
+          <div class="proposal-intro">
+            <p>We would place a dedicated squad under Mission Lane's PO or PM. The first eight weeks would ship one production-ready data path.</p>
+            <div class="team" aria-label="team shape">
+              <div class="role">1 data lead</div>
+              <div class="role">2 ML engineers</div>
+              <div class="role">1 backend engineer</div>
+              <div class="role">1 QA engineer</div>
+            </div>
+            <div class="stack" aria-label="relevant stack">
+              <span class="tag">Python</span>
+              <span class="tag">Java</span>
+              <span class="tag">Node.js</span>
+              <span class="tag">React</span>
+              <span class="tag">Angular</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="num">1</div>
+              <div>
+                <h3>Map the data path</h3>
+                <p>Trace underwriting, portfolio, and payment signals. Mark owners, weak joins, and checks needed before model release.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div>
+                <h3>Build release guardrails</h3>
+                <p>Add tests for missing fields, drift, and account states. Keep documents ready for compliance review.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div>
+                <h3>Ship one model support path</h3>
+                <p>Stand up a secure pipeline for one use case, then demo it weekly to risk and engineering.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div>
+                <h3>Handoff to the new leader</h3>
+                <p>Leave runbooks, test packs, and backlog notes, so the Head of Data Science starts faster.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="identity">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists. We use no freelancers or subcontractors, which helps long regulated work stay stable. For fintech work, ISO 27001 and ISO 9001 matter, and our teams support Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. We can place a dedicated squad under your team and security rules. That means Antoine keeps product control while Elinext adds data, backend, QA, DevOps, and mobile capacity. The model is built for long work, not one-off tasks.</p>
+          <div class="customers" aria-label="named customers">
+            <strong class="customer">Siemens</strong>
+            <strong class="customer">Broadcom</strong>
+            <strong class="customer">Volkswagen</strong>
+            <strong class="customer">TRUMPF</strong>
+            <strong class="customer">TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-data-analytics-platform-for-companies-operating-on-nigerian-financial-market.jpg" alt="Data analytics case study image">
+            <div class="proof-body">
+              <h3>Data Analytics Platform for Companies Operating on the Nigerian Financial Market</h3>
+              <p>Elinext built a financial data platform with Python and Angular. The system turned market data into useful risk insight.</p>
+              <a href="https://www.elinext.com/case-study/data-analytics-platform-for-companies-operating-on-nigerian-financial-market/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-financial-risk-management-software.jpg" alt="Financial risk management case study image">
+            <div class="proof-body">
+              <h3>Financial Risk Management Software</h3>
+              <p>Elinext placed a long-term dedicated team for financial risk software. Developers, testers, and the client shipped together.</p>
+              <a href="https://www.elinext.com/case-study/financial-risk-management-software/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Start the data sprint</h2>
+        <p>We can map a first squad in one short call.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
