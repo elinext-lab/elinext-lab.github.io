@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reduce support load while nAIvigate grows | Elinext</title>
+  <meta name="description" content="A short proposal for BEKO Solutions: reduce support load, harden nAIvigate, and keep delivery moving with a small Elinext squad.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/beko-solutions_2026-05-07_05-05-00/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/beko-solutions_2026-05-07_05-05-00/">
+  <meta property="og:title" content="Reduce support load while nAIvigate grows">
+  <meta property="og:description" content="A short proposal for BEKO Solutions from Elinext.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/beko-solutions_2026-05-07_05-05-00/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #536070;
+      --paper: #fffaf2;
+      --white: #ffffff;
+      --line: #dcd8ce;
+      --blue: #1157a5;
+      --red: #d7392f;
+      --green: #2b8b57;
+      --yellow: #f4b942;
+      --orange: #f26c2f;
+      --soft-blue: #e9f2fb;
+      --soft-green: #edf8f1;
+      --soft-yellow: #fff4d4;
+      --shadow: 0 18px 50px rgba(23, 32, 51, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    img { display: block; max-width: 100%; height: auto; }
+    .wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+    .section { padding: 56px 0; background: var(--paper); }
+    .section.white { background: var(--white); }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--red);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: clamp(2.35rem, 8vw, 4.8rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: clamp(1.75rem, 5vw, 2.65rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      padding: 68px 0 46px;
+      background:
+        linear-gradient(135deg, rgba(17, 87, 165, 0.12), rgba(244, 185, 66, 0.24)),
+        var(--paper);
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: end;
+    }
+    .hero-copy { max-width: 820px; }
+    .hero-copy p {
+      max-width: 690px;
+      color: var(--muted);
+      font-size: 1.04rem;
+    }
+    .signal-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      width: 100%;
+    }
+    .signal {
+      min-height: 92px;
+      padding: 18px;
+      border: 1px solid rgba(23, 32, 51, 0.14);
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: var(--shadow);
+    }
+    .signal strong { display: block; margin-bottom: 5px; font-size: 0.95rem; }
+    .signal span { color: var(--muted); font-size: 0.9rem; }
+    .read-box {
+      width: 100%;
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--soft-blue);
+      border-left: 6px solid var(--blue);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .read-box p { margin: 0; color: #26384f; }
+    .proposal {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .team-card, .stack-card {
+      padding: 24px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0 0;
+    }
+    .role {
+      min-height: 76px;
+      padding: 14px;
+      background: var(--soft-yellow);
+      border: 1px solid #f0d488;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+    .role span { display: block; color: var(--muted); font-size: 0.82rem; font-weight: 400; }
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 18px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: var(--white);
+      font-weight: 800;
+      flex: none;
+    }
+    .step strong { display: block; margin-bottom: 5px; font-size: 1rem; }
+    .step p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .chip {
+      padding: 7px 10px;
+      background: var(--soft-green);
+      color: #164d30;
+      border: 1px solid #b7ddc6;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+    .elinext {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 26px;
+      background: var(--ink);
+      color: var(--white);
+      border-radius: 8px;
+    }
+    .elinext p { margin-bottom: 12px; color: #e7edf6; }
+    .elinext p:last-child { margin-bottom: 0; }
+    .names {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .names strong {
+      padding: 6px 10px;
+      background: rgba(244, 185, 66, 0.18);
+      border: 1px solid rgba(244, 185, 66, 0.42);
+      border-radius: 999px;
+      color: #ffe7a7;
+      font-size: 0.88rem;
+    }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    .case-card {
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 2.3 / 1;
+      object-fit: cover;
+    }
+    .case-body { padding: 20px; }
+    .case-body h3 { margin-bottom: 8px; font-size: 1.12rem; }
+    .case-body p { color: var(--muted); font-size: 0.95rem; }
+    .case-body a {
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .cta {
+      text-align: center;
+      background:
+        linear-gradient(90deg, rgba(17, 87, 165, 0.95), rgba(43, 139, 87, 0.95)),
+        var(--blue);
+      color: var(--white);
+    }
+    .cta h2 { color: var(--white); }
+    .cta p { max-width: 540px; margin: 0 auto 24px; color: #e8f2ff; }
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 46px;
+      padding: 12px 20px;
+      background: var(--orange);
+      color: var(--white);
+      border-radius: 6px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      .wrap { padding: 0 32px; }
+      .hero-grid { grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr); }
+      .signal-strip { align-self: end; }
+      .proposal { grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1fr); }
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 1024px) {
+      .section { padding: 72px 0; }
+      .hero { min-height: 88vh; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">For BEKO Solutions</p>
+          <h1>Reduce support load while nAIvigate and projects grow</h1>
+          <p>Saw you are hiring IT Support for rollouts, infrastructure issues, and remote support across Austria. That is a good time to remove repeat causes, not only add another queue.</p>
+        </div>
+        <div class="signal-strip" aria-label="Current signals">
+          <div class="signal"><strong>Signal</strong><span>Support role covers sites, rollouts, incidents, and user support.</span></div>
+          <div class="signal"><strong>Product</strong><span>nAIvigate is live as BEKO's AI use case generator.</span></div>
+          <div class="signal"><strong>Need</strong><span>Keep support, web operations, and delivery in one rhythm.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The IT-Support search says BEKO is handling more site, rollout, and remote support work. The hard part is the mix of daily fixes and central IT projects. nAIvigate adds one more public system that needs trust, speed, and clear data handling. If repeat issues stay in support, delivery slows and senior staff lose focus.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal">
+          <div class="team-card">
+            <p><strong>Engagement model:</strong> a dedicated squad under your Product Owner or PM for a six-week pilot.</p>
+            <div class="team-grid">
+              <div class="role">Tech Lead<span>scope, risks, handoff</span></div>
+              <div class="role">Full-stack Engineer<span>web fixes, APIs</span></div>
+              <div class="role">DevOps Engineer<span>releases, monitoring</span></div>
+              <div class="role">QA Engineer<span>automation, regression</span></div>
+            </div>
+            <div class="chips">
+              <span class="chip">Node.js</span><span class="chip">React</span><span class="chip">.NET</span><span class="chip">Python</span><span class="chip">QA automation</span><span class="chip">DevOps</span>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step"><span class="num">1</span><div><strong>Map repeat support causes</strong><p>Review tickets, rollout notes, and nAIvigate logs to find issues that create avoidable support demand.</p></div></div>
+            <div class="step"><span class="num">2</span><div><strong>Harden the public journey</strong><p>Check the homepage to nAIvigate path, form states, consent flow, API errors, and mobile speed.</p></div></div>
+            <div class="step"><span class="num">3</span><div><strong>Automate release checks</strong><p>Add smoke tests and regression checks for key pages before rollouts reach support teams.</p></div></div>
+            <div class="step"><span class="num">4</span><div><strong>Hand over cleanly</strong><p>Leave BEKO with dashboards, runbooks, and a ranked backlog for the new support hire.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="elinext">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers.</p>
+          <p>For BEKO, the fit is a practical mix of web, backend, QA, and DevOps support. We work with European teams and hold ISO 9001 and ISO 27001.</p>
+          <div class="names"><strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong></div>
+          <p>These names matter here because BEKO serves technical and industrial clients too.</p>
+          <p>Our squad would work beside your team, reduce repeat support causes, and keep ownership with BEKO.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-cicd.jpg" alt="CI/CD case study cover">
+            <div class="case-body">
+              <h3>CI/CD for infrastructure software</h3>
+              <p>Elinext improved release flow for an infrastructure management provider and cut development time through pipeline work.</p>
+              <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-crm.jpg" alt="Manufacturing CRM case study cover">
+            <div class="case-body">
+              <h3>CRM for building equipment</h3>
+              <p>Elinext built a CRM that improved operations, user experience, and cross-team work for a building equipment maker.</p>
+              <a href="https://www.elinext.com/case-study/crm-system-development-for-building-equipment-manufacturer/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Start with a support audit</h2>
+        <p>A short pilot can show what to fix first.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
