@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YouVersion engineering bridge proposal by Elinext</title>
+  <meta name="description" content="A short proposal for supporting YouVersion engineering while senior hiring runs.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/youversion_2026-05-07_12-27-30/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="YouVersion engineering bridge proposal">
+  <meta property="og:description" content="A focused bridge squad for Bible App release quality and Platform support.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/youversion_2026-05-07_12-27-30/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/youversion_2026-05-07_12-27-30/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/youversion_2026-05-07_12-27-30/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172436;
+      --muted: #5e6875;
+      --paper: #fffaf1;
+      --white: #ffffff;
+      --line: #d9e2dd;
+      --teal: #116b73;
+      --green: #49774d;
+      --orange: #ed7a2f;
+      --soft: #e9f2ed;
+      --navy: #111b2f;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    body { min-width: 320px; }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .section {
+      width: 100%;
+      padding: 56px 20px;
+      background: var(--paper);
+    }
+
+    .section.white { background: var(--white); }
+    .section.soft { background: var(--soft); }
+    .section.dark { background: var(--navy); color: var(--white); }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .narrow { width: min(100%, 760px); }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      max-width: 860px;
+      margin-bottom: 18px;
+      font-size: clamp(2.2rem, 9vw, 5.8rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      font-size: clamp(1.7rem, 5vw, 3rem);
+      line-height: 1.08;
+      text-align: center;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      line-height: 1.25;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(135deg, rgba(255, 250, 241, 0.95), rgba(233, 242, 237, 0.92)),
+        radial-gradient(circle at 85% 20%, rgba(237, 122, 47, 0.16), transparent 32%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero p {
+      max-width: 690px;
+      font-size: 1.08rem;
+      color: var(--muted);
+    }
+
+    .hero .why {
+      color: var(--ink);
+      border-left: 4px solid var(--orange);
+      padding-left: 16px;
+    }
+
+    .read-box {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      padding: 28px;
+      border: 1px solid #bed4c9;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: #f4eee3;
+      box-shadow: 0 18px 48px rgba(23, 36, 54, 0.08);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      font-size: 1.03rem;
+    }
+
+    .plan-board {
+      display: grid;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .model {
+      padding: 22px;
+      border: 1px solid #23465a;
+      border-radius: 8px;
+      background: #13233a;
+    }
+
+    .model p { color: #d8e3ea; }
+
+    .roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .role,
+    .customer,
+    .stack {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .role {
+      background: #213851;
+      color: #ffffff;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid #23465a;
+      border-radius: 8px;
+      background: #0f1d31;
+    }
+
+    .badge {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--navy);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: #c6d5df;
+      font-size: 0.96rem;
+    }
+
+    .stack-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .stack {
+      background: #fff2df;
+      color: #66350f;
+      border: 1px solid #efc79c;
+    }
+
+    .elinext-text {
+      width: min(100%, 840px);
+      margin: 0 auto;
+      text-align: center;
+      font-size: 1.03rem;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 18px 0 0;
+    }
+
+    .customer {
+      background: #e9f2ed;
+      color: var(--teal);
+      border: 1px solid #bfd5cb;
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 14px 38px rgba(23, 36, 54, 0.07);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 2.3 / 1;
+      object-fit: cover;
+    }
+
+    .case-body { padding: 20px; }
+
+    .case-body p {
+      margin-bottom: 14px;
+      color: var(--muted);
+    }
+
+    .case-body a {
+      color: var(--teal);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .contact {
+      text-align: center;
+      background:
+        linear-gradient(180deg, rgba(17, 27, 47, 0.95), rgba(17, 27, 47, 0.98));
+    }
+
+    .contact h2 { color: var(--white); }
+
+    .contact p {
+      max-width: 560px;
+      margin: 0 auto 22px;
+      color: #d5dde7;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 6px;
+      background: var(--orange);
+      color: #101827;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 768px) {
+      .section { padding: 82px 32px; }
+      .plan-board { grid-template-columns: 0.9fr 1.1fr; align-items: stretch; }
+      .model { display: flex; flex-direction: column; justify-content: center; }
+      .case-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="section hero" aria-labelledby="hero-title">
+      <div class="wrap">
+        <p class="eyebrow">Prepared for YouVersion engineering</p>
+        <h1 id="hero-title">Keep Bible App delivery moving while senior hiring runs</h1>
+        <p>A focused engineering bridge for the YouVersion Family of Apps, built around mobile release quality, account state, and Platform support while your team keeps product control.</p>
+        <p class="why"><strong>Why we're here:</strong> we saw YouVersion hiring senior engineers across mobile, backend, web, and testing. That usually means good teams protect roadmap speed while they search carefully.</p>
+      </div>
+    </section>
+
+    <section class="section white" aria-labelledby="read-title">
+      <div class="wrap">
+        <h2 id="read-title">Our read</h2>
+        <div class="read-box">
+          <p>Your signal says YouVersion is scaling more than one workstream at once. The Bible App must stay steady for daily Plans, Prayers, Friends, audio, and streaks. At the same time, YouVersion Platform adds APIs, SDKs, sign-in, and partner support. If senior hiring takes months, your current leads carry roadmap work, review load, and release risk.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark" aria-labelledby="work-title">
+      <div class="wrap">
+        <h2 id="work-title">What we'd do</h2>
+        <div class="plan-board">
+          <div class="model">
+            <h3>Dedicated bridge squad under your PM</h3>
+            <p>We plug into YouVersion's backlog, code review, and sprint rhythm. Tiffany's team keeps architecture, product, and release control.</p>
+            <div class="roles" aria-label="Proposed team">
+              <span class="role">Tech lead</span>
+              <span class="role">Senior Android</span>
+              <span class="role">Senior iOS</span>
+              <span class="role">Backend API</span>
+              <span class="role">QA automation</span>
+            </div>
+          </div>
+          <div class="timeline" aria-label="Six week pilot plan">
+            <div class="step">
+              <span class="badge">1</span>
+              <div>
+                <h3>Risk map</h3>
+                <p>Map the current Android and iOS release risks across Plans, streaks, audio, login, and offline paths.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="badge">2</span>
+              <div>
+                <h3>Small fix batches</h3>
+                <p>Ship fixes in small batches, with Tiffany's leads keeping code review and product choices inside YouVersion.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="badge">3</span>
+              <div>
+                <h3>Regression cover</h3>
+                <p>Add automated smoke tests for Plans, account state, friend invites, audio progress, and chapter navigation.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="badge">4</span>
+              <div>
+                <h3>Handoff</h3>
+                <p>Leave a release checklist and device matrix your team can keep using after hiring closes.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="stack-row" aria-label="Relevant stack">
+          <span class="stack">Swift</span>
+          <span class="stack">Kotlin</span>
+          <span class="stack">Flutter/Dart</span>
+          <span class="stack">Node.js</span>
+          <span class="stack">Python</span>
+          <span class="stack">React</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" aria-labelledby="elinext-title">
+      <div class="wrap">
+        <h2 id="elinext-title">Who is Elinext</h2>
+        <div class="elinext-text">
+          <p>Elinext is a full-cycle software development provider, active since 1997. We have about 700 in-house specialists and use no freelancers or subcontractors. For YouVersion, the useful match is a dedicated team model, mobile and backend depth, and QA automation. We hold ISO 9001 and ISO 27001, which matters for account, data, and release work. That mix lets us support Tiffany's team without taking product control away from YouVersion.</p>
+          <div class="customers" aria-label="Named customers">
+            <strong class="customer">Broadcom</strong>
+            <strong class="customer">Siemens</strong>
+            <strong class="customer">Volkswagen</strong>
+            <strong class="customer">TRUMPF</strong>
+            <strong class="customer">TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white" aria-labelledby="proof-title">
+      <div class="wrap">
+        <h2 id="proof-title">Proof from similar work</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-payment.jpg" alt="Case study cover for a B2B online payment platform">
+            <div class="case-body">
+              <h3>B2B Online Payment Platform</h3>
+              <p>Remote team joined a client org to build mobile and web payment systems. The work used React Native, Node.js, AWS, and QA automation.</p>
+              <a href="https://www.elinext.com/case-study/online-payment-system-for-car-manufacturer/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-allunique.jpg" alt="Case study cover for a mobile photo editor app">
+            <div class="case-body">
+              <h3>Allunique Studio mobile app</h3>
+              <p>Built native iOS and Android apps for a consumer media product. The app was translated into 21 languages after launch.</p>
+              <a href="https://www.elinext.com/case-study/allunique-studio-photo-editor-app/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark contact" aria-labelledby="contact-title">
+      <div class="wrap narrow">
+        <h2 id="contact-title">Start the bridge call</h2>
+        <p>Share one blocked stream. We will propose the first sprint.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
