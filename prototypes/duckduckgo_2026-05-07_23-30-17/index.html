@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DuckDuckGo Backend Bridge Proposal | Elinext</title>
+  <meta name="description" content="A focused Elinext proposal for DuckDuckGo's iOS, macOS, and backend delivery moment.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/duckduckgo_2026-05-07_23-30-17/">
+  <meta property="og:title" content="DuckDuckGo backend bridge proposal">
+  <meta property="og:description" content="Keep iOS and macOS releases moving while backend leadership scales.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/duckduckgo_2026-05-07_23-30-17/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/duckduckgo_2026-05-07_23-30-17/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/duckduckgo_2026-05-07_23-30-17/og-image.jpg">
+  <style>
+    :root {
+      --ink: #10212b;
+      --muted: #59656d;
+      --paper: #fffdfa;
+      --soft: #f1f7f0;
+      --green: #38713d;
+      --orange: #e26f2b;
+      --line: #d8dfd6;
+      --deep: #0e1b24;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      background: var(--deep);
+      color: var(--white);
+      padding: 28px 0 48px;
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 42px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 750;
+    }
+
+    .brand img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--white);
+    }
+
+    .label {
+      color: #bad6c0;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 18px;
+      font-size: clamp(2.25rem, 7vw, 4.45rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      margin-bottom: 14px;
+      color: #d8e3df;
+      font-size: clamp(1rem, 2.2vw, 1.18rem);
+    }
+
+    .why {
+      max-width: 760px;
+      margin-bottom: 0;
+      padding-left: 18px;
+      border-left: 4px solid var(--orange);
+      color: #f2f6f3;
+    }
+
+    section {
+      padding: 54px 0;
+      background: var(--paper);
+    }
+
+    section h2 {
+      text-align: center;
+      margin-bottom: 22px;
+      font-size: clamp(1.65rem, 4vw, 2.35rem);
+      line-height: 1.08;
+    }
+
+    .read-box {
+      max-width: 74ch;
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      color: #27343a;
+    }
+
+    .proposal {
+      background: #ffffff;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+      align-items: start;
+    }
+
+    .squad {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff7ef;
+    }
+
+    .squad h3,
+    .step h3,
+    .case h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+      line-height: 1.2;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .tag {
+      padding: 7px 10px;
+      border: 1px solid #e4cbb5;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #66391e;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step p,
+    .squad p,
+    .case p,
+    .proof-line {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .cred {
+      background: #eef5f5;
+    }
+
+    .cred p {
+      max-width: 78ch;
+      margin: 0 auto;
+      text-align: center;
+      color: #293940;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 18px auto 0;
+    }
+
+    .customers strong {
+      padding: 7px 10px;
+      border: 1px solid #b9cfcb;
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--green);
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    }
+
+    .case {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .case img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #edf1ed;
+    }
+
+    .case-body {
+      padding: 20px;
+    }
+
+    .case a {
+      display: inline-flex;
+      margin-top: 14px;
+      color: var(--green);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .talk {
+      background: var(--deep);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .talk p {
+      max-width: 44ch;
+      margin: 0 auto 24px;
+      color: #d8e3df;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 6px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 860px) {
+      .proposal-grid {
+        grid-template-columns: 0.9fr 1.4fr;
+      }
+
+      section {
+        padding: 70px 0;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .topline {
+        align-items: flex-start;
+        flex-direction: column;
+        margin-bottom: 34px;
+      }
+
+      .hero {
+        padding-bottom: 40px;
+      }
+
+      .wrap {
+        padding: 0 18px;
+      }
+
+      .step {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="topline">
+        <div class="brand">
+          <img src="assets/duckduckgo-favicon.ico" alt="">
+          <span>DuckDuckGo</span>
+        </div>
+        <span class="label">Proposal by Elinext</span>
+      </div>
+      <h1>Keep iOS and macOS releases moving while backend leadership scales.</h1>
+      <p class="hero-copy">For Shilpa's app group, the hard part is not only Swift work. It is keeping privacy features stable while backend paths change.</p>
+      <p class="why"><strong>Why we're here:</strong> saw DuckDuckGo is hiring an Engineering Director, Backend. That role signals backend load across Search Assist, Duck.ai, sync, VPN, and private measurement.</p>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="wrap">
+        <h2>Our Read</h2>
+        <p class="read-box">The backend director search tells us DuckDuckGo is scaling core product systems, not filling a small gap. For iOS and macOS apps, that can mean blocked API work, late feature flags, and more release checks. Duck.ai and subscription features also raise the trust bar. If the gap lasts, mobile teams can ship slower or carry more risk into each app release.</p>
+      </div>
+    </section>
+
+    <section class="proposal">
+      <div class="wrap">
+        <h2>What We'd Do</h2>
+        <div class="proposal-grid">
+          <article class="squad">
+            <h3>Dedicated squad under your PM</h3>
+            <p>One senior backend lead, two backend engineers, one iOS/macOS engineer, and one QA automation engineer for a six-week pilot.</p>
+            <div class="tags" aria-label="Relevant stack">
+              <span class="tag">Swift</span>
+              <span class="tag">Objective-C</span>
+              <span class="tag">Python</span>
+              <span class="tag">Java</span>
+              <span class="tag">Node.js</span>
+              <span class="tag">QA automation</span>
+            </div>
+          </article>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Map release blockers</h3>
+                <p>Trace iOS and macOS dependencies for Duck.ai, sync, VPN, Fire Button, Search Assist, and subscription paths.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Add backend capacity</h3>
+                <p>Pick one contained backlog and move APIs, flags, anonymous events, or data jobs without touching product ownership.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Harden privacy flows</h3>
+                <p>Build tests for AI opt-outs, search suggestions, passwords, bookmarks, tabs, clearing flows, and tracker views.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Hand off cleanly</h3>
+                <p>Ship weekly demos, decisions, test results, and notes the incoming Backend Director can use on day one.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cred">
+      <div class="wrap">
+        <h2>Who Is Elinext</h2>
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For DuckDuckGo, the fit is a controlled team model, ISO 27001 security practice, and senior mobile, backend, QA, and DevOps skills. Elinext has delivered work for security-sensitive and high-scale clients, including <strong>Siemens</strong>, <strong>Broadcom</strong>, and <strong>Volkswagen</strong>. We would plug into your roadmap and leave ownership with DuckDuckGo.</p>
+        <div class="customers" aria-label="Named customers">
+          <strong>Siemens</strong>
+          <strong>Broadcom</strong>
+          <strong>Volkswagen</strong>
+          <strong>TRUMPF</strong>
+          <strong>TUI</strong>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="case-grid">
+          <article class="case">
+            <img src="assets/case-backend-banking.jpg" alt="Backend banking case study visual">
+            <div class="case-body">
+              <h3>Backend App Development for Banking</h3>
+              <p>Elinext built backend search and real-time sync using Java, Elasticsearch, Docker, and Kubernetes.</p>
+              <a href="https://www.elinext.com/case-study/backend-app-development-for-banking/">Read case study</a>
+            </div>
+          </article>
+          <article class="case">
+            <img src="assets/case-qa-privacy.jpg" alt="Automation QA privacy case study visual">
+            <div class="case-body">
+              <h3>Automation QA for Data Privacy</h3>
+              <p>Elinext added QA automation for a privacy-sensitive data product and expanded the team over time.</p>
+              <a href="https://www.elinext.com/case-study/automation-qa-for-healthcare-data-privacy/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk">
+      <div class="wrap">
+        <h2>Start The Conversation</h2>
+        <p>Bring a small bridge squad to your next release plan.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
