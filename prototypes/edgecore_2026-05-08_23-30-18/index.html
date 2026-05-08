@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EdgeCore TMO Support Proposal | Elinext</title>
+  <meta name="description" content="A short proposal for EdgeCore's construction and TMO data flow.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/edgecore_2026-05-08_23-30-18/">
+  <meta property="og:title" content="EdgeCore TMO Support Proposal">
+  <meta property="og:description" content="A focused Elinext plan for construction KPI, risk, and delivery data.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/edgecore_2026-05-08_23-30-18/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/edgecore_2026-05-08_23-30-18/og-image.jpg">
+  <style>
+    :root {
+      --ink: #13202f;
+      --muted: #536372;
+      --paper: #fbfcfb;
+      --line: #dbe3df;
+      --green: #173f35;
+      --green-2: #24594b;
+      --mint: #e7f0eb;
+      --blue: #12395b;
+      --orange: #d46b2a;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.5;
+    }
+
+    a { color: inherit; }
+    img { display: block; max-width: 100%; height: auto; }
+    .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    section { padding: 52px 0; background: var(--paper); }
+    h1, h2, h3, p { margin: 0; }
+    h2 {
+      text-align: center;
+      font-size: clamp(1.55rem, 3vw, 2.35rem);
+      line-height: 1.15;
+      margin-bottom: 22px;
+      letter-spacing: 0;
+    }
+
+    .hero {
+      padding: 72px 0 56px;
+      background:
+        linear-gradient(135deg, rgba(19, 32, 47, .94), rgba(23, 63, 53, .9)),
+        radial-gradient(circle at 75% 20%, rgba(212, 107, 42, .28), transparent 32%);
+      color: var(--white);
+    }
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+    .mark {
+      display: inline-flex;
+      width: fit-content;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: #d8e5df;
+      font-size: .86rem;
+      margin-bottom: 18px;
+    }
+    h1 {
+      max-width: 760px;
+      font-size: clamp(2.2rem, 7vw, 5.1rem);
+      line-height: .98;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 660px;
+      color: #dfe9e4;
+      font-size: 1.02rem;
+      margin-top: 18px;
+    }
+    .why {
+      border-left: 4px solid var(--orange);
+      padding-left: 14px;
+      color: #ffffff;
+    }
+    .hero-card {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.2);
+      background: rgba(255,255,255,.08);
+      border-radius: 8px;
+      max-width: 420px;
+    }
+    .hero-card strong { color: #ffffff; }
+    .hero-card span { color: #c8d5cf; font-size: .95rem; }
+
+    .read-box {
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 26px;
+      background: var(--mint);
+      border: 1px solid #c8d9d0;
+      border-left: 6px solid var(--green-2);
+      border-radius: 8px;
+      font-size: 1.05rem;
+    }
+
+    .work {
+      background: #ffffff;
+    }
+    .proposal {
+      display: grid;
+      gap: 18px;
+    }
+    .model {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      background: #f7faf8;
+    }
+    .model p { color: var(--muted); margin-top: 8px; }
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .pill {
+      border: 1px solid #c8d8d0;
+      background: var(--white);
+      border-radius: 999px;
+      padding: 8px 11px;
+      font-size: .92rem;
+      white-space: nowrap;
+    }
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+    .num {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--green);
+      color: var(--white);
+      font-weight: 700;
+    }
+    .step h3 { font-size: 1.05rem; margin-bottom: 5px; }
+    .step p { color: var(--muted); font-size: .96rem; }
+    .stack {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f4f7f6;
+    }
+    .stack h3 { font-size: 1rem; color: var(--green); }
+    .stack-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .elinext {
+      background: var(--green);
+      color: var(--white);
+    }
+    .elinext p {
+      max-width: 82ch;
+      margin: 0 auto;
+      color: #e2ece7;
+      font-size: 1.03rem;
+    }
+    .logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+      justify-content: center;
+    }
+    .logos strong {
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: rgba(255,255,255,.08);
+      color: #ffffff;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #eef2ef;
+    }
+    .case-body { padding: 18px; }
+    .case-body h3 {
+      font-size: 1.08rem;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .case-body p { color: var(--muted); margin-bottom: 12px; }
+    .case-body a {
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .talk {
+      padding: 58px 0 70px;
+      background: #eef3f0;
+      text-align: center;
+    }
+    .talk h2 { margin-bottom: 10px; }
+    .talk p { color: var(--muted); margin-bottom: 24px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    @media (min-width: 900px) {
+      section { padding: 70px 0; }
+      .hero { padding: 92px 0 74px; }
+      .hero-grid { grid-template-columns: minmax(0, 1fr) 360px; }
+      .proposal { grid-template-columns: 340px minmax(0, 1fr); align-items: start; }
+      .model { position: sticky; top: 22px; }
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="mark">Prepared for David Sukinik and EdgeCore</span>
+          <h1>Keep EdgeCore construction data moving as campuses scale</h1>
+          <p>EdgeCore is building density-ready data centers across major U.S. markets. The next pressure point is keeping project facts clear across construction, finance, operations, and leaders.</p>
+          <p class="why">We saw the TMO Business Analyst opening. That role points to a live need for better KPI, risk, and project data flow while campus delivery keeps moving.</p>
+        </div>
+        <div class="hero-card" aria-label="Proposal focus">
+          <strong>Focus</strong><span>Construction KPI and risk flow</span>
+          <strong>Model</strong><span>Dedicated squad under EdgeCore leaders</span>
+          <strong>Start</strong><span>Six-week pilot, weekly demos</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <p class="read-box">The TMO analyst role says EdgeCore is adding more structure. That fits a company moving from strong projects to repeatable campus delivery. Your teams must tie milestones, risks, KPIs, and cost choices together. If that data sits in slides and sheets, leaders lose time. Construction decisions then move slower than the field work needs.</p>
+      </div>
+    </section>
+
+    <section class="work">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal">
+          <aside class="model">
+            <h3>Engagement model</h3>
+            <p>A dedicated squad works under your TMO Director and construction leaders.</p>
+            <div class="team">
+              <span class="pill">Senior BA</span>
+              <span class="pill">Delivery PM</span>
+              <span class="pill">Full-stack engineer</span>
+              <span class="pill">Data engineer</span>
+              <span class="pill">QA automation</span>
+              <span class="pill">DevOps support</span>
+            </div>
+          </aside>
+          <div class="steps">
+            <article class="step">
+              <div class="num">1</div>
+              <div>
+                <h3>Map the flow</h3>
+                <p>Map current project reports from site teams, finance, vendors, and leaders into one clear data model.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div>
+                <h3>Build the pilot</h3>
+                <p>Build a small KPI and risk hub that shows owners, dates, blockers, and evidence.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div>
+                <h3>Connect first systems</h3>
+                <p>Connect priority systems first, then automate weekly leadership updates and change notes for each active campus.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div>
+                <h3>Test and hand off</h3>
+                <p>Test with construction users, fix gaps fast, and leave a backlog for the full rollout.</p>
+              </div>
+            </article>
+            <div class="stack">
+              <h3>Relevant stack</h3>
+              <div class="stack-row">
+                <span class="pill">React</span>
+                <span class="pill">.NET</span>
+                <span class="pill">Node.js</span>
+                <span class="pill">Python</span>
+                <span class="pill">QA automation</span>
+                <span class="pill">DevOps</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. Our work fits security-sensitive teams because we hold ISO 9001 and ISO 27001, with clear delivery controls. The team can work under your PM or own a scoped build from discovery to release. For EdgeCore, we would bring business analysis, web engineering, QA, and DevOps as one steady squad for the TMO.</p>
+        <div class="logos" aria-label="Named Elinext customers">
+          <strong>Siemens</strong>
+          <strong>Broadcom</strong>
+          <strong>Volkswagen</strong>
+          <strong>TRUMPF</strong>
+          <strong>TUI</strong>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof from similar work</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-renewable-energy.jpg" alt="Renewable energy project management software case study">
+            <div class="case-body">
+              <h3>Renewable Energy Project Management Software</h3>
+              <p>Built one project view across technical, legal, and finance work.</p>
+              <a href="https://www.elinext.com/case-study/renewable-energy-project-management-software/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-cicd-infrastructure.jpg" alt="Infrastructure management CI/CD case study">
+            <div class="case-body">
+              <h3>CI/CD Optimization for Infrastructure Management</h3>
+              <p>Reduced release time for an infrastructure provider's pipeline.</p>
+              <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk">
+      <div class="wrap">
+        <h2>Talk through the next build</h2>
+        <p>Bring a small team to test the TMO fit.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
