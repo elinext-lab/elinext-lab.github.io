@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Typeface x Elinext | Secure Enterprise AI Rollouts</title>
+  <meta name="description" content="A short proposal for helping Typeface scale secure enterprise GenAI rollouts with reusable integration patterns and DevSecOps support.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/typeface_2026-05-09_00-39-58/">
+  <meta property="og:title" content="Typeface x Elinext">
+  <meta property="og:description" content="Scaling secure GenAI rollouts for enterprise customers.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/typeface_2026-05-09_00-39-58/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/typeface_2026-05-09_00-39-58/og-image.jpg">
+  <style>
+    :root {
+      --ink: #121827;
+      --muted: #5d6678;
+      --paper: #fbfaf6;
+      --panel: #ffffff;
+      --line: #d8dde6;
+      --navy: #111a2e;
+      --teal: #0f766e;
+      --green: #1f8a5b;
+      --orange: #f47b3f;
+      --blue: #2b5f9e;
+      --soft: #eef4f1;
+      --warm: #fff4ea;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+      background: var(--paper);
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 20px;
+      background: var(--paper);
+    }
+
+    .section.alt {
+      background: #f3f6f4;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      width: 100%;
+      padding: 52px 20px 60px;
+      color: #f9fafb;
+      background:
+        linear-gradient(135deg, rgba(17, 26, 46, 0.98), rgba(15, 118, 110, 0.88)),
+        url("assets/case-ai-agent.jpg") center / cover no-repeat;
+      position: relative;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(11, 15, 25, 0.58);
+    }
+
+    .hero .wrap {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #cde7df;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 18px;
+      font-size: clamp(2.35rem, 7vw, 4.8rem);
+      line-height: 0.98;
+      font-weight: 860;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 680px;
+      margin-bottom: 16px;
+      color: #e7edf4;
+      font-size: 1.08rem;
+      line-height: 1.55;
+    }
+
+    .why {
+      max-width: 740px;
+      margin: 0;
+      color: #dbe8e4;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .section-title {
+      max-width: 760px;
+      margin: 0 auto 24px;
+      text-align: center;
+      font-size: clamp(1.65rem, 5vw, 2.7rem);
+      line-height: 1.08;
+      font-weight: 820;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 86ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #bdd7d0;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: var(--soft);
+      color: #243044;
+      box-shadow: 0 16px 36px rgba(24, 37, 51, 0.06);
+    }
+
+    .read-box p {
+      margin: 0;
+      font-size: 1.03rem;
+      line-height: 1.62;
+    }
+
+    .proposal {
+      background: var(--navy);
+      color: #f7fafc;
+    }
+
+    .proposal .section-title {
+      color: #ffffff;
+    }
+
+    .proposal-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      width: 100%;
+    }
+
+    .squad {
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .model {
+      margin-bottom: 18px;
+      color: #cdd8e5;
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .roles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0 0 18px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .roles li,
+    .stack span,
+    .customer-tags span {
+      min-width: 0;
+      border-radius: 999px;
+      white-space: normal;
+    }
+
+    .roles li {
+      padding: 10px 12px;
+      background: #ffffff;
+      color: #172033;
+      font-size: 0.9rem;
+      font-weight: 760;
+      text-align: center;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .stack span {
+      padding: 8px 10px;
+      background: rgba(244, 123, 63, 0.16);
+      color: #ffd6c2;
+      border: 1px solid rgba(244, 123, 63, 0.42);
+      font-size: 0.84rem;
+      font-weight: 760;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--ink);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #111827;
+      font-weight: 850;
+      flex: 0 0 auto;
+    }
+
+    .step h3 {
+      margin-bottom: 6px;
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.48;
+    }
+
+    .elinext-copy {
+      max-width: 84ch;
+      margin: 0 auto;
+      color: #263247;
+      font-size: 1.03rem;
+      line-height: 1.62;
+      text-align: center;
+    }
+
+    .customer-tags {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 20px 0 0;
+    }
+
+    .customer-tags span {
+      padding: 8px 12px;
+      background: #e7f1ed;
+      border: 1px solid #c7ddd5;
+      color: #173f3a;
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .case {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 18px 44px rgba(19, 31, 47, 0.07);
+    }
+
+    .case img {
+      width: 100%;
+      aspect-ratio: 2.1 / 1;
+      object-fit: cover;
+      background: #e9edf0;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      line-height: 1.24;
+    }
+
+    .case p {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.5;
+    }
+
+    .case a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      background: #0e392f;
+      color: #f8fbf8;
+      text-align: center;
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .cta p {
+      margin: 0 auto 24px;
+      max-width: 42ch;
+      color: #d7e9e3;
+      font-size: 1.02rem;
+      line-height: 1.5;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 6px;
+      background: var(--orange);
+      color: #151923;
+      font-weight: 860;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section {
+        padding: 76px 32px;
+      }
+
+      .hero {
+        padding: 76px 32px 88px;
+      }
+
+      .proposal-grid {
+        grid-template-columns: 0.85fr 1.15fr;
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .hero {
+        padding-top: 92px;
+        padding-bottom: 102px;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">For Typeface and Mohit Kalra</p>
+        <h1>Help enterprise GenAI solutions ship with secure guardrails</h1>
+        <p class="hero-copy">Typeface Arc is moving fast with agents, APIs, and enterprise customer workflows. Elinext can help package the hard delivery work into secure, reusable patterns.</p>
+        <p class="why">Saw Typeface is hiring a Solutions Architect Intern to prototype customer workflows and build integrations. That points to rising delivery load around enterprise AI rollouts, not a small support need.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Our read</h2>
+        <div class="read-box">
+          <p>Typeface is moving from strong product demand to repeatable enterprise delivery. The intern role names customer needs, GenAI prototypes, CMS, DAM, Salesforce, Adobe, and Google Workspace integrations. That usually means solution patterns must become faster, safer, and easier to reuse. If the core team carries all this work, pilots can slow down and security reviews can take focus from product work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2 class="section-title">What we'd do</h2>
+        <div class="proposal-grid">
+          <div class="squad">
+            <p class="model">A dedicated squad works under your Product Owner. The goal is a six-week pilot with weekly demos and clear security review points.</p>
+            <ul class="roles">
+              <li>Tech Lead</li>
+              <li>2 Backend Engineers</li>
+              <li>DevSecOps Engineer</li>
+              <li>Automation QA</li>
+            </ul>
+            <div class="stack" aria-label="Relevant stack">
+              <span>Python</span>
+              <span>FastAPI</span>
+              <span>Node.js</span>
+              <span>React</span>
+              <span>Azure or Google Cloud</span>
+              <span>CI/CD</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Map integration patterns</h3>
+                <p>Review customer paths across CMS, DAM, CRM, and analytics tools, then mark where reusable patterns can replace custom work.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Build secure reference connectors</h3>
+                <p>Create hardened connector examples for Salesforce, Adobe, and Google Workspace with audit logs, RBAC checks, and test data flows.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Add CI/CD controls</h3>
+                <p>Add automated checks for prompts, API contracts, secrets, dependencies, and model output risks before release during every sprint.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Package field playbooks</h3>
+                <p>Document architecture templates, demo scripts, and acceptance tests so solutions teams can launch pilots with less engineering pull.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2 class="section-title">Who is Elinext</h2>
+        <p class="elinext-copy">Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For a security-led AI platform, our ISO 27001 and ISO 9001 background matters. We have delivered for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. Our teams cover AI/ML, data engineering, backend, QA, DevOps, and product delivery. We would work under your Product Owner, so Mohit's standards and Typeface's engineering direction stay in control. The squad above takes on integration and release work without touching core model IP.</p>
+        <div class="customer-tags" aria-label="Named Elinext customers">
+          <span>Siemens</span>
+          <span>Broadcom</span>
+          <span>Volkswagen</span>
+          <span>TRUMPF</span>
+          <span>TUI</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case">
+            <img src="assets/case-ai-agent.jpg" alt="AI integration case study image">
+            <div class="case-body">
+              <h3>Artificial Intelligence Integration</h3>
+              <p>Built a FastAPI, React, Python, TypeScript, RAG, and LLM bridge between users and an AI assistant.</p>
+              <a href="https://www.elinext.com/case-study/ai-gis-personalized-recommendations/">View case study</a>
+            </div>
+          </article>
+          <article class="case">
+            <img src="assets/case-cicd.jpg" alt="CI/CD optimization case study image">
+            <div class="case-body">
+              <h3>CI/CD Optimization</h3>
+              <p>Reduced development time and made release pipelines easier to configure while keeping quality and security controls.</p>
+              <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Start the conversation</h2>
+        <p>Talk through a small secure pilot for Typeface.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
