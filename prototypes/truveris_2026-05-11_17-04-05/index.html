@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Truveris Data Feed Automation Proposal</title>
+  <meta name="description" content="A focused Elinext proposal for automating Truveris data feed checks, exception routing, and QA around Marketplace and truGuard workflows.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/truveris_2026-05-11_17-04-05/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Truveris Data Feed Automation Proposal">
+  <meta property="og:description" content="A focused Elinext proposal for the Data Coordinator moment at Truveris.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/truveris_2026-05-11_17-04-05/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/truveris_2026-05-11_17-04-05/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Truveris Data Feed Automation Proposal">
+  <meta name="twitter:description" content="A focused Elinext proposal for the Data Coordinator moment at Truveris.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/truveris_2026-05-11_17-04-05/og-image.jpg">
+  <style>
+    :root {
+      --ink: #13213a;
+      --muted: #5f6e85;
+      --paper: #f6f8fb;
+      --white: #ffffff;
+      --navy: #05086c;
+      --blue: #1b41ca;
+      --aqua: #26768f;
+      --teal: #00a2ad;
+      --yellow: #fad700;
+      --orange: #f28b2f;
+      --line: #dbe3ef;
+      --soft-blue: #eef4ff;
+      --soft-aqua: #e9f7f8;
+      --soft-yellow: #fff8cf;
+      --shadow: 0 18px 50px rgba(19, 33, 58, .11);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      color: var(--white);
+      background:
+        radial-gradient(circle at 88% 16%, rgba(250, 215, 0, .22), transparent 30%),
+        linear-gradient(135deg, #05086c 0%, #1b41ca 56%, #26768f 100%);
+      padding: 30px 0 42px;
+    }
+
+    .brandline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      color: #dce7ff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .brandline span:last-child {
+      color: var(--yellow);
+    }
+
+    .hero-content {
+      display: grid;
+      gap: 24px;
+      padding-top: 42px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 850px;
+      margin-bottom: 18px;
+      font-size: clamp(38px, 8vw, 72px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 760px;
+      margin-bottom: 18px;
+      color: #eef4ff;
+      font-size: 18px;
+    }
+
+    .why {
+      max-width: 760px;
+      margin-bottom: 0;
+      padding: 16px 18px;
+      border-left: 5px solid var(--yellow);
+      border-radius: 8px;
+      background: rgba(5, 8, 108, .42);
+      color: #ffffff;
+      font-size: 16px;
+    }
+
+    section {
+      padding: 48px 0;
+      background: var(--paper);
+    }
+
+    section h2 {
+      max-width: 760px;
+      margin: 0 auto 22px;
+      text-align: center;
+      font-size: clamp(28px, 5vw, 42px);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 82ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #c5dce3;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: var(--soft-aqua);
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      color: #243247;
+      font-size: 17px;
+    }
+
+    .proposal {
+      background: var(--white);
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .model-block {
+      padding: 20px;
+      border: 1px solid #cbd9f4;
+      border-radius: 8px;
+      background: var(--soft-blue);
+      box-shadow: var(--shadow);
+    }
+
+    .model-block h3,
+    .stack h3 {
+      margin-bottom: 10px;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .model-block p,
+    .stack p {
+      margin-bottom: 0;
+      color: #2b3c57;
+    }
+
+    .roles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .role,
+    .tag,
+    .customer {
+      min-width: 0;
+      border: 1px solid #cbd9f4;
+      border-radius: 999px;
+      padding: 9px 10px;
+      background: #ffffff;
+      color: #173b7a;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 14px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 10px 28px rgba(19, 33, 58, .07);
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #14244a;
+      font-size: 16px;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .stack {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid #f0df8a;
+      border-radius: 8px;
+      background: var(--soft-yellow);
+    }
+
+    .tags,
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      border-color: #f2de72;
+      color: #554900;
+    }
+
+    .cred {
+      background: var(--paper);
+    }
+
+    .cred-box {
+      max-width: 84ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .cred-box p {
+      margin-bottom: 0;
+      color: #243247;
+      font-size: 17px;
+    }
+
+    .customer {
+      border-color: #d7ddff;
+      background: #f8faff;
+      color: var(--blue);
+    }
+
+    .proof {
+      background: var(--white);
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #eef2f7;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .case-body p {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .case-body a {
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .final {
+      color: #ffffff;
+      background: #101936;
+    }
+
+    .final-box {
+      display: grid;
+      gap: 18px;
+      align-items: center;
+      text-align: center;
+    }
+
+    .final h2 {
+      margin-bottom: 0;
+      color: #ffffff;
+    }
+
+    .final p {
+      margin: 0 auto;
+      max-width: 52ch;
+      color: #dce4f4;
+      font-size: 17px;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      width: 100%;
+      max-width: 240px;
+      margin: 0 auto;
+      padding: 13px 18px;
+      border-radius: 999px;
+      background: var(--orange);
+      color: #161616;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .hero {
+        padding: 38px 0 64px;
+      }
+
+      .hero-content {
+        padding-top: 58px;
+      }
+
+      section {
+        padding: 64px 0;
+      }
+
+      .proposal-grid {
+        grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+      }
+
+      .roles {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .wrap {
+        width: min(1120px, calc(100% - 64px));
+      }
+
+      .roles {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="brandline">
+        <span>Elinext proposal for Truveris</span>
+        <span>Data feed automation</span>
+      </div>
+      <div class="hero-content">
+        <div>
+          <h1>Make Truveris data feeds faster before they slow delivery</h1>
+          <p class="lead">Truveris already turns PBM claims and contract data into clear decisions for employers and brokers. The next gain is making each incoming feed easier to check, fix, and trust.</p>
+          <p class="why">Saw the Data Coordinator I role. It names client feeds, third-party files, SFTP, cloud drives, Salesforce queues, and quality checks. That is a data flow signal, not just hiring.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="read" aria-labelledby="read-title">
+      <div class="wrap">
+        <h2 id="read-title">Our read</h2>
+        <div class="read-box">
+          <p>That role tells us Truveris is scaling the operating layer behind Marketplace and truGuard. Client and PBM feeds must arrive clean before claims analytics and contract oversight can move. When exceptions sit across SFTP, shared drives, Salesforce, and people, analysts lose time and trust drops. The risk is not one bad file. It is repeated manual checks becoming the default way to protect delivery.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal" aria-labelledby="proposal-title">
+      <div class="wrap">
+        <h2 id="proposal-title">What we'd do</h2>
+        <div class="proposal-grid">
+          <div>
+            <div class="model-block">
+              <h3>Dedicated data automation pod</h3>
+              <p>Elinext would place a small squad under your product or operations owner for a six-week pilot.</p>
+              <div class="roles" aria-label="Suggested team">
+                <span class="role">Data architect</span>
+                <span class="role">Backend engineer</span>
+                <span class="role">Python engineer</span>
+                <span class="role">QA automation</span>
+                <span class="role">Fractional BA</span>
+                <span class="role">Weekly demo lead</span>
+              </div>
+            </div>
+            <div class="stack">
+              <h3>Relevant stack</h3>
+              <p>Python, Node.js or Java, SQL/PostgreSQL, React or Angular, Playwright, AWS or Azure.</p>
+              <div class="tags" aria-label="Technology tags">
+                <span class="tag">Python</span>
+                <span class="tag">SQL</span>
+                <span class="tag">Java</span>
+                <span class="tag">React</span>
+                <span class="tag">Playwright</span>
+                <span class="tag">AWS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="steps">
+            <div class="step">
+              <span class="num">1</span>
+              <div>
+                <strong>Map live feed flow</strong>
+                <p>Trace the top client and PBM feed paths across SFTP, shared drives, Salesforce queues, and product intake steps.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <div>
+                <strong>Add validation rules</strong>
+                <p>Check file format, required fields, duplicate loads, and common PBM exceptions before analysts spend time on manual review.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <div>
+                <strong>Route blocked work</strong>
+                <p>Send missing data, conflicts, and contractor tasks to the right owner with status, history, and next action.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <div>
+                <strong>Protect reports with QA</strong>
+                <p>Build regression checks for claims outputs, contract logic, and recurring Marketplace and truGuard reporting paths.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">5</span>
+              <div>
+                <strong>Demo and handoff</strong>
+                <p>Run weekly demos, tune rules with your team, and leave a clear playbook for coordinators.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cred" aria-labelledby="cred-title">
+      <div class="wrap">
+        <h2 id="cred-title">Who is Elinext</h2>
+        <div class="cred-box">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build web, backend, data, AI, QA, and DevOps teams for clients in the US and Europe. For Truveris, the most relevant proof is secure delivery: ISO 9001, ISO 27001, and healthcare and finance project work. Named clients include Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. That fits a small squad improving data workflows without disrupting your product team.</p>
+          <div class="customers" aria-label="Named Elinext customers">
+            <span class="customer">Siemens</span>
+            <span class="customer">Broadcom</span>
+            <span class="customer">Volkswagen</span>
+            <span class="customer">TRUMPF</span>
+            <span class="customer">TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof" aria-labelledby="proof-title">
+      <div class="wrap">
+        <h2 id="proof-title">Proof from similar work</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-healthcare-qa.jpg" alt="Healthcare QA case study image">
+            <div class="case-body">
+              <h3>Automation QA Services for a Healthcare Data Privacy Company</h3>
+              <p>Healthcare data product with many sources and migration cases. Elinext added QA automation and CI support so releases became steadier.</p>
+              <a href="https://www.elinext.com/case-study/automation-qa-for-healthcare-data-privacy/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-data-anonymization.jpg" alt="Healthcare data anonymization case study image">
+            <div class="case-body">
+              <h3>Healthcare Data Anonymization Platform</h3>
+              <p>A healthcare client moved from separate manual tools to a SaaS and UNIX data pipeline for controlled file processing.</p>
+              <a href="https://www.elinext.com/case-study/healthcare-data-anonymization-platform/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="final" aria-labelledby="final-title">
+      <div class="wrap">
+        <div class="final-box">
+          <h2 id="final-title">Start a focused conversation</h2>
+          <p>Share one feed pain and we can scope a pilot.</p>
+          <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
