@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Implementation Support For LogiSense Billing | Elinext</title>
+  <meta name="description" content="A short proposal for LogiSense: senior implementation and QA support while the Customer Solutions team grows.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/logisense_2026-05-12_13-40-13/">
+  <meta property="og:title" content="Implementation Support For LogiSense Billing">
+  <meta property="og:description" content="A focused Elinext proposal for LogiSense's Customer Solutions growth moment.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/logisense_2026-05-12_13-40-13/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/logisense_2026-05-12_13-40-13/og-image.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/logisense_2026-05-12_13-40-13/og-image.jpg">
+  <style>
+    :root {
+      --ink: #102033;
+      --muted: #5c6877;
+      --paper: #fbfcfd;
+      --soft: #eef5f4;
+      --panel: #ffffff;
+      --line: #d8e3e1;
+      --accent: #f26d21;
+      --teal: #078b82;
+      --navy: #0f1629;
+      --shadow: 0 18px 48px rgba(16, 32, 51, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .page { width: 100%; }
+    .section {
+      width: 100%;
+      padding: 54px 20px;
+      background: var(--paper);
+      position: relative;
+      z-index: 1;
+    }
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--teal);
+      font-weight: 800;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 13ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.45rem, 8vw, 5.7rem);
+      line-height: 0.94;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: clamp(1.85rem, 5vw, 3.1rem);
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+    p { color: var(--muted); }
+
+    .hero {
+      min-height: 82vh;
+      padding: 26px 20px 50px;
+      color: #ffffff;
+      background:
+        linear-gradient(135deg, rgba(15, 22, 41, 0.98), rgba(13, 48, 57, 0.95)),
+        radial-gradient(circle at 82% 18%, rgba(242, 109, 33, 0.28), transparent 32%);
+      display: flex;
+      align-items: stretch;
+    }
+    .hero .wrap {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 40px;
+      min-height: calc(82vh - 76px);
+    }
+    .brand-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      min-width: 0;
+    }
+    .brand-row img {
+      width: min(176px, 52vw);
+      filter: brightness(0) invert(1);
+    }
+    .brand-row span {
+      color: rgba(255,255,255,0.68);
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    .hero-copy {
+      align-self: center;
+      display: grid;
+      gap: 18px;
+      max-width: 760px;
+    }
+    .hero-copy p {
+      max-width: 62ch;
+      margin-bottom: 0;
+      color: rgba(255,255,255,0.78);
+      font-size: clamp(1rem, 2.6vw, 1.16rem);
+    }
+    .hero-copy .why {
+      color: #ffffff;
+      border-left: 4px solid var(--accent);
+      padding-left: 16px;
+      max-width: 64ch;
+    }
+    .hero-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .chip {
+      border: 1px solid rgba(255,255,255,0.22);
+      color: rgba(255,255,255,0.82);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .read {
+      background: #eaf3f2;
+    }
+    .read-card {
+      width: min(100%, 78ch);
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #c9ddda;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: #f7fbfa;
+      box-shadow: var(--shadow);
+    }
+    .read-card p {
+      margin: 0;
+      color: #344554;
+      font-size: 1.05rem;
+    }
+
+    .proposal {
+      background: #ffffff;
+    }
+    .proposal-panel {
+      display: grid;
+      gap: 18px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(180deg, #ffffff, #f7fbfa);
+      box-shadow: var(--shadow);
+    }
+    .model {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: 1fr;
+    }
+    .model-card {
+      min-width: 0;
+      padding: 18px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #ffffff;
+    }
+    .model-card p {
+      margin-bottom: 0;
+      color: rgba(255,255,255,0.78);
+    }
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .role {
+      min-width: 0;
+      padding: 12px;
+      border-radius: 8px;
+      background: #f4f7f8;
+      border: 1px solid #dfe8e9;
+      color: #263645;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+    .steps {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+    .num {
+      width: 34px;
+      height: 34px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .step p { margin-bottom: 0; font-size: 0.94rem; }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      padding-top: 2px;
+    }
+    .stack span {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #eaf3f2;
+      color: #116c68;
+      font-weight: 800;
+      font-size: 0.84rem;
+    }
+
+    .elinext {
+      background: var(--soft);
+    }
+    .elinext-text {
+      width: min(100%, 76ch);
+      margin: 0 auto;
+      padding: 24px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .customer-tags strong {
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: #ffffff;
+      background: var(--teal);
+      font-size: 0.84rem;
+    }
+
+    .proof {
+      background: #ffffff;
+    }
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .case-card {
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      box-shadow: 0 12px 34px rgba(16, 32, 51, 0.08);
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+    .case-body { padding: 18px; }
+    .case-body p { margin-bottom: 12px; }
+    .case-body a {
+      font-weight: 900;
+      color: var(--teal);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .talk {
+      color: #ffffff;
+      background: var(--navy);
+    }
+    .talk .wrap {
+      display: grid;
+      justify-items: center;
+      text-align: center;
+      gap: 14px;
+    }
+    .talk h2 { margin-bottom: 0; color: #ffffff; }
+    .talk p {
+      max-width: 52ch;
+      margin-bottom: 6px;
+      color: rgba(255,255,255,0.76);
+    }
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 48px;
+      padding: 13px 18px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section { padding: 76px 28px; }
+      .hero { padding: 32px 28px 58px; }
+      .model { grid-template-columns: 0.82fr 1fr; }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .case-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 1040px) {
+      .proposal-panel { padding: 30px; }
+      .role-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap">
+        <div class="brand-row">
+          <img src="assets/logisense-brand.png" alt="LogiSense">
+          <span>Proposal by Elinext</span>
+        </div>
+        <div class="hero-copy">
+          <p class="eyebrow">For Chris Brown and LogiSense</p>
+          <h1>Keep customer billing work moving without slowing core product</h1>
+          <p>A practical plan for a small Elinext pod to absorb implementation tickets, custom integrations, and QA while your lead architects keep LogiSense Billing on its roadmap.</p>
+          <p class="why">Saw LogiSense is hiring a Customer Solutions Specialist. That role sits between clients, billing setup, data moves, testing, and Engineering, so delivery capacity is the next pressure point.</p>
+        </div>
+        <div class="hero-bottom">
+          <span class="chip">Usage-based billing</span>
+          <span class="chip">Customer integrations</span>
+          <span class="chip">QA automation</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section read">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p>The new Customer Solutions role says LogiSense is putting more focus on implementation. That is smart, because LogiSense Billing is API-first and each enterprise client brings its own data, contract rules, and systems. The bottleneck is the handoff from client request to tested product change. If Engineering owns every custom flow, the roadmap slows and solutions staff wait for code.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-panel">
+          <div class="model">
+            <div class="model-card">
+              <h3>Engagement model</h3>
+              <p>A dedicated Elinext squad works under your Product or Implementation owner for a six-week pilot, with weekly demos and clear handoff notes.</p>
+            </div>
+            <div class="role-grid" aria-label="Proposed team">
+              <div class="role">Tech Lead</div>
+              <div class="role">2 Integration Engineers</div>
+              <div class="role">QA Automation</div>
+              <div class="role">Shared BA Support</div>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Sort the queue</h3>
+                <p>Pick the first customer requests tied to billing setup, data migration, reports, webhooks, or Salesforce handoffs.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Build repeatable paths</h3>
+                <p>Create small integration templates and scripts so similar client asks stop becoming new one-off engineering work.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Add test gates</h3>
+                <p>Cover usage import, rating, invoice, report, and event flows with focused automated checks before release.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Hand off cleanly</h3>
+                <p>Leave each solution with design notes, test evidence, rollback notes, and steps Customer Solutions can reuse.</p>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <span>Java</span><span>Python</span><span>Node.js</span><span>REST APIs</span><span>Angular</span><span>QA automation</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section elinext">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="elinext-text">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build web, backend, mobile, QA, DevOps, AI, and data teams for product companies. We hold ISO 9001 and ISO 27001, which matters for billing and customer data work. Named customers include Broadcom, Siemens, Volkswagen, TRUMPF, TUI, Parrot, and TransPerfect. For LogiSense, the fit is a senior squad that supports delivery while your core product team keeps control.</p>
+          <div class="customer-tags">
+            <strong>Broadcom</strong><strong>Siemens</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proof">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-telecom-installation.jpg" alt="Telecom installation project">
+            <div class="case-body">
+              <h3>Industrial telecom software installation</h3>
+              <p>Elinext helped a telecom software provider simplify customer deployments with Java, Linux shell, QA, and customer DevOps handoffs.</p>
+              <a href="https://www.elinext.com/case-study/solution-for-industrial-telecom-software-installation/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-telecom-qa.jpg" alt="Telecom QA project">
+            <div class="case-body">
+              <h3>QA for infrastructure management software</h3>
+              <p>A dedicated Elinext QA team supported a complex telecom platform and expanded testing coverage by 340%.</p>
+              <a href="https://www.elinext.com/case-study/it-infrastructure-management-software-qa/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="wrap">
+        <h2>Start the conversation</h2>
+        <p>Map one implementation queue and test the fit in six weeks.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
