@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProKidney data engineering proposal by Elinext</title>
+  <meta name="description" content="A focused Elinext proposal for ProKidney's Phase 3 statistical data and application support.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/prokidney_2026-05-13_20-16-19/">
+  <meta property="og:title" content="ProKidney Phase 3 data support">
+  <meta property="og:description" content="A focused proposal for statistical data paths, QA validation, and application integration.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/prokidney_2026-05-13_20-16-19/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/prokidney_2026-05-13_20-16-19/og-image.jpg">
+  <style>
+    :root {
+      --ink: #132322;
+      --muted: #5a6865;
+      --paper: #f7faf6;
+      --panel: #ffffff;
+      --line: #d8e4dc;
+      --deep: #0f2d2c;
+      --teal: #16826f;
+      --blue: #275c8d;
+      --orange: #e9842a;
+      --soft: #e9f3ef;
+      --warn: #fff4e8;
+      --shadow: 0 18px 45px rgba(15, 45, 44, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    section {
+      width: 100%;
+      padding: 56px 20px;
+      background: var(--paper);
+    }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      padding: 72px 20px 62px;
+      background:
+        linear-gradient(135deg, rgba(15, 45, 44, 0.96), rgba(27, 82, 90, 0.92)),
+        radial-gradient(circle at 82% 18%, rgba(233, 132, 42, 0.24), transparent 34%);
+      color: #f8fff9;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .kicker {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #d7f0e8;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      max-width: 760px;
+      margin: 18px 0 18px;
+      font-size: 2.65rem;
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 710px;
+      margin: 0 0 14px;
+      color: #dcece6;
+      font-size: 1.02rem;
+    }
+
+    .hero .why {
+      padding-left: 14px;
+      border-left: 4px solid var(--orange);
+      color: #fff7ec;
+    }
+
+    .signal-board {
+      width: 100%;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+    }
+
+    .signal-board strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    .signal-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .signal-list li {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: #d8ece6;
+      font-size: 0.95rem;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 8px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+
+    h2 {
+      margin: 0 0 22px;
+      text-align: center;
+      color: var(--deep);
+      font-size: 2rem;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .read-block {
+      width: min(100%, 880px);
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #c9ded4;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: var(--soft);
+      box-shadow: var(--shadow);
+    }
+
+    .read-block p {
+      max-width: 70ch;
+      margin: 0;
+      color: #223a36;
+      font-size: 1.03rem;
+    }
+
+    .proposal {
+      background: #eef6f2;
+    }
+
+    .proposal-shell {
+      display: grid;
+      gap: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .proposal-top {
+      display: grid;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .model,
+    .stack {
+      min-width: 0;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdfb;
+    }
+
+    .label {
+      margin: 0 0 8px;
+      color: var(--teal);
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .model p,
+    .stack p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .role-tags,
+    .stack-tags,
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .role-tags span,
+    .stack-tags span,
+    .customer-tags strong {
+      display: inline-flex;
+      max-width: 100%;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #e7f2ed;
+      color: #17433b;
+      font-size: 0.86rem;
+      font-weight: 800;
+      white-space: normal;
+    }
+
+    .stack-tags span {
+      background: #eef3fb;
+      color: #214a73;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+      margin-top: 2px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 13px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .num {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--deep);
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin: 0 0 4px;
+      color: var(--deep);
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .elinext {
+      background: #ffffff;
+    }
+
+    .elinext-card {
+      width: min(100%, 880px);
+      margin: 0 auto;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdfb;
+      box-shadow: var(--shadow);
+    }
+
+    .elinext-card p {
+      margin: 0;
+      color: #263a36;
+      font-size: 1rem;
+    }
+
+    .proof {
+      background: #f6f1ea;
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid #e1d6c9;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #d8e4dc;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin: 0 0 8px;
+      color: var(--deep);
+      font-size: 1.16rem;
+      line-height: 1.2;
+    }
+
+    .case-body p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .case-body a {
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .talk {
+      padding-bottom: 70px;
+      background: var(--deep);
+      color: #f8fff9;
+      text-align: center;
+    }
+
+    .talk h2 {
+      color: #fff;
+    }
+
+    .talk p {
+      max-width: 560px;
+      margin: 0 auto 22px;
+      color: #dcece6;
+    }
+
+    .button {
+      display: inline-flex;
+      max-width: 100%;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #211306;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      section {
+        padding: 76px 32px;
+      }
+
+      .hero {
+        padding: 92px 32px 84px;
+      }
+
+      .hero h1 {
+        font-size: 4rem;
+      }
+
+      h2 {
+        font-size: 2.7rem;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+      }
+
+      .proposal-shell {
+        padding: 24px;
+      }
+
+      .proposal-top {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+      }
+
+      .timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1120px) {
+      .hero h1 {
+        max-width: 860px;
+        font-size: 4.55rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="kicker">For ProKidney IT Applications</span>
+          <h1>Make PROACT 1 data ready for every readout</h1>
+          <p>ProKidney is moving rilparencel through a pivotal Phase 3 program. The IT application stack now has to support clean data, validated programs, and clear reports for teams under deadline.</p>
+          <p class="why">Why we're here: we saw the Statistical Programmer Contractor role. That usually means the analysis work is urgent, and the harder load sits in the data paths feeding SAS, R, and trial reports.</p>
+        </div>
+        <aside class="signal-board" aria-label="Relevant public signals">
+          <strong>Public signals we read</strong>
+          <ul class="signal-list">
+            <li><span class="dot"></span><span>PROACT 1 enrollment and eGFR slope timing are now central milestones.</span></li>
+            <li><span class="dot"></span><span>Rilparencel data needs careful, repeatable handoffs across clinical teams.</span></li>
+            <li><span class="dot"></span><span>Alex's remit sits where applications, programs, and vendors meet.</span></li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-block">
+          <p>The statistical programmer hire says ProKidney is adding capacity for trial analysis, not exploring a side project. The likely bottleneck is the path from clinical systems into clean analysis data, validated code, and final reports. If that path stays manual, PROACT 1 work can slow down and pull Alex's team into repeat fixes. The business risk is missed review time before key rilparencel milestones.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-shell">
+          <div class="proposal-top">
+            <div class="model">
+              <p class="label">Engagement model</p>
+              <p>A dedicated squad under ProKidney's program owner, starting with a six-week pilot and weekly demos.</p>
+              <div class="role-tags" aria-label="Team shape">
+                <span>1 tech lead</span>
+                <span>2 data engineers</span>
+                <span>1 QA automation engineer</span>
+                <span>part-time DevOps</span>
+              </div>
+            </div>
+            <div class="stack">
+              <p class="label">Relevant stack</p>
+              <p>We would fit around the clinical tools already in place.</p>
+              <div class="stack-tags" aria-label="Relevant stack">
+                <span>Python</span>
+                <span>Java</span>
+                <span>.NET</span>
+                <span>Node.js</span>
+                <span>Automated QA</span>
+                <span>DevOps</span>
+              </div>
+            </div>
+          </div>
+          <div class="timeline">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Map the data path</h3>
+                <p>Map PROACT 1 data flows from site intake through clinical systems, SAS, R, and reporting handoffs.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Build checked pipelines</h3>
+                <p>Create job logs, exception queues, and repeatable exports that statistical programmers can trust.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Add validation records</h3>
+                <p>Add automated tests for key transforms, report outputs, user access, and release changes.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Leave clear runbooks</h3>
+                <p>Run weekly demos with Alex's application owners, then hand over simple runbooks for the internal team.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="elinext-card">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For a regulated biotech team, the useful parts are ISO 9001, ISO 27001, senior QA, data engineers, DevOps, and Python or Java back-end help. The same delivery model has served named customers including <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. We work under your product owner or program lead, with weekly review and clear documents for regulated teams. For ProKidney, that means software support while your experts stay focused on rilparencel science.</p>
+          <div class="customer-tags" aria-label="Named customers">
+            <strong>Siemens</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-clinical-trials.jpg" alt="Clinical trials software case study image">
+            <div class="case-body">
+              <h3>Clinical trials software QA</h3>
+              <p>Healthcare QA for a live clinical trials platform.</p>
+              <p>Outcome: multitenant servers and long-running regulated delivery.</p>
+              <a href="https://www.elinext.com/case-study/qa-for-clinical-trials-software/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-lab-services.jpg" alt="Medical lab services case study image">
+            <div class="case-body">
+              <h3>US medical lab web app</h3>
+              <p>Refactoring support for pharmaceutical and clinical specialists.</p>
+              <p>Outcome: HIPAA and HL7 compliant lab workflows.</p>
+              <a href="https://www.elinext.com/case-study/refactoring-of-web-app-for-us-medical-lab-services/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk">
+      <div class="wrap">
+        <h2>Talk through the data plan</h2>
+        <p>A short call can test fit and next steps.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
