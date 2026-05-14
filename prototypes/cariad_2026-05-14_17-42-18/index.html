@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CARIAD Test Automation Proposal by Elinext</title>
+  <meta name="description" content="A focused Elinext proposal to help CARIAD scale embedded, ADAS, and platform test automation.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/cariad_2026-05-14_17-42-18/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="CARIAD Test Automation Proposal by Elinext">
+  <meta property="og:description" content="Helping CARIAD turn repeatable validation work into CI-ready test evidence.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/cariad_2026-05-14_17-42-18/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/cariad_2026-05-14_17-42-18/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CARIAD Test Automation Proposal by Elinext">
+  <meta name="twitter:description" content="Helping CARIAD turn repeatable validation work into CI-ready test evidence.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/cariad_2026-05-14_17-42-18/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172032;
+      --muted: #5f6978;
+      --paper: #f5f4ef;
+      --white: #ffffff;
+      --night: #111827;
+      --line: #d9d5cb;
+      --green: #2d766f;
+      --orange: #f06f2f;
+      --soft-green: #e7f1ee;
+      --soft-orange: #fff0e8;
+      --blue: #2f5f98;
+      --shadow: 0 18px 45px rgba(23, 32, 50, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 54px 18px;
+      background: var(--paper);
+    }
+
+    .section.white {
+      background: var(--white);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      width: 100%;
+      padding: 44px 18px 52px;
+      color: var(--white);
+      background:
+        linear-gradient(130deg, rgba(17, 24, 39, 0.98), rgba(23, 50, 56, 0.95)),
+        #111827;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 18px;
+      color: #d6e8e4;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 30px;
+      height: 3px;
+      background: var(--orange);
+      border-radius: 999px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: 38px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: 28px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .why {
+      max-width: 710px;
+      margin-bottom: 26px;
+      color: #e7efef;
+      font-size: 17px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      max-width: 880px;
+    }
+
+    .signal {
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .signal strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #ffffff;
+      font-size: 14px;
+    }
+
+    .signal span {
+      color: #d6e8e4;
+      font-size: 14px;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid #b9d2ce;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      background: var(--soft-green);
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p {
+      max-width: 76ch;
+      margin: 0;
+      color: #24323f;
+      font-size: 17px;
+    }
+
+    .proposal {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    .model-card,
+    .flow-card {
+      width: 100%;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 0;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--soft-orange);
+      color: #6b321b;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .stack span,
+    .customers span {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border: 1px solid #bfd8d4;
+      border-radius: 999px;
+      background: #f6fbfa;
+      color: #214c48;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .flow-step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid #e4ded2;
+      border-radius: 8px;
+      background: #fffaf5;
+    }
+
+    .num {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .flow-step strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .flow-step span {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .elinext {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #c7c2b7;
+      border-radius: 8px;
+      background: var(--night);
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .elinext p {
+      margin-bottom: 14px;
+      color: #edf2f2;
+      font-size: 16px;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .customers span {
+      border-color: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.10);
+      color: #ffffff;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body p {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .case-body a {
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .talk {
+      text-align: center;
+      color: var(--white);
+      background: var(--green);
+    }
+
+    .talk h2 {
+      margin-bottom: 10px;
+    }
+
+    .talk p {
+      max-width: 520px;
+      margin: 0 auto 22px;
+      color: #edf7f5;
+      font-size: 17px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section {
+        padding: 68px 28px;
+      }
+
+      .hero {
+        padding: 58px 28px 68px;
+      }
+
+      h1 {
+        font-size: 54px;
+      }
+
+      h2 {
+        font-size: 34px;
+      }
+
+      .hero-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .proposal {
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">For Guy Zur and CARIAD test systems</p>
+      <h1>Help test systems keep pace with CARIAD platform work</h1>
+      <p class="why">Saw CARIAD hiring around test software, embedded Linux, ADAS integration, and base/test software. Here is how we would help Guy's team turn repeatable validation work into CI-ready evidence.</p>
+      <div class="hero-grid" aria-label="Current signal">
+        <div class="signal"><strong>Focus</strong><span>Embedded, ADAS, and platform validation</span></div>
+        <div class="signal"><strong>Mode</strong><span>Dedicated squad under CARIAD leads</span></div>
+        <div class="signal"><strong>First win</strong><span>One test family automated in six weeks</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section" aria-labelledby="read-title">
+    <div class="wrap">
+      <h2 id="read-title">Our read</h2>
+      <div class="read-box">
+        <p>Your hiring signal says CARIAD is adding company capacity, but the engineering board tells a deeper story. Open roles in test software, embedded Linux, ADAS integration, and base/test software point to growing platform validation load. As VW.OS, VW.AC, and SDV work connect more teams, test systems can become the release bottleneck. If automation lags, engineers spend more time proving fixes than moving safe functions forward.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section white" aria-labelledby="do-title">
+    <div class="wrap">
+      <h2 id="do-title">What we'd do</h2>
+      <div class="proposal">
+        <div class="model-card">
+          <h3>Dedicated test automation squad</h3>
+          <p>We would run a six-week pilot under your PO or PM, with weekly demos and written handoffs.</p>
+          <div class="team">
+            <span class="pill">QA Automation Lead</span>
+            <span class="pill">2 Embedded Automation Engineers</span>
+            <span class="pill">DevOps / CI Engineer</span>
+            <span class="pill">Data / ML Test Engineer</span>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span>C/C++</span>
+            <span>Java</span>
+            <span>Python</span>
+            <span>Jenkins</span>
+            <span>Docker</span>
+            <span>Embedded Linux</span>
+          </div>
+        </div>
+        <div class="flow-card">
+          <div class="flow">
+            <div class="flow-step">
+              <span class="num">1</span>
+              <div><strong>Map the flow</strong><span>Select one ADAS or embedded Linux test family, then map scripts, logs, bench steps, owners, and release evidence.</span></div>
+            </div>
+            <div class="flow-step">
+              <span class="num">2</span>
+              <div><strong>Build automation</strong><span>Turn repeatable checks into Python and C/C++ friendly test runners that plug into existing CI and review gates.</span></div>
+            </div>
+            <div class="flow-step">
+              <span class="num">3</span>
+              <div><strong>Add data triage</strong><span>Add camera, radar, or simulation data checks so edge cases reach engineers with clear context and repro steps.</span></div>
+            </div>
+            <div class="flow-step">
+              <span class="num">4</span>
+              <div><strong>Hand off weekly</strong><span>Ship tested code, documentation, and coverage notes each week, with CARIAD leads keeping safety and architecture control.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="elinext-title">
+    <div class="wrap">
+      <h2 id="elinext-title">Who is Elinext</h2>
+      <div class="elinext">
+        <p>Elinext is a full-cycle software development company founded in 1997. We have about 700 in-house specialists and use no freelancers. For CARIAD, the fit is secure dedicated delivery and ISO 9001/ISO 27001 discipline. We build QA, DevOps, Java, .NET, C/C++, Python, and AI/ML teams under a client's PO or PM. It also fits safety-sensitive work where clear evidence matters. That matches this squad: test automation support while Guy's team keeps control.</p>
+        <div class="customers" aria-label="Named customers">
+          <span>Volkswagen</span>
+          <span>Siemens</span>
+          <span>Broadcom</span>
+          <span>TRUMPF</span>
+          <span>TUI</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section white" aria-labelledby="proof-title">
+    <div class="wrap">
+      <h2 id="proof-title">Proof</h2>
+      <div class="proof-grid">
+        <article class="case-card">
+          <img src="assets/case-it-infrastructure-qa.jpg" alt="QA case study visual">
+          <div class="case-body">
+            <h3>QA for infrastructure management software</h3>
+            <p>Elinext scaled QA for a complex multi-module system used by enterprise teams. The work improved quality, coverage, and release confidence.</p>
+            <a href="https://www.elinext.com/case-study/it-infrastructure-management-software-qa/">View case study</a>
+          </div>
+        </article>
+        <article class="case-card">
+          <img src="assets/case-automotive-navigation.jpg" alt="Automotive head unit case study visual">
+          <div class="case-body">
+            <h3>Automotive head unit software</h3>
+            <p>Elinext built responsive software for an automotive head unit, with background services for traffic, media, and voice shortcuts.</p>
+            <a href="https://www.elinext.com/case-study/automotive-navigation-app/">View case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section talk" aria-labelledby="talk-title">
+    <div class="wrap">
+      <h2 id="talk-title">Start the test pilot</h2>
+      <p>A short call can define the first test family.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
