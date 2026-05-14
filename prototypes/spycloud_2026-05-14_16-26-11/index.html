@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SpyCloud Privacy Tooling Proposal | Elinext</title>
+  <meta name="description" content="A short Elinext proposal for privacy operations tooling, DSAR workflows, and secure data automation at SpyCloud.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/spycloud_2026-05-14_16-26-11/">
+  <meta property="og:title" content="SpyCloud Privacy Tooling Proposal">
+  <meta property="og:description" content="A focused proposal for privacy ops tooling, DSAR workflows, and secure automation support.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/spycloud_2026-05-14_16-26-11/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/spycloud_2026-05-14_16-26-11/og-image.jpg">
+  <style>
+    :root {
+      --ink: #111827;
+      --muted: #5a6577;
+      --line: #d8dee8;
+      --paper: #f7f5f1;
+      --white: #ffffff;
+      --navy: #111a2f;
+      --blue: #1769aa;
+      --teal: #2a8c8a;
+      --orange: #ef7d3c;
+      --soft: #eef6f5;
+      --warm: #fff2e8;
+      --shadow: 0 20px 50px rgba(17, 24, 39, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(17, 26, 47, 0.96), rgba(24, 70, 90, 0.9)),
+        radial-gradient(circle at 12% 20%, rgba(239, 125, 60, 0.24), transparent 30%);
+      color: var(--white);
+      padding: 32px 20px 54px;
+    }
+
+    .hero-inner,
+    .section-inner {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 34px;
+      color: #c7d4df;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: clamp(2.35rem, 8vw, 4.7rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 680px;
+      margin: 0;
+      color: #e4ebf0;
+      font-size: 1.05rem;
+    }
+
+    section {
+      padding: 52px 20px;
+    }
+
+    h2 {
+      margin-bottom: 24px;
+      text-align: center;
+      font-size: clamp(1.75rem, 5vw, 2.55rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--soft);
+      border: 1px solid #b9dbd6;
+      border-left: 7px solid var(--teal);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p {
+      margin: 0;
+      color: #243041;
+      font-size: 1.03rem;
+    }
+
+    .work {
+      background: var(--white);
+    }
+
+    .work-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .team-box,
+    .step,
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .team-box {
+      padding: 24px;
+      border-top: 6px solid var(--orange);
+    }
+
+    .team-box p {
+      color: var(--muted);
+    }
+
+    .role-list,
+    .stack-list,
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0;
+      margin: 16px 0 0;
+      list-style: none;
+    }
+
+    .role-list li,
+    .stack-list li,
+    .customer-list li {
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: #edf1f7;
+      color: #243041;
+      font-size: 0.88rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .stack-list li {
+      background: var(--warm);
+      color: #8b3f17;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .step-number {
+      display: inline-grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin: 0 0 6px;
+      font-size: 1.02rem;
+      line-height: 1.25;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .cred {
+      background: var(--paper);
+    }
+
+    .cred-text {
+      width: min(100%, 860px);
+      margin: 0 auto;
+      color: #263244;
+      font-size: 1.03rem;
+    }
+
+    .customer-list {
+      justify-content: center;
+      margin-top: 22px;
+    }
+
+    .customer-list li {
+      background: #10213b;
+      color: #f8fbff;
+    }
+
+    .proof {
+      background: #fdfbf7;
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #e6ebf1;
+    }
+
+    .case-body {
+      padding: 20px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 10px;
+      font-size: 1.08rem;
+      line-height: 1.25;
+    }
+
+    .case-body p {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .case-body a {
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .talk {
+      background: var(--navy);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .talk p {
+      margin-bottom: 26px;
+      color: #c9d4df;
+      font-size: 1.05rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 6px;
+      background: var(--orange);
+      color: var(--ink);
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .hero {
+        padding: 44px 32px 76px;
+      }
+
+      section {
+        padding: 70px 32px;
+      }
+
+      .work-grid {
+        grid-template-columns: 0.9fr 1.4fr;
+        align-items: start;
+      }
+
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Elinext proposal brief for SpyCloud</p>
+      <h1>Make privacy work faster while your platform keeps scaling</h1>
+      <p class="why">Saw you are hiring a part-time Privacy Analyst for consent, DSAR, and DROP work. That often means privacy requests now cross several systems and need cleaner tooling.</p>
+    </div>
+  </header>
+
+  <section class="read" aria-labelledby="read-title">
+    <div class="section-inner">
+      <h2 id="read-title">Our read</h2>
+      <div class="read-box">
+        <p>The Privacy Analyst role says SpyCloud is growing its privacy ops load, not just policy work. The role owns consent records and cookie audits. It also owns DSAR intake, DROP requests, and team handoffs. That points to a data workflow problem across tools and teams. If it stays manual, analysts wait on owners, deletion proof gets harder, and Frank's IT team gets repeat requests.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="work" aria-labelledby="work-title">
+    <div class="section-inner">
+      <h2 id="work-title">What we'd do</h2>
+      <div class="work-grid">
+        <div class="team-box">
+          <h3>Six-week dedicated squad</h3>
+          <p>We would work under your product, privacy, or IT owner, with weekly demos and code review before release.</p>
+          <ul class="role-list" aria-label="Team shape">
+            <li>Tech Lead</li>
+            <li>2 Backend/Data Engineers</li>
+            <li>QA Automation</li>
+            <li>Business Analyst</li>
+          </ul>
+          <ul class="stack-list" aria-label="Relevant stack">
+            <li>Python</li>
+            <li>Java</li>
+            <li>Node.js</li>
+            <li>React</li>
+            <li>AWS</li>
+            <li>Playwright</li>
+          </ul>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <span class="step-number">1</span>
+            <div>
+              <h3>Map the request path</h3>
+              <p>Map DSAR and DROP paths across CMP, product, support, and data stores, then mark owners and proof points.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="step-number">2</span>
+            <div>
+              <h3>Create one status layer</h3>
+              <p>Build a small intake layer that keeps requests, deadlines, evidence, and exceptions in one place.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="step-number">3</span>
+            <div>
+              <h3>Connect the right systems</h3>
+              <p>Create secure connectors or export jobs for systems that hold user, cookie, account, and consent data.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="step-number">4</span>
+            <div>
+              <h3>Protect release flow</h3>
+              <p>Add automated checks, audit logs, and regression tests so privacy changes do not break release flow.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="step-number">5</span>
+            <div>
+              <h3>Hand over cleanly</h3>
+              <p>Run weekly demos with Frank's team and hand over docs, runbooks, and backlog for the next phase.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cred" aria-labelledby="cred-title">
+    <div class="section-inner">
+      <h2 id="cred-title">Who is Elinext</h2>
+      <div class="cred-text">
+        <p>Elinext is a full-cycle software development company, active since 1997. We have about 700 in-house specialists and use no freelancers or subcontractors. For a security company, ISO 27001 and ISO 9001 matter because the work must be controlled. Our teams have delivered for Broadcom, Siemens, Volkswagen, TRUMPF, and TUI. The same model fits this work: clear access rules, weekly demos, and code that your team can review before it ships.</p>
+      </div>
+      <ul class="customer-list" aria-label="Named customers">
+        <li>Broadcom</li>
+        <li>Siemens</li>
+        <li>Volkswagen</li>
+        <li>TRUMPF</li>
+        <li>TUI</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="proof" aria-labelledby="proof-title">
+    <div class="section-inner">
+      <h2 id="proof-title">Proof</h2>
+      <div class="case-grid">
+        <article class="case-card">
+          <img src="assets/case-healthcare-data-privacy.jpg" alt="Healthcare data privacy case study preview">
+          <div class="case-body">
+            <h3>Automation QA Services for a Healthcare Data Privacy Company</h3>
+            <p>Elinext supported a sensitive data platform with QA automation, data engineering, and web work. The team grew across several projects.</p>
+            <p><strong>Outcome:</strong> stronger release stability and automated CI for complex data-source and migration cases.</p>
+            <a href="https://www.elinext.com/case-study/automation-qa-for-healthcare-data-privacy/">Read case study</a>
+          </div>
+        </article>
+        <article class="case-card">
+          <img src="assets/case-m365-security-monitoring.png" alt="Security monitoring SaaS case study preview">
+          <div class="case-body">
+            <h3>SaaS Platform Design for M365 Security Monitoring</h3>
+            <p>Elinext helped turn security assessment work into a SaaS platform with automated audit preparation.</p>
+            <p><strong>Outcome:</strong> faster security checks and a platform ready for customer beta use.</p>
+            <a href="https://www.elinext.com/case-study/saas-platform-design/">Read case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="talk" aria-labelledby="talk-title">
+    <div class="section-inner">
+      <h2 id="talk-title">Start the privacy tooling conversation</h2>
+      <p>A short call is enough to compare the workflow.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
