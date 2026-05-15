@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Backend support for Snaplii's AI payment push</title>
+  <meta name="description" content="A short Elinext proposal for Snaplii's AI-era backend hiring moment.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/snaplii_2026-05-15_22-41-31/">
+  <meta property="og:title" content="Backend support for Snaplii's AI payment push">
+  <meta property="og:description" content="A focused Elinext proposal for Snaplii's AI-native payment backend work.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/snaplii_2026-05-15_22-41-31/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/snaplii_2026-05-15_22-41-31/og-image.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/snaplii_2026-05-15_22-41-31/og-image.jpg">
+  <style>
+    :root {
+      --navy: #111827;
+      --ink: #1f2748;
+      --muted: #626a86;
+      --line: #d9def0;
+      --paper: #f7f8fd;
+      --white: #ffffff;
+      --blue: #4451c2;
+      --blue-soft: #e9ecff;
+      --orange: #ff9500;
+      --green: #1c8c71;
+      --shadow: 0 18px 50px rgba(31, 39, 72, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+    a { color: inherit; }
+    img { display: block; max-width: 100%; height: auto; }
+    .page { width: 100%; }
+    .section { width: 100%; padding: 56px 20px; background: var(--paper); }
+    .section.white { background: var(--white); }
+    .wrap { width: 100%; max-width: 1120px; margin: 0 auto; }
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 56px 20px 44px;
+      position: relative;
+      isolation: isolate;
+    }
+    .hero:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(68, 81, 194, 0.34), transparent 55%),
+        linear-gradient(180deg, rgba(255, 149, 0, 0.14), transparent 48%);
+      z-index: -1;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffcf8b;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .eyebrow:before {
+      content: "";
+      width: 32px;
+      height: 2px;
+      background: var(--orange);
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 780px;
+      margin: 18px 0 18px;
+      font-size: clamp(2.25rem, 8vw, 5.2rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+    h2 {
+      text-align: center;
+      font-size: clamp(1.55rem, 4vw, 2.55rem);
+      line-height: 1.12;
+      margin-bottom: 22px;
+      letter-spacing: 0;
+    }
+    h3 { font-size: 1.05rem; margin-bottom: 8px; line-height: 1.25; }
+    .hero-copy {
+      max-width: 760px;
+      color: #d8def8;
+      font-size: clamp(1rem, 2.8vw, 1.22rem);
+      margin-bottom: 14px;
+    }
+    .why {
+      max-width: 780px;
+      border-left: 3px solid var(--orange);
+      padding-left: 16px;
+      color: #f4f6ff;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .pill {
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: #edf0ff;
+      background: rgba(255,255,255,0.08);
+      font-size: 0.9rem;
+      white-space: normal;
+    }
+    .read-box {
+      width: 100%;
+      max-width: 78ch;
+      margin: 0 auto;
+      background: #eef1ff;
+      border: 1px solid #d8defd;
+      border-left: 5px solid var(--blue);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .read-box p { margin: 0; color: #293258; }
+    .plan {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .plan-head {
+      display: grid;
+      gap: 18px;
+      padding: 24px;
+      background: #f9fbff;
+      border-bottom: 1px solid var(--line);
+    }
+    .team {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .role {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--white);
+      font-weight: 700;
+      color: var(--blue);
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+    }
+    .timeline {
+      display: grid;
+      gap: 14px;
+      padding: 20px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: var(--white);
+    }
+    .num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--orange);
+      color: var(--navy);
+      font-weight: 900;
+    }
+    .step-title {
+      display: block;
+      font-weight: 850;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .step p { margin: 0; color: var(--muted); }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 20px 22px;
+    }
+    .stack span {
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      padding: 7px 10px;
+      font-weight: 800;
+      font-size: 0.86rem;
+    }
+    .elinext {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 28px;
+    }
+    .elinext p { color: #dce2fb; margin-bottom: 16px; }
+    .logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .logos strong {
+      display: inline-flex;
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: #ffffff;
+      background: rgba(255,255,255,0.08);
+    }
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+    .case-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .case-body { padding: 18px; }
+    .case-body p { color: var(--muted); margin-bottom: 12px; }
+    .case-body a { font-weight: 800; color: var(--blue); text-decoration-thickness: 2px; }
+    .cta {
+      text-align: center;
+      background: var(--navy);
+      color: var(--white);
+    }
+    .cta p {
+      color: #dce2fb;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border-radius: 999px;
+      padding: 12px 20px;
+      background: var(--orange);
+      color: var(--navy);
+      font-weight: 900;
+      text-decoration: none;
+      margin-top: 8px;
+    }
+
+    @media (min-width: 768px) {
+      .section { padding: 76px 32px; }
+      .hero { padding: 84px 32px 68px; }
+      .plan-head { grid-template-columns: minmax(0, 0.85fr) minmax(300px, 1fr); padding: 30px; }
+      .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 30px; }
+      .stack { padding: 0 30px 30px; }
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 1120px) {
+      .hero { padding-top: 96px; }
+      .timeline { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .step { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="wrap">
+        <div class="eyebrow">Elinext proposal brief</div>
+        <h1>Build the backend for Snaplii's AI payment push</h1>
+        <p class="hero-copy">Snaplii is moving from a smart gift card wallet into a payment platform where AI, trust, and speed must work together.</p>
+        <p class="why">Why we're here: we saw the Backend Engineer role for "Architects of the AI Era." That role points to Java, Spring, cloud scale, agents, and safe payment logic.</p>
+        <div class="hero-meta" aria-label="Proposal focus">
+          <span class="pill">AI-native backend</span>
+          <span class="pill">Payment reliability</span>
+          <span class="pill">Gift card state control</span>
+          <span class="pill">AML and KYC guardrails</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="section white" aria-labelledby="our-read">
+      <div class="wrap">
+        <h2 id="our-read">Our read</h2>
+        <div class="read-box">
+          <p>The hiring signal says Snaplii is building new payment architecture, not only adding features. The hard part is keeping wallet, gift card, login, fraud, and support flows stable while AI speeds up delivery. Public reviews point to friction around account access, gift card state, and offer rules. If that backend layer stays thin, growth can turn into support load and trust risk.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="what">
+      <div class="wrap">
+        <h2 id="what">What we'd do</h2>
+        <div class="plan">
+          <div class="plan-head">
+            <div>
+              <h3>Dedicated squad under your product lead</h3>
+              <p>Elinext would add a focused backend and AI integration squad that works under Snaplii's PO or engineering lead.</p>
+            </div>
+            <div class="team" aria-label="Suggested team">
+              <div class="role">1 Java tech lead</div>
+              <div class="role">2 senior backend engineers</div>
+              <div class="role">1 DevOps engineer</div>
+              <div class="role">1 AI integration engineer</div>
+            </div>
+          </div>
+          <div class="timeline" aria-label="Pilot plan">
+            <div class="step">
+              <div class="num">1</div>
+              <div><span class="step-title">Map risky flows</span><p>Trace login, device checks, gift card issue, refund, and support handoff states across current services.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div><span class="step-title">Harden the core</span><p>Add clear service contracts, audit events, and tests around payment, wallet, and gift card state changes.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div><span class="step-title">Add safe AI</span><p>Use agents for support triage and developer flow, with human gates for money and KYC actions.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div><span class="step-title">Ship weekly demos</span><p>Run a six-week pilot with weekly demos, clear backlog, and handover notes for Snaplii engineers.</p></div>
+            </div>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span>Java</span><span>Spring Boot</span><span>Python</span><span>AWS</span><span>Docker</span><span>Kubernetes</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white" aria-labelledby="who">
+      <div class="wrap">
+        <h2 id="who">Who is Elinext</h2>
+        <div class="elinext">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build backend, web, mobile, AI, QA, and DevOps teams for clients that need steady delivery. For Snaplii, the fit is our financial software work, ISO 9001 and ISO 27001 practices, and dedicated team model. Our client history includes <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, and <strong>TUI</strong>. That makes the squad above a practical extension of your AI-era backend push.</p>
+          <div class="logos" aria-label="Named customers">
+            <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="proof">
+      <div class="wrap">
+        <h2 id="proof">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-backend-banking.jpg" alt="Backend banking case study image">
+            <div class="case-body">
+              <h3>Backend App Development for Banking</h3>
+              <p>Elinext used Java, Kubernetes, Docker, and data engineering to improve search and scale in a banking app.</p>
+              <a href="https://www.elinext.com/case-study/backend-app-development-for-banking/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-payment-platform.jpg" alt="Payment platform case study image">
+            <div class="case-body">
+              <h3>B2B Online Payment Platform</h3>
+              <p>Elinext provided an outstaffed team for a high-load payment platform using AWS, Node.js, React Native, and DynamoDB.</p>
+              <a href="https://www.elinext.com/case-study/online-payment-system-for-car-manufacturer/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta" aria-labelledby="talk">
+      <div class="wrap">
+        <h2 id="talk">Let's talk</h2>
+        <p>Map the backend pilot and decide if our team fits.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
