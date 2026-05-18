@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HundredStar Games Animation Support Proposal | Elinext</title>
+  <meta name="description" content="A short proposal for HundredStar Games on scaling AAA gameplay animation support without adding review load.">
+  <meta property="og:title" content="HundredStar Games | Animation Support Proposal">
+  <meta property="og:description" content="Scaling AAA animation without adding review load.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/hundredstar-games_2026-05-18_16-27-14/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/hundredstar-games_2026-05-18_16-27-14/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/hundredstar-games_2026-05-18_16-27-14/">
+  <style>
+    :root {
+      --ink: #191d24;
+      --muted: #5d6572;
+      --paper: #f8f4ec;
+      --cream: #fffaf0;
+      --line: #ddd3c2;
+      --night: #11151c;
+      --orange: #ef6b2d;
+      --gold: #fbc402;
+      --teal: #0e7c7b;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      position: relative;
+    }
+
+    .inner {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      background:
+        linear-gradient(130deg, rgba(17, 21, 28, 0.98), rgba(31, 37, 46, 0.94)),
+        var(--night);
+      color: var(--white);
+      padding-top: 28px;
+      padding-bottom: 64px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 46px;
+    }
+
+    .brand-mark {
+      width: min(210px, 56vw);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .byline {
+      color: #c8ced8;
+      font-size: 0.92rem;
+      white-space: nowrap;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 34px;
+      align-items: center;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 18px;
+      font-size: clamp(2.35rem, 9vw, 5.1rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 720px;
+      margin-bottom: 0;
+      color: #e8e2d4;
+      font-size: clamp(1rem, 2vw, 1.22rem);
+    }
+
+    .signal-board {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .signal-board strong {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--gold);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .signal-chip {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.09);
+      border-radius: 8px;
+      color: #f4efe4;
+      font-weight: 700;
+      text-align: center;
+      padding: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .eyebrow {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .section h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(1.7rem, 5vw, 2.6rem);
+      line-height: 1.08;
+    }
+
+    .read {
+      background: #efe3d0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .read-copy {
+      max-width: 72ch;
+      margin: 0 auto;
+      border-left: 7px solid var(--orange);
+      padding: 18px 0 18px 18px;
+      color: #2c3138;
+      font-size: clamp(1rem, 2.2vw, 1.17rem);
+    }
+
+    .proposal {
+      background: var(--cream);
+    }
+
+    .proposal-layout {
+      display: grid;
+      gap: 18px;
+    }
+
+    .team-card,
+    .step-card,
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 18px 45px rgba(53, 42, 25, 0.08);
+    }
+
+    .team-card {
+      padding: 22px;
+      border-top: 5px solid var(--orange);
+    }
+
+    .team-card h3 {
+      margin-bottom: 12px;
+      font-size: 1.18rem;
+    }
+
+    .team-card p {
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+
+    .roles,
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .roles li,
+    .stack li,
+    .customer-pill {
+      border: 1px solid #d7c9b4;
+      border-radius: 999px;
+      background: #fff4dd;
+      padding: 7px 11px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #3c3427;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step-card {
+      padding: 18px;
+    }
+
+    .step-num {
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--gold);
+      font-weight: 900;
+    }
+
+    .step-card h3 {
+      margin-bottom: 7px;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .step-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .elinext {
+      background: #ffffff;
+    }
+
+    .cred-copy {
+      max-width: 78ch;
+      margin: 0 auto 22px;
+      color: #343a42;
+      font-size: 1.05rem;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .proof {
+      background: #f2f6f4;
+      border-top: 1px solid #d9e3de;
+      border-bottom: 1px solid #d9e3de;
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #dfe6e3;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+
+    .case-body p {
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .case-body a {
+      color: var(--teal);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .final {
+      background: var(--night);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .final h2 {
+      margin-bottom: 10px;
+    }
+
+    .final p {
+      max-width: 40ch;
+      margin: 0 auto 24px;
+      color: #d7dce5;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      max-width: 100%;
+      border-radius: 8px;
+      background: var(--gold);
+      color: #18140a;
+      padding: 13px 18px;
+      font-weight: 900;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 76px 28px;
+      }
+
+      .hero {
+        padding-top: 32px;
+        padding-bottom: 86px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      }
+
+      .proposal-layout {
+        grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+        gap: 24px;
+      }
+
+      .timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1180px) {
+      .section {
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="section hero">
+      <div class="inner">
+        <div class="brand-row">
+          <img class="brand-mark" src="assets/hundredstar-logo.svg" alt="HundredStar Games">
+          <div class="byline">Proposal by Elinext</div>
+        </div>
+        <div class="hero-grid">
+          <div>
+            <h1>Add AAA animation capacity without adding review load</h1>
+            <p class="why">We saw the Senior Character Animator signal at HundredStar. It points to a project stage where gameplay animation, mocap cleanup, UE5 implementation, and external partner work all need a clean loop.</p>
+          </div>
+          <div class="signal-board" aria-label="Support focus">
+            <strong>Support focus</strong>
+            <div class="signal-grid">
+              <div class="signal-chip">UE5</div>
+              <div class="signal-chip">Maya</div>
+              <div class="signal-chip">Mocap</div>
+              <div class="signal-chip">External dev</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section read">
+      <div class="inner">
+        <span class="eyebrow">Our read</span>
+        <h2>The bottleneck is the review loop</h2>
+        <p class="read-copy">You are growing a compact AAA studio, not a large factory. The animator hire says the game needs more gameplay motion, but also stronger benchmarks for style, feel, and handoff. Colin's external development role makes the real bottleneck clear: outside help must reduce pressure on leads, not create more reviews. If that loop is weak, senior animators spend time fixing files instead of improving player feel.</p>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="inner">
+        <span class="eyebrow">What we'd do</span>
+        <h2>A six-week animation support pilot</h2>
+        <div class="proposal-layout">
+          <aside class="team-card">
+            <h3>Dedicated squad under your leads</h3>
+            <p>Engagement model: a dedicated pilot squad under your animation and external development leads.</p>
+            <ul class="roles">
+              <li>Technical lead</li>
+              <li>Unreal engineer</li>
+              <li>2 animators</li>
+              <li>Gameplay QA</li>
+              <li>Delivery lead</li>
+            </ul>
+            <p style="margin-top:18px;">Relevant stack:</p>
+            <ul class="stack">
+              <li>UE5</li>
+              <li>Blueprints</li>
+              <li>Maya</li>
+              <li>C/C++</li>
+              <li>Python</li>
+              <li>QA automation</li>
+            </ul>
+          </aside>
+          <div class="timeline">
+            <article class="step-card">
+              <span class="step-num">1</span>
+              <h3>Benchmark one feature path</h3>
+              <p>Agree the animation bar for one locomotion or combat feature, with references, timing notes, and UE5 acceptance checks.</p>
+            </article>
+            <article class="step-card">
+              <span class="step-num">2</span>
+              <h3>Build the handoff kit</h3>
+              <p>Prepare Maya, mocap, naming, export, and Blueprint rules so external work reaches the team in the right shape.</p>
+            </article>
+            <article class="step-card">
+              <span class="step-num">3</span>
+              <h3>Implement and test</h3>
+              <p>Pair animation support with an Unreal engineer and QA to catch broken states before director review.</p>
+            </article>
+            <article class="step-card">
+              <span class="step-num">4</span>
+              <h3>Document the repeat loop</h3>
+              <p>Turn the pilot into a partner-ready pack Colin can reuse across vendors and future animation features.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section elinext">
+      <div class="inner">
+        <span class="eyebrow">Who is Elinext</span>
+        <h2>External capacity with delivery control</h2>
+        <p class="cred-copy">Elinext is a full-cycle software development partner, active since 1997, with about 700 in-house specialists and no freelancers. For HundredStar, the fit is a dedicated squad model with software engineers, QA, designers, AI/ML, and delivery leads working under your own PO or PM. We hold ISO 9001 and ISO 27001 certifications, and have delivered for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, <strong>TUI</strong>, and <strong>Parrot</strong>. That gives you external capacity with a delivery system, not just extra resumes. It matches the pilot above: small, managed, and easy to stop or scale.</p>
+        <div class="customers" aria-label="Named customers">
+          <span class="customer-pill">Siemens</span>
+          <span class="customer-pill">Broadcom</span>
+          <span class="customer-pill">Volkswagen</span>
+          <span class="customer-pill">TRUMPF</span>
+          <span class="customer-pill">TUI</span>
+          <span class="customer-pill">Parrot</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proof">
+      <div class="inner">
+        <span class="eyebrow">Proof</span>
+        <h2>Relevant work from Elinext</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-smartfish.jpg" alt="SmartFish case study image">
+            <div class="case-body">
+              <h3>SmartFish: Relaxing Game for Kids and Adults</h3>
+              <p>Elinext built a 3D game app with Maya, 3D Max, 2D and 3D artists, an animator, developer, and PM.</p>
+              <a href="https://www.elinext.com/case-study/smartfish/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-internal-testing.jpg" alt="Internal testing tool case study image">
+            <div class="case-body">
+              <h3>Custom Randomizer Tool for Internal Testing</h3>
+              <p>Elinext built a tool for game developers, QA testers, and analysts to validate game behavior and reduce manual test work.</p>
+              <a href="https://www.elinext.com/case-study/internal-testing-tool/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section final">
+      <div class="inner">
+        <span class="eyebrow">Next step</span>
+        <h2>Talk through the pilot</h2>
+        <p>A short call can test fit and timing.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
