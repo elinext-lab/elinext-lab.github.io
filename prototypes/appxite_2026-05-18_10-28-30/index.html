@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AppXite CSP Engineering Proposal by Elinext</title>
+  <meta name="description" content="A focused Elinext proposal for adding .NET, Azure, DevOps, and QA capacity around AppXite's Microsoft CSP workflows.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/appxite_2026-05-18_10-28-30/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AppXite CSP Engineering Proposal by Elinext">
+  <meta property="og:description" content="A six-week .NET, Azure, DevOps, and QA pilot for Microsoft CSP scale.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/appxite_2026-05-18_10-28-30/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/appxite_2026-05-18_10-28-30/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AppXite CSP Engineering Proposal by Elinext">
+  <meta name="twitter:description" content="A six-week .NET, Azure, DevOps, and QA pilot for Microsoft CSP scale.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/appxite_2026-05-18_10-28-30/og-image.jpg">
+  <style>
+    :root {
+      --ink: #132033;
+      --muted: #59677a;
+      --line: #d8e1ea;
+      --paper: #ffffff;
+      --soft: #f3f7fa;
+      --navy: #12213a;
+      --blue: #1c65b7;
+      --orange: #f28a24;
+      --teal: #2e8b7d;
+      --green: #6ab04f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      background: var(--paper);
+    }
+
+    .section.alt {
+      background: var(--soft);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 32px 18px 58px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(18, 33, 58, 0.96), rgba(21, 55, 86, 0.94)),
+        linear-gradient(90deg, rgba(242, 138, 36, 0.16), rgba(46, 139, 125, 0.18));
+    }
+
+    .hero .wrap {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+
+    .brand-row img {
+      width: min(176px, 58vw);
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .byline {
+      color: #cfd8e4;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      font-size: clamp(2rem, 6vw, 4.6rem);
+      line-height: 1.03;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    .lede {
+      max-width: 650px;
+      margin-top: 22px;
+      color: #e4ecf4;
+      font-size: clamp(1rem, 2.6vw, 1.25rem);
+    }
+
+    .why {
+      max-width: 780px;
+      margin-top: 16px;
+      padding-left: 16px;
+      border-left: 4px solid var(--orange);
+      color: #fff1df;
+      font-size: 1rem;
+    }
+
+    .signal-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .signal-pill {
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #f5f8fb;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.9rem;
+    }
+
+    .eyebrow {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--orange);
+      font-size: 0.78rem;
+      font-weight: 760;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: clamp(1.65rem, 4vw, 2.5rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 78ch;
+      margin: 26px auto 0;
+      padding: 24px;
+      border: 1px solid #cbd9e5;
+      border-left: 6px solid var(--blue);
+      border-radius: 8px;
+      background: #eef5fb;
+      color: #243247;
+      font-size: 1.03rem;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .squad {
+      border-radius: 8px;
+      padding: 22px;
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .squad h3,
+    .steps h3 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+    }
+
+    .role-grid,
+    .stack-grid,
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .role,
+    .stack,
+    .customer-tags strong {
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      font-weight: 720;
+    }
+
+    .role {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stack {
+      border: 1px solid #cfdbe7;
+      background: #fff;
+      color: #20334c;
+    }
+
+    .model {
+      margin-bottom: 18px;
+      color: #d7e1eb;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .number {
+      display: inline-grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .step-title {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.98rem;
+      font-weight: 790;
+      color: #1c2b43;
+    }
+
+    .step-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .stack-panel {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
+    }
+
+    .stack-panel h3 {
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .elinext {
+      max-width: 84ch;
+      margin: 24px auto 0;
+      color: #27384e;
+      font-size: 1rem;
+    }
+
+    .elinext p + p {
+      margin-top: 12px;
+    }
+
+    .customer-tags {
+      margin-top: 14px;
+      justify-content: center;
+    }
+
+    .customer-tags strong {
+      background: #fff4e8;
+      color: #7b4310;
+      border: 1px solid #f2d1aa;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #e8eef5;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .case-body p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .case-body a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 760;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      color: #fff;
+      background: linear-gradient(135deg, #12213a, #264b64);
+    }
+
+    .cta h2 {
+      color: #fff;
+    }
+
+    .cta p {
+      margin-top: 10px;
+      color: #dbe6ef;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      margin-top: 22px;
+      padding: 0 22px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      .section {
+        padding: 70px 28px;
+      }
+
+      .hero {
+        padding: 38px 28px 74px;
+      }
+
+      .signal-strip {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .proposal-grid {
+        grid-template-columns: minmax(250px, 0.82fr) minmax(0, 1.18fr);
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .hero {
+        min-height: 680px;
+      }
+
+      .hero .wrap {
+        min-height: 580px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div>
+        <div class="brand-row">
+          <img src="assets/appxite-logo.png" alt="AppXite logo">
+          <span class="byline">Proposal by Elinext</span>
+        </div>
+        <h1>Add Microsoft CSP capacity without slowing AppXite's roadmap</h1>
+        <p class="lede">AppXite Platform already runs marketplace, CPQ, billing, provisioning, and partner workflows for cloud sellers. The next hard step is scaling support while product teams keep shipping.</p>
+        <p class="why">Saw the Microsoft CSP Support Specialist role. It points to real demand around Partner Center, provisioning, billing, SQL checks, REST APIs, and Azure or M365 questions from large customers.</p>
+        <div class="signal-strip" aria-label="Key signals">
+          <span class="signal-pill">CSP workflows and Partner Center</span>
+          <span class="signal-pill">Billing, provisioning, and SQL checks</span>
+          <span class="signal-pill">Azure, M365, REST APIs, and QA</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section alt">
+      <div class="wrap">
+        <span class="eyebrow">Our read</span>
+        <h2>Support growth is now engineering work</h2>
+        <p class="read-box">That role says AppXite is scaling Microsoft cloud work, not only adding support headcount. The hard part is the cross-team load behind each case: Partner Center rules, NCE changes, billing data, API checks, and product fixes all touch the same platform. If support waits for core engineers, roadmap work on marketplace, CPQ, and billing can slip. A small external squad can take contained .NET, Azure, DevOps, and QA work while your specialists stay close to customers.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <span class="eyebrow">What we'd do</span>
+        <h2>A six-week CSP workflow pilot</h2>
+        <div class="proposal-grid">
+          <aside class="squad">
+            <p class="model">We would start with a dedicated squad under your product owner or support lead.</p>
+            <h3>Team shape</h3>
+            <div class="role-grid" aria-label="Proposed team roles">
+              <span class="role">1 .NET/Azure tech lead</span>
+              <span class="role">2 senior .NET engineers</span>
+              <span class="role">1 Azure DevOps engineer</span>
+              <span class="role">1 QA automation engineer</span>
+              <span class="role">part-time BA</span>
+            </div>
+            <div class="stack-panel">
+              <h3>Relevant stack</h3>
+              <div class="stack-grid" aria-label="Relevant technologies">
+                <span class="stack">.NET</span>
+                <span class="stack">C#</span>
+                <span class="stack">Azure</span>
+                <span class="stack">MS SQL</span>
+                <span class="stack">REST APIs</span>
+                <span class="stack">Angular</span>
+              </div>
+            </div>
+          </aside>
+          <div class="steps" aria-label="Pilot milestones">
+            <article class="step-card">
+              <span class="number">1</span>
+              <div>
+                <span class="step-title">Pick the pilot paths</span>
+                <p>Map the top CSP support paths across Partner Center, provisioning, billing, and API diagnostics, then choose two workflows for the pilot.</p>
+              </div>
+            </article>
+            <article class="step-card">
+              <span class="number">2</span>
+              <div>
+                <span class="step-title">Fix the repeated blockers</span>
+                <p>Add .NET and SQL fixes around the selected workflows, with clear logs and runbooks for support specialists.</p>
+              </div>
+            </article>
+            <article class="step-card">
+              <span class="number">3</span>
+              <div>
+                <span class="step-title">Automate checks</span>
+                <p>Automate checks for subscription, invoice, and provisioning cases so repeat issues are caught before customer escalation.</p>
+              </div>
+            </article>
+            <article class="step-card">
+              <span class="number">4</span>
+              <div>
+                <span class="step-title">Calm the release path</span>
+                <p>Tighten Azure DevOps pipelines and test data so releases stay calm while the CSP queue grows.</p>
+              </div>
+            </article>
+            <article class="step-card">
+              <span class="number">5</span>
+              <div>
+                <span class="step-title">Hand over each week</span>
+                <p>Demo progress weekly, keep handover notes short, and leave your team with reusable tests and support docs.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <span class="eyebrow">Who is Elinext</span>
+        <h2>Engineering depth for cloud platforms</h2>
+        <div class="elinext">
+          <p>Elinext is a full-cycle software development partner, founded in 1997, with about 700 in-house specialists and no freelancers. For AppXite, the fit is Microsoft, cloud, QA, and delivery support: we build .NET, C#, Azure, Angular, and DevOps teams that work under your product lead. Elinext is ISO 9001 and ISO 27001 certified, which matters when billing, partner data, and support access are in scope. That gives the proposed squad a tested delivery base, not a loose bench.</p>
+          <div class="customer-tags" aria-label="Named Elinext customers">
+            <strong>Siemens</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <span class="eyebrow">Proof</span>
+        <h2>Relevant Elinext work</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-saas-m365.jpg" alt="M365 security monitoring case study image">
+            <div class="case-body">
+              <h3>SaaS Platform Design for M365 Security Monitoring</h3>
+              <p>Azure, .NET Core, Angular, Microsoft Graph API, SQL DB, and PowerShell. Security checks moved from hours to minutes.</p>
+              <a href="https://www.elinext.com/case-study/saas-platform-design/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-qa-translation.jpg" alt="QA automation case study image">
+            <div class="case-body">
+              <h3>Automated Testing of a Web Platform</h3>
+              <p>Long-term QA and automation for cloud and on-prem versions. The team scaled as the product grew.</p>
+              <a href="https://www.elinext.com/case-study/automated-testing-website-translation/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>We can scope the first six weeks together.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
