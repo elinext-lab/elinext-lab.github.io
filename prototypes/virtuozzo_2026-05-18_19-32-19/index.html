@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Virtuozzo Core Engineering Proposal by Elinext</title>
+  <meta name="description" content="A focused Elinext proposal for adding senior engineering capacity around Virtuozzo's cloud infrastructure growth.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/virtuozzo_2026-05-18_19-32-19/">
+  <meta property="og:title" content="Virtuozzo Core Engineering Proposal by Elinext">
+  <meta property="og:description" content="A practical plan for sales-led cloud growth without overloading Core Engineering.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/virtuozzo_2026-05-18_19-32-19/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/virtuozzo_2026-05-18_19-32-19/og-image.jpg">
+  <style>
+    :root {
+      --ink: #142033;
+      --muted: #5d6878;
+      --paper: #f6f7f4;
+      --white: #ffffff;
+      --line: #d8ddd5;
+      --green: #145c52;
+      --orange: #f47c2c;
+      --soft-orange: #fff0e7;
+      --soft-green: #e8f3ef;
+      --shadow: 0 18px 45px rgba(20, 32, 51, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+    }
+
+    .section {
+      width: 100%;
+      padding: 54px 18px;
+      background: var(--paper);
+    }
+
+    .inner {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 62px 18px 58px;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 80% 18%, rgba(244, 124, 44, 0.24), transparent 28%),
+        linear-gradient(145deg, #132033 0%, #123a35 100%);
+    }
+
+    .hero .inner {
+      display: grid;
+      gap: 28px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #ffcfad;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 16px;
+      font-size: clamp(2.2rem, 7vw, 5.1rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 650px;
+      margin-bottom: 0;
+      color: #e8f0ee;
+      font-size: 1.02rem;
+    }
+
+    .hero-panel {
+      width: 100%;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-panel strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .hero-panel span {
+      display: block;
+      color: #d5e3df;
+      font-size: 0.94rem;
+    }
+
+    .section-title {
+      margin-bottom: 24px;
+      text-align: center;
+      font-size: clamp(1.7rem, 4vw, 2.6rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 84ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #bfd6cc;
+      border-left: 5px solid var(--green);
+      border-radius: 8px;
+      background: var(--soft-green);
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      color: #26394a;
+      font-size: 1.02rem;
+    }
+
+    .proposal {
+      background: var(--white);
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .team-card,
+    .steps-card {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfa;
+      box-shadow: var(--shadow);
+    }
+
+    .team-card {
+      padding: 22px;
+    }
+
+    .team-card p {
+      color: var(--muted);
+    }
+
+    .role-grid,
+    .stack-list,
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .role-grid li,
+    .stack-list li,
+    .customer-list li {
+      max-width: 100%;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: var(--soft-orange);
+      color: #67310f;
+      font-size: 0.9rem;
+      font-weight: 700;
+      white-space: normal;
+    }
+
+    .steps-card {
+      overflow: hidden;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .step:last-child {
+      border-bottom: 0;
+    }
+
+    .num {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin-bottom: 5px;
+      font-size: 1.05rem;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .cred {
+      background: var(--paper);
+    }
+
+    .cred-box {
+      max-width: 86ch;
+      margin: 0 auto;
+      padding: 24px;
+      border-radius: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .cred-box p {
+      margin-bottom: 16px;
+      color: #2c3b4b;
+    }
+
+    .cred-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .proof {
+      background: var(--white);
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfa;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .case-body p {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .case-body a {
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .talk {
+      background: #132033;
+      color: var(--white);
+      text-align: center;
+    }
+
+    .talk h2 {
+      margin-bottom: 10px;
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      letter-spacing: 0;
+    }
+
+    .talk p {
+      margin-bottom: 22px;
+      color: #dbe5e2;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      max-width: 100%;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #111b29;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 76px 32px;
+      }
+
+      .hero {
+        padding: 86px 32px 80px;
+      }
+
+      .hero .inner {
+        grid-template-columns: minmax(0, 1fr) 330px;
+        align-items: end;
+      }
+
+      .proposal-grid {
+        grid-template-columns: 0.85fr 1.15fr;
+        align-items: stretch;
+      }
+
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="inner">
+        <div>
+          <p class="eyebrow">Proposal for Ric Wheeler and Core Engineering</p>
+          <h1>Give core engineering more room for cloud growth</h1>
+          <p class="why">Saw Virtuozzo hiring a New Business Sales Manager for cloud infrastructure. New MSP and CSP deals often bring PoCs, migration asks, and SLA work back to the Core team.</p>
+        </div>
+        <aside class="hero-panel" aria-label="Proposal focus">
+          <strong>Focus</strong>
+          <span>Senior systems, DevOps, and QA help around V/IS delivery, not a handoff of core product control.</span>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner">
+        <h2 class="section-title">Our read</h2>
+        <div class="read-box">
+          <p>That sales hire tells us Virtuozzo is pushing harder into MSP, CSP, and hosting accounts. Those buyers need proof that V/IS can replace VMware, run Kubernetes and S3 services, and pass a mixed workload pilot. The hard part is not only kernel work. It is repeatable migration tooling, test coverage, and release speed around Core. If that capacity is thin, good deals can slow while engineers handle custom asks.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="inner">
+        <h2 class="section-title">What we'd do</h2>
+        <div class="proposal-grid">
+          <div class="team-card">
+            <h3>Dedicated squad under your PO</h3>
+            <p>A six-week pilot squad that works inside Ric's priorities and protects Core ownership.</p>
+            <ul class="role-grid" aria-label="Team shape">
+              <li>1 Tech Lead</li>
+              <li>2 Systems Engineers</li>
+              <li>1 DevOps Engineer</li>
+              <li>2 QA Engineers</li>
+            </ul>
+            <h3>Relevant stack</h3>
+            <ul class="stack-list" aria-label="Relevant stack">
+              <li>C/C++</li>
+              <li>Java</li>
+              <li>Python</li>
+              <li>Linux</li>
+              <li>Jenkins</li>
+              <li>Selenium</li>
+            </ul>
+          </div>
+          <div class="steps-card" aria-label="Pilot milestones">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>PoC load map</h3>
+                <p>Map sales-led PoC patterns into Core workstreams, with clear owners for migration, storage, Kubernetes, and release risks.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Migration helpers</h3>
+                <p>Harden scripts and test data for VMware-to-Virtuozzo moves across Windows, Linux, backup agents, and rollback paths.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Release pipeline</h3>
+                <p>Tune CI, smoke tests, and lab environments so V/IS changes can ship without long manual checks.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Enterprise QA</h3>
+                <p>Add regression packs for S3, KVM, Kubernetes, and billing paths that new MSP deals will stress first.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cred">
+      <div class="inner">
+        <h2 class="section-title">Who is Elinext</h2>
+        <div class="cred-box">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For infrastructure work, we can bring senior C/C++, Java, Python, DevOps, and QA engineers under your PO or PM. We are ISO 9001 and ISO 27001 certified, which matters when teams touch release systems and customer data.</p>
+          <ul class="customer-list" aria-label="Named customers">
+            <li>Siemens</li>
+            <li>Broadcom</li>
+            <li>Volkswagen</li>
+            <li>TRUMPF</li>
+            <li>TUI</li>
+          </ul>
+          <p>That is the same delivery model we would use for Ric's Core team. The goal is short ramp time without moving product control outside Virtuozzo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proof">
+      <div class="inner">
+        <h2 class="section-title">Proof from similar work</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-ci-cd.jpg" alt="CI/CD optimization case study image">
+            <div class="case-body">
+              <h3>CI/CD for infrastructure management</h3>
+              <p>Elinext improved Jenkins, Groovy, and QA flows for a provider with quarterly releases.</p>
+              <p>Result: development time fell, while the pipeline stayed flexible and secure.</p>
+              <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-network-monitoring.jpg" alt="Network monitoring case study image">
+            <div class="case-body">
+              <h3>Telecom network monitoring software</h3>
+              <p>Elinext built software for complex physical and virtual network switch monitoring.</p>
+              <p>Result: thousands of end customers can manage infrastructure changes faster.</p>
+              <a href="https://www.elinext.com/case-study/network-monitoring-software/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="inner">
+        <h2>Talk through the load</h2>
+        <p>A short call can test the squad fit.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
