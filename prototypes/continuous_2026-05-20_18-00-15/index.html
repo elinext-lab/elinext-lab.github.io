@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Continuous Scaling Proposal by Elinext</title>
+  <meta name="description" content="A focused Elinext proposal for helping Continuous scale delivery, QA, and customer-facing releases.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/continuous_2026-05-20_18-00-15/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Continuous Scaling Proposal by Elinext">
+  <meta property="og:description" content="A focused proposal for safer releases during Continuous Platform scale.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/continuous_2026-05-20_18-00-15/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/continuous_2026-05-20_18-00-15/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Continuous Scaling Proposal by Elinext">
+  <meta name="twitter:description" content="A focused proposal for safer releases during Continuous Platform scale.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/continuous_2026-05-20_18-00-15/og-image.jpg">
+  <style>
+    :root {
+      --ink: #101828;
+      --muted: #586372;
+      --navy: #0f1629;
+      --blue: #0f4bbd;
+      --cyan: #46a3f3;
+      --orange: #f47b20;
+      --green: #13a16b;
+      --paper: #f7f9fc;
+      --line: #dce4ee;
+      --white: #ffffff;
+      --shadow: 0 18px 40px rgba(16, 24, 40, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+      background: var(--paper);
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 2;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      color: var(--blue);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+      background: #fbfcff;
+    }
+
+    section {
+      width: 100%;
+      background: var(--paper);
+    }
+
+    .wrap {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 56px 20px;
+    }
+
+    .hero {
+      color: var(--white);
+      background:
+        linear-gradient(135deg, rgba(15, 22, 41, 0.96), rgba(12, 53, 95, 0.94)),
+        radial-gradient(circle at top right, rgba(244, 123, 32, 0.35), transparent 36%);
+    }
+
+    .hero .wrap {
+      padding-top: 72px;
+      padding-bottom: 72px;
+      display: grid;
+      gap: 28px;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      max-width: 100%;
+      padding: 7px 11px;
+      border-left: 4px solid var(--orange);
+      background: rgba(255, 255, 255, 0.1);
+      color: #d7e6f6;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 14px;
+      font-size: clamp(2.15rem, 6vw, 4.8rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 700px;
+      margin-bottom: 0;
+      color: #dce9f7;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+    }
+
+    .hero-panel {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      width: min(780px, 100%);
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .signal-row {
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: #eef5fb;
+      font-size: 0.96rem;
+    }
+
+    .dot {
+      width: 18px;
+      height: 18px;
+      margin-top: 3px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 0 0 0 6px rgba(244, 123, 32, 0.14);
+    }
+
+    .section-head {
+      max-width: 760px;
+      margin: 0 auto 24px;
+      text-align: center;
+    }
+
+    .section-head h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.8rem, 4vw, 2.55rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .read-box {
+      max-width: 74ch;
+      margin: 0 auto;
+      padding: 26px;
+      border: 1px solid #bfd3e8;
+      border-left: 7px solid var(--blue);
+      border-radius: 8px;
+      background: #eef6ff;
+      box-shadow: 0 14px 30px rgba(15, 75, 189, 0.08);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      color: #24364a;
+      font-size: 1.03rem;
+    }
+
+    .proposal {
+      background: var(--white);
+    }
+
+    .proposal-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .squad-card,
+    .timeline-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .squad-card {
+      padding: 22px;
+    }
+
+    .squad-card h3,
+    .timeline-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.25rem;
+      line-height: 1.2;
+    }
+
+    .squad-card p {
+      color: var(--muted);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #ecf7f2;
+      color: #08734c;
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .roles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .role {
+      min-height: 68px;
+      padding: 12px;
+      border: 1px solid #d8e8dc;
+      border-radius: 8px;
+      background: #fbfffd;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .timeline-card {
+      padding: 18px;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcff;
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--white);
+      font-size: 0.84rem;
+      font-weight: 900;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 0.98rem;
+    }
+
+    .step span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .elinext {
+      background: #f3f7f6;
+    }
+
+    .cred-box {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 28px;
+      border: 1px solid #cddfda;
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .cred-box p {
+      margin-bottom: 12px;
+      color: #263745;
+    }
+
+    .cred-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .customer-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .customer-pills strong {
+      padding: 7px 10px;
+      border: 1px solid #f2c49c;
+      border-radius: 999px;
+      background: #fff5ec;
+      color: #9a4a00;
+      font-size: 0.86rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .case {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 12px 26px rgba(16, 24, 40, 0.08);
+    }
+
+    .case img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #e8eef6;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
+
+    .case-body p {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .case-body a {
+      display: inline-flex;
+      min-height: 36px;
+      align-items: center;
+      color: var(--blue);
+      font-weight: 900;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .talk {
+      color: var(--white);
+      background: var(--navy);
+    }
+
+    .talk-box {
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .talk h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.8rem, 4vw, 2.55rem);
+    }
+
+    .talk p {
+      margin-bottom: 22px;
+      color: #dce5ee;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      max-width: 100%;
+      padding: 13px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero .wrap {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .proposal-grid {
+        grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .wrap {
+        padding: 72px 24px;
+      }
+
+      .hero .wrap {
+        padding-top: 92px;
+        padding-bottom: 92px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .topbar-inner {
+        padding: 14px 16px;
+      }
+
+      .tag {
+        white-space: normal;
+        text-align: right;
+      }
+
+      .wrap {
+        padding: 46px 16px;
+      }
+
+      .hero .wrap {
+        padding-top: 58px;
+        padding-bottom: 58px;
+      }
+
+      .read-box,
+      .cred-box,
+      .squad-card,
+      .timeline-card {
+        padding: 18px;
+      }
+
+      .roles {
+        grid-template-columns: 1fr;
+      }
+
+      .step {
+        grid-template-columns: 36px 1fr;
+        padding: 12px;
+      }
+
+      .num {
+        width: 32px;
+        height: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar" aria-label="Proposal header">
+      <div class="topbar-inner">
+        <div class="brand">Continuous x Elinext</div>
+        <div class="tag">Proposal brief</div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="wrap">
+          <div>
+            <div class="eyebrow">For Kayte Eckels and Customer Success</div>
+            <h1 id="hero-title">Help Continuous Scale Releases Without Raising Customer Risk</h1>
+            <p class="why">Saw Continuous is adding Payroll and Benefits capacity. You are also unifying OpCon, Encapture, and Sycorr. That kind of growth can put Customer Success between bigger promises and delivery limits.</p>
+          </div>
+          <div class="hero-panel" aria-label="Why this matters">
+            <div class="signal-row">
+              <span class="dot" aria-hidden="true"></span>
+              <span>Continuous sells trust to banks. Releases, migrations, and support must feel steady while the platform grows.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="read-title">
+        <div class="wrap">
+          <div class="section-head">
+            <h2 id="read-title">Our read</h2>
+          </div>
+          <div class="read-box">
+            <p>The hiring signal says Continuous is building stronger internal ops for the next stage. Public product work points the same way. OpCon, Encapture, and Sycorr now sit in one banking automation story. The risk is slow delivery and more support load. Banks rely on Continuous for lending, compliance, IT, and security.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="proposal" aria-labelledby="do-title">
+        <div class="wrap">
+          <div class="section-head">
+            <h2 id="do-title">What we'd do</h2>
+            <p>A dedicated squad under your Product or Engineering lead.</p>
+          </div>
+          <div class="proposal-grid">
+            <article class="squad-card">
+              <h3>Six-week pilot squad</h3>
+              <p>Team shape: 1 tech lead, 2 senior engineers, 1 QA lead, 1 UX designer.</p>
+              <p>Stack fit: Java, .NET, Python, React, Angular, Node.js.</p>
+              <div class="roles" aria-label="Team roles">
+                <div class="role">Tech lead</div>
+                <div class="role">Full-stack build</div>
+                <div class="role">QA automation</div>
+                <div class="role">UX cleanup</div>
+              </div>
+              <div class="chips" aria-label="Engagement traits">
+                <span class="chip">Weekly demos</span>
+                <span class="chip">Customer-risk focus</span>
+                <span class="chip">Continuous keeps control</span>
+              </div>
+            </article>
+
+            <article class="timeline-card">
+              <h3>Pilot flow</h3>
+              <div class="steps">
+                <div class="step">
+                  <div class="num">01</div>
+                  <div>
+                    <strong>Map support pressure</strong>
+                    <span>Map customer-facing flows across OpCon, documents, and access reviews. Pick one pilot backlog with Kayte's team.</span>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">02</div>
+                  <div>
+                    <strong>Automate the risky paths</strong>
+                    <span>Add regression tests for lending, compliance, and integration flows. Focus on bugs that create support escalations.</span>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">03</div>
+                  <div>
+                    <strong>Remove adoption drag</strong>
+                    <span>Clean up confusing setup, error, and handoff moments. Keep changes small enough for fast review.</span>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">04</div>
+                  <div>
+                    <strong>Show progress early</strong>
+                    <span>Run weekly demos with Product and Customer Success. Turn pilot results into a hiring or squad plan.</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="elinext" aria-labelledby="elinext-title">
+        <div class="wrap">
+          <div class="section-head">
+            <h2 id="elinext-title">Who is Elinext</h2>
+          </div>
+          <div class="cred-box">
+            <p>Elinext is a full-cycle software development company founded in 1997.</p>
+            <p>We have about 700 in-house specialists and no freelancers. ISO 9001 and ISO 27001 help us fit work where quality and data security matter.</p>
+            <div class="customer-pills" aria-label="Named customers">
+              <strong>Siemens</strong>
+              <strong>Broadcom</strong>
+              <strong>Volkswagen</strong>
+              <strong>TRUMPF</strong>
+              <strong>TUI</strong>
+            </div>
+            <p>For Continuous, we would add senior build and QA capacity under your team. Customer Success gets safer releases without losing product control.</p>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="proof-title">
+        <div class="wrap">
+          <div class="section-head">
+            <h2 id="proof-title">Proof</h2>
+            <p>Two relevant Elinext projects from regulated product work.</p>
+          </div>
+          <div class="proof-grid">
+            <article class="case">
+              <img src="assets/case-qa-insurtech.jpg" alt="Quality assurance services case study preview">
+              <div class="case-body">
+                <h3>Dedicated QA for a US insurtech platform</h3>
+                <p>Ongoing testing helped reduce defects and keep a regulated platform stable.</p>
+                <a href="https://www.elinext.com/case-study/dedicated-quality-assurance-services-for-us-insuretech/">Read case study</a>
+              </div>
+            </article>
+            <article class="case">
+              <img src="assets/case-outstaffing-insurance.jpg" alt="Insurance web app outstaffing case study preview">
+              <div class="case-body">
+                <h3>Outstaffing for an insurance web app</h3>
+                <p>One senior engineer joined the client team and improved operating flow.</p>
+                <a href="https://www.elinext.com/case-study/outstaffing-for-web-app-development-for-a-top-notch-insurance-company/">Read case study</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="talk" aria-labelledby="talk-title">
+        <div class="wrap">
+          <div class="talk-box">
+            <h2 id="talk-title">Start the capacity talk</h2>
+            <p>A short call can define a useful pilot.</p>
+            <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
