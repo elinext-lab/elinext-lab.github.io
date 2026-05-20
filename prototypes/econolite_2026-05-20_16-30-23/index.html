@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Econolite QA Automation Proposal by Elinext</title>
+  <meta name="description" content="A focused QA automation proposal for Econolite's Centracs Mobility and traffic controller test work.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/econolite_2026-05-20_16-30-23/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Econolite QA Automation Proposal">
+  <meta property="og:description" content="A focused way to strengthen test automation while Centracs moves deeper into cloud.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/econolite_2026-05-20_16-30-23/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/econolite_2026-05-20_16-30-23/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17212f;
+      --muted: #5f6c7c;
+      --line: #dce5ee;
+      --soft: #f4f8fb;
+      --panel: #ffffff;
+      --blue: #154f7b;
+      --teal: #1e8a92;
+      --orange: #ef7d22;
+      --deep: #0f2238;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--soft);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      background: var(--panel);
+    }
+
+    .section.alt {
+      background: var(--soft);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      padding: 30px 18px 48px;
+      background:
+        linear-gradient(135deg, rgba(15, 34, 56, .94), rgba(21, 79, 123, .91)),
+        radial-gradient(circle at 85% 15%, rgba(239, 125, 34, .22), transparent 34%),
+        var(--deep);
+      color: #ffffff;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .brand-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .logo-chip {
+      max-width: 190px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: #ffbf8c;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.55rem, 9vw, 5.4rem);
+      line-height: .98;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 62ch;
+      font-size: 1.02rem;
+      color: #dce8f2;
+    }
+
+    .why {
+      margin-bottom: 0;
+      padding-left: 16px;
+      border-left: 4px solid var(--orange);
+    }
+
+    .signal-card {
+      width: 100%;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, .22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .08);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, .16);
+    }
+
+    .signal-card img {
+      width: 210px;
+      margin-bottom: 20px;
+      padding: 8px;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .signal-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .signal-item {
+      padding: 14px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .1);
+      color: #ecf5fb;
+    }
+
+    .signal-item strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #ffffff;
+      font-size: .92rem;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: clamp(1.8rem, 5vw, 2.7rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #c9d9e7;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: #eaf3f6;
+      color: #243446;
+      font-size: 1.02rem;
+    }
+
+    .proposal {
+      border-top: 5px solid var(--orange);
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .model-card,
+    .stack-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .model-card h3,
+    .stack-card h3,
+    .proof-card h3 {
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .role-list,
+    .stack-list,
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 14px 0 0;
+      list-style: none;
+    }
+
+    .role-list li,
+    .stack-list li,
+    .customer-list li {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #edf4f8;
+      color: #173d5f;
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .num {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin-bottom: 5px;
+      font-size: 1rem;
+    }
+
+    .step p,
+    .model-card p,
+    .stack-card p,
+    .proof-card p,
+    .elinext p,
+    .cta p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .elinext {
+      background: #fff9f4;
+    }
+
+    .elinext-card {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #f1d0b5;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .customer-list {
+      margin-bottom: 16px;
+    }
+
+    .customer-list li {
+      background: #fff0e4;
+      color: #8c3d09;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-link {
+      display: inline-flex;
+      margin-top: 14px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      background: var(--deep);
+      color: #ffffff;
+    }
+
+    .cta h2 {
+      margin-bottom: 8px;
+    }
+
+    .cta p {
+      color: #d8e5ef;
+    }
+
+    .cta a {
+      display: inline-flex;
+      justify-content: center;
+      width: 100%;
+      max-width: 290px;
+      margin-top: 24px;
+      padding: 13px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 76px 28px;
+      }
+
+      .hero {
+        min-height: 88vh;
+        padding: 36px 28px 70px;
+      }
+
+      .hero-grid,
+      .proposal-grid,
+      .proof-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .timeline {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stack-card {
+        align-self: start;
+      }
+    }
+
+    @media (min-width: 1120px) {
+      .hero-grid {
+        grid-template-columns: 1.08fr .92fr;
+      }
+
+      .signal-card {
+        padding: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="brand-row">
+            <img class="logo-chip" src="assets/econolite-logo.png" alt="Econolite logo">
+            <p class="eyebrow">Proposal brief for Michael Booth</p>
+          </div>
+          <h1>Stabilize testing while Centracs moves deeper into cloud</h1>
+          <p>Centracs Mobility is carrying more agency work into secure cloud ATMS, predictive traffic control, and connected roadway systems. That raises the bar for release confidence across software, devices, and field data.</p>
+          <p class="why">Saw Econolite is hiring a Senior Software Engineer in Test for traffic controller and detection products. Here is how Elinext would help bridge that gap while your internal search continues.</p>
+        </div>
+        <aside class="signal-card" aria-label="Focus areas">
+          <img src="assets/centracs-mobility-logo.png" alt="Centracs Mobility logo">
+          <div class="signal-grid">
+            <div class="signal-item"><strong>Product surface</strong>Cloud ATMS, APIs, controllers, detection, Windows tools.</div>
+            <div class="signal-item"><strong>Test need</strong>Automation for smoke, regression, load, and integration.</div>
+            <div class="signal-item"><strong>Risk to reduce</strong>Release delays while legacy and cloud systems overlap.</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          Econolite is not just filling one QA seat. The signal says your team is scaling test automation for a mixed product line: Centracs Mobility, traffic controllers, detection products, APIs, Windows tools, and embedded Linux. That mix makes release confidence hard, because each change can touch software, lab hardware, and agency workflows. If coverage stays thin, cloud migration work can slow down and senior engineers stay tied to manual checks.
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-grid">
+          <div class="model-card">
+            <h3>Six-week dedicated QA automation pilot</h3>
+            <p>We would place a small squad under your PO or PM, with weekly demos and clear ownership of the first automation pack.</p>
+            <ul class="role-list">
+              <li>QA automation lead</li>
+              <li>2 QA engineers</li>
+              <li>Backend test engineer</li>
+              <li>Fractional DevOps</li>
+            </ul>
+          </div>
+          <div class="stack-card">
+            <h3>Relevant stack</h3>
+            <p>The pilot would match the public role and stay close to your engineering reality.</p>
+            <ul class="stack-list">
+              <li>C++</li>
+              <li>Python</li>
+              <li>Qt</li>
+              <li>C#/.NET</li>
+              <li>REST APIs</li>
+              <li>Jenkins or GitHub Actions</li>
+            </ul>
+          </div>
+        </div>
+        <div class="timeline">
+          <div class="step">
+            <span class="num">1</span>
+            <div><h3>Map the test surface</h3><p>Document controller, detection, API, Windows, and embedded Linux flows that block confident Centracs releases today.</p></div>
+          </div>
+          <div class="step">
+            <span class="num">2</span>
+            <div><h3>Build the first framework</h3><p>Create reusable Python and C# test hooks for smoke, API, and regression checks across shared services.</p></div>
+          </div>
+          <div class="step">
+            <span class="num">3</span>
+            <div><h3>Add lab-friendly coverage</h3><p>Define simulator or hardware-access rules for SNMP, REST, embedded Linux, and controller edge cases.</p></div>
+          </div>
+          <div class="step">
+            <span class="num">4</span>
+            <div><h3>Wire it into delivery</h3><p>Connect the first test pack to CI/CD, with clear reports for release readiness and failure triage.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section elinext">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="elinext-card">
+          <ul class="customer-list">
+            <li>Siemens</li>
+            <li>Broadcom</li>
+            <li>Volkswagen</li>
+            <li>TRUMPF</li>
+          </ul>
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build dedicated teams for web, backend, mobile, QA, DevOps, AI/ML, and enterprise software. Our work is relevant here because we support regulated and industrial clients, including Siemens, Broadcom, Volkswagen, and TRUMPF. Elinext holds ISO 9001 and ISO 27001 certifications. For Econolite, we would bring a focused QA automation squad that can work under your product owner and turn test knowledge into assets.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-it-infrastructure-management-software-qa.jpg" alt="Infrastructure QA case study image">
+            <div class="proof-body">
+              <h3>QA for infrastructure management software</h3>
+              <p>Elinext built a scalable QA team for a complex, multi-module infrastructure product with real-time KPI monitoring.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/it-infrastructure-management-software-qa/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-card-terminals-software-development.jpg" alt="Card terminals case study image">
+            <div class="proof-body">
+              <h3>Transport software with hardware touchpoints</h3>
+              <p>Elinext supported C# desktop and Web API work for card terminals used in live transport operations.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/card-terminals-software-development-for-cruise-liners/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Talk through the test plan</h2>
+        <p>Start with one critical flow, then scale coverage.</p>
+        <a href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
