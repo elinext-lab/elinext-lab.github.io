@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bravas NetSuite Stabilization Proposal | Elinext</title>
+  <meta name="description" content="A focused Elinext proposal for Bravas NetSuite stabilization, D-Tools integration cleanup, and reporting support.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/bravas_2026-05-21_18-00-29/">
+  <meta property="og:title" content="Bravas NetSuite Stabilization Proposal">
+  <meta property="og:description" content="A focused ERP and integration sprint for Bravas while the NetSuite Administrator search continues.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/bravas_2026-05-21_18-00-29/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/bravas_2026-05-21_18-00-29/og-image.jpg">
+  <style>
+    :root {
+      --ink: #101623;
+      --muted: #5c6675;
+      --paper: #fbfaf6;
+      --white: #ffffff;
+      --deep: #101827;
+      --line: #e4dfd5;
+      --warm: #f3ede3;
+      --sage: #dfe9dc;
+      --blue: #dce9f2;
+      --orange: #d97a35;
+      --orange-dark: #a95622;
+      --shadow: 0 18px 44px rgba(20, 24, 33, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+    }
+
+    .section.dark {
+      background: var(--deep);
+      color: var(--white);
+    }
+
+    .section.white {
+      background: var(--white);
+    }
+
+    .section.warm {
+      background: var(--warm);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 82vh;
+      display: grid;
+      align-items: center;
+      padding-top: 38px;
+      padding-bottom: 42px;
+      background:
+        linear-gradient(135deg, rgba(16, 24, 39, 0.97), rgba(24, 43, 52, 0.96)),
+        var(--deep);
+    }
+
+    .brandline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 52px;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.83rem;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .brandmark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brandmark::before {
+      content: "";
+      width: 34px;
+      height: 3px;
+      background: var(--orange);
+      border-radius: 2px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 22px;
+      font-size: clamp(2.45rem, 7vw, 5.6rem);
+      line-height: 0.98;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: 0;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 34px;
+    }
+
+    .signal-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 36px;
+      max-width: 760px;
+    }
+
+    .signal-strip span {
+      border-left: 3px solid var(--orange);
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .section h2 {
+      margin-bottom: 24px;
+      text-align: center;
+      font-size: clamp(1.8rem, 4vw, 3.2rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 26px;
+      background: var(--sage);
+      border: 1px solid #c8d8c3;
+      border-left: 6px solid #4d7757;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p,
+    .intro p,
+    .who p {
+      margin-bottom: 0;
+      color: var(--ink);
+      font-size: 1.04rem;
+    }
+
+    .proposal-layout {
+      display: grid;
+      gap: 18px;
+      margin-top: 30px;
+    }
+
+    .proposal-main,
+    .team-panel {
+      border-radius: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .proposal-main {
+      padding: 18px;
+    }
+
+    .team-panel {
+      padding: 22px;
+      background: #f8f6f0;
+    }
+
+    .intro {
+      display: grid;
+      gap: 10px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      color: var(--orange-dark);
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf8;
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--deep);
+      color: var(--white);
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin-bottom: 5px;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .roles {
+      display: grid;
+      gap: 10px;
+      margin: 18px 0 22px;
+    }
+
+    .role {
+      padding: 11px 12px;
+      border: 1px solid #d7cfbf;
+      border-radius: 8px;
+      background: var(--white);
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--blue);
+      color: #24465c;
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .who {
+      max-width: 860px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 22px;
+    }
+
+    .customer {
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.88);
+      font-weight: 850;
+    }
+
+    .dark .who p {
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 2.25 / 1;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 20px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.12rem;
+      line-height: 1.25;
+    }
+
+    .case-body p {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .case-link {
+      color: var(--orange-dark);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+    }
+
+    .cta h2 {
+      margin-bottom: 12px;
+    }
+
+    .cta p {
+      margin: 0 auto 24px;
+      max-width: 560px;
+      color: var(--muted);
+      font-size: 1.06rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 13px 22px;
+      border-radius: 999px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 12px 26px rgba(217, 122, 53, 0.26);
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 78px 28px;
+      }
+
+      .proposal-layout {
+        grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+        align-items: stretch;
+      }
+
+      .proposal-main {
+        padding: 24px;
+      }
+
+      .signal-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1120px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section dark hero">
+      <div class="wrap">
+        <div class="brandline">
+          <span class="brandmark">Elinext for Bravas</span>
+          <span>Proposal brief</span>
+        </div>
+        <div class="hero-grid">
+          <div>
+            <h1>Keep Bravas's NetSuite recovery moving while you hire</h1>
+            <p>Saw the NetSuite Administrator search focused on post-migration cleanup, broken workflows, data health, and D-Tools integration. Here is how Elinext would help without slowing your in-house hire.</p>
+            <div class="signal-strip" aria-label="Focus areas">
+              <span>Post-migration cleanup</span>
+              <span>NetSuite to D-Tools</span>
+              <span>Finance and ops reports</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section warm">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Your NetSuite role points to a recovery phase after the 2025 migration. Broken workflows and data gaps can block finance, ops, and location leaders. D-Tools integration adds risk because projects, parts, and billing must match. If the queue waits for one hire, field teams keep working around the system.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-layout">
+          <div class="proposal-main">
+            <div class="intro">
+              <span class="eyebrow">Engagement model</span>
+              <p>A dedicated squad works under your Finance, Ops, and IT leads for a six-week pilot.</p>
+            </div>
+            <div class="steps">
+              <article class="step">
+                <span class="num">1</span>
+                <div>
+                  <h3>Map the live backlog</h3>
+                  <p>Group NetSuite defects by workflow, data, role, report, and D-Tools impact, then set the first repair queue.</p>
+                </div>
+              </article>
+              <article class="step">
+                <span class="num">2</span>
+                <div>
+                  <h3>Fix high-friction workflows</h3>
+                  <p>Clean broken scripts, saved searches, and automation with test cases that finance users can review in weekly demos.</p>
+                </div>
+              </article>
+              <article class="step">
+                <span class="num">3</span>
+                <div>
+                  <h3>Stabilize integrations</h3>
+                  <p>Review NetSuite to D-Tools flows, add checks, and flag records that need manual review before billing.</p>
+                </div>
+              </article>
+              <article class="step">
+                <span class="num">4</span>
+                <div>
+                  <h3>Handoff clean ownership</h3>
+                  <p>Leave SOPs, change logs, release notes, and a clear queue for the new administrator to own.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+          <aside class="team-panel" aria-label="Team shape">
+            <span class="eyebrow">Team shape</span>
+            <div class="roles">
+              <div class="role">ERP integration lead</div>
+              <div class="role">Backend developer</div>
+              <div class="role">QA data engineer</div>
+              <div class="role">Part-time DevOps</div>
+            </div>
+            <span class="eyebrow">Relevant stack</span>
+            <div class="stack">
+              <span class="pill">Java</span>
+              <span class="pill">.NET</span>
+              <span class="pill">Python</span>
+              <span class="pill">Node.js</span>
+              <span class="pill">React</span>
+              <span class="pill">Angular</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark">
+      <div class="wrap who">
+        <h2>Who is Elinext</h2>
+        <p>Elinext is a full-cycle software development company, working with global clients since 1997. We have about 700 in-house specialists, and use no freelancers or subcontractors. For Bravas, the fit is secure enterprise work, integrations, QA, DevOps, and reporting. We hold ISO 9001 for quality and ISO 27001 for information security. Customers include Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. That base helps a NetSuite squad ship weekly fixes, clear change logs, and safe access work while your team owns priorities.</p>
+        <div class="customers" aria-label="Named customers">
+          <strong class="customer">Siemens</strong>
+          <strong class="customer">Broadcom</strong>
+          <strong class="customer">Volkswagen</strong>
+          <strong class="customer">TRUMPF</strong>
+          <strong class="customer">TUI</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section warm">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-erp.jpg" alt="ERP development case study preview" loading="lazy">
+            <div class="case-body">
+              <h3>ERP development for an automotive dealership service provider</h3>
+              <p>Elinext upgraded an ERP stack, improved event sync, and supported daily operations for a service organization.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/erp-development-for-the-automotive-dealership-service-provider/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-billing.jpg" alt="Enterprise billing software case study preview" loading="lazy">
+            <div class="case-body">
+              <h3>Medical practice and billing software</h3>
+              <p>Elinext has supported a complex billing platform for years, including third-party integrations and enterprise feature work.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/healthcare-crm-system/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap cta">
+        <h2>Talk through the sprint</h2>
+        <p>A short call can size the NetSuite backlog.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
