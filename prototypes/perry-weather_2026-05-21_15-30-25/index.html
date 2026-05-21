@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Perry Weather backend capacity proposal | Elinext</title>
+  <meta name="description" content="A focused Elinext proposal for Perry Weather backend scale, alert reliability, and senior engineering capacity.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/perry-weather_2026-05-21_15-30-25/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Perry Weather backend capacity proposal">
+  <meta property="og:description" content="Senior backend capacity for Perry Weather's alert platform moment.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/perry-weather_2026-05-21_15-30-25/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/perry-weather_2026-05-21_15-30-25/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/perry-weather_2026-05-21_15-30-25/og-image.jpg">
+  <style>
+    :root {
+      --navy: #131b25;
+      --ink: #263443;
+      --muted: #617080;
+      --paper: #ffffff;
+      --soft: #f5f8fb;
+      --line: #dce5ec;
+      --teal: #66c8ab;
+      --lime: #dfe566;
+      --orange: #f37021;
+      --blue: #264f75;
+      --shadow: 0 18px 50px rgba(19, 27, 37, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--soft);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      font-size: 16px;
+      line-height: 1.58;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 54px 18px;
+      background: var(--paper);
+    }
+
+    .section.alt {
+      background: #edf7f3;
+    }
+
+    .section.dark {
+      background: var(--navy);
+      color: #f8fbff;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 86vh;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(135deg, rgba(19, 27, 37, 0.96), rgba(38, 79, 117, 0.92)),
+        url("assets/case-analytics.jpg") center / cover;
+      color: #f8fbff;
+      padding: 54px 18px 44px;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 7px;
+      background: linear-gradient(90deg, var(--orange), var(--teal), var(--lime));
+    }
+
+    .hero .wrap {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 18px;
+      color: #dce7f3;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 3px;
+      background: var(--orange);
+      border-radius: 3px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: 42px;
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: 29px;
+      line-height: 1.15;
+      color: var(--navy);
+      letter-spacing: 0;
+    }
+
+    .dark h2 {
+      color: #ffffff;
+    }
+
+    .hero p {
+      max-width: 690px;
+      margin-bottom: 14px;
+      color: #e8f0f8;
+      font-size: 18px;
+    }
+
+    .why {
+      padding-left: 16px;
+      border-left: 4px solid var(--orange);
+      color: #ffffff;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      background: #f8fbef;
+      border: 1px solid #d7dfaa;
+      border-left: 7px solid var(--lime);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      color: var(--ink);
+      font-size: 18px;
+    }
+
+    .proposal {
+      background: #f8fbff;
+    }
+
+    .proposal-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .proposal-intro {
+      padding: 0;
+    }
+
+    .model-line {
+      margin-bottom: 18px;
+      font-size: 18px;
+      color: var(--navy);
+    }
+
+    .team-shape {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 20px 0 24px;
+    }
+
+    .role {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 54px;
+      padding: 13px 14px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .role strong {
+      color: var(--navy);
+    }
+
+    .role span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .stack li,
+    .customer {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #e7f4f0;
+      color: #12392e;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 12px;
+      padding: 18px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(19, 27, 37, 0.07);
+    }
+
+    .badge {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin: 0 0 5px;
+      color: var(--navy);
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .elinext p {
+      max-width: 78ch;
+      margin: 0 auto 20px;
+      text-align: center;
+      color: #dce7f3;
+      font-size: 17px;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .customer {
+      background: rgba(102, 200, 171, 0.16);
+      color: #e7fff7;
+      border: 1px solid rgba(102, 200, 171, 0.45);
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #dbe5ec;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      color: var(--navy);
+      font-size: 19px;
+      line-height: 1.25;
+    }
+
+    .case-body p {
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+
+    .case-body a {
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+      border-bottom: 2px solid var(--teal);
+    }
+
+    .talk {
+      text-align: center;
+    }
+
+    .talk p {
+      margin-bottom: 24px;
+      color: #dce7f3;
+      font-size: 18px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 10px 24px rgba(243, 112, 33, 0.28);
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 72px 28px;
+      }
+
+      .hero {
+        min-height: 82vh;
+        padding: 72px 28px 58px;
+      }
+
+      h1 {
+        font-size: 60px;
+      }
+
+      h2 {
+        font-size: 38px;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 900px) {
+      .proposal-grid,
+      .team-shape {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1120px) {
+      h1 {
+        font-size: 68px;
+      }
+
+      .proposal-grid {
+        gap: 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Private proposal brief</p>
+        <h1>Backend help for Perry Weather's next platform push</h1>
+        <p>Perry Weather already has the hard part. Trusted weather data, hardware, and teams act from one source of truth. The next step is backend delivery as that footprint grows.</p>
+        <p class="why">Why we're here: we saw the Senior Backend Engineer role. It looks tied to scaling C# services behind stations, alerts, and StormBridge.</p>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Perry Weather is scaling services behind stations, warning systems, apps, and dashboard. That means more telemetry, more policy checks, and more async work in production. If that load stays on a small team, new features and reliability work compete every week. The business risk is simple: customer trust depends on alerts that arrive fast and records that hold up later.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-grid">
+          <div class="proposal-intro">
+            <p class="model-line"><strong>Engagement model:</strong> a dedicated backend squad under your product and engineering leads.</p>
+            <div class="team-shape" aria-label="Proposed team shape">
+              <div class="role"><strong>Backend Lead</strong><span>pilot owner</span></div>
+              <div class="role"><strong>2 C# Engineers</strong><span>services</span></div>
+              <div class="role"><strong>QA Engineer</strong><span>alert paths</span></div>
+              <div class="role"><strong>DevOps Support</strong><span>part-time</span></div>
+            </div>
+            <p><strong>Relevant stack:</strong></p>
+            <ul class="stack">
+              <li>C#</li>
+              <li>.NET</li>
+              <li>React Native</li>
+              <li>Node.js</li>
+              <li>Python</li>
+            </ul>
+          </div>
+          <div class="timeline">
+            <article class="step">
+              <div class="badge">1</div>
+              <div>
+                <h3>Find the safest pilot</h3>
+                <p>Map telemetry from stations, StormBridge, apps, and dashboard, then pick the safest backend pilot path.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="badge">2</div>
+              <div>
+                <h3>Add senior capacity</h3>
+                <p>Add two senior C#/.NET engineers and one QA engineer, matched to your microservice and async patterns.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="badge">3</div>
+              <div>
+                <h3>Protect alert paths</h3>
+                <p>Harden alert jobs, push registration, login edges, and runbooks around paths that affect customer safety.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="badge">4</div>
+              <div>
+                <h3>Leave clean ownership</h3>
+                <p>Ship weekly demos and handoff notes, so your team keeps ownership and can keep moving after the pilot.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark elinext">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <p>Elinext is a full-cycle software development company, founded in 1997, with long client relationships. About 700 in-house specialists build mobile, web, backend, QA, DevOps, AI, and data systems. No freelancers or subcontractors means stable teams, clearer ownership, and less handoff risk. We work for Broadcom, Siemens, Volkswagen, TRUMPF, TUI, Parrot, and TransPerfect worldwide. ISO 9001 and ISO 27001 support quality, security, and clear delivery control for enterprise work. For Perry Weather, senior engineers can follow C# standards and protect critical alert paths.</p>
+        <div class="customers" aria-label="Named Elinext customers">
+          <strong class="customer">Broadcom</strong>
+          <strong class="customer">Siemens</strong>
+          <strong class="customer">Volkswagen</strong>
+          <strong class="customer">TRUMPF</strong>
+          <strong class="customer">TUI</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-warehouse.jpg" width="900" height="506" alt="Warehouse management case study visual">
+            <div class="case-body">
+              <h3>Continuous microservices development</h3>
+              <p>Elinext supported warehouse backend services, Web API, ASP.NET Core, MS SQL, Android, QA, and production fixes.</p>
+              <a href="https://www.elinext.com/case-study/warehouse-management-solutions/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-analytics.jpg" width="900" height="506" alt="Sales analytics platform case study visual">
+            <div class="case-body">
+              <h3>Data-heavy analytics platform</h3>
+              <p>Elinext built a web platform that helps process about 30 million dealer and customer records daily.</p>
+              <a href="https://www.elinext.com/case-study/sales-analytics-application-for-chainsaw-manufacturer/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark talk">
+      <div class="wrap">
+        <h2>Start the backend conversation</h2>
+        <p>A short call can test fit, scope, and timing.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
