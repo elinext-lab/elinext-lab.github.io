@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sentry Ingest Support Proposal | Elinext</title>
+  <meta name="description" content="A focused Elinext proposal for Sentry's ingest and event pipeline work.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/sentry_2026-05-22_23-00-37/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Sentry Ingest Support Proposal">
+  <meta property="og:description" content="A focused backend and data pipeline support plan from Elinext.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/sentry_2026-05-22_23-00-37/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/sentry_2026-05-22_23-00-37/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/sentry_2026-05-22_23-00-37/og-image.jpg">
+  <style>
+    :root {
+      --ink: #171422;
+      --muted: #5e6270;
+      --paper: #fbf8f2;
+      --soft: #f1ede5;
+      --panel: #ffffff;
+      --night: #17142b;
+      --violet: #6a5fc1;
+      --orange: #f26835;
+      --teal: #277d77;
+      --line: rgba(23, 20, 34, 0.14);
+      --shadow: 0 18px 48px rgba(28, 23, 45, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 54px 18px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 86vh;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(135deg, rgba(23, 20, 43, 0.96), rgba(39, 125, 119, 0.78)),
+        radial-gradient(circle at 70% 18%, rgba(242, 104, 53, 0.28), transparent 34%);
+      color: #fffaf2;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 34px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: #f7b08b;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 18px;
+      font-size: clamp(3rem, 11vw, 6.8rem);
+      line-height: 0.92;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 58ch;
+      margin-bottom: 0;
+      color: #e8e4f2;
+      font-size: clamp(1.02rem, 2.4vw, 1.24rem);
+    }
+
+    .hero-note {
+      width: 100%;
+      max-width: 430px;
+      border-left: 5px solid var(--orange);
+      padding: 18px 0 18px 18px;
+      color: #f7f0e6;
+    }
+
+    .hero-note strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
+
+    .hero-note span {
+      color: #d5d0e4;
+    }
+
+    .section-title {
+      margin-bottom: 24px;
+      text-align: center;
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      max-width: 74ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid rgba(106, 95, 193, 0.28);
+      border-left: 7px solid var(--violet);
+      border-radius: 8px;
+      background: #f0ecff;
+      box-shadow: var(--shadow);
+      font-size: 1.05rem;
+    }
+
+    .proposal {
+      background: var(--night);
+      color: #fffaf2;
+    }
+
+    .proposal .section-title {
+      color: #fffaf2;
+    }
+
+    .proposal-intro {
+      max-width: 70ch;
+      margin: 0 auto 30px;
+      color: #ddd7ea;
+      text-align: center;
+    }
+
+    .squad {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom: 26px;
+    }
+
+    .role {
+      min-height: 86px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .role b {
+      display: block;
+      color: #ffffff;
+      font-size: 0.95rem;
+    }
+
+    .role span {
+      color: #c9c4d8;
+      font-size: 0.86rem;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      background: #211d39;
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #1d1420;
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin-bottom: 5px;
+      font-size: 1.05rem;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: #ccc6db;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+      justify-content: center;
+    }
+
+    .tag,
+    .customer {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tag {
+      background: #fff2e6;
+      color: #692d15;
+    }
+
+    .elinext {
+      background: #f7f4ed;
+    }
+
+    .cred {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 26px;
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      font-size: 1.04rem;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 0;
+    }
+
+    .customer {
+      background: #e9f4f2;
+      color: #15514d;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 2.3 / 1;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 20px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.2rem;
+    }
+
+    .case-body p {
+      color: var(--muted);
+    }
+
+    .case-body a {
+      font-weight: 900;
+      color: var(--violet);
+    }
+
+    .talk {
+      background: #f4efe4;
+      text-align: center;
+    }
+
+    .talk p {
+      max-width: 38ch;
+      margin: 0 auto 24px;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border-radius: 8px;
+      padding: 12px 18px;
+      background: var(--orange);
+      color: #2c130a;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 78px 28px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      }
+
+      .squad {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 430px) {
+      .section {
+        padding: 44px 16px;
+      }
+
+      .hero {
+        min-height: 84vh;
+      }
+
+      .squad {
+        grid-template-columns: 1fr;
+      }
+
+      .step {
+        grid-template-columns: 1fr;
+      }
+
+      .num {
+        width: 34px;
+        height: 34px;
+      }
+
+      .read-box,
+      .cred {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="section hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">For Sentry</p>
+          <h1>Protect ingest reliability while Sentry scales</h1>
+          <p class="why">Saw Sentry is hiring for Software Engineer, Ingest in Austria. That points to more load on Relay, Symbolicator, and the event pipeline behind the product.</p>
+        </div>
+        <div class="hero-note">
+          <strong>Why we're here</strong>
+          <span>We can help the core team keep shipping while hiring continues.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Our read</h2>
+        <p class="read-box">The Ingest role says Sentry is scaling the system that receives customer events. That work is close to Relay, Symbolicator, queues, storage, and support-visible issue state. The hard part is not only speed. It is keeping context correct when traffic spikes, noisy projects appear, or symbolication slows down. If that slips, users lose trust during the moments they need Sentry most.</p>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2 class="section-title">What we'd do</h2>
+        <p class="proposal-intro">A dedicated Elinext squad would work under Sentry's PO or engineering manager. The team shape: one Tech Lead, two senior backend engineers, one QA automation engineer, and a part-time DevOps engineer.</p>
+        <div class="squad" aria-label="Proposed team">
+          <div class="role"><b>Tech Lead</b><span>delivery, reviews, risk calls</span></div>
+          <div class="role"><b>Backend</b><span>Rust-facing service work</span></div>
+          <div class="role"><b>Backend</b><span>Python and queues</span></div>
+          <div class="role"><b>QA Auto</b><span>load and failure tests</span></div>
+          <div class="role"><b>DevOps</b><span>dashboards and runbooks</span></div>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="num">1</div>
+            <div>
+              <h3>Map the ingest path</h3>
+              <p>Trace the path from SDK event to Relay, Kafka, Symbolicator, storage, alerts, and customer-visible issue state.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">2</div>
+            <div>
+              <h3>Test burst behavior</h3>
+              <p>Add load and failure tests for burst traffic, noisy projects, slow symbolication, and queue back pressure.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">3</div>
+            <div>
+              <h3>Ship small fixes</h3>
+              <p>Deliver small Rust-facing and Python fixes with your Client Infrastructure team, review notes, and rollback steps.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">4</div>
+            <div>
+              <h3>Align the runbooks</h3>
+              <p>Tune dashboards and runbooks so support, solutions engineering, and on-call engineers see the same ingest truth.</p>
+            </div>
+          </article>
+        </div>
+        <div class="stack" aria-label="Relevant stack">
+          <span class="tag">Python</span>
+          <span class="tag">C/C++</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">React</span>
+          <span class="tag">PostgreSQL</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section elinext">
+      <div class="wrap">
+        <h2 class="section-title">Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Sentry, the fit is backend, QA, DevOps, and ISO 27001 work around data-heavy systems. ISO 9001 also supports a clear test and release process. Our teams have served <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. We can join under your PO and help protect delivery while the ingest team grows.</p>
+          <div class="customers" aria-label="Named customers">
+            <span class="customer">Siemens</span>
+            <span class="customer">Broadcom</span>
+            <span class="customer">Volkswagen</span>
+            <span class="customer">TRUMPF</span>
+            <span class="customer">TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-router.jpg" alt="Remote network management case study">
+            <div class="case-body">
+              <h3>Remote network and router management</h3>
+              <p>Elinext built a high-volume platform for internet providers, with Python, React, PostgreSQL, and Kubernetes in the stack.</p>
+              <a href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-microservice.jpg" alt="Microservice data analysis case study">
+            <div class="case-body">
+              <h3>Microservice data collection</h3>
+              <p>Elinext supported overloaded services with Kafka, Redis, gRPC, AWS, React, MySQL, and TypeScript work.</p>
+              <a href="https://www.elinext.com/case-study/microservice-software-for-collecting-and-analyzing-data/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="wrap">
+        <h2 class="section-title">Start the conversation</h2>
+        <p>Share the ingest backlog. We will shape a small pilot.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
