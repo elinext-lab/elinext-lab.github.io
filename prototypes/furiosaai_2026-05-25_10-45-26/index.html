@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Elinext Proposal for FuriosaAI</title>
+  <meta name="description" content="A focused Elinext proposal for FuriosaAI's compiler workflow, CI signal, and SDK delivery around RNGD.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/furiosaai_2026-05-25_10-45-26/">
+  <meta property="og:title" content="Elinext Proposal for FuriosaAI">
+  <meta property="og:description" content="Support for compiler workflow, CI signal, and SDK delivery around RNGD.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/furiosaai_2026-05-25_10-45-26/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/furiosaai_2026-05-25_10-45-26/og-image.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      --ink: #141414;
+      --muted: #5f6368;
+      --paper: #f7f3ed;
+      --panel: #fffdf8;
+      --dark: #111722;
+      --red: #d7342a;
+      --orange: #f28729;
+      --green: #3f8f68;
+      --line: #ded6c9;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .page {
+      width: 100%;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      background: var(--paper);
+    }
+
+    .section.light { background: var(--panel); }
+    .section.dark { background: var(--dark); color: white; }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      background:
+        linear-gradient(135deg, rgba(17,23,34,.98), rgba(39,20,18,.94)),
+        radial-gradient(circle at 20% 10%, rgba(215,52,42,.22), transparent 36%);
+      color: white;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 8px;
+      background: linear-gradient(90deg, var(--red), var(--orange), var(--green));
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: #ffb06a;
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 820px;
+      margin-bottom: 18px;
+      font-size: clamp(2.55rem, 7vw, 5.8rem);
+      line-height: .98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 24px;
+      font-size: clamp(1.9rem, 4vw, 3.2rem);
+      line-height: 1.05;
+      text-align: center;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 660px;
+      margin-bottom: 14px;
+      color: #e9e4dc;
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+    }
+
+    .why {
+      max-width: 720px;
+      margin: 0;
+      padding-left: 16px;
+      border-left: 4px solid var(--orange);
+      color: #fff7ed;
+      font-size: 1rem;
+    }
+
+    .read-card {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      padding: 26px;
+      border: 1px solid #e7b9a6;
+      border-left: 6px solid var(--red);
+      border-radius: 8px;
+      background: #f3e7dc;
+      box-shadow: 0 18px 46px rgba(69, 40, 20, .08);
+    }
+
+    .read-card p {
+      margin-bottom: 0;
+      font-size: 1.05rem;
+    }
+
+    .plan {
+      display: grid;
+      gap: 18px;
+    }
+
+    .plan-head {
+      display: grid;
+      gap: 18px;
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      background: rgba(255,255,255,.06);
+    }
+
+    .role-grid,
+    .steps,
+    .case-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .role-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .role {
+      min-width: 0;
+      padding: 14px;
+      border-radius: 8px;
+      background: #fff8ed;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      max-width: 100%;
+      padding: 6px 10px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 999px;
+      color: #ffe4c4;
+      font-size: .9rem;
+      white-space: normal;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      min-width: 0;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 8px;
+      background: rgba(255,255,255,.08);
+    }
+
+    .num {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #151515;
+      font-weight: 900;
+    }
+
+    .step p {
+      margin: 0;
+      color: #d7dbe3;
+      font-size: .96rem;
+    }
+
+    .cred {
+      width: min(100%, 880px);
+      margin: 0 auto;
+      font-size: 1.05rem;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .customer {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #f6ece1;
+      font-weight: 800;
+    }
+
+    .case-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 18px 46px rgba(32, 25, 18, .08);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #e6ded3;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body p {
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+
+    .case-body a {
+      font-weight: 800;
+      color: #8c211b;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .cta {
+      text-align: center;
+    }
+
+    .cta p {
+      max-width: 520px;
+      margin: 0 auto 22px;
+      color: #dce2ea;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #121212;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section { padding: 76px 28px; }
+      .plan { grid-template-columns: .9fr 1.1fr; align-items: start; }
+      .case-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .plan-head { position: sticky; top: 28px; }
+    }
+
+    @media (max-width: 430px) {
+      .hero { min-height: 88vh; }
+      .role-grid { grid-template-columns: 1fr; }
+      .step { grid-template-columns: 1fr; }
+      .num { width: 34px; height: 34px; }
+      .read-card { padding: 22px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section dark hero">
+      <div class="wrap">
+        <p class="eyebrow">Proposal brief for FuriosaAI</p>
+        <h1>Helping FuriosaAI scale compiler work around RNGD faster</h1>
+        <p class="lead">RNGD is moving from strong proof to wider enterprise use. The software stack now needs fast compiler delivery, clear CI signal, and simple developer paths.</p>
+        <p class="why">We saw the Compiler AX Engineer role. It points to a team need: make AI-assisted engineering, review, CI, and docs useful inside FuriosaAI's compiler workflow.</p>
+      </div>
+    </section>
+
+    <section class="section light">
+      <div class="wrap">
+        <h2>Our Read</h2>
+        <div class="read-card">
+          <p>The AX role says the Compiler team wants repeatable AI-assisted workflows. That means RNGD work is moving from chip proof to team scale. The hard part is not only faster code. It is better CI signal, clear playbooks, and safe tests for compiler, runtime, and SDK changes. If this stays manual, releases slow and senior engineers lose time on triage.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark">
+      <div class="wrap">
+        <h2>What We'd Do</h2>
+        <div class="plan">
+          <div class="plan-head">
+            <div>
+              <h3>Engagement model</h3>
+              <p>A dedicated squad under your compiler or DevEx lead, with weekly demos and clear handoff.</p>
+            </div>
+            <div>
+              <h3>Team shape</h3>
+              <div class="role-grid">
+                <div class="role">1 Tech Lead</div>
+                <div class="role">2 Python / C++ engineers</div>
+                <div class="role">1 DevOps / CI engineer</div>
+                <div class="role">1 QA automation engineer</div>
+              </div>
+            </div>
+            <div>
+              <h3>Relevant stack</h3>
+              <div class="stack">
+                <span class="pill">Python</span>
+                <span class="pill">C/C++</span>
+                <span class="pill">Java</span>
+                <span class="pill">Node.js</span>
+                <span class="pill">React</span>
+                <span class="pill">QA automation</span>
+              </div>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="num">1</div>
+              <div><h3>Map the compiler flow</h3><p>Review real PRs, CI failures, docs gaps, and debug paths across compiler, runtime, SDK, and model tests.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div><h3>Pilot useful AI workflows</h3><p>Test coding agents on review prep, failure triage, runbook drafts, and repeatable compiler team prompts.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div><h3>Improve CI signal</h3><p>Add sharper failure labels, flaky test handling, and dashboards for NPU-backed compiler and SDK checks.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div><h3>Package the handoff</h3><p>Ship playbooks, templates, test notes, and adoption metrics your engineers can keep using after the pilot.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section light">
+      <div class="wrap">
+        <h2>Who Is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, active since 1997. We have around 700 in-house specialists and use no freelancers. For FuriosaAI, our fit is systems work, QA, DevOps, and AI software delivery. Our teams work with ISO 9001 and ISO 27001 standards. We can work under your product or engineering lead, with weekly demos and clear handoff. This lets us add a focused squad without slowing your core compiler team. The goal is useful output, not process noise.</p>
+          <div class="customers">
+            <strong class="customer">Siemens</strong>
+            <strong class="customer">Broadcom</strong>
+            <strong class="customer">Volkswagen</strong>
+            <strong class="customer">TRUMPF</strong>
+            <strong class="customer">TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-virtualization-manager.jpg" alt="Infrastructure case study cover">
+            <div class="case-body">
+              <h3>Virtualization Manager for a Leading Telecom Company</h3>
+              <p>Elinext built internal infrastructure tooling with Python and DevOps support. It improved productivity and cut maintenance effort.</p>
+              <a href="https://www.elinext.com/case-study/virtualization-manager-of-internal-infrastructure-for-telecom-company-in-usa/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-ci-cd.jpg" alt="CI/CD case study cover">
+            <div class="case-body">
+              <h3>CI/CD Optimization for Infrastructure Software</h3>
+              <p>Elinext improved release flow for a technology client. Development time fell by 40% from start to finish.</p>
+              <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark">
+      <div class="wrap cta">
+        <h2>Start A Focused Pilot</h2>
+        <p>Bring extra hands to compiler flow, CI, and SDK work.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
