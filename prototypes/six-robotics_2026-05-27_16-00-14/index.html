@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Six Robotics GCS Engineering Proposal | Elinext</title>
+  <meta name="description" content="A focused Elinext proposal for Six Robotics Ground Control Station backend, API, telemetry, and release support.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/six-robotics_2026-05-27_16-00-14/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Six Robotics GCS Engineering Proposal">
+  <meta property="og:description" content="Senior Rust, C++, API, telemetry, and release support for the Valkyrie Ground Control Station backend.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/six-robotics_2026-05-27_16-00-14/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/six-robotics_2026-05-27_16-00-14/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/six-robotics_2026-05-27_16-00-14/og-image.jpg">
+  <style>
+    :root {
+      --ink: #121722;
+      --muted: #596171;
+      --line: #d9dfeb;
+      --paper: #f6f4ee;
+      --white: #ffffff;
+      --navy: #121a2d;
+      --olive: #5e6b50;
+      --orange: #e98635;
+      --blue: #dce8f5;
+      --green-soft: #eef1e7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 28px 0 36px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 42px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      color: #c7cfdd;
+    }
+
+    .brand strong {
+      color: var(--white);
+      font-size: 0.95rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .kicker {
+      color: #f3b073;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      margin: 0 0 12px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.35rem, 10vw, 5.4rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 42rem;
+      color: #dce3ef;
+      font-size: 1.04rem;
+      margin-bottom: 16px;
+    }
+
+    .why {
+      max-width: 42rem;
+      color: #f5f1e9;
+      border-left: 4px solid var(--orange);
+      padding-left: 14px;
+      margin-bottom: 0;
+    }
+
+    .hero-media {
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: #0b1020;
+    }
+
+    .hero-media img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
+    section {
+      padding: 56px 0;
+      background: var(--paper);
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      line-height: 1.05;
+      margin-bottom: 26px;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: min(100%, 72ch);
+      margin: 0 auto;
+      background: var(--green-soft);
+      border: 1px solid #cfd8c5;
+      border-left: 6px solid var(--olive);
+      border-radius: 8px;
+      padding: 24px;
+      font-size: 1.03rem;
+    }
+
+    .proposal {
+      background: #ffffff;
+    }
+
+    .proposal-panel {
+      display: grid;
+      gap: 18px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcff;
+    }
+
+    .model {
+      display: grid;
+      gap: 14px;
+    }
+
+    .model-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: var(--white);
+    }
+
+    .label {
+      display: block;
+      color: var(--orange);
+      font-weight: 800;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      border: 1px solid #cdd6e4;
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: #eef5fb;
+      color: #223047;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin: 6px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: var(--white);
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--white);
+      font-weight: 800;
+      font-size: 0.86rem;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1rem;
+    }
+
+    .step span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .elinext {
+      background: var(--blue);
+    }
+
+    .copy {
+      width: min(100%, 72ch);
+      margin: 0 auto;
+      font-size: 1.02rem;
+      text-align: left;
+    }
+
+    .logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .logos strong {
+      display: inline-block;
+      border: 1px solid #bac9da;
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: rgba(255, 255, 255, 0.65);
+      font-size: 0.86rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #e6ebf2;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+      line-height: 1.2;
+    }
+
+    .case-body p {
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .case-body a {
+      color: #23476d;
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .final {
+      background: var(--navy);
+      color: var(--white);
+      text-align: center;
+      padding: 62px 0;
+    }
+
+    .final h2 {
+      font-size: clamp(2rem, 8vw, 4rem);
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    .final p {
+      color: #dce3ef;
+      margin-bottom: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #15130f;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .hero {
+        padding: 34px 0 52px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.04fr) minmax(260px, 0.96fr);
+      }
+
+      .proposal-panel {
+        padding: 28px;
+      }
+
+      .model {
+        grid-template-columns: 0.95fr 1.05fr;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="brand">
+        <strong>Six Robotics</strong>
+        <span>Proposal brief by Elinext</span>
+      </div>
+      <div class="hero-grid">
+        <div>
+          <p class="kicker">For Mathias Nedrebø</p>
+          <h1>Keep Valkyrie GCS work moving while hiring catches up</h1>
+          <p class="lead">A short proposal for senior Rust, C++, API, telemetry, and release support. We focus on Six Robotics' Ground Control Station backend. Your team keeps architecture control.</p>
+          <p class="why">Saw you are hiring senior engineers for GCS and Production Suite work. Here is how we would reduce load while you find the right permanent hires.</p>
+        </div>
+        <div class="hero-media">
+          <img src="assets/six-gcs.jpg" alt="Ground control station field setup from Six Robotics">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Our read</h2>
+      <div class="read-box">
+        <p>Your hiring signal says GCS work is moving fast. The hard part is not Rust alone. It is the mix of backend APIs, edge devices, telemetry, and field use. If senior capacity stays thin, partner integrations can slow down and release risk grows. A small outside team can absorb defined work. Your team keeps core autonomy and architecture decisions.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="proposal">
+    <div class="wrap">
+      <h2 class="section-title">What we'd do</h2>
+      <div class="proposal-panel">
+        <div class="model">
+          <div class="model-card">
+            <span class="label">Engagement model</span>
+            <p>A dedicated team works under your Product Owner, PM, or tech lead. Six Robotics keeps product direction, code review, and IP boundaries.</p>
+            <span class="label">Team shape</span>
+            <div class="team">
+              <span class="pill">Senior Rust backend</span>
+              <span class="pill">C++ systems engineer</span>
+              <span class="pill">DevOps / test automation</span>
+              <span class="pill">QA automation</span>
+            </div>
+          </div>
+          <div class="model-card">
+            <span class="label">Six-week pilot</span>
+            <ol class="steps">
+              <li class="step"><span class="num">1</span><span><strong>Map the work</strong><span>Map GCS backend boundaries, API owners, simulator paths, and test gaps with your lead engineer.</span></span></li>
+              <li class="step"><span class="num">2</span><span><strong>Ship backend slices</strong><span>Deliver Rust service work for telemetry and partner APIs, with Protobuf contracts reviewed before merge.</span></span></li>
+              <li class="step"><span class="num">3</span><span><strong>Test field paths</strong><span>Build replay tests from simulator and field data to catch edge, UI, and BMS breakage.</span></span></li>
+              <li class="step"><span class="num">4</span><span><strong>Harden releases</strong><span>Add CI checks, security scans, and rollback notes, then leave clean handover docs for each weekly demo.</span></span></li>
+            </ol>
+          </div>
+        </div>
+        <div class="team">
+          <span class="pill">Rust</span>
+          <span class="pill">C++</span>
+          <span class="pill">Linux</span>
+          <span class="pill">gRPC / Protobuf</span>
+          <span class="pill">Kubernetes</span>
+          <span class="pill">Python QA</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="elinext">
+    <div class="wrap">
+      <h2 class="section-title">Who is Elinext</h2>
+      <div class="copy">
+        <p>Elinext is a full-cycle software development company, active since 1997. About 700 in-house specialists work there, with no freelancers. For Six Robotics, the fit is senior backend, C/C++, QA, DevOps, and AI/ML support. Elinext holds ISO 9001 and ISO 27001 for high-trust work. Teams have delivered for Siemens, Broadcom, Volkswagen, TRUMPF, TUI, and Parrot. That gives Mathias extra capacity under your product lead, while Six Robotics keeps architecture choices.</p>
+        <div class="logos">
+          <strong>Siemens</strong>
+          <strong>Broadcom</strong>
+          <strong>Volkswagen</strong>
+          <strong>TRUMPF</strong>
+          <strong>TUI</strong>
+          <strong>Parrot</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Proof</h2>
+      <div class="proof-grid">
+        <article class="case-card">
+          <img src="assets/case-drone-app.jpg" alt="Drone control software case study image">
+          <div class="case-body">
+            <h3>Drone App for a French Wireless Devices Manufacturer</h3>
+            <p>Drone control work using C/C++ and live video.</p>
+            <a href="https://www.elinext.com/case-study/iot-application-for-controlling-drones/">Read case study</a>
+          </div>
+        </article>
+        <article class="case-card">
+          <img src="assets/case-mes.jpg" alt="Manufacturing execution system case study image">
+          <div class="case-body">
+            <h3>Manufacturing Execution System</h3>
+            <p>Long-running MES teams for production release cycles.</p>
+            <a href="https://www.elinext.com/case-study/manufacturing-execution-system/">Read case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <h2>Start with one team</h2>
+      <p>Six weeks is enough to prove fit.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
