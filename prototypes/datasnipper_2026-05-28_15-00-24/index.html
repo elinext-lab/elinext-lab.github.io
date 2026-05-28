@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DataSnipper Backend Capacity Brief</title>
+  <meta name="description" content="A focused plan to keep DataSnipper's AI audit workflows moving while engineering roles are open.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/datasnipper_2026-05-28_15-00-24/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/datasnipper_2026-05-28_15-00-24/">
+  <meta property="og:title" content="DataSnipper backend capacity brief">
+  <meta property="og:description" content="A focused plan to keep AI audit workflows moving while engineering roles are open.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/datasnipper_2026-05-28_15-00-24/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="DataSnipper backend capacity brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DataSnipper backend capacity brief">
+  <meta name="twitter:description" content="A focused plan to keep AI audit workflows moving while engineering roles are open.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/datasnipper_2026-05-28_15-00-24/og-image.jpg">
+  <style>
+    :root {
+      --ink: #102033;
+      --muted: #56657a;
+      --line: #d9e2ee;
+      --paper: #f7fafc;
+      --white: #ffffff;
+      --navy: #0f1629;
+      --blue: #18375d;
+      --green: #2ebf91;
+      --orange: #f97332;
+      --soft: #eaf5f2;
+      --shadow: 0 18px 44px rgba(15, 22, 41, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .section { width: 100%; padding: 56px 18px; }
+    .inner { width: min(100%, 1120px); margin: 0 auto; }
+    .section h2 {
+      margin: 0 auto 22px;
+      text-align: center;
+      font-size: clamp(1.6rem, 2.2vw, 2.3rem);
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+    .section-label {
+      display: block;
+      margin: 0 auto 10px;
+      text-align: center;
+      color: var(--orange);
+      font-weight: 800;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .hero {
+      color: #f8fbff;
+      background: var(--navy);
+      padding: 34px 18px 58px;
+      position: relative;
+      isolation: isolate;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 10px;
+      background: linear-gradient(90deg, var(--orange), var(--green), #62a7ff);
+      z-index: -1;
+    }
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 48px;
+    }
+    .mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+    }
+    .mark-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      background: var(--green);
+      box-shadow: 18px 0 0 var(--orange);
+      flex: 0 0 auto;
+    }
+    .prepared {
+      color: #aab8ca;
+      font-size: 0.9rem;
+      text-align: right;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+    h1 {
+      max-width: 840px;
+      margin: 0;
+      font-size: clamp(2.25rem, 7vw, 5.35rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+    .why {
+      max-width: 660px;
+      color: #d8e2ee;
+      font-size: clamp(1rem, 1.4vw, 1.2rem);
+      margin: 18px 0 0;
+    }
+    .hero-panel {
+      width: 100%;
+      background: #14243a;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    .signal-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+    .signal-item {
+      border-left: 4px solid var(--orange);
+      background: rgba(255, 255, 255, 0.06);
+      padding: 12px 14px;
+      border-radius: 6px;
+      color: #e9f1fb;
+      font-weight: 700;
+    }
+    .read {
+      background: #eef6f2;
+    }
+    .read-card {
+      width: 100%;
+      max-width: 78ch;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #cbe5dc;
+      border-left: 7px solid var(--green);
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      color: #243247;
+      font-size: 1.05rem;
+    }
+
+    .plan {
+      background: #ffffff;
+    }
+    .proposal {
+      display: grid;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .team-card,
+    .steps-card {
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    .team-card h3,
+    .steps-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+    .model {
+      color: var(--muted);
+      margin: 0 0 18px;
+    }
+    .roles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0 0 18px;
+      padding: 0;
+      list-style: none;
+    }
+    .roles li {
+      min-height: 66px;
+      display: grid;
+      align-content: center;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      font-weight: 800;
+    }
+    .roles span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #e8f2ff;
+      color: #173f67;
+      font-weight: 750;
+      font-size: 0.86rem;
+    }
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .num {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #ffffff;
+      font-weight: 900;
+    }
+    .step-title {
+      display: block;
+      font-weight: 850;
+      margin-bottom: 4px;
+    }
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .elinext {
+      background: #f2f6fb;
+    }
+    .cred {
+      max-width: 880px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .cred p { margin: 0 0 12px; }
+    .cred p:last-child { margin-bottom: 0; }
+    .customer-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+    .customer-row strong {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #fff2e9;
+      color: #9b3b09;
+      font-size: 0.88rem;
+    }
+
+    .proof {
+      background: #ffffff;
+    }
+    .case-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .case-card {
+      overflow: hidden;
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 8.4;
+      object-fit: cover;
+      background: #dce7f3;
+    }
+    .case-body {
+      padding: 18px;
+    }
+    .case-body h3 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+      line-height: 1.25;
+    }
+    .case-body p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+    .case-body a {
+      color: #174d7c;
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .talk {
+      background: var(--navy);
+      color: #f8fbff;
+      text-align: center;
+      padding-bottom: 64px;
+    }
+    .talk h2 {
+      color: #f8fbff;
+      margin-bottom: 10px;
+    }
+    .talk p {
+      max-width: 560px;
+      margin: 0 auto 24px;
+      color: #c9d5e4;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 850;
+      text-decoration: none;
+      box-shadow: 0 14px 28px rgba(249, 115, 50, 0.26);
+    }
+
+    @media (min-width: 720px) {
+      .section { padding: 76px 32px; }
+      .hero { padding: 38px 32px 76px; }
+      .hero-grid { grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.75fr); }
+      .signal-list { grid-template-columns: 1fr; }
+      .proposal { grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.28fr); }
+      .case-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 460px) {
+      .hero-top {
+        align-items: flex-start;
+        flex-direction: column;
+        margin-bottom: 36px;
+      }
+      .prepared { text-align: left; }
+      .roles { grid-template-columns: 1fr; }
+      .step { grid-template-columns: 1fr; }
+      .num { width: 36px; height: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="inner">
+      <div class="hero-top">
+        <div class="mark"><span class="mark-dot" aria-hidden="true"></span><span>DataSnipper</span></div>
+        <div class="prepared">Prepared by Elinext</div>
+      </div>
+      <div class="hero-grid">
+        <div>
+          <h1>Keep DataSnipper's AI audit roadmap moving while backend seats fill</h1>
+          <p class="why">We saw the active Backend Engineer and Software Engineer hiring signals. That usually means core product work is ready now, while the right full-time hire may still take months.</p>
+        </div>
+        <aside class="hero-panel" aria-label="Why this brief exists">
+          <strong>Why we're here</strong>
+          <div class="signal-list">
+            <div class="signal-item">Backend capacity for AI Agents</div>
+            <div class="signal-item">QA coverage for document workflows</div>
+            <div class="signal-item">Data pipelines for evidence review</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </header>
+
+  <section class="section read">
+    <div class="inner">
+      <span class="section-label">Our read</span>
+      <h2>The signal points to delivery load</h2>
+      <div class="read-card">
+        DataSnipper is moving from fast Excel automation into agentic audit and finance workflows. The open backend and software roles suggest the hard part is not demand; it is keeping delivery speed high while AI Agents, UpLink, and document extraction keep growing. Public users praise the product, but they also mention large document sets, matching edge cases, and training depth. If capacity stays tight, roadmap work and quality work can compete for the same engineers.
+      </div>
+    </div>
+  </section>
+
+  <section class="section plan">
+    <div class="inner">
+      <span class="section-label">What we'd do</span>
+      <h2>A focused squad around your team</h2>
+      <div class="proposal">
+        <div class="team-card">
+          <h3>Engagement model</h3>
+          <p class="model">A dedicated Elinext squad works under your product and engineering leads for a six-week pilot, then rolls into a quarterly capacity pod.</p>
+          <ul class="roles">
+            <li>Tech Lead<span>delivery owner</span></li>
+            <li>Backend x2<span>API and data flows</span></li>
+            <li>AI/Data<span>extraction checks</span></li>
+            <li>QA Automation<span>document regression</span></li>
+          </ul>
+          <h3>Relevant stack</h3>
+          <div class="stack" aria-label="Relevant technologies">
+            <span class="pill">Java</span>
+            <span class="pill">.NET / C#</span>
+            <span class="pill">Python</span>
+            <span class="pill">Node.js</span>
+            <span class="pill">React</span>
+            <span class="pill">QA automation</span>
+          </div>
+        </div>
+        <div class="steps-card">
+          <h3>Pilot milestones</h3>
+          <div class="steps">
+            <div class="step">
+              <span class="num">1</span>
+              <div><span class="step-title">Pick the slice</span><p>Map the backend backlog around AI Agents, document matching, and large-file flows, then pick one shippable slice for the pilot.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <div><span class="step-title">Add backend speed</span><p>Add two senior backend engineers to implement API, data, and queue work without pulling your core team from roadmap decisions.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <div><span class="step-title">Harden AI evidence</span><p>Pair one AI/data engineer with your ML team to harden extraction checks, evidence links, and human review paths.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <div><span class="step-title">Protect releases</span><p>Stand up automated regression tests for document-heavy workflows, with weekly demos and release notes your team can review.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section elinext">
+    <div class="inner">
+      <span class="section-label">Who is Elinext</span>
+      <h2>Senior engineers, not freelancers</h2>
+      <div class="cred">
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build backend, web, AI/ML, QA, DevOps, and product teams for clients across Europe, North America, and Asia.</p>
+        <p>Our delivery work is backed by ISO 9001 and ISO 27001, which matters for audit and finance software.</p>
+        <div class="customer-row" aria-label="Named Elinext customers">
+          <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong><strong>TransPerfect</strong>
+        </div>
+        <p>For DataSnipper, that means a small, senior squad can join your roadmap without weakening your security and quality bar.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section proof">
+    <div class="inner">
+      <span class="section-label">Proof</span>
+      <h2>Relevant work from Elinext</h2>
+      <div class="case-grid">
+        <article class="case-card">
+          <img src="assets/case-document-collaboration.jpg" alt="Document collaboration platform case study image">
+          <div class="case-body">
+            <h3>Document Collaboration Platform Development</h3>
+            <p>Regulated financial documents, QA, and platform stability.</p>
+            <a href="https://www.elinext.com/case-study/document-collaboration-platform/">Read the case study</a>
+          </div>
+        </article>
+        <article class="case-card">
+          <img src="assets/case-banking-qa.png" alt="Banking web app QA case study image">
+          <div class="case-body">
+            <h3>Quality Assurance for Banking Web App</h3>
+            <p>Financial reconciliation workflows with automated QA.</p>
+            <a href="https://www.elinext.com/case-study/qa-services-for-banking-app/">Read the case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section talk">
+    <div class="inner">
+      <h2>Talk through the gap</h2>
+      <p>A small backend squad can start without slowing hiring.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+    </div>
+  </section>
+</body>
+</html>
