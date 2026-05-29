@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Frank Energie backend reliability brief</title>
+  <meta name="description" content="A short Elinext proposal for scaling Frank Energie's backend reliability around smart charging, batteries, and power sourcing.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/frank-energie_2026-05-29_08-54-52/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/frank-energie_2026-05-29_08-54-52/">
+  <meta property="og:title" content="Frank Energie backend reliability brief">
+  <meta property="og:description" content="A focused squad for smart charging, batteries, and real-time power sourcing.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/frank-energie_2026-05-29_08-54-52/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Frank Energie backend reliability brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Frank Energie backend reliability brief">
+  <meta name="twitter:description" content="A focused squad for smart charging, batteries, and real-time power sourcing.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/frank-energie_2026-05-29_08-54-52/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17231e;
+      --muted: #5e6b65;
+      --paper: #fbfaf6;
+      --panel: #ffffff;
+      --mint: #e7f3ea;
+      --green: #154334;
+      --green-2: #286956;
+      --orange: #e86f2f;
+      --line: #dfe6de;
+      --soft: #f2eadf;
+      --shadow: 0 18px 44px rgba(23, 35, 30, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration-thickness: 0.08em;
+      text-underline-offset: 0.22em;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      background: var(--green);
+      color: #fffaf1;
+      padding: 48px 0 44px;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 8px;
+      background: var(--orange);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #f3c0a6;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      overflow-wrap: break-word;
+      word-break: normal;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 12ch;
+      font-size: clamp(2.45rem, 7.2vw, 5.25rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 57ch;
+      font-size: 1.02rem;
+    }
+
+    .hero-copy p {
+      margin: 0 0 14px;
+    }
+
+    .hero-copy p:last-child {
+      margin-bottom: 0;
+      color: #f8d9c7;
+      font-weight: 650;
+    }
+
+    section {
+      padding: 52px 0;
+      background: var(--paper);
+    }
+
+    section:nth-of-type(even) {
+      background: #f7f5ef;
+    }
+
+    .section-title {
+      margin: 0 auto 22px;
+      text-align: center;
+      font-size: clamp(1.7rem, 7vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 74ch;
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--mint);
+      border: 1px solid #c9dfcf;
+      border-left: 6px solid var(--orange);
+      border-radius: 8px;
+      box-shadow: 0 12px 28px rgba(21, 67, 52, 0.08);
+    }
+
+    .read-box p {
+      margin: 0;
+      color: #263b32;
+      font-size: 1.03rem;
+    }
+
+    .proposal {
+      background: #fff7ec;
+    }
+
+    .proposal-intro {
+      max-width: 72ch;
+      margin: 0 auto 26px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .team-strip {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0 auto 28px;
+      max-width: 760px;
+    }
+
+    .role {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      border: 1px solid #edd9c5;
+      border-radius: 8px;
+      background: var(--panel);
+      font-weight: 800;
+      text-align: center;
+      color: var(--green);
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      gap: 8px;
+      padding: 18px;
+      border-radius: 8px;
+      background: var(--panel);
+      border: 1px solid #ecd8c2;
+      box-shadow: 0 10px 24px rgba(102, 67, 39, 0.08);
+    }
+
+    .num {
+      width: 36px;
+      height: 36px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin: 0;
+      color: var(--green);
+      font-size: 1.1rem;
+      line-height: 1.2;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    .tag,
+    .customer {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #e4eee7;
+      color: var(--green);
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .elinext-copy {
+      max-width: 78ch;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 1.03rem;
+    }
+
+    .elinext-copy p {
+      margin: 0;
+    }
+
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 20px 0 0;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 20px;
+    }
+
+    .case-body h3 {
+      margin: 0 0 8px;
+      color: var(--green);
+      font-size: 1.15rem;
+      line-height: 1.2;
+    }
+
+    .case-body p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .cta {
+      background: var(--green);
+      color: #fffaf1;
+      text-align: center;
+      padding-bottom: 58px;
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+    }
+
+    .cta p {
+      margin: 0 auto 22px;
+      max-width: 40ch;
+      color: #f8d9c7;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .wrap {
+        padding: 0 32px;
+      }
+
+      .hero {
+        padding: 72px 0 62px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 0.82fr);
+      }
+
+      section {
+        padding: 70px 0;
+      }
+
+      .team-strip {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1120px) {
+      .hero {
+        min-height: 560px;
+        display: flex;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Prepared for Frank Energie</p>
+        <h1>Backend scale for smart energy control</h1>
+      </div>
+      <div class="hero-copy">
+        <p>Frank already helps households use dynamic prices, smart charging, batteries, and heat pumps with less effort.</p>
+        <p>Saw you are hiring a backend engineer for real-time power sourcing. Here is how a focused Elinext squad could help keep smart services reliable.</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="read">
+    <div class="wrap">
+      <h2 class="section-title">Our read</h2>
+      <div class="read-box">
+        <p>That hire tells us Frank is scaling real-time power sourcing, forecasts, and device control. The hard part is not the app screen. It is many event streams, partner APIs, and price signals at speed. Recent reviews mention battery data gaps, smart charging issues, and app hangs after updates. If reliability slips, users lose trust in Slim Laden and Slim Handelen during European growth.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="proposal">
+    <div class="wrap">
+      <h2 class="section-title">What we'd do</h2>
+      <p class="proposal-intro">Run a dedicated backend reliability squad under Frank's product owner. Start with a six-week pilot, weekly demos, and release flags.</p>
+      <div class="team-strip" aria-label="Proposed team shape">
+        <div class="role">Tech Lead</div>
+        <div class="role">2 Backend Engineers</div>
+        <div class="role">QA Automation</div>
+        <div class="role">DevOps</div>
+        <div class="role">Delivery Manager</div>
+      </div>
+      <div class="steps">
+        <article class="step">
+          <span class="num">1</span>
+          <h3>Map the live flow</h3>
+          <p>Map market prices, device APIs, forecasts, and app calls into one owned backend view. Mark the riskiest links first.</p>
+        </article>
+        <article class="step">
+          <span class="num">2</span>
+          <h3>Harden smart jobs</h3>
+          <p>Harden smart charging and battery jobs with replay tests, queue checks, and clear failure states. Start with EV and battery paths.</p>
+        </article>
+        <article class="step">
+          <span class="num">3</span>
+          <h3>Explain each decision</h3>
+          <p>Add observability for each optimization decision, from price input to device command. Give support a short reason trail.</p>
+        </article>
+        <article class="step">
+          <span class="num">4</span>
+          <h3>Ship with control</h3>
+          <p>Ship behind flags in weekly demos, then expand across new countries. Keep Frank engineers close to every release.</p>
+        </article>
+      </div>
+      <div class="stack" aria-label="Relevant stack">
+        <span class="tag">Java</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">Python</span>
+        <span class="tag">React</span>
+        <span class="tag">QA automation</span>
+        <span class="tag">DevOps</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="elinext">
+    <div class="wrap">
+      <h2 class="section-title">Who is Elinext</h2>
+      <div class="elinext-copy">
+        <p>Elinext is a full-cycle software development provider, active since 1997 across global markets. It has about 700 in-house specialists, with no freelancers and no subcontractors. For Frank, the fit is backend engineering, QA, DevOps, data work, and mobile support. Named customer work includes <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, <strong>TUI</strong>, <strong>Parrot</strong>, and <strong>TransPerfect</strong> programs. ISO 27001 and ISO 9001 support security, quality, partner trust, and vendor due diligence. That base helps the squad improve live energy systems while Frank keeps roadmap control.</p>
+      </div>
+      <div class="customer-list" aria-label="Named customers">
+        <span class="customer">Siemens</span>
+        <span class="customer">Broadcom</span>
+        <span class="customer">Volkswagen</span>
+        <span class="customer">TRUMPF</span>
+        <span class="customer">TUI</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="proof">
+    <div class="wrap">
+      <h2 class="section-title">Proof</h2>
+      <div class="proof-grid">
+        <article class="case-card">
+          <img src="assets/case-ev-charging.jpg" alt="EV charging case study cover">
+          <div class="case-body">
+            <h3>App for Charging Solutions for Electric Vehicles</h3>
+            <p>Elinext built iOS and Android apps for a Swiss EV charging company using renewable energy workflows.</p>
+            <a href="https://www.elinext.com/case-study/app-for-green-vehicle-charging/">Read case study</a>
+          </div>
+        </article>
+        <article class="case-card">
+          <img src="assets/case-network-planning.jpg" alt="Network planning case study cover">
+          <div class="case-body">
+            <h3>Network Planning Software for a German Energy and Telecom Supplier</h3>
+            <p>Elinext delivered sprint-based web engineering with Java, Spring, React, and PostgreSQL for planning software.</p>
+            <a href="https://www.elinext.com/case-study/software-for-telecom-network-planning/">Read case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <h2 class="section-title">Talk through the squad</h2>
+      <p>A short call can test fit and next steps.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
