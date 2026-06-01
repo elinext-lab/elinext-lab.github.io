@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aize IAM engineering brief</title>
+  <meta name="description" content="A short proposal for Aize on adding IAM product engineering capacity while the senior hire is open.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/aize_2026-06-01_15-12-33/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/aize_2026-06-01_15-12-33/">
+  <meta property="og:title" content="Aize IAM engineering brief">
+  <meta property="og:description" content="A practical plan to add IAM capacity while the senior role is open.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/aize_2026-06-01_15-12-33/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Aize IAM engineering brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Aize IAM engineering brief">
+  <meta name="twitter:description" content="A practical plan to add IAM capacity while the senior role is open.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/aize_2026-06-01_15-12-33/og-image.jpg">
+  <style>
+    :root {
+      --ink: #122026;
+      --muted: #5b6870;
+      --line: #d9e1df;
+      --paper: #f7f8f4;
+      --white: #ffffff;
+      --aize: #14473f;
+      --aize-2: #0c2f35;
+      --mint: #dcefe6;
+      --orange: #f07d3a;
+      --blue: #275c8d;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.5;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: inherit; }
+    .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    section { padding: 48px 0; background: var(--paper); }
+    h1, h2, h3, p { margin: 0; }
+    h2 { text-align: center; font-size: 1.55rem; line-height: 1.1; letter-spacing: 0; }
+    .kicker { font-size: .78rem; text-transform: uppercase; font-weight: 800; letter-spacing: .08em; color: var(--orange); }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      color: var(--white);
+      background:
+        linear-gradient(115deg, rgba(8, 33, 35, .94), rgba(20, 71, 63, .84)),
+        url("assets/case-industrial.jpg") center / cover;
+      position: relative;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 72px;
+      background: linear-gradient(to bottom, rgba(247, 248, 244, 0), var(--paper));
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 26px;
+      position: relative;
+      z-index: 1;
+      padding: 72px 0 96px;
+    }
+    .hero h1 {
+      max-width: 780px;
+      font-size: 2.25rem;
+      line-height: .96;
+      letter-spacing: 0;
+    }
+    .hero-text {
+      max-width: 760px;
+      display: grid;
+      gap: 16px;
+      font-size: 1rem;
+      color: #e8f3ef;
+    }
+    .hero-text .why {
+      padding-left: 18px;
+      border-left: 4px solid var(--orange);
+      color: #ffffff;
+    }
+
+    .read-box {
+      background: #e7f0ea;
+      border: 1px solid #cbdcd5;
+      border-left: 6px solid var(--aize);
+      padding: 26px;
+      border-radius: 8px;
+      margin-top: 22px;
+    }
+    .read-box p { max-width: 78ch; margin: 0 auto; color: #25343a; }
+
+    .proposal {
+      background: var(--white);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .proposal-panel {
+      margin-top: 26px;
+      display: grid;
+      gap: 18px;
+    }
+    .squad {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .role, .step, .case-card {
+      border: 1px solid var(--line);
+      background: #fbfcfa;
+      border-radius: 8px;
+    }
+    .role {
+      padding: 14px;
+      min-height: 78px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+    }
+    .role b { color: var(--aize-2); }
+    .role span { color: var(--muted); font-size: .92rem; }
+    .steps {
+      display: grid;
+      gap: 14px;
+      margin-top: 6px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      padding: 16px;
+      align-items: start;
+    }
+    .num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: var(--white);
+      background: var(--aize);
+    }
+    .step h3 { font-size: 1rem; margin-bottom: 5px; }
+    .step p { color: var(--muted); font-size: .96rem; }
+    .stack {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .tag {
+      padding: 7px 10px;
+      border: 1px solid #bcd0c9;
+      background: var(--mint);
+      border-radius: 999px;
+      font-size: .88rem;
+      font-weight: 700;
+      color: #183b35;
+    }
+
+    .cred p, .cta p { max-width: 76ch; margin: 20px auto 0; color: #3f4d53; }
+    .logos {
+      margin: 18px auto 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+    .logos strong {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #eef3f1;
+      border: 1px solid var(--line);
+      font-size: .9rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .case-card { overflow: hidden; }
+    .case-card .body { padding: 18px; display: grid; gap: 8px; }
+    .case-card h3 { font-size: 1.05rem; line-height: 1.25; }
+    .case-card p { color: var(--muted); }
+    .case-card a { color: var(--blue); font-weight: 800; text-decoration: none; }
+
+    .cta {
+      background: var(--aize-2);
+      color: var(--white);
+      text-align: center;
+    }
+    .cta p { color: #d7e8e3; }
+    .button {
+      display: inline-flex;
+      margin-top: 22px;
+      padding: 13px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #1c120b;
+      text-decoration: none;
+      font-weight: 850;
+    }
+
+    @media (min-width: 760px) {
+      section { padding: 70px 0; }
+      .hero-grid { padding: 90px 0 120px; }
+      h2 { font-size: 2.15rem; }
+      .hero h1 { font-size: 4.35rem; }
+      .hero-text { font-size: 1.08rem; }
+      .proposal-panel { grid-template-columns: .88fr 1.12fr; align-items: start; gap: 24px; }
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 1180px) {
+      .hero h1 { font-size: 5.15rem; }
+      .hero-text { font-size: 1.14rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <div class="wrap hero-grid">
+        <div class="kicker">For Morten and the IAM team</div>
+        <h1>Bridge the IAM gap behind Aize's next scale step</h1>
+        <div class="hero-text">
+          <p>Aize already gives heavy-asset teams one place for data, work, and partner flow. That promise needs identity work that feels safe, fast, and simple.</p>
+          <p class="why">Saw you are hiring a Senior Software Engineer for IAM. That points to a real need: keep Aize secure and smooth while the team grows user access, SSO, partner users, and tenant flow.</p>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The IAM role says Aize is scaling the identity flow inside the product, not just filling a support task. A small team now owns an app within the app across backend, React, DevOps, and cloud work. If that seat stays open, SSO, partner access, and safe tenant growth can slow delivery. The risk is more backlog for the person you hire later.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-panel">
+          <div>
+            <p><strong>Model:</strong> a dedicated squad under Aize's product owner and IAM tech lead.</p>
+            <div class="squad" aria-label="Proposed team">
+              <div class="role"><b>IAM lead</b><span>C#/.NET backend</span></div>
+              <div class="role"><b>Full-stack dev</b><span>React and services</span></div>
+              <div class="role"><b>DevOps engineer</b><span>CI/CD and cloud</span></div>
+              <div class="role"><b>QA support</b><span>Access flow tests</span></div>
+            </div>
+            <div class="stack">
+              <span class="tag">C#</span>
+              <span class="tag">.NET</span>
+              <span class="tag">React</span>
+              <span class="tag">Python</span>
+              <span class="tag">QA</span>
+              <span class="tag">DevOps</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step"><div class="num">1</div><div><h3>Map the IAM backlog</h3><p>Review SSO, MFA, invites, tenant switching, and partner access with your team in the first week.</p></div></article>
+            <article class="step"><div class="num">2</div><div><h3>Ship one thin flow</h3><p>Take one high-value identity slice from design to release, with weekly demos and clean handover notes.</p></div></article>
+            <article class="step"><div class="num">3</div><div><h3>Harden release paths</h3><p>Add tests and pipeline checks around access changes so the small IAM team can move with less risk.</p></div></article>
+            <article class="step"><div class="num">4</div><div><h3>Leave durable capacity</h3><p>Document decisions, edge cases, and runbooks so your permanent hire starts ahead of the backlog.</p></div></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cred">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Aize, the fit is enterprise web, DevOps, QA, and security-aware delivery. Elinext holds ISO 9001 and ISO 27001, which matters when identity work touches customer data. Named customers include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. We would use that depth as a bridge squad, not as a replacement for your team. This keeps delivery close to Aize.</p>
+        <div class="logos" aria-label="Named customers">
+          <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-industrial.jpg" alt="Industrial software case study preview">
+            <div class="body">
+              <h3>Real-time Data Insights of Machines Performance</h3>
+              <p>Industrial web and DevOps work that connects machine data to improvement insights.</p>
+              <a href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-cicd.jpg" alt="CI/CD case study preview">
+            <div class="body">
+              <h3>CI/CD Optimization for Infrastructure Software</h3>
+              <p>Pipeline work that reduced development time while keeping quality and security measures.</p>
+              <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Start the IAM bridge</h2>
+        <p>A short call can test fit, scope, and security needs.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
