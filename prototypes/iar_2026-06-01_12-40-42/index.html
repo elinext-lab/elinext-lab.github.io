@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IAR C-SPY debugger modernization brief</title>
+  <meta name="description" content="A short proposal for helping IAR move C-SPY debugger work faster and safer.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/iar_2026-06-01_12-40-42/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/iar_2026-06-01_12-40-42/">
+  <meta property="og:title" content="IAR C-SPY debugger modernization brief">
+  <meta property="og:description" content="A short proposal for helping IAR move C-SPY debugger work faster and safer.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/iar_2026-06-01_12-40-42/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="IAR C-SPY debugger modernization brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="IAR C-SPY debugger modernization brief">
+  <meta name="twitter:description" content="A short proposal for helping IAR move C-SPY debugger work faster and safer.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/iar_2026-06-01_12-40-42/og-image.jpg">
+  <style>
+    :root {
+      --ink: #171717;
+      --muted: #5c6470;
+      --paper: #ffffff;
+      --soft: #f5f7f9;
+      --warm: #fff2ec;
+      --line: #d9dee7;
+      --dark: #1f242b;
+      --accent: #e5391f;
+      --accent-dark: #b82c1b;
+      --blue: #243f63;
+      --green: #244b3a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .nowrap {
+      white-space: nowrap;
+    }
+
+    .page {
+      width: 100%;
+      background: var(--paper);
+    }
+
+    .section {
+      width: 100%;
+      padding: 58px 18px;
+      background: var(--paper);
+    }
+
+    .section:nth-of-type(odd) {
+      background: var(--soft);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      align-items: center;
+      padding: 72px 18px 52px;
+      color: #ffffff;
+      background:
+        linear-gradient(110deg, rgba(24, 24, 24, 0.94), rgba(24, 24, 24, 0.78)),
+        url("assets/case-automotive-head-unit.jpg") center / cover no-repeat;
+    }
+
+    .hero .wrap {
+      max-width: 980px;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #ffb6a8;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: clamp(2.35rem, 8vw, 4.8rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin-bottom: 0;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 1.08rem;
+    }
+
+    .next-hint {
+      margin-top: 54px;
+      width: 92px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 999px;
+    }
+
+    h2 {
+      margin-bottom: 28px;
+      text-align: center;
+      font-size: clamp(1.75rem, 4vw, 2.45rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px;
+      background: #fff7f2;
+      border: 1px solid #ffd0bd;
+      border-left: 6px solid var(--accent);
+      border-radius: 8px;
+      box-shadow: 0 12px 34px rgba(31, 36, 43, 0.08);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      font-size: 1.03rem;
+    }
+
+    .proposal {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(31, 36, 43, 0.10);
+      overflow: hidden;
+    }
+
+    .proposal-head {
+      display: grid;
+      gap: 18px;
+      padding: 24px;
+      background: var(--dark);
+      color: #ffffff;
+    }
+
+    .proposal-head p {
+      margin-bottom: 0;
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+      padding: 20px;
+      background: #ffffff;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: #ffffff;
+      background: var(--accent);
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+      line-height: 1.2;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .identity {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .identity p {
+      margin-bottom: 0;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 20px 0 0;
+    }
+
+    .customers strong {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--warm);
+      color: var(--accent-dark);
+      font-size: 0.84rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 12px 30px rgba(31, 36, 43, 0.07);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #eceff3;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
+
+    .case-body p {
+      margin-bottom: 14px;
+      color: var(--muted);
+    }
+
+    .case-body a {
+      color: var(--accent-dark);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      color: #ffffff;
+      background: var(--blue);
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    .cta p {
+      margin: 0 auto 24px;
+      max-width: 520px;
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 76px 28px;
+      }
+
+      .hero {
+        min-height: 86vh;
+        padding: 90px 28px 68px;
+      }
+
+      .proposal-head {
+        grid-template-columns: 1.1fr 0.9fr;
+        align-items: center;
+        padding: 30px;
+      }
+
+      .timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 24px;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1120px) {
+      .timeline {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .step {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap">
+        <p class="eyebrow">Prepared for IAR</p>
+        <h1 id="hero-title">Helping IAR move <span class="nowrap">C-SPY</span> debugger work with less drag</h1>
+        <p>Saw you are hiring for Debugger Technology in Uppsala. That points to a live push around C-SPY quality. It also points to device support inside IAR Embedded Workbench.</p>
+        <div class="next-hint" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="read-title">
+      <div class="wrap">
+        <h2 id="read-title">Our read</h2>
+        <div class="read-box">
+          <p>IAR Embedded Workbench is trusted because its toolchain and debugger stay reliable. The debugger role says C-SPY work is scaling now. Users also expect VS Code, CMake, Jenkins, and GitLab paths. The hard part is stable change across devices and target chips. If it queues behind bug fixes, releases and customer confidence can slip.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="work-title">
+      <div class="wrap">
+        <h2 id="work-title">What we'd do</h2>
+        <div class="proposal">
+          <div class="proposal-head">
+            <div>
+              <h3>Dedicated squad under your product leads</h3>
+              <p>Six-week pilot with weekly demos and clean handoff notes.</p>
+            </div>
+            <div>
+              <p>Team: one C++ tech lead, two senior C++ engineers, QA automation, and DevOps.</p>
+              <div class="tags" aria-label="Relevant stack">
+                <span class="tag">C++</span>
+                <span class="tag">CMake</span>
+                <span class="tag">Jenkins</span>
+                <span class="tag">GitLab CI</span>
+                <span class="tag">Python</span>
+                <span class="tag">Playwright</span>
+              </div>
+            </div>
+          </div>
+          <div class="timeline">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Map risk</h3>
+                <p>Map C-SPY debug paths, build scripts, and support issues. Mark risky modules and fast wins for the first sprint.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Refactor with tests</h3>
+                <p>Refactor selected C++ modules behind tests. Keep debugger behavior stable for Arm, RISC-V, and existing probe flows.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Harden CI paths</h3>
+                <p>Add automated checks for CMake and Jenkins paths. Feed results into GitLab before each release candidate.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Lower setup friction</h3>
+                <p>Clean up VS Code setup samples and launch files. Reduce friction for teams outside the classic IDE.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="elinext-title">
+      <div class="wrap">
+        <h2 id="elinext-title">Who is Elinext</h2>
+        <div class="identity">
+          <p>Elinext is a full-cycle software development partner active since 1997, using no freelancers or subcontractors. Our 700 in-house specialists cover C/C++, QA automation, DevOps, product design, and delivery management. For IAR, that fits debugger code, hardware-linked tests, release checks, and product support. We hold ISO 9001 and ISO 27001 certifications for quality and information security. Our customers include Siemens, Broadcom, Volkswagen, TRUMPF, TUI, Parrot, and TransPerfect. The same dedicated squad model can support C-SPY while your leaders keep product control.</p>
+          <div class="customers" aria-label="Selected customers">
+            <strong>Siemens</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="proof-title">
+      <div class="wrap">
+        <h2 id="proof-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-automotive-head-unit.jpg" alt="">
+            <div class="case-body">
+              <h3>Operating System for an Automotive Head Unit</h3>
+              <p>Embedded C/C++ support for hardware-linked automotive product work.</p>
+              <a href="https://www.elinext.com/case-study/car-audio-system-environment/">Read case</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-ci-cd-optimization.jpg" alt="">
+            <div class="case-body">
+              <h3>CI/CD Optimization for Infrastructure Management</h3>
+              <p>Jenkins and QA work made release setup faster.</p>
+              <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">Read case</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta" aria-labelledby="talk-title">
+      <div class="wrap">
+        <h2 id="talk-title">Talk through <span class="nowrap">C-SPY</span> work</h2>
+        <p>A short call can test fit around C-SPY work.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
