@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Myntro core systems modernization brief</title>
+  <meta name="description" content="A short proposal for Myntro's System Developer hiring moment.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/myntro_2026-06-01_12-00-20/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/myntro_2026-06-01_12-00-20/">
+  <meta property="og:title" content="Myntro core systems modernization brief">
+  <meta property="og:description" content="A plan for the System Developer gap around Myntro Collect and core systems.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/myntro_2026-06-01_12-00-20/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Myntro core systems modernization brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Myntro core systems modernization brief">
+  <meta name="twitter:description" content="A plan for the System Developer gap around Myntro Collect and core systems.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/myntro_2026-06-01_12-00-20/og-image.jpg">
+  <style>
+    :root {
+      --ink: #2B2F37;
+      --deep: #0A2A39;
+      --mint: #A5C9CF;
+      --pale: #EDFEFC;
+      --paper: #F9F7F5;
+      --line: #D7E6E7;
+      --accent: #FFE69D;
+      --white: #FFFFFF;
+      --muted: #66747B;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+    }
+
+    .section {
+      width: 100%;
+      background: var(--paper);
+      padding: 48px 18px;
+    }
+
+    .section.alt {
+      background: var(--white);
+    }
+
+    .wrap {
+      width: min(100%, 1080px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      padding: 46px 18px 58px;
+      color: var(--white);
+      background:
+        linear-gradient(135deg, rgba(10, 42, 57, 0.98), rgba(10, 42, 57, 0.82)),
+        radial-gradient(circle at 22% 18%, rgba(255, 230, 157, 0.18), transparent 36%);
+    }
+
+    .hero .wrap {
+      display: grid;
+      gap: 28px;
+    }
+
+    .mark {
+      width: 82px;
+      height: 9px;
+      border-radius: 20px;
+      background: var(--accent);
+      margin-bottom: 22px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 840px;
+      margin-bottom: 18px;
+      font-size: clamp(2.5rem, 8vw, 5.35rem);
+      line-height: 1.02;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 720px;
+      font-size: 1.05rem;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .why {
+      border-left: 4px solid var(--accent);
+      padding-left: 16px;
+    }
+
+    .signal-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .signal {
+      min-width: 0;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .signal strong {
+      display: block;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .signal span {
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.94rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 22px;
+      color: var(--deep);
+      font-size: clamp(1.7rem, 5vw, 2.7rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      max-width: 76ch;
+      margin: 0 auto;
+      border-left: 6px solid var(--mint);
+      background: #F1FBFA;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 18px 45px rgba(10, 42, 57, 0.08);
+    }
+
+    .read-box p {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .proposal {
+      border-radius: 8px;
+      background: var(--deep);
+      color: var(--white);
+      padding: 20px;
+      box-shadow: 0 24px 60px rgba(10, 42, 57, 0.2);
+    }
+
+    .proposal-head {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .proposal h2 {
+      color: var(--white);
+      margin-bottom: 0;
+    }
+
+    .model {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 1rem;
+    }
+
+    .roles {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .role {
+      min-width: 0;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 12px;
+      font-weight: 700;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .step {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--ink);
+      padding: 16px;
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--deep);
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin-bottom: 4px;
+      color: var(--deep);
+      font-size: 1.05rem;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .stack span,
+    .customer {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 8px 11px;
+      background: var(--pale);
+      color: var(--deep);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .cred {
+      max-width: 86ch;
+      margin: 0 auto;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      padding: 24px;
+    }
+
+    .cred p {
+      margin-bottom: 14px;
+    }
+
+    .cred p:last-child {
+      margin-bottom: 0;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 0;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      min-width: 0;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--white);
+    }
+
+    .case-card img {
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      color: var(--deep);
+      font-size: 1.12rem;
+      margin-bottom: 8px;
+    }
+
+    .case-body p {
+      margin-bottom: 10px;
+      color: var(--muted);
+    }
+
+    .case-body a {
+      font-weight: 800;
+      color: var(--deep);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .cta {
+      text-align: center;
+      background: var(--deep);
+      color: var(--white);
+    }
+
+    .cta h2 {
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .cta p {
+      margin: 0 auto 22px;
+      max-width: 42ch;
+      color: rgba(255, 255, 255, 0.84);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      max-width: 100%;
+      padding: 13px 20px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: var(--deep);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 620px) {
+      .section {
+        padding: 64px 28px;
+      }
+
+      .hero {
+        padding: 58px 28px 76px;
+      }
+
+      .signal-grid,
+      .roles {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 900px) {
+      .hero {
+        min-height: 88vh;
+      }
+
+      .hero .wrap {
+        grid-template-columns: 1.3fr 0.7fr;
+        align-items: end;
+      }
+
+      .signal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .proposal {
+        padding: 34px;
+      }
+
+      .roles {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .timeline {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .step {
+        grid-template-columns: 1fr;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <div class="mark" aria-hidden="true"></div>
+          <h1>Keep Myntro's core systems moving while the team grows</h1>
+          <p>A short delivery plan for Myntro's product and technology team. It focuses on system modernization, reliable integrations, and support for My Myntro and savings flows.</p>
+          <p class="why">Saw your System Developer role in Gothenburg. It points to live modernization work across debt collection, investments, and new services, where delivery cannot pause during hiring.</p>
+        </div>
+        <div class="signal-grid" aria-label="Signal summary">
+          <div class="signal">
+            <strong>Signal</strong>
+            <span>System Developer for core business systems.</span>
+          </div>
+          <div class="signal">
+            <strong>Stack fit</strong>
+            <span>.NET, C#, SQL, Azure, and testing.</span>
+          </div>
+          <div class="signal">
+            <strong>Product surface</strong>
+            <span>Myntro Collect, My Myntro, payments, and cases.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2 class="section-title">Our read</h2>
+        <div class="read-box">
+          <p>That role says Myntro is not just adding headcount. You are moving a regulated debt business toward stronger product thinking. The hard part is the middle layer: legacy systems, data flows, and new cloud services. If that work waits for hiring, payment journeys and portfolio work can slow down. It can also add pressure to the product team.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="proposal">
+          <div class="proposal-head">
+            <h2 class="section-title">What we'd do</h2>
+            <p class="model">Engagement model: a dedicated squad under Myntro's Product and Technology leaders for a six-week pilot, then extend only if useful.</p>
+          </div>
+          <div class="roles" aria-label="Team shape">
+            <div class="role">1 .NET tech lead</div>
+            <div class="role">2 senior C# engineers</div>
+            <div class="role">1 Azure DevOps engineer</div>
+            <div class="role">1 QA automation engineer</div>
+          </div>
+          <div class="timeline">
+            <article class="step">
+              <div class="num">1</div>
+              <div>
+                <h3>Map core flows</h3>
+                <p>Trace My Myntro, payment, savings, and back-office flows, then mark the riskiest handoffs and data gaps.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div>
+                <h3>Stabilize delivery</h3>
+                <p>Improve tests, logging, and release checks around systems that affect collections and customer payment plans.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div>
+                <h3>Modernize in slices</h3>
+                <p>Move selected C# services toward cleaner APIs, with clear rollback paths for regulated workloads first.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div>
+                <h3>Prove the model</h3>
+                <p>Run weekly demos with Myntro owners, showing working changes and decisions for the next quarter.</p>
+              </div>
+            </article>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span>.NET / C#</span>
+            <span>SQL</span>
+            <span>Azure</span>
+            <span>WebAPI</span>
+            <span>Angular</span>
+            <span>Playwright</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2 class="section-title">Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, active since 1997. We have about 700 in-house specialists and no freelancers. We build web, backend, mobile, QA, DevOps, and data systems across Europe and North America. For Myntro, the fit is regulated finance, .NET and Java backend work, Azure, test automation, and dedicated teams. Elinext is ISO 9001 and ISO 27001 certified, with named customers including <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. The same delivery model can support Myntro while your team hires permanent system developers.</p>
+          <div class="customers" aria-label="Named customers">
+            <span class="customer">Siemens</span>
+            <span class="customer">Broadcom</span>
+            <span class="customer">Volkswagen</span>
+            <span class="customer">TRUMPF</span>
+            <span class="customer">TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-erp-payment.jpg" alt="Payment processing case study cover">
+            <div class="case-body">
+              <h3>3-tier ERP and Payment Processing Solution</h3>
+              <p>Old payment logic was rebuilt with newer .NET services.</p>
+              <p>Speed and performance improved in a live finance system.</p>
+              <a href="https://www.elinext.com/case-study/erp-and-payment-processing-solution/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-cash-liquidity.jpg" alt="Cash and liquidity management case study cover">
+            <div class="case-body">
+              <h3>Cash and Liquidity Management App for Banks</h3>
+              <p>Banking workflows moved from finance specs into working software.</p>
+              <p>The result supports daily bank and finance operations.</p>
+              <a href="https://www.elinext.com/case-study/cash-and-liquidity-management-app/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2 class="section-title">Talk through the gap</h2>
+        <p>We can map the first sprint around Myntro's systems.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
