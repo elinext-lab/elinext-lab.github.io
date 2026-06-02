@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Endalia backend capacity brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/endalia_2026-06-02_11-00-27/">
+  <meta name="description" content="A short backend capacity plan for Endalia HR while the .NET hiring search is open.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/endalia_2026-06-02_11-00-27/">
+  <meta property="og:title" content="Endalia backend capacity brief">
+  <meta property="og:description" content="A short .NET bridge plan for Endalia HR while backend hiring is open.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/endalia_2026-06-02_11-00-27/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Endalia backend capacity brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Endalia backend capacity brief">
+  <meta name="twitter:description" content="A short .NET bridge plan for Endalia HR while backend hiring is open.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/endalia_2026-06-02_11-00-27/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #5f6873;
+      --paper: #fffdfa;
+      --soft: #f7f1ec;
+      --line: #e7ded6;
+      --red: #df334b;
+      --teal: #14756f;
+      --amber: #f4a261;
+      --navy: #10243d;
+      --white: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+    .hero {
+      padding: 34px 0 28px;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--red);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 780px;
+      margin-bottom: 14px;
+      font-size: clamp(2rem, 7vw, 4.9rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 710px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 1.03rem;
+    }
+    .why {
+      padding: 14px 16px;
+      border-left: 4px solid var(--red);
+      background: var(--soft);
+    }
+    section {
+      padding: 34px 0;
+      background: var(--paper);
+    }
+    section h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: clamp(1.45rem, 4vw, 2.2rem);
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+    .read-box {
+      max-width: 74ch;
+      margin: 0 auto;
+      padding: 22px;
+      background: #fff4f1;
+      border: 1px solid #f0c8c1;
+      border-left: 5px solid var(--red);
+    }
+    .read-box p { margin: 0; }
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+    .start-card,
+    .proof-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--teal);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    .work {
+      background: var(--navy);
+      color: var(--white);
+    }
+    .work h2 { color: var(--white); }
+    .work-intro {
+      max-width: 780px;
+      margin: 0 auto 22px;
+      text-align: center;
+      color: #dce6ef;
+    }
+    .plan {
+      display: grid;
+      gap: 14px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 18px;
+      background: #172f50;
+      border: 1px solid #29476b;
+      border-radius: 8px;
+    }
+    .num {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--amber);
+      color: #20160c;
+      font-weight: 900;
+    }
+    .step h3 {
+      margin-bottom: 5px;
+      font-size: 1.02rem;
+    }
+    .step p {
+      margin: 0;
+      color: #cbd7e4;
+    }
+    .team {
+      margin-top: 18px;
+      padding: 16px;
+      background: #0d1e34;
+      border: 1px solid #2a4768;
+      border-radius: 8px;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eef7f6;
+      color: var(--teal);
+      font-size: 0.86rem;
+      font-weight: 750;
+    }
+    .work .tag {
+      background: #203e5f;
+      color: #ffffff;
+      border: 1px solid #42658a;
+    }
+    .elinext {
+      background: #ffffff;
+    }
+    .who-box {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfaf7;
+    }
+    .who-box p { margin-bottom: 12px; }
+    .who-box p:last-child { margin-bottom: 0; }
+    .customers strong {
+      display: inline-block;
+      margin: 4px 4px 0 0;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #fff0e2;
+      color: #7a3a00;
+    }
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 2.1 / 1;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 14px;
+    }
+    .proof-card h3 { margin-bottom: 8px; }
+    .proof-card p { color: var(--muted); }
+    .proof-card a {
+      color: var(--red);
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .product-image {
+      margin: 22px 0 0;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+    .product-image img {
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      margin: 0 auto;
+    }
+    .cta {
+      text-align: center;
+      background: var(--soft);
+      border-top: 1px solid var(--line);
+    }
+    .cta p {
+      margin-bottom: 20px;
+      color: var(--muted);
+    }
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--red);
+      color: var(--white);
+      font-weight: 850;
+      text-decoration: none;
+    }
+    @media (min-width: 760px) {
+      .hero { padding: 58px 0 48px; }
+      section { padding: 48px 0; }
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .plan { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .team {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 18px;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Prepared for Hernán Untermann</p>
+      <h1>Keep Endalia HR moving while the .NET search runs</h1>
+      <p>Endalia already connects payroll, time, documents, requests, and employee communication in one platform. The next risk is not product fit. It is keeping release pace while backend hiring is open.</p>
+      <p class="why"><strong>Why we're here:</strong> you are hiring a Backend Engineer .NET. That points to a real capacity gap behind Endalia HR, especially while the mobile app is shipping calendar, document, and request updates.</p>
+    </div>
+  </header>
+
+  <main>
+    <section aria-labelledby="read-title">
+      <div class="wrap">
+        <h2 id="read-title">Our read</h2>
+        <div class="read-box">
+          <p>The .NET role tells us Endalia is adding backend capacity, not just replacing a seat. Endalia HR is a cloud HCM and payroll platform for medium and large companies, with modules for payroll, time, talent, communication, analytics, and employee self-service. Your iOS notes from June 1 mention calendar, personal documents, Welcome Space, request management, performance, and bug fixes. That mix usually puts pressure on APIs, data rules, and regression checks. If the role stays open, mobile and portal changes can slow, and support teams may carry more edge cases.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="start-title">
+      <div class="wrap">
+        <h2 id="start-title">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">Login and time flows</span>
+            <p>The App Store includes a login complaint, while another user praises time-clock and company communication. Map login, time registration, calendar requests, and payroll documents as one regression pack before the next release.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Data and reports</span>
+            <p>Public reviews mention unlinked payroll, compensation, and report data that create manual work. Run a short API audit to mark gaps by data, permission, API shape, or report-builder issue.</p>
+          </article>
+        </div>
+        <figure class="product-image">
+          <img src="assets/endalia-product.png" alt="Endalia HR product screens from Endalia website">
+        </figure>
+      </div>
+    </section>
+
+    <section class="work" aria-labelledby="work-title">
+      <div class="wrap">
+        <h2 id="work-title">What we'd do</h2>
+        <p class="work-intro">Use a dedicated squad under your Product Owner. Start with a six-week bridge, weekly demos, and work tied to the open .NET role.</p>
+        <div class="plan">
+          <article class="step">
+            <div class="num">1</div>
+            <div>
+              <h3>Join the sprint</h3>
+              <p>Review backend queues and map Endalia HR flows tied to login, time, calendar, payroll, and requests.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">2</div>
+            <div>
+              <h3>Ship focused fixes</h3>
+              <p>Deliver .NET API fixes and tests for the highest-risk employee portal and mobile release paths.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">3</div>
+            <div>
+              <h3>Protect releases</h3>
+              <p>Add automated regression checks around login, time registration, request status, and payroll document access.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">4</div>
+            <div>
+              <h3>Hand over cleanly</h3>
+              <p>Hand over code, test notes, and open backlog items while your hiring process continues.</p>
+            </div>
+          </article>
+        </div>
+        <div class="team">
+          <p><strong>Team shape:</strong> 1 Tech Lead, 2 senior .NET engineers, and 1 QA automation engineer.</p>
+          <div class="tags" aria-label="Relevant stack">
+            <span class="tag">.NET</span>
+            <span class="tag">C#</span>
+            <span class="tag">ASP.NET Core</span>
+            <span class="tag">MS SQL</span>
+            <span class="tag">Angular</span>
+            <span class="tag">QA automation</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext" aria-labelledby="elinext-title">
+      <div class="wrap">
+        <h2 id="elinext-title">Who is Elinext</h2>
+        <div class="who-box">
+          <p>Elinext is a full-cycle software development provider, active since 1997, with about 700 in-house specialists and no freelancers. For Endalia, the useful fit is a dedicated team under your product owner, with backend, QA, and delivery support.</p>
+          <p>We work across .NET, C#, Angular, QA, DevOps, and enterprise web systems. <span class="customers"><strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong></span></p>
+          <p>ISO 9001 and ISO 27001 matter here because HR and payroll systems carry sensitive employee data. That is why the plan above starts small, proves velocity, and keeps your internal team in control.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="proof-title">
+      <div class="wrap">
+        <h2 id="proof-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <h3>Internal Talent Management System Development</h3>
+            <p>Elinext built a web talent system with ASP.NET Core, C#, MS SQL Server, Angular, and TypeScript to replace spreadsheets and improve employee management.</p>
+            <a href="https://www.elinext.com/case-study/talent-management-system/">View case study</a>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-global-payroll-management-software.jpg" alt="Global Payroll Management Software case study image">
+            <h3>Global Payroll Management Software</h3>
+            <p>Elinext built payroll software where rules change by country, starting from broad requirements and turning them into a working web product.</p>
+            <a href="https://www.elinext.com/case-study/global-payroll-management-software/">View case study</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" aria-labelledby="talk-title">
+      <div class="wrap">
+        <h2 id="talk-title">Talk through the bridge</h2>
+        <p>A short call can test the plan against your roadmap.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
