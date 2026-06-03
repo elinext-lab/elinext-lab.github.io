@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WeTransact full-stack scale brief</title>
+  <meta name="description" content="A short engineering brief for WeTransact's Microsoft Marketplace platform scale moment.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/wetransact_2026-06-03_10-00-15/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/wetransact_2026-06-03_10-00-15/">
+  <meta property="og:title" content="WeTransact full-stack scale brief">
+  <meta property="og:description" content="A practical brief for WeTransact's .NET, Azure, and marketplace delivery needs.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/wetransact_2026-06-03_10-00-15/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="WeTransact full-stack scale brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="WeTransact full-stack scale brief">
+  <meta name="twitter:description" content="A practical brief for WeTransact's .NET, Azure, and marketplace delivery needs.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/wetransact_2026-06-03_10-00-15/og-image.jpg">
+  <style>
+    :root {
+      --ink: #152033;
+      --muted: #5f6f85;
+      --paper: #fbf8f2;
+      --white: #ffffff;
+      --line: #d9e0e7;
+      --teal: #0e766f;
+      --orange: #f27a1a;
+      --soft-teal: #e8f4f2;
+      --soft-orange: #fff0e2;
+      --navy: #1d2b45;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .band {
+      width: 100%;
+      padding: 52px 18px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding-top: 68px;
+      padding-bottom: 56px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #9bd8d0;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      max-width: 13ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.25rem, 8vw, 4.8rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 24px;
+      text-align: center;
+      font-size: clamp(1.75rem, 5vw, 2.75rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 62ch;
+      margin-bottom: 0;
+      color: #d6dee9;
+      font-size: 1.05rem;
+    }
+
+    .signal {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .signal strong {
+      display: block;
+      margin-bottom: 12px;
+      color: #ffffff;
+      font-size: 1.05rem;
+    }
+
+    .signal span {
+      display: inline-block;
+      margin: 4px 4px 0 0;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: rgba(155, 216, 208, 0.14);
+      color: #dff5f2;
+      font-size: 0.86rem;
+    }
+
+    .read { background: var(--soft-teal); }
+
+    .read-card {
+      width: 100%;
+      max-width: 78ch;
+      margin: 0 auto;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      padding: 24px;
+      background: var(--white);
+      box-shadow: 0 16px 36px rgba(21, 32, 51, 0.08);
+    }
+
+    .start { background: var(--paper); }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .note-card,
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      background: var(--white);
+    }
+
+    .note-card b {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--teal);
+    }
+
+    .proposal {
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    .proposal h2 { color: var(--white); }
+
+    .proposal-intro {
+      max-width: 76ch;
+      margin: 0 auto 24px;
+      color: #dbe5ef;
+      text-align: center;
+    }
+
+    .plan {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      gap: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .step-num {
+      width: 34px;
+      height: 34px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #1c160f;
+      font-weight: 700;
+    }
+
+    .step-title {
+      display: block;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .step p {
+      margin: 0;
+      color: #dbe5ef;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 22px;
+      justify-content: center;
+    }
+
+    .stack span,
+    .customer {
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: var(--soft-orange);
+      color: #7b3a05;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .who { background: var(--white); }
+
+    .who p {
+      max-width: 78ch;
+      margin: 0 auto;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px auto 0;
+      max-width: 78ch;
+    }
+
+    .proof { background: var(--paper); }
+
+    .case-card {
+      display: grid;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .case-card img {
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+
+    .case-card a {
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .talk {
+      background: var(--soft-orange);
+      text-align: center;
+    }
+
+    .talk p {
+      margin-bottom: 22px;
+      color: var(--muted);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border-radius: 8px;
+      padding: 0 20px;
+      background: var(--orange);
+      color: #1d160f;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .band { padding: 72px 32px; }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.75fr);
+      }
+
+      .start-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      .plan { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+      .case-card { grid-template-columns: minmax(220px, 0.6fr) minmax(0, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero band">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Prepared for Dick Dijkstra</p>
+          <h1>Hiring full-stack help for WeTransact's next scale step</h1>
+          <p>Saw WeTransact is hiring a Full Stack Engineer while scaling Microsoft Marketplace, co-sell, private offer, and CRM-native deal flows. That points to product delivery load, not a simple vacancy.</p>
+        </div>
+        <aside class="signal" aria-label="Signal summary">
+          <strong>Signal we used</strong>
+          <span>Full-stack engineering</span>
+          <span>Partner Center</span>
+          <span>Private offers</span>
+          <span>CRM sync</span>
+          <span>Co-sell</span>
+        </aside>
+      </div>
+    </section>
+
+    <section class="read band">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p>Hiring full-stack help says WeTransact is scaling more than a backlog. The signal fits a platform team improving how it ships. Your own product now spans Marketplace Launchpad, Demand Engine, Partner Center work, offers, finance, incentives, and CRM connectors. That is a lot of edge cases for one team to own. If those flows keep growing without tighter release gates, expert support can become the hidden bottleneck.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="start band">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="note-card">
+            <b>Docs-to-portal path</b>
+            <p>Review Partner Center, portal, offer, finance, and CRM connector guides beside real onboarding steps. Turn repeated support questions into checks, tooltips, or guided actions.</p>
+          </div>
+          <div class="note-card">
+            <b>First-view speed</b>
+            <p>Lighthouse found render-blocking resources and unused JavaScript on the homepage. Split marketing scripts from first render before adding more trial traffic.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal band">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <p class="proposal-intro">Use a dedicated squad under your PO or engineering lead. Team: one tech lead, two senior full-stack engineers, one QA automation engineer, and a part-time UX designer for onboarding flows.</p>
+        <div class="plan">
+          <div class="step">
+            <span class="step-num">1</span>
+            <span class="step-title">Map the load</span>
+            <p>Map Partner Center, CRM connector, offer management, and support flows to find repeated manual work and slow release points.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <span class="step-title">Tighten delivery</span>
+            <p>Improve Azure CI/CD, test gates, and release notes so engineers can ship marketplace changes with fewer handoffs.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <span class="step-title">Move backlog</span>
+            <p>Add two senior full-stack engineers to move .NET and ASP.NET Core backlog items without pulling your core team.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">4</span>
+            <span class="step-title">Add AI checks</span>
+            <p>Use AI-assisted review, docs checks, and regression tests where the team already wants system-level speed.</p>
+          </div>
+        </div>
+        <div class="stack" aria-label="Relevant stack">
+          <span>.NET / C#</span>
+          <span>ASP.NET Core</span>
+          <span>Azure</span>
+          <span>MS SQL</span>
+          <span>Angular or React</span>
+          <span>CI/CD</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="who band">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build web, mobile, backend, QA, DevOps, AI/ML, and product design teams. For WeTransact, the relevant fit is a Microsoft-stack squad with ISO 9001 and ISO 27001 discipline. Our delivery history includes Broadcom, Siemens, Volkswagen, TRUMPF, and TUI. That gives your team extra hands without losing control of the product plan.</p>
+        <div class="customers" aria-label="Named customers">
+          <span class="customer">Broadcom</span>
+          <span class="customer">Siemens</span>
+          <span class="customer">Volkswagen</span>
+          <span class="customer">TRUMPF</span>
+          <span class="customer">TUI</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof band">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-saas-platform-design.jpg" alt="SaaS Platform Design for M365 Security Monitoring case study image">
+            <div>
+              <h3>SaaS Platform Design for M365 Security Monitoring</h3>
+              <p>Elinext designed and built a Microsoft 365 SaaS platform with Azure, .NET Core, Angular, Microsoft Graph API, and SQL automation. The client launched a product that moved security assessments from hours to minutes.</p>
+              <a href="https://www.elinext.com/case-study/saas-platform-design/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk band">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>A short call can test fit and next steps.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
