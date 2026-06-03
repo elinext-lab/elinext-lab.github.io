@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SilverRail backend delivery brief</title>
+  <meta name="description" content="A short, specific delivery brief for SilverRail as it grows backend/API engineering for SilverOne and SilverCore.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/silverrail_2026-06-03_16-19-05/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/silverrail_2026-06-03_16-19-05/">
+  <meta property="og:title" content="SilverRail backend delivery brief">
+  <meta property="og:description" content="A focused plan for scaling SilverOne and SilverCore API delivery.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/silverrail_2026-06-03_16-19-05/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="SilverRail backend delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SilverRail backend delivery brief">
+  <meta name="twitter:description" content="A focused plan for scaling SilverOne and SilverCore API delivery.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/silverrail_2026-06-03_16-19-05/og-image.jpg">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #13221f;
+      --muted: #5f6d69;
+      --line: #dfe8e5;
+      --paper: #fbfdfb;
+      --soft: #eef6f1;
+      --mist: #f4f8f6;
+      --deep: #10342d;
+      --green: #2f7d64;
+      --orange: #e8722b;
+      --gold: #f4b24c;
+      --white: #ffffff;
+      --shadow: 0 18px 50px rgba(16, 52, 45, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .section { padding: 56px 18px; background: var(--paper); }
+    .section.alt { background: var(--mist); }
+    .wrap { width: 100%; max-width: 1120px; margin: 0 auto; }
+    .narrow { max-width: 820px; margin: 0 auto; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 900px;
+      font-size: clamp(2.35rem, 7vw, 4rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+      margin-bottom: 22px;
+    }
+    h2 {
+      text-align: center;
+      font-size: clamp(1.65rem, 4vw, 2.5rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+      margin-bottom: 24px;
+    }
+    h3 {
+      font-size: 1.05rem;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    p { font-size: 1rem; color: var(--muted); }
+    .hero {
+      padding: 64px 18px 58px;
+      color: var(--white);
+      background:
+        linear-gradient(135deg, rgba(16, 52, 45, 0.98), rgba(27, 80, 67, 0.94) 54%, rgba(232, 114, 43, 0.86));
+    }
+    .hero p { color: rgba(255, 255, 255, 0.84); max-width: 690px; }
+    .eyebrow {
+      color: #bde6d6;
+      text-transform: uppercase;
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      margin-bottom: 20px;
+    }
+    .why {
+      border-left: 4px solid var(--gold);
+      padding-left: 16px;
+      margin-top: 18px;
+      max-width: 760px;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 34px;
+      align-items: end;
+    }
+    .rail-map {
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      padding: 22px;
+      min-height: 260px;
+      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.18);
+    }
+    .rail-row {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin: 18px 0;
+      color: rgba(255, 255, 255, 0.92);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+    .rail-line {
+      height: 7px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #bde6d6, #f4b24c, #ffffff);
+      position: relative;
+    }
+    .rail-line::before,
+    .rail-line::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--white);
+      transform: translateY(-50%);
+      box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.14);
+    }
+    .rail-line::before { left: 6%; }
+    .rail-line::after { right: 8%; }
+    .read-band {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 26px;
+      background: #eaf4ee;
+      border: 1px solid #cfe2d9;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+    }
+    .read-band p { color: #2e4540; margin-bottom: 0; }
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .start-card,
+    .proof-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .start-card { padding: 22px; }
+    .label {
+      display: inline-flex;
+      align-items: center;
+      color: var(--green);
+      font-size: 0.74rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+    .start-card p, .proof-card p { margin-bottom: 0; }
+    .plan {
+      background: var(--deep);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+    .plan h2 { color: var(--white); }
+    .plan p { color: rgba(255, 255, 255, 0.78); }
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 22px 0 26px;
+    }
+    .pill {
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.09);
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-weight: 800;
+      font-size: 0.88rem;
+      white-space: normal;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.17);
+      border-radius: 8px;
+    }
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--orange);
+      font-weight: 900;
+    }
+    .step strong { display: block; color: var(--white); margin-bottom: 5px; }
+    .step span { color: rgba(255, 255, 255, 0.76); font-size: 0.95rem; }
+    .who {
+      max-width: 880px;
+      margin: 0 auto;
+      font-size: 1.04rem;
+      color: #334a45;
+    }
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .customers strong {
+      border: 1px solid #cfe2d9;
+      border-radius: 999px;
+      background: var(--white);
+      padding: 8px 12px;
+      font-size: 0.88rem;
+    }
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      border-bottom: 1px solid var(--line);
+    }
+    .proof-body { padding: 18px; }
+    .proof-card a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--green);
+      font-weight: 900;
+      text-decoration: none;
+    }
+    .cta {
+      text-align: center;
+      color: var(--white);
+      background: var(--deep);
+      padding: 56px 18px;
+    }
+    .cta h2 { color: var(--white); }
+    .cta p { color: rgba(255, 255, 255, 0.78); }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 900;
+      text-decoration: none;
+      margin-top: 8px;
+    }
+
+    @media (min-width: 760px) {
+      .section { padding: 74px 28px; }
+      .hero { padding: 84px 28px 78px; }
+      .start-grid, .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .plan { padding: 34px; }
+    }
+
+    @media (min-width: 900px) {
+      .hero-grid { grid-template-columns: minmax(0, 1.75fr) minmax(280px, 0.75fr); }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">Prepared for Nick Sales</div>
+        <h1>Keep SilverRail APIs moving as backend hiring ramps.</h1>
+        <p>SilverOne and SilverCore sit in a hard place: rail search, ticketing, payments, aftersales, data, and partner systems all meet in one platform.</p>
+        <p class="why">Saw SilverRail hiring software engineers for backend/API work. That usually means the roadmap is moving faster than the core team can safely absorb.</p>
+      </div>
+      <div class="rail-map" aria-label="Delivery focus diagram">
+        <div class="rail-row"><span>Shop</span><i class="rail-line"></i></div>
+        <div class="rail-row"><span>Book</span><i class="rail-line"></i></div>
+        <div class="rail-row"><span>Pay</span><i class="rail-line"></i></div>
+        <div class="rail-row"><span>Issue</span><i class="rail-line"></i></div>
+        <div class="rail-row"><span>After</span><i class="rail-line"></i></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>Our read</h2>
+      <div class="read-band">
+        <p>The hiring signal says SilverRail is scaling backend delivery, not just filling seats. SilverCore already spans shop, book, pay, ticket issue, and aftersales through one API. That means each new feature can touch partner contracts, test data, and release notes. If the bottleneck stays, partner pilots can slow and senior engineers get pulled into support work. The real risk is shipping faster while keeping every rail flow safe.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap">
+      <h2>Where we'd start</h2>
+      <div class="start-grid">
+        <article class="start-card">
+          <span class="label">Noticed</span>
+          <h3>Public docs show the API map, then gate details.</h3>
+          <p>Add a short public quickstart with safe payloads, lifecycle diagrams, and a partner readiness checklist before full portal access.</p>
+        </article>
+        <article class="start-card">
+          <span class="label">Next step</span>
+          <h3>The job spec names JSON, XML, cloud, and microservices.</h3>
+          <p>Build a small compatibility pack around shop, book, pay, issue, and aftersales before new engineers land.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap plan">
+      <h2>What we'd do</h2>
+      <p>Use a dedicated squad under your PO/PM for a six-week backend/API pilot, with a weekly demo and clear handover.</p>
+      <div class="team" aria-label="Team shape">
+        <span class="pill">1 Tech Lead</span>
+        <span class="pill">2 Java/.NET engineers</span>
+        <span class="pill">1 QA automation engineer</span>
+        <span class="pill">1 DevOps engineer</span>
+        <span class="pill">Part-time BA</span>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="num">1</span><div><strong>Map the flows</strong><span>Document SilverCore shop, book, pay, issue, and aftersales paths with owners, test data, and partner touchpoints.</span></div></div>
+        <div class="step"><span class="num">2</span><div><strong>Harden regression</strong><span>Create API checks for JSON and XML contracts, edge fares, payment states, refunds, and ticket issue changes.</span></div></div>
+        <div class="step"><span class="num">3</span><div><strong>Clean release gates</strong><span>Tune CI/CD checks across Java, .NET, Docker, Kubernetes, and cloud environments so failures point to owners.</span></div></div>
+        <div class="step"><span class="num">4</span><div><strong>Leave a handover kit</strong><span>Give your new hires runbooks, review patterns, and starter tasks tied to the real SilverOne roadmap.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap">
+      <h2>Who is Elinext</h2>
+      <p class="who">Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For SilverRail, the fit is backend, QA, DevOps, and enterprise web delivery under your own product lead. Elinext holds ISO 9001 and ISO 27001, which matters when API quality and partner trust are part of the work. Our customer history includes <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. That is the base for the pilot above: skilled people, steady process, and clear handover.</p>
+      <div class="customers" aria-label="Named customers">
+        <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>Proof</h2>
+      <div class="proof-grid">
+        <article class="proof-card">
+          <img src="assets/case-tui-fly.jpg" alt="TUI Fly booking engine case study preview">
+          <div class="proof-body">
+            <h3>TUI Fly internet booking engine prototype</h3>
+            <p>Elinext turned static designs into a working travel booking prototype for desktop and mobile validation.</p>
+            <a href="https://www.elinext.com/case-study/prototype-development-for-tui-fly-internet-booking-engine/">Read case study</a>
+          </div>
+        </article>
+        <article class="proof-card">
+          <img src="assets/case-api-integration.jpg" alt="API integration case study preview">
+          <div class="proof-body">
+            <h3>Java/Spring integration platform</h3>
+            <p>Elinext helped build a multi-party API system using Java, Spring, REST, SOAP, and event-style flows.</p>
+            <a href="https://www.elinext.com/case-study/app-for-integration-with-financial-organizations/">Read case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="narrow">
+      <h2>Start the conversation</h2>
+      <p>Bring one API flow. We will map the pilot.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
