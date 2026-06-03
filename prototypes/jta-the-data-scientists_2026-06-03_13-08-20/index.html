@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JTA backend capacity brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/jta-the-data-scientists_2026-06-03_13-08-20/">
+  <meta name="description" content="A short delivery brief for JTA's Power BI visual and backend capacity moment.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/jta-the-data-scientists_2026-06-03_13-08-20/">
+  <meta property="og:title" content="JTA backend capacity brief">
+  <meta property="og:description" content="A short delivery brief for JTA's Power BI visual and backend capacity moment.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/jta-the-data-scientists_2026-06-03_13-08-20/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="JTA backend capacity brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="JTA backend capacity brief">
+  <meta name="twitter:description" content="A short delivery brief for JTA's Power BI visual and backend capacity moment.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/jta-the-data-scientists_2026-06-03_13-08-20/og-image.jpg">
+  <style>
+    :root {
+      --ink: #142033;
+      --muted: #667084;
+      --line: #d9e1ea;
+      --paper: #fbfcfd;
+      --panel: #ffffff;
+      --blue: #223761;
+      --cyan: #00a1ce;
+      --pink: #e5287e;
+      --green: #0f8b6d;
+      --amber: #f59f24;
+      --soft: #eaf7fb;
+      --soft-pink: #fff0f6;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .section { padding: 56px 0; background: var(--paper); }
+    .wrap { width: min(100% - 32px, 1120px); margin: 0 auto; }
+    .narrow { max-width: 760px; margin: 0 auto; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 880px;
+      font-size: clamp(36px, 8vw, 74px);
+      line-height: 0.98;
+      letter-spacing: 0;
+      margin-bottom: 20px;
+    }
+    h2 {
+      text-align: center;
+      font-size: clamp(25px, 4vw, 38px);
+      line-height: 1.12;
+      margin-bottom: 24px;
+    }
+    h3 { font-size: 18px; margin-bottom: 8px; }
+    p { color: var(--muted); font-size: 17px; }
+    .hero {
+      padding: 74px 0 64px;
+      background:
+        linear-gradient(145deg, rgba(34,55,97,0.96), rgba(20,32,51,0.98)),
+        linear-gradient(90deg, rgba(0,161,206,0.28), rgba(229,40,126,0.20));
+      color: #fff;
+    }
+    .hero p { color: #dfe8f3; max-width: 720px; font-size: 19px; }
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 18px;
+      color: #bdeaf6;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 4px;
+      border-radius: 4px;
+      background: var(--pink);
+    }
+    .read-card {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--soft);
+      border-left: 6px solid var(--cyan);
+      border-radius: 8px;
+      padding: 26px;
+      box-shadow: 0 18px 50px rgba(20,32,51,0.08);
+    }
+    .read-card p { max-width: 76ch; margin: 0; color: #253247; }
+    .start-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    .start-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+    }
+    .label {
+      color: var(--pink);
+      font-weight: 800;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .proposal {
+      background: #eef6f7;
+    }
+    .delivery {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 24px 70px rgba(20,32,51,0.10);
+    }
+    .team {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 18px 0 22px;
+    }
+    .pill {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-weight: 700;
+      color: var(--blue);
+    }
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+    .step {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: auto 1fr;
+      align-items: start;
+      background: #fbfcfd;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 800;
+    }
+    .step strong { display: block; font-size: 17px; margin-bottom: 4px; }
+    .step p { margin: 0; font-size: 15px; }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .tag {
+      background: #e8f7f4;
+      border: 1px solid #bce2d7;
+      color: #0f634f;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .cred {
+      background: #fff;
+    }
+    .cred-card {
+      max-width: 900px;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 26px;
+      background: var(--panel);
+    }
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .customers strong {
+      background: var(--soft-pink);
+      color: #9b1550;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 14px;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr;
+    }
+    .case {
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .case img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      border-bottom: 1px solid var(--line);
+    }
+    .case-body { padding: 18px; }
+    .case p { font-size: 15px; margin-bottom: 12px; }
+    .case a { color: var(--blue); font-weight: 800; }
+    .cta {
+      background: var(--blue);
+      color: #fff;
+      text-align: center;
+    }
+    .cta p { color: #d8e5ef; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      margin-top: 12px;
+      padding: 0 22px;
+      border-radius: 8px;
+      background: var(--amber);
+      color: #172033;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    @media (min-width: 760px) {
+      .section { padding: 74px 0; }
+      .start-grid, .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .delivery { padding: 34px; }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .team { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    @media (max-width: 430px) {
+      .wrap { width: min(100% - 24px, 1120px); }
+      .hero { padding: 54px 0 48px; }
+      .read-card, .delivery, .cred-card, .start-card { padding: 20px; }
+      .team { grid-template-columns: 1fr; }
+      .step { grid-template-columns: 1fr; }
+      .num { width: 32px; height: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow">Prepared for Brian Carneiro</div>
+        <h1>Bridge backend capacity for JTA's Power BI visual work</h1>
+        <p>Saw the Backend Developer signal while JTA is publishing Power BI visuals and scaling data work. Here is where we would protect delivery first.</p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="read-title">
+      <div class="wrap">
+        <h2 id="read-title">Our read</h2>
+        <div class="read-card">
+          <p>That signal says JTA is adding delivery capacity around data products and client platforms. The public Marketplace listing for Table with Custom Headers by JTA shows a real Power BI extension, not only consulting copy. That means backend work touches product support, data export, privacy, and partner trust. Brian likely has to protect project dates while keeping senior review close. If hiring takes time, pipeline fixes and visual support can slow client work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="start-title">
+      <div class="wrap">
+        <h2 id="start-title">Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <div class="label">Product path</div>
+            <p>Map the Power BI visual path: sample download, support email, and external service calls. Add a triage sheet for table shapes, export size, and tenant rules.</p>
+          </div>
+          <div class="start-card">
+            <div class="label">Public demo path</div>
+            <p>Our homepage audit found heavy hero media on mobile. Use the same image discipline for product docs, samples, and Marketplace support pages.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal" aria-labelledby="do-title">
+      <div class="wrap">
+        <h2 id="do-title">What we'd do</h2>
+        <div class="delivery">
+          <p><strong>Engagement model:</strong> a dedicated squad under Brian or JTA's PM for a 6-week pilot.</p>
+          <div class="team" aria-label="Team shape">
+            <div class="pill">Backend lead</div>
+            <div class="pill">2 backend engineers</div>
+            <div class="pill">Azure DevOps</div>
+            <div class="pill">QA automation</div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="num">1</div>
+              <div><strong>Trace the flow</strong><p>Trace Marketplace install, sample download, support handoff, and private portal access points with Brian's current delivery team.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div><strong>Harden services</strong><p>Harden backend services for exports, telemetry, tenant rules, and secure file handling around Power BI visuals.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div><strong>Add checks</strong><p>Add automated checks for common table shapes, hierarchy states, large exports, and browser support paths.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div><strong>Demo weekly</strong><p>Ship weekly demos so JTA can keep client delivery moving while full-time hiring continues.</p></div>
+            </div>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span class="tag">Azure</span>
+            <span class="tag">.NET</span>
+            <span class="tag">Python</span>
+            <span class="tag">SQL Server</span>
+            <span class="tag">Power BI</span>
+            <span class="tag">Playwright</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cred" aria-labelledby="who-title">
+      <div class="wrap">
+        <h2 id="who-title">Who is Elinext</h2>
+        <div class="cred-card">
+          <p>Elinext is a full-cycle software development company, active since 1997 across regulated markets. We have about 700 in-house specialists, with no freelancers or subcontractors involved in client delivery. For JTA, the fit is backend, data, DevOps, QA, and Microsoft-friendly delivery support. Our ISO 9001 and ISO 27001 practices help with secure enterprise data work. Teams have delivered for Siemens, Broadcom, Volkswagen, TRUMPF, TUI, and TransPerfect. We can work under your PM, run weekly demos, flag risks early, and document each handover clearly.</p>
+          <div class="customers" aria-label="Named customers">
+            <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong><strong>TransPerfect</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="proof-title">
+      <div class="wrap">
+        <h2 id="proof-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case">
+            <img src="assets/case-sentiment.jpg" alt="Sentiment analysis case study cover">
+            <div class="case-body">
+              <h3>Sentiment analysis software</h3>
+              <p>Python and ML stack to turn social data into clear signals for decisions.</p>
+              <a href="https://www.elinext.com/case-study/sentiment-analysis-for-social-media/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case">
+            <img src="assets/case-router.jpg" alt="Remote management platform case study cover">
+            <div class="case-body">
+              <h3>Remote management platform</h3>
+              <p>Azure Kubernetes, Java, Go, Python, and React for an AI-powered platform.</p>
+              <a href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta" aria-labelledby="talk-title">
+      <div class="wrap narrow">
+        <h2 id="talk-title">Start the delivery conversation</h2>
+        <p>A small pilot can protect current project dates.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
