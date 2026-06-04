@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lyten BESS Cloud Platform Brief</title>
+  <meta name="description" content="A short proposal brief for Lyten as Voltpack Mobile System and LytenCloud scale across BESS deployments.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/lyten_2026-06-04_22-00-16/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/lyten_2026-06-04_22-00-16/">
+  <meta property="og:title" content="LytenCloud support for BESS field growth">
+  <meta property="og:description" content="A practical backend and cloud plan for Voltpack Mobile System deployments.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/lyten_2026-06-04_22-00-16/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="LytenCloud support for BESS field growth - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="LytenCloud support for BESS field growth">
+  <meta name="twitter:description" content="A practical backend and cloud plan for Voltpack Mobile System deployments.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/lyten_2026-06-04_22-00-16/og-image.jpg">
+  <style>
+    :root {
+      --ink: #162126;
+      --muted: #5e6a70;
+      --paper: #f7f8f4;
+      --white: #ffffff;
+      --line: #dce1dc;
+      --green: #1f6f5b;
+      --green-soft: #e4f1ec;
+      --orange: #d86f28;
+      --orange-soft: #f8e6d7;
+      --charcoal: #101a22;
+      --teal: #287f89;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: flex;
+      align-items: flex-end;
+      background:
+        linear-gradient(180deg, rgba(16, 26, 34, 0.35), rgba(16, 26, 34, 0.92)),
+        url("assets/lyten-bess.png") center / cover no-repeat;
+      color: var(--white);
+      padding: 32px 18px 42px;
+    }
+
+    .hero-inner,
+    .section-inner {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 18px 0 14px;
+      font-size: 2.1rem;
+      line-height: 1.08;
+      font-weight: 800;
+    }
+
+    .hero p {
+      max-width: 690px;
+      margin: 0 0 14px;
+      font-size: 1rem;
+    }
+
+    .hero .why {
+      color: #eef7f4;
+    }
+
+    .source-note {
+      max-width: 640px;
+      color: #dfe7e3;
+      font-size: 0.9rem;
+    }
+
+    section {
+      background: var(--paper);
+      padding: 44px 18px;
+    }
+
+    h2 {
+      margin: 0 auto 18px;
+      text-align: center;
+      font-size: 1.7rem;
+      line-height: 1.18;
+    }
+
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #c8d8d1;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      background: var(--green-soft);
+      box-shadow: 0 16px 36px rgba(18, 33, 38, 0.08);
+    }
+
+    .read-box p,
+    .intro-copy {
+      margin: 0;
+      color: #223136;
+      font-size: 1rem;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .start-card {
+      padding: 18px;
+      border: 1px solid #ead8c5;
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--orange);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .start-card p {
+      margin: 0;
+    }
+
+    .plan {
+      background: var(--charcoal);
+      color: var(--white);
+    }
+
+    .plan h2 {
+      color: var(--white);
+    }
+
+    .plan-copy {
+      max-width: 760px;
+      margin: 0 auto 22px;
+      text-align: center;
+      color: #d7e0dd;
+    }
+
+    .team-strip {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr;
+      max-width: 900px;
+      margin: 0 auto 22px;
+    }
+
+    .role-pill {
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #f5f7f6;
+      font-size: 0.95rem;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      background: #172a30;
+    }
+
+    .step-num {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .step-title {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .step p {
+      margin: 0;
+      color: #d1dedb;
+    }
+
+    .stack {
+      max-width: 900px;
+      margin: 22px auto 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .stack span {
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: #f2f6f4;
+      background: rgba(255, 255, 255, 0.07);
+      font-size: 0.88rem;
+    }
+
+    .elinext {
+      background: #fff;
+    }
+
+    .cred {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfb;
+    }
+
+    .cred p {
+      margin: 0;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .customers strong {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--orange-soft);
+      color: #813b12;
+      font-size: 0.88rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #e5e9e6;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .case-body p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .case-body a {
+      color: var(--green);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .close {
+      background: #edf2ef;
+      text-align: center;
+    }
+
+    .close p {
+      max-width: 620px;
+      margin: 0 auto 18px;
+      color: var(--muted);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--green);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    @media (min-width: 700px) {
+      .hero {
+        min-height: 88vh;
+        padding: 48px 30px 56px;
+      }
+
+      h1 {
+        font-size: 3rem;
+      }
+
+      .hero p {
+        font-size: 1.08rem;
+      }
+
+      section {
+        padding: 58px 30px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .team-strip {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      h1 {
+        font-size: 3.45rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="eyebrow">Proposal brief</span>
+        <h1>Support LytenCloud as BESS moves from plant to field</h1>
+        <p>Voltpack Mobile System now carries a clear software promise. Field visibility, fast data, and reliable support for edge energy sites.</p>
+        <p class="why">We saw Lyten hiring a Backend Engineer in Gdansk for the BESS cloud platform. The role points to AWS services, Terraform, telemetry pipelines, and edge data.</p>
+        <p class="source-note">Prepared as a give-first read for Karel Vanheusden and the Lyten product team.</p>
+      </div>
+    </header>
+
+    <section aria-labelledby="our-read">
+      <div class="section-inner">
+        <h2 id="our-read">Our read</h2>
+        <div class="read-box">
+          <p>The signal says Voltpack Mobile System is becoming a connected product, not only hardware. Your site says VMS gives full visibility through LytenCloud. It also supports mobile power, microgrids, and data centers. So the backend must handle telemetry, alerts, and field data during Europe scale-up. A pilot-friendly cloud layer may slow as more sites connect. Then product teams lose time on support instead of new BESS features.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="start">
+      <div class="section-inner">
+        <h2 id="start">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Your job post names Kinesis, S3, Lambda, Databricks, and AWS security. Start with a telemetry contract. Name each field owner before new LytenCloud features.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Test weak-link and offline cases early. Mobile BESS sites will not always have steady links. Delayed events need clear replay rules before customer sites grow.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan" aria-labelledby="work">
+      <div class="section-inner">
+        <h2 id="work">What we'd do</h2>
+        <p class="plan-copy">Use a dedicated squad under Lyten's PM. Run a four to six week pilot. Harden the BESS cloud path before more field sites connect.</p>
+        <div class="team-strip" aria-label="Suggested team shape">
+          <div class="role-pill">Backend lead</div>
+          <div class="role-pill">2 cloud engineers</div>
+          <div class="role-pill">DevOps engineer</div>
+          <div class="role-pill">QA automation</div>
+          <div class="role-pill">Data support</div>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="step-num">1</div>
+            <div>
+              <span class="step-title">Telemetry baseline</span>
+              <p>Audit AWS ingestion, edge events, and alert paths for Voltpack deployments. Then remove duplicate routes before field growth.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="step-num">2</div>
+            <div>
+              <span class="step-title">Cloud build sprint</span>
+              <p>Build Terraform modules, CI checks, and release gates. Keep each backend service ready for LytenCloud releases.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="step-num">3</div>
+            <div>
+              <span class="step-title">Pipeline hardening</span>
+              <p>Tune Kinesis, S3, Lambda, and Databricks jobs. Keep telemetry useful during site growth and poor links.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="step-num">4</div>
+            <div>
+              <span class="step-title">Field readiness test</span>
+              <p>Run failure drills with Embedded, TechOps, and Data teams. Confirm behavior before new BESS sites reach customers.</p>
+            </div>
+          </article>
+        </div>
+        <div class="stack" aria-label="Relevant stack">
+          <span>Python</span>
+          <span>Node.js</span>
+          <span>React</span>
+          <span>AWS</span>
+          <span>Docker</span>
+          <span>QA automation</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext" aria-labelledby="who">
+      <div class="section-inner">
+        <h2 id="who">Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, active since 1997 across global markets. We bring about 700 in-house specialists, with no freelancers or subcontractors. For Lyten, the fit is backend, DevOps, QA, data, and cloud delivery. We work under ISO 9001 and ISO 27001 practices for quality and security. Our engineers support Java, .NET, Node.js, Python, React, AWS, and test automation. A dedicated team can work under your PM, so control and roadmap stay with Lyten.</p>
+          <div class="customers" aria-label="Named customers">
+            <strong>Siemens</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+          </div>
+          <p>That fits the squad above and the BESS cloud work named in your role.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="proof">
+      <div class="section-inner">
+        <h2 id="proof">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-industrial-data.jpg" alt="Industrial data insights interface illustration">
+            <div class="case-body">
+              <h3>Real-time machine data insights</h3>
+              <p>Elinext helped a manufacturing client turn machine data into web tools for better OEE decisions.</p>
+              <a href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-iot-monitoring.jpg" alt="IoT device monitoring dashboard illustration">
+            <div class="case-body">
+              <h3>Real-time IoT device monitoring</h3>
+              <p>Elinext improved an energy monitoring web app. It handled large data loads and live device visibility.</p>
+              <a href="https://www.elinext.com/case-study/web-app-for-iot-devices-monitoring/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="close" aria-labelledby="talk">
+      <div class="section-inner">
+        <h2 id="talk">Talk through the cloud plan</h2>
+        <p>A short call can test the first sprint scope.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
