@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RealityMine product engineering brief</title>
+  <meta name="description" content="A short product engineering brief for RealityMine and RealityMeter, prepared by Elinext.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/realitymine_2026-06-04_11-14-12/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/realitymine_2026-06-04_11-14-12/">
+  <meta property="og:title" content="RealityMine product engineering brief">
+  <meta property="og:description" content="RealityMeter trust and tooling work tied to your Software Engineer hiring signal.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/realitymine_2026-06-04_11-14-12/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="RealityMine product engineering brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RealityMine product engineering brief">
+  <meta name="twitter:description" content="RealityMeter trust and tooling work tied to your Software Engineer hiring signal.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/realitymine_2026-06-04_11-14-12/og-image.jpg">
+  <style>
+    :root {
+      --ink: #141620;
+      --muted: #5d6372;
+      --panel: #ffffff;
+      --paper: #f5f7fb;
+      --deep: #1c1d27;
+      --deep-2: #262836;
+      --line: #dce2eb;
+      --cyan: #00aec7;
+      --plum: #b75295;
+      --green: #3f8f70;
+      --warm: #fff7e8;
+      --radius: 8px;
+      --shadow: 0 18px 50px rgba(20, 22, 32, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+      background: var(--paper);
+    }
+
+    .section {
+      width: 100%;
+      padding: 48px 18px;
+      background: var(--paper);
+    }
+
+    .section.light {
+      background: #ffffff;
+    }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      color: #eef5f8;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(0, 174, 199, 0.22), transparent 28%),
+        linear-gradient(135deg, #1c1d27 0%, #252638 54%, #151722 100%);
+      padding: 58px 18px 42px;
+    }
+
+    .hero .wrap {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      align-items: center;
+      gap: 8px;
+      color: #d5fbff;
+      background: rgba(0, 174, 199, 0.16);
+      border: 1px solid rgba(0, 174, 199, 0.36);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      flex: 0 0 auto;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 13ch;
+      margin-top: 18px;
+      font-size: 2.45rem;
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 680px;
+      margin-top: 18px;
+      color: #d9deee;
+      font-size: 1rem;
+    }
+
+    .hero-panel {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+
+    .hero-panel strong {
+      display: block;
+      color: #ffffff;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 10px;
+      color: #d7deea;
+      font-size: 0.92rem;
+    }
+
+    .mini-list span {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .mini-list span::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      margin-top: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      flex: 0 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 1.55rem;
+      line-height: 1.15;
+    }
+
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 22px;
+      border-radius: var(--radius);
+      border: 1px solid #cbd8e2;
+      border-left: 5px solid var(--cyan);
+      background: #edf8fb;
+      box-shadow: 0 10px 28px rgba(0, 174, 199, 0.08);
+    }
+
+    .read-box p,
+    .start-card p,
+    .what-card p,
+    .elinext p,
+    .case-card p,
+    .cta p {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 10px 28px rgba(20, 22, 32, 0.06);
+    }
+
+    .label {
+      display: block;
+      width: fit-content;
+      margin-bottom: 9px;
+      color: #27556f;
+      background: #e6f7fa;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      color: #edf3f7;
+      background: var(--deep);
+    }
+
+    .proposal .section-title {
+      color: #ffffff;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .team-card {
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: var(--deep-2);
+      box-shadow: var(--shadow);
+    }
+
+    .what-card {
+      padding: 0;
+    }
+
+    .what-card p {
+      color: #c7cfdf;
+    }
+
+    .team-card {
+      padding: 18px;
+    }
+
+    .team-card h3,
+    .what-card h3 {
+      margin-bottom: 12px;
+      color: #ffffff;
+      font-size: 1rem;
+    }
+
+    .roles,
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      max-width: 100%;
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: #ffffff;
+      background: rgba(0, 174, 199, 0.18);
+      border: 1px solid rgba(0, 174, 199, 0.32);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      color: #10212a;
+      background: var(--cyan);
+      font-weight: 900;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #ffffff;
+    }
+
+    .step p {
+      color: #c7cfdf;
+      font-size: 0.93rem;
+    }
+
+    .elinext {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 22px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 28px rgba(20, 22, 32, 0.06);
+    }
+
+    .customer-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .customer-row strong {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 6px 9px;
+      color: #163442;
+      background: #e9f6f8;
+      font-size: 0.84rem;
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 28px rgba(20, 22, 32, 0.06);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #e9edf2;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .case-body a {
+      display: inline-block;
+      margin-top: 12px;
+      color: #116d7c;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      color: #ffffff;
+      background:
+        linear-gradient(135deg, rgba(0, 174, 199, 0.24), rgba(183, 82, 149, 0.2)),
+        var(--deep);
+    }
+
+    .cta h2 {
+      margin-bottom: 8px;
+      font-size: 1.6rem;
+    }
+
+    .cta p {
+      color: #d9deea;
+      margin-bottom: 22px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      max-width: 100%;
+      padding: 12px 18px;
+      color: #111822;
+      background: #ffffff;
+      border-radius: var(--radius);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      .section {
+        padding: 64px 28px;
+      }
+
+      .hero {
+        padding: 72px 28px 54px;
+      }
+
+      h1 {
+        font-size: 4rem;
+      }
+
+      .start-grid,
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-grid {
+        grid-template-columns: minmax(0, 1fr) 320px;
+      }
+
+      .what-card {
+        padding: 0;
+      }
+    }
+
+    @media (min-width: 900px) {
+      .hero .wrap {
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      }
+    }
+
+    @media (min-width: 1100px) {
+      h1 {
+        font-size: 4.8rem;
+      }
+
+      .hero-panel {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <span class="eyebrow"><span class="dot"></span>RealityMine / RealityMeter</span>
+          <h1>Keep RealityMeter running while the product team scales</h1>
+          <p class="why">We saw RealityMine hiring a Software Engineer to build and evolve tooling behind behavioral data products. That points to product work, AI-enabled internal tools, and more pressure on quality.</p>
+        </div>
+        <aside class="hero-panel" aria-label="Why this brief matters">
+          <strong>Why we are here</strong>
+          <div class="mini-list">
+            <span>RealityMeter depends on consent, uptime, and clear panelist trust.</span>
+            <span>Recent public feedback points to disconnects, payout doubt, and VPN friction.</span>
+            <span>A small outside squad can remove a focused queue while your team grows.</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section light">
+      <div class="wrap">
+        <h2 class="section-title">Our read</h2>
+        <div class="read-box">
+          <p>The Software Engineer role says RealityMine is scaling the tooling behind its behavioral data products, not only adding hands. That is a delivery bottleneck: RealityMeter captures app and web behavior across iOS, Android, Windows, and Mac, so each change touches trust, capture quality, and partner reporting. Google Play reviews and Reddit threads show the same risk from the panelist side: disconnects, VPN friction, payout confusion, and permission anxiety. If those issues stay in the backlog, panel owners get more support noise while the new AI-enhanced product team is trying to move faster.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Recent reviews mention not knowing whether RealityMeter is still running or whether a monthly reward will arrive. Add a small status view for last check, study state, reward partner, and support route.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Reddit users worry that the VPN can block other reward apps. Test a short conflict guide before onboarding ends, with clear pause rules and study-compliance impact.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2 class="section-title">What we'd do</h2>
+        <div class="proposal-grid">
+          <article class="what-card">
+            <h3>Six-week dedicated squad under your PO</h3>
+            <p>We would run a focused pilot with weekly demos and a narrow goal: reduce panelist doubt while your new product tooling team forms.</p>
+            <div class="steps">
+              <div class="step">
+                <span class="num">1</span>
+                <div>
+                  <strong>Map fragile flows</strong>
+                  <p>Review Android onboarding, Accessibility, VPN, pause, and reward states against recent review themes and partner-study rules.</p>
+                </div>
+              </div>
+              <div class="step">
+                <span class="num">2</span>
+                <div>
+                  <strong>Ship a status layer</strong>
+                  <p>Explain running state, last capture check, pause rules, and where reward support lives in one clear place.</p>
+                </div>
+              </div>
+              <div class="step">
+                <span class="num">3</span>
+                <div>
+                  <strong>Automate device checks</strong>
+                  <p>Add device-farm tests for VPN reconnect, Accessibility permission paths, battery guardrails, and study-complete messages.</p>
+                </div>
+              </div>
+              <div class="step">
+                <span class="num">4</span>
+                <div>
+                  <strong>Prototype one tool</strong>
+                  <p>Review data-product tooling with your team and prototype one AI-assisted support or QA workflow.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          <aside class="team-card">
+            <h3>Team shape</h3>
+            <div class="roles">
+              <span class="pill">Mobile tech lead</span>
+              <span class="pill">Android engineer</span>
+              <span class="pill">Backend / data engineer</span>
+              <span class="pill">QA automation</span>
+              <span class="pill">UX designer</span>
+            </div>
+            <h3 style="margin-top: 22px;">Relevant stack</h3>
+            <div class="stack">
+              <span class="pill">Android</span>
+              <span class="pill">Java</span>
+              <span class="pill">Python</span>
+              <span class="pill">React</span>
+              <span class="pill">Postgres / MySQL</span>
+              <span class="pill">AWS / Azure</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section light">
+      <div class="wrap">
+        <h2 class="section-title">Who is Elinext</h2>
+        <div class="elinext">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For RealityMine, the fit is a dedicated product squad that can cover mobile, backend, QA, DevOps, and product design under your PO. We work under ISO 9001 and ISO 27001, and named customers include Siemens, Broadcom, Volkswagen, TRUMPF, TUI, and Parrot. The goal is not to replace your engineers. It is to remove a focused queue of work while the new product team forms.</p>
+          <div class="customer-row" aria-label="Named customers">
+            <strong>Siemens</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+            <strong>Parrot</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-subtitle-management.jpg" alt="Elinext web application case study cover">
+            <div class="case-body">
+              <h3>Web Application for Seamless Subtitle Management</h3>
+              <p>Elinext built a media workflow platform with responsive UX, DevOps, React, Laravel, CI/CD, GitLab, and Docker.</p>
+              <a href="https://www.elinext.com/case-study/web-application-for-seamless-subtitle-management/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-automation-qa.jpg" alt="Elinext automation QA case study cover">
+            <div class="case-body">
+              <h3>Automation QA for a Healthcare Data Privacy Company</h3>
+              <p>Elinext supported a sensitive data platform with automation CI, QA support, Python, AWS, Angular, and MongoDB.</p>
+              <a href="https://www.elinext.com/case-study/automation-qa-for-healthcare-data-privacy/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>A short call can confirm fit and next steps.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
