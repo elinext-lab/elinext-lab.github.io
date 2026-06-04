@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>myenergi mobile reliability brief</title>
+  <meta name="description" content="A focused mobile brief for myenergi's React Native control layer across zappi, libbi, BLE setup and schedules.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/myenergi_2026-06-04_11-00-24/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/myenergi_2026-06-04_11-00-24/">
+  <meta property="og:title" content="myenergi mobile reliability brief">
+  <meta property="og:description" content="A focused brief for zappi, libbi, schedules, BLE setup and real-time control.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/myenergi_2026-06-04_11-00-24/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="myenergi mobile reliability brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="myenergi mobile reliability brief">
+  <meta name="twitter:description" content="A focused brief for zappi, libbi, schedules, BLE setup and real-time control.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/myenergi_2026-06-04_11-00-24/og-image.jpg">
+  <style>
+    :root {
+      --ink: #142022;
+      --muted: #5a6766;
+      --line: #d9dfd8;
+      --paper: #fbfcf8;
+      --soft: #eef5e6;
+      --panel: #ffffff;
+      --deep: #092d34;
+      --green: #168a4a;
+      --orange: #f47a20;
+      --blue: #2d6f91;
+      --shadow: 0 16px 40px rgba(8, 40, 38, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      padding: 54px 0;
+      position: relative;
+      background: var(--paper);
+    }
+
+    .section:nth-of-type(even) {
+      background: #f4f7ef;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 58px 0 46px;
+      background:
+        linear-gradient(135deg, rgba(9, 45, 52, 0.96), rgba(20, 54, 46, 0.94)),
+        var(--deep);
+      color: #fff;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #aee0c0;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: clamp(2.15rem, 7vw, 4.7rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(1.65rem, 5vw, 2.6rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 700px;
+      color: #dce9e4;
+      font-size: 1.04rem;
+    }
+
+    .why {
+      max-width: 720px;
+      margin-bottom: 0;
+      color: #fff7e8;
+      font-weight: 700;
+    }
+
+    .hero-card {
+      width: 100%;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .app-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .app-row img {
+      width: 68px;
+      min-width: 68px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+    }
+
+    .app-row strong {
+      display: block;
+      font-size: 1.12rem;
+    }
+
+    .app-row span {
+      color: #d5e4dd;
+      font-size: 0.92rem;
+    }
+
+    .scope-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .scope-list li {
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #f7fbf8;
+      font-size: 0.94rem;
+    }
+
+    .read-box {
+      max-width: 78ch;
+      padding: 24px;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      background: #e8f2e1;
+      box-shadow: 0 12px 24px rgba(14, 77, 54, 0.08);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      font-size: 1.03rem;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-intro {
+      max-width: 72ch;
+      margin: 0 auto 18px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .start-card,
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      overflow: hidden;
+      box-shadow: 0 12px 26px rgba(31, 60, 50, 0.08);
+    }
+
+    .start-card {
+      padding: 20px;
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--orange);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      background: var(--deep);
+      color: #fff;
+    }
+
+    .proposal h2 {
+      color: #fff;
+    }
+
+    .model {
+      margin-bottom: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      background: #12454b;
+      color: #edf8f4;
+      font-weight: 700;
+    }
+
+    .work-grid {
+      display: grid;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .team {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+      padding: 20px;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .team span {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: var(--soft);
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #221207;
+      font-weight: 800;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: #d8e9e5;
+    }
+
+    .stack {
+      margin-top: 18px;
+      color: #d6ebe4;
+    }
+
+    .about-text {
+      max-width: 82ch;
+      margin: 0 auto;
+      text-align: center;
+      color: #31403f;
+      font-size: 1.02rem;
+    }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 18px auto 0;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: #0e5131;
+      font-weight: 800;
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .case-card div {
+      padding: 18px;
+    }
+
+    .case-card p {
+      color: var(--muted);
+    }
+
+    .case-card a {
+      font-weight: 800;
+      text-decoration-color: var(--orange);
+      text-underline-offset: 4px;
+    }
+
+    .section.final {
+      background: #0e2d31;
+      color: #fff;
+      text-align: center;
+    }
+
+    .final h2 {
+      margin-bottom: 12px;
+    }
+
+    .final p {
+      margin-bottom: 22px;
+      color: #dce9e4;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #1d1208;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 72px 0;
+      }
+
+      .hero {
+        padding: 82px 0 64px;
+      }
+
+      .case-grid {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+
+      .start-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (min-width: 960px) {
+      .hero-grid,
+      .work-grid {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Prepared for David Nicholl</p>
+        <h1>A focused mobile push for myenergi home energy control</h1>
+        <p class="lead">The app now carries zappi, eddi, libbi, harvi and installer setup trust. A short outside squad can help your team ship cleaner control flows without slowing hardware work.</p>
+        <p class="why">We saw the Mobile App Developer 3 signal for a Senior React Native engineer. It points to pressure across the customer app, installer app, BLE setup and real-time device control.</p>
+      </div>
+      <aside class="hero-card" aria-label="myenergi product scope">
+        <div class="app-row">
+          <img src="assets/myenergi-app-icon.jpg" alt="myenergi app icon">
+          <p><strong>myenergi app</strong><span>Control layer for the home energy ecosystem</span></p>
+        </div>
+        <ul class="scope-list">
+          <li>zappi and zappi GLO charge control</li>
+          <li>libbi, eddi and harvi energy state</li>
+          <li>Installer BLE setup and diagnostics</li>
+        </ul>
+      </aside>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" id="our-read">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Your hiring signal says myenergi is scaling the mobile layer behind its hardware. That layer now joins zappi, eddi, libbi, harvi, Gridpay, BLE setup and live API state. Reviews and forum posts point to one hard issue. Users are not always sure who controls the next charge. When schedules, tariff apps and device firmware disagree, support load rises and trust falls. Strong hardware can feel unreliable when the app state is unclear.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="where-start">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <p class="start-intro">We would start with two visible flows, not a broad redesign.</p>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">Noticed</span>
+            <h3>Schedule ownership splits across tools</h3>
+            <p>Map ownership across the app, myaccount, zappi panel, Gridpay, Octopus and car apps. Then show one plain "controlled by" state.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Next step</span>
+            <h3>Command saves need safer feedback</h3>
+            <p>Test Boost Now and device priority saves so users can leave slow screens without losing changes or guessing what happened.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal" id="what-do">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <p class="model">Engagement model: a dedicated mobile squad under your product owner. Six-week pilot, weekly demos, one shippable reliability slice.</p>
+        <div class="work-grid">
+          <div class="team">
+            <h3>Team shape</h3>
+            <span>1 mobile tech lead</span>
+            <span>2 senior React Native engineers</span>
+            <span>1 QA automation engineer</span>
+            <span>1 product designer</span>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Map control paths</h3>
+                <p>Follow zappi, libbi and installer setup from screen tap to API, firmware, BLE and partner state.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Stabilise commands</h3>
+                <p>Add tracking, retry rules and success states for boost, schedule save, mode change and device priority actions.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Clarify energy choices</h3>
+                <p>Test simple labels for avoid battery drain, cheap-rate only, use surplus and export first.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Prove release quality</h3>
+                <p>Add focused React Native tests and QA checks around the flows that create support tickets.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <p class="stack"><strong>Relevant stack:</strong> React Native, TypeScript, Swift, Kotlin, REST APIs, QA automation.</p>
+      </div>
+    </section>
+
+    <section class="section" id="who">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <p class="about-text">Elinext is a full-cycle software development company, active since 1997. We have about 700 in-house specialists and no freelancers. For myenergi, the fit is mobile, web, QA and backend support for hardware-connected products. We work under ISO 9001 and ISO 27001 controls, useful for connected energy systems and customer data. Our named customers include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong> and <strong>TRUMPF</strong>. This means the squad above can bring senior delivery help while your product owner keeps direction.</p>
+        <div class="pills" aria-label="named Elinext customers">
+          <span class="pill">Siemens</span>
+          <span class="pill">Broadcom</span>
+          <span class="pill">Volkswagen</span>
+          <span class="pill">TRUMPF</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="proof">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-ev-charging.jpg" alt="EV charging case study preview">
+            <div>
+              <h3>App for EV charging solutions</h3>
+              <p>Elinext built iOS and Android apps for an EV charging solution. The product launched with full functionality and kept improving after release.</p>
+              <a href="https://www.elinext.com/case-study/app-for-green-vehicle-charging/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-wireless-camera.jpg" alt="Wireless device case study preview">
+            <div>
+              <h3>Wireless device management app</h3>
+              <p>A home-device company needed help after long in-house development. Elinext split iOS specialists into teams and kept improving the product.</p>
+              <a href="https://www.elinext.com/case-study/wireless-camera-management-app/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section final" id="talk">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>Bring one product owner and the hardest charge flow.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
