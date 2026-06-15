@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FononTech printhead scale-up brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/fonontech_2026-06-15_18-26-04/">
+  <meta name="description" content="A short engineering support brief for FononTech as Impulse Printing moves into repeatable production.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/fonontech_2026-06-15_18-26-04/">
+  <meta property="og:title" content="FononTech: support for Impulse printhead scale-up">
+  <meta property="og:description" content="A focused engineering brief for PCB test, tooling, and production handoffs.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/fonontech_2026-06-15_18-26-04/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="FononTech: support for Impulse printhead scale-up - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FononTech: support for Impulse printhead scale-up">
+  <meta name="twitter:description" content="A focused engineering brief for PCB test, tooling, and production handoffs.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/fonontech_2026-06-15_18-26-04/og-image.jpg">
+  <style>
+    :root {
+      --ink: #121417;
+      --paper: #f5f6f2;
+      --panel: #ffffff;
+      --line: #d9ded8;
+      --muted: #5f6a72;
+      --blue: #1478b7;
+      --blue-soft: #e9f5fb;
+      --green: #2e8f63;
+      --orange: #df6d32;
+      --dark: #10171c;
+      --dark-2: #16232a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      background: var(--dark);
+      color: #fff;
+      padding: 34px 0 46px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 26px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #9dd8ff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 16px;
+      font-size: 2.25rem;
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    .lede,
+    .why {
+      max-width: 46rem;
+      margin-bottom: 14px;
+      color: #dce9ee;
+      font-size: 1rem;
+    }
+
+    .why {
+      margin-bottom: 0;
+    }
+
+    .hero-visual {
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      background: #20272d;
+    }
+
+    .hero-visual img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
+    .photo-note {
+      padding: 12px 14px;
+      color: #cbd7dc;
+      font-size: 0.84rem;
+    }
+
+    section {
+      padding: 42px 0;
+      background: var(--paper);
+    }
+
+    section h2 {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: 1.45rem;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 74ch;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid #c7d8df;
+      border-left: 6px solid var(--blue);
+      border-radius: 8px;
+      background: var(--blue-soft);
+      color: #25323b;
+    }
+
+    .read-box p,
+    .start-card p,
+    .proof-card p,
+    .mini-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card,
+    .proof-card,
+    .mini-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 8px;
+      color: var(--blue);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .plan {
+      background: #ffffff;
+    }
+
+    .plan-panel {
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--dark-2);
+      color: #fff;
+    }
+
+    .plan-head {
+      display: grid;
+      gap: 18px;
+      padding: 22px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .plan-head p {
+      margin-bottom: 0;
+      color: #d7e2e6;
+    }
+
+    .roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #f3f8f9;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 14px;
+      padding: 18px 22px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .step:last-child {
+      border-bottom: 0;
+    }
+
+    .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin-bottom: 4px;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: #d6e0e5;
+      font-size: 0.94rem;
+    }
+
+    .mini-card {
+      padding: 22px;
+    }
+
+    .customer-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .customer-row strong {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #e9f2ef;
+      color: #12392b;
+      font-size: 0.84rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #e6e8e5;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-body h3 {
+      margin-bottom: 6px;
+      font-size: 1.02rem;
+      line-height: 1.25;
+    }
+
+    .proof-body a {
+      display: inline-flex;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .cta {
+      background: var(--dark);
+      color: #fff;
+      text-align: center;
+    }
+
+    .cta h2 {
+      color: #fff;
+    }
+
+    .cta p {
+      margin-bottom: 22px;
+      color: #d5e1e5;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .wrap {
+        padding: 0 32px;
+      }
+
+      .hero {
+        padding: 54px 0 58px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+      }
+
+      h1 {
+        font-size: 3.35rem;
+      }
+
+      section {
+        padding: 56px 0;
+      }
+
+      section h2 {
+        font-size: 1.8rem;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .plan-head {
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        padding: 28px;
+      }
+
+      .step {
+        padding: 20px 28px;
+      }
+    }
+
+    @media (min-width: 1120px) {
+      h1 {
+        font-size: 3.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Brief for Jan Schildermans</p>
+        <h1>Scaling Impulse Printing without slowing your core team</h1>
+        <p class="lede">A focused support plan for FononTech as Impulse Printing moves from first machine delivery toward reliable production, customer application work, and cleaner test handoffs across hardware and software.</p>
+        <p class="why"><strong>Why we're here:</strong> Saw you are hiring a PCB Design Engineer for Impulse printhead work; that looks like a scale-up bottleneck Jan will care about.</p>
+      </div>
+      <figure class="hero-visual">
+        <img src="assets/fonontech-lab.jpg" alt="FononTech lab and equipment">
+        <figcaption class="photo-note">FononTech is moving a deep-tech platform into customer-ready production.</figcaption>
+      </figure>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The PCB hire says FononTech is scaling the Impulse printhead, not just hiring layout help. The role links Altium365 work with PCB tests, Python, Matlab, TwinCAT, and embedded C/C++. That mix often becomes a handoff problem across electronics, firmware, mechanics, and suppliers. You also delivered a first machine and raised fresh seed funding in May 2025. If test evidence and design notes lag, customer work can slow the core team.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">Noticed</span>
+            <p>Start with the printhead flow: Altium365 inputs, PCB tests, setup data, and outsourcing package. A shared evidence template would make each review faster.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Next step</span>
+            <p>Then map heater plate experiments into production decisions. One simple form can tie each test to acceptance notes, software version, and next action.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="plan-panel">
+          <div class="plan-head">
+            <p><strong>Engagement model:</strong> a dedicated squad under your engineering lead. FononTech keeps product control; Elinext adds test, tooling, and handoff capacity for a six-week pilot.</p>
+            <div>
+              <div class="roles" aria-label="Proposed team shape">
+                <span class="pill">Industrial software lead</span>
+                <span class="pill">C/C++ engineer</span>
+                <span class="pill">Python automation engineer</span>
+                <span class="pill">QA test engineer</span>
+              </div>
+              <div class="roles" aria-label="Relevant stack" style="margin-top:10px">
+                <span class="pill">Python</span>
+                <span class="pill">C/C++</span>
+                <span class="pill">.NET</span>
+                <span class="pill">Angular</span>
+                <span class="pill">DevOps</span>
+              </div>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Map printhead handoffs</h3>
+                <p>Trace Altium365 inputs, firmware touchpoints, test data, and supplier outputs for one printhead module with your engineers.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Build test utilities</h3>
+                <p>Add Python and C/C++ utilities for repeatable PCB checks, fixture data capture, and clean evidence packs after each run.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Harden supplier packages</h3>
+                <p>Create clear docs for outsourcing sub-components, including acceptance notes, software versions, and review owners before supplier release.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Demo and decide</h3>
+                <p>Run a weekly demo cadence, close open risks, and pick the next module with Jan's team.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="mini-card">
+          <p>Elinext is a full-cycle software development company, active since 1997 across global markets and industries. About 700 in-house specialists cover backend, frontend, QA, AI/ML, DevOps, management, analysis, and delivery. No freelancers or subcontractors join delivery; teams work under your PO or PM each week. For industrial trust, named customers include Siemens, TRUMPF, Broadcom, Volkswagen, TUI, and Parrot. ISO 9001 supports quality work, while ISO 27001 supports information security discipline. For FononTech, we would support test, tooling, and handoff work around your core experts.</p>
+          <div class="customer-row" aria-label="Named customers">
+            <strong>Siemens</strong>
+            <strong>TRUMPF</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TUI</strong>
+            <strong>Parrot</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-machine-insights.jpg" alt="Industrial machine data interface">
+            <div class="proof-body">
+              <h3>Real-time data insights for machine performance</h3>
+              <p>Elinext built a manufacturing platform that collects machine data and supports OEE improvement.</p>
+              <a href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">View case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-mes.webp" alt="Manufacturing execution system case study">
+            <div class="proof-body">
+              <h3>Manufacturing execution system support</h3>
+              <p>Five Elinext teams supported a long-running MES with C++, C#, Angular, SQL, and Oracle.</p>
+              <a href="https://www.elinext.com/case-study/manufacturing-execution-system/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Talk through the bottleneck</h2>
+        <p>A short call can scope the first six-week pilot.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
