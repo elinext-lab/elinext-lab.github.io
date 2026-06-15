@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The MJ Companies Personal Lines Brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/the-mj-companies_2026-06-15_17-38-54/">
+  <meta name="description" content="A short engineering brief for The MJ Companies as Personal Lines operations scale.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/the-mj-companies_2026-06-15_17-38-54/">
+  <meta property="og:title" content="The MJ Companies: scaling Personal Lines service">
+  <meta property="og:description" content="A brief on service workflow, APERTURE data, and mobile web quality.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/the-mj-companies_2026-06-15_17-38-54/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The MJ Companies: scaling Personal Lines service - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The MJ Companies: scaling Personal Lines service">
+  <meta name="twitter:description" content="A brief on service workflow, APERTURE data, and mobile web quality.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/the-mj-companies_2026-06-15_17-38-54/og-image.jpg">
+  <style>
+    :root {
+      --ink: #10232b;
+      --muted: #5d6a70;
+      --paper: #fbfaf7;
+      --white: #ffffff;
+      --teal: #075568;
+      --teal-soft: #e5f3f2;
+      --blue: #1d3f72;
+      --orange: #e46d2f;
+      --line: #d8e1df;
+      --green: #637c4b;
+      --shadow: 0 18px 44px rgba(16, 35, 43, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    body {
+      min-width: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration-thickness: 0.08em;
+      text-underline-offset: 0.18em;
+    }
+
+    .page {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .section {
+      width: 100%;
+      padding: 48px 18px;
+      background: var(--paper);
+    }
+
+    .section.alt {
+      background: var(--white);
+    }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      min-width: 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--orange);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.45rem, 13vw, 4.8rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(1.7rem, 8vw, 2.7rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      line-height: 1.2;
+    }
+
+    .hero {
+      background: var(--teal);
+      color: #f7fbfa;
+      padding: 30px 18px 52px;
+    }
+
+    .hero .wrap {
+      display: grid;
+      gap: 30px;
+    }
+
+    .hero-copy {
+      min-width: 0;
+    }
+
+    .hero p {
+      max-width: 58ch;
+      margin-bottom: 14px;
+      color: #d9ecea;
+      font-size: 1.03rem;
+    }
+
+    .brief-card {
+      width: 100%;
+      align-self: end;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.09);
+      padding: 20px;
+    }
+
+    .brief-card dl {
+      display: grid;
+      gap: 14px;
+      margin: 0;
+    }
+
+    .brief-card dt {
+      color: #afd7d2;
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .brief-card dd {
+      margin: 3px 0 0;
+      font-weight: 700;
+    }
+
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      border-left: 6px solid var(--orange);
+      border-radius: 8px;
+      background: #edf3ee;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      font-size: 1.03rem;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .proof-card {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      padding: 20px;
+    }
+
+    .source {
+      display: inline-flex;
+      margin-bottom: 12px;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .proposal {
+      background: #10232b;
+      color: #f8fbfa;
+    }
+
+    .proposal h2 {
+      color: #ffffff;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .team-card,
+    .timeline {
+      min-width: 0;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 20px;
+    }
+
+    .team-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .team-list li,
+    .customer-list span,
+    .stack span {
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 7px 10px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--ink);
+      padding: 16px;
+    }
+
+    .num {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 900;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .stack span {
+      background: var(--teal-soft);
+      color: var(--teal);
+    }
+
+    .elinext-box {
+      max-width: 84ch;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .customer-list span {
+      background: #f4eadc;
+      color: #7b421f;
+    }
+
+    .proof-card {
+      display: grid;
+      gap: 16px;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-card p {
+      color: var(--muted);
+    }
+
+    .proof-card a {
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .cta {
+      background: var(--green);
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .cta h2 {
+      color: #ffffff;
+    }
+
+    .cta p {
+      margin-bottom: 24px;
+      color: #eef5e9;
+    }
+
+    .button {
+      display: inline-flex;
+      width: min(100%, 260px);
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      background: #ffffff;
+      color: var(--green);
+      padding: 12px 18px;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section {
+        padding: 66px 28px;
+      }
+
+      .hero {
+        padding: 42px 28px 70px;
+      }
+
+      .hero .wrap,
+      .proposal-grid,
+      .proof-grid {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+      }
+
+      .start-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      h1 {
+        max-width: 13ch;
+      }
+    }
+
+    @media (min-width: 1120px) {
+      .section {
+        padding: 78px 36px;
+      }
+
+      .hero {
+        padding: 54px 36px 86px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-copy">
+          <p class="eyebrow">Prepared for The MJ Companies</p>
+          <h1>Scaling Personal Lines service without slowing APERTURE data work</h1>
+          <p>MJ is growing a data-led service model. The next step is to make daily Personal Lines work easier to track, support, and improve.</p>
+          <p>Saw you are hiring a Personal Lines Manager in Phoenix. The role points to service standards, SOPs, automation, and system improvements.</p>
+        </div>
+        <aside class="brief-card" aria-label="Brief context">
+          <dl>
+            <div>
+              <dt>Signal</dt>
+              <dd>Personal Lines operations scale</dd>
+            </div>
+            <div>
+              <dt>Product surface</dt>
+              <dd>APERTURE analytics and client portals</dd>
+            </div>
+            <div>
+              <dt>Best first move</dt>
+              <dd>Workflow map, QA checks, data guardrails</dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The new Personal Lines Manager role says MJ is scaling service delivery, not just filling a seat. The hard part is likely steady handoffs between service staff, support teams, client portals, and APERTURE data. If those paths stay manual, response times and white-glove service can depend on one manager. APERTURE already carries claims data, PHI, dashboards, and client reporting, so every workflow fix needs strong data controls. Wes can make this easier by linking SOPs, queue data, and portal checks into one clear operating model.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="source">Client Login page</span>
+            <p>The public login page sends clients to both a Risk Management Center and a Retirement Client Portal. Put a short service map beside it: client need, target system, owning team, and escalation path.</p>
+          </article>
+          <article class="start-card">
+            <span class="source">Mobile homepage audit</span>
+            <p>The homepage is rich, but slow on mobile in testing. Run a two-week media and script cleanup before more webinar, email, or paid traffic lands there.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-grid">
+          <div class="team-card">
+            <h3>Dedicated squad under MJ's owner</h3>
+            <p>One focused team works with your product or operations lead. The first pilot runs six weeks with a weekly demo.</p>
+            <ul class="team-list" aria-label="Team shape">
+              <li>Tech Lead</li>
+              <li>Full-stack Engineer</li>
+              <li>Data Engineer</li>
+              <li>QA Automation</li>
+              <li>UX Analyst</li>
+            </ul>
+            <div class="stack" aria-label="Relevant stack">
+              <span>React</span>
+              <span>Node.js</span>
+              <span>Python</span>
+              <span>.NET</span>
+              <span>PostgreSQL</span>
+              <span>Playwright</span>
+            </div>
+          </div>
+          <div class="timeline">
+            <article class="step">
+              <div class="num">1</div>
+              <div>
+                <h3>Map the work</h3>
+                <p>Map Personal Lines work, APERTURE data touchpoints, and client handoffs so one SOP fits service and reporting needs.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div>
+                <h3>Ship small fixes</h3>
+                <p>Build workflow fixes around queues, templates, and status notes, then demo them weekly to Wes and operations leaders.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div>
+                <h3>Protect key paths</h3>
+                <p>Add checks for portal links, forms, and mobile pages, using Playwright tests before each content or process release.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div>
+                <h3>Guard the data</h3>
+                <p>Review data paths for PHI, claims data, and account access so APERTURE changes stay audit-ready.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="elinext-box">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For MJ, the fit is secure web, data, QA, and steady team extension for regulated work. Our teams bring ISO 9001 and ISO 27001 practices, plus work for <strong>Broadcom</strong>, <strong>Siemens</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. We can place a focused squad under your product or operations owner, then tie each sprint to the Personal Lines service model and APERTURE data controls. That keeps delivery useful, clear, and easy to review.</p>
+          <div class="customer-list" aria-label="Named customers">
+            <span>Broadcom</span>
+            <span>Siemens</span>
+            <span>Volkswagen</span>
+            <span>TRUMPF</span>
+            <span>TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-insurance-web.jpg" alt="Insurance web app development case study preview">
+            <div class="proof-body">
+              <h3>Insurance web app extension</h3>
+              <p>Elinext added engineering capacity for an insurance product and helped streamline operations.</p>
+              <a href="https://www.elinext.com/case-study/outstaffing-for-web-app-development-for-a-top-notch-insurance-company/">Read the case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-insurtech-qa.jpg" alt="Insurtech QA case study preview">
+            <div class="proof-body">
+              <h3>QA for a US insurtech platform</h3>
+              <p>Elinext supported a regulated insurance platform with steady QA and release confidence.</p>
+              <a href="https://www.elinext.com/case-study/dedicated-quality-assurance-services-for-us-insuretech/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Talk through the first sprint</h2>
+        <p>Share the queue, risks, and next owners in one call.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
