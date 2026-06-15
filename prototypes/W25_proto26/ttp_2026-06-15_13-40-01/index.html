@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TTP internal software delivery brief</title>
+  <meta name="description" content="A short proposal for helping TTP ship workflow, data and AI tools while core teams stay focused.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/ttp_2026-06-15_13-40-01/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/ttp_2026-06-15_13-40-01/">
+  <meta property="og:title" content="TTP internal software delivery brief">
+  <meta property="og:description" content="A focused way to clear workflow, data and AI work without slowing client delivery.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/ttp_2026-06-15_13-40-01/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="TTP internal software delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TTP internal software delivery brief">
+  <meta name="twitter:description" content="A focused way to clear workflow, data and AI work without slowing client delivery.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/ttp_2026-06-15_13-40-01/og-image.jpg">
+  <style>
+    :root {
+      --ink: #142033;
+      --muted: #536072;
+      --line: #d9e2e8;
+      --paper: #f7f9f8;
+      --white: #ffffff;
+      --soft: #eaf2ef;
+      --blue: #223b5a;
+      --green: #1c6b62;
+      --orange: #e16d2f;
+      --gold: #f3be50;
+      --shadow: 0 18px 50px rgba(20, 32, 51, .10);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.5;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: inherit; }
+
+    .page { width: 100%; }
+    .section {
+      width: 100%;
+      padding: 48px 18px;
+      background: var(--paper);
+    }
+    .section.alt { background: var(--white); }
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      max-width: 780px;
+      font-size: clamp(2.35rem, 8vw, 5rem);
+      line-height: .98;
+      letter-spacing: 0;
+      color: var(--white);
+    }
+    h2 {
+      text-align: center;
+      font-size: clamp(1.55rem, 4.5vw, 2.4rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+      margin-bottom: 22px;
+    }
+    h3 {
+      font-size: 1.05rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+    p { color: var(--muted); }
+
+    .hero {
+      background: #142033;
+      color: var(--white);
+      padding: 58px 18px 36px;
+    }
+    .hero p { color: #d9e4ea; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: #ffd28a;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 3px;
+      background: var(--orange);
+      border-radius: 4px;
+    }
+    .why {
+      max-width: 760px;
+      margin-top: 18px;
+      font-size: 1.04rem;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 24px;
+      align-items: end;
+    }
+    .hero-media {
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.22);
+      background: #0c1422;
+    }
+    .hero-media img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      opacity: .82;
+    }
+
+    .read-card {
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 24px;
+      border-left: 5px solid var(--green);
+      border-radius: 8px;
+      background: #e7f0eb;
+      box-shadow: var(--shadow);
+    }
+    .read-card p { font-size: 1.02rem; color: #24354a; }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+    .start-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 12px 32px rgba(20,32,51,.06);
+    }
+    .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--green);
+      font-weight: 800;
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    .start-card p { font-size: .98rem; }
+
+    .proposal {
+      background: var(--blue);
+      color: var(--white);
+    }
+    .proposal h2, .proposal h3 { color: var(--white); }
+    .proposal p { color: #dce5ec; }
+    .proposal-shell {
+      display: grid;
+      gap: 18px;
+    }
+    .team-card,
+    .step-card,
+    .stack-row {
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      background: rgba(255,255,255,.08);
+    }
+    .team-card {
+      padding: 20px;
+      display: grid;
+      gap: 14px;
+    }
+    .team-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      color: var(--white);
+      font-weight: 700;
+      font-size: .9rem;
+      white-space: nowrap;
+    }
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+    .step-card {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--gold);
+      color: #132033;
+      font-weight: 900;
+    }
+    .step-card p { margin-top: 4px; font-size: .95rem; }
+    .stack-row {
+      padding: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .stack-row .pill { background: rgba(225,109,47,.26); }
+
+    .elinext-card {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .elinext-card p { color: #314157; }
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .customers strong {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eef5f2;
+      color: var(--green);
+      font-size: .9rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .case-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(20,32,51,.07);
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+    .case-body { padding: 18px; }
+    .case-body p { margin-top: 8px; font-size: .96rem; }
+    .case-body a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--green);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .talk {
+      background: #15263b;
+      color: var(--white);
+      text-align: center;
+    }
+    .talk p { color: #d7e1e8; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      margin-top: 20px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section { padding: 70px 28px; }
+      .hero { padding: 78px 28px 46px; }
+      .hero-grid { grid-template-columns: 1.12fr .88fr; }
+      .start-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proposal-shell { grid-template-columns: .78fr 1.22fr; align-items: start; }
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .read-card { padding: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">Prepared for Angus Mathieson</div>
+          <h1>Helping TTP ship internal software without slowing client work</h1>
+          <p class="why">Saw TTP is hiring a 12-month Software Developer for workflow tools, integrations, data and AI. Here is how we would help clear that work fast, under your team’s control.</p>
+        </div>
+        <figure class="hero-media" aria-label="TTP software capability visual">
+          <img src="assets/ttp-software.jpg" alt="TTP software capability image">
+        </figure>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p>The 12-month FTC role tells us TTP is scaling internal tools, not just adding code. The job points to workflow systems, Microsoft Graph, Azure SQL, and AI features used across the business. That means the hard part is turning team needs into stable apps. If one hire carries the whole load, integrations and testing can slow them down. For Energy and Process Technologies, better data flow can help teams move from lab work to client decisions faster.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we’d start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Your role asks for workflow tools, APIs, Azure SQL and AI. Start with one high-value workflow, then map systems, users, permissions and hand-offs before building.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Your software capability page is slow on mobile. Compress the hero media, defer tracking scripts, and make core content usable sooner.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we’d do</h2>
+        <div class="proposal-shell">
+          <div class="team-card">
+            <h3>Dedicated squad under TTP’s owner</h3>
+            <p>An eight-week pilot with weekly demos, clear handover notes, and no change to TTP’s product control.</p>
+            <div class="team-line">
+              <span class="pill">Tech Lead</span>
+              <span class="pill">2 full-stack engineers</span>
+              <span class="pill">QA automation</span>
+              <span class="pill">Part-time BA</span>
+            </div>
+            <div class="stack-row" aria-label="Relevant stack">
+              <span class="pill">.NET</span>
+              <span class="pill">Python</span>
+              <span class="pill">ASP.NET / Blazor</span>
+              <span class="pill">Azure SQL</span>
+              <span class="pill">Azure OpenAI</span>
+              <span class="pill">REST / Graph</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step-card">
+              <div class="num">1</div>
+              <div>
+                <h3>Shape one workflow</h3>
+                <p>Interview users, map the current hand-offs, and turn one repeated process into a build-ready backlog.</p>
+              </div>
+            </article>
+            <article class="step-card">
+              <div class="num">2</div>
+              <div>
+                <h3>Build the integration slice</h3>
+                <p>Connect the first API path across Microsoft Graph, Azure SQL, and the app UI with test data.</p>
+              </div>
+            </article>
+            <article class="step-card">
+              <div class="num">3</div>
+              <div>
+                <h3>Add safe AI support</h3>
+                <p>Use Azure OpenAI with source links, access checks, and feedback so teams can trust answers.</p>
+              </div>
+            </article>
+            <article class="step-card">
+              <div class="num">4</div>
+              <div>
+                <h3>Harden release quality</h3>
+                <p>Add automated checks, simple release notes, and handover docs that fit TTP’s internal engineering process.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="elinext-card">
+          <p>Elinext is a full-cycle software development company, active since 1997, for global technology clients. About 700 in-house specialists cover web, backend, mobile, QA, DevOps and practical AI delivery. We use no freelancers or subcontractors, which keeps ownership simpler for client teams during delivery. Our process is backed by ISO 9001 and ISO 27001 practices for quality and security. Named customers include Siemens, Broadcom, Volkswagen, TRUMPF, TUI, Parrot and TransPerfect across markets. For TTP, that means a senior squad can fit your owner-led delivery model quickly.</p>
+          <div class="customers" aria-label="Named customers">
+            <strong>Siemens</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-renewable_energy_project_management.jpg" alt="Renewable energy project management software case study">
+            <div class="case-body">
+              <h3>Renewable energy project management software</h3>
+              <p>Elinext built an internal web system that joined technical, financial and legal project data for clearer decisions.</p>
+              <a href="https://www.elinext.com/case-study/renewable-energy-project-management-software/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-industrial_data_insights.jpg" alt="Industrial data insights case study">
+            <div class="case-body">
+              <h3>Real-time machine data insights</h3>
+              <p>Elinext helped connect factory machine data to a web platform for operational insight and process improvement.</p>
+              <a href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="wrap">
+        <h2>Talk through the first sprint</h2>
+        <p>A short call can test the fit and scope.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
