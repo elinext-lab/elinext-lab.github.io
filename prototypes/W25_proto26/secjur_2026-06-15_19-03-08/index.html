@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SECJUR AI Production Brief</title>
+  <meta name="description" content="A short proposal for helping SECJUR move DCO AI features from MVP to production.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/secjur_2026-06-15_19-03-08/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/secjur_2026-06-15_19-03-08/">
+  <meta property="og:title" content="SECJUR: production-ready AI for DCO">
+  <meta property="og:description" content="A brief on taking SECJUR's DCO AI features from MVP to safe production.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/secjur_2026-06-15_19-03-08/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="SECJUR: production-ready AI for DCO - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SECJUR: production-ready AI for DCO">
+  <meta name="twitter:description" content="A brief on taking SECJUR's DCO AI features from MVP to safe production.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/secjur_2026-06-15_19-03-08/og-image.jpg">
+  <style>
+    :root {
+      --ink: #152026;
+      --muted: #5b6972;
+      --paper: #fbfaf7;
+      --panel: #ffffff;
+      --soft: #eef5f0;
+      --line: #d9e1dc;
+      --green: #0e6b5f;
+      --blue: #294c7a;
+      --orange: #e66b2d;
+      --gold: #f7c95c;
+      --shadow: 0 18px 44px rgba(21, 32, 38, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      font-size: 16px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      padding: 56px 0 44px;
+      background:
+        linear-gradient(135deg, rgba(14, 107, 95, 0.95), rgba(41, 76, 122, 0.92)),
+        radial-gradient(circle at 15% 10%, rgba(247, 201, 92, 0.5), transparent 30%);
+      color: #ffffff;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #f7e5b8;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: clamp(2.2rem, 5.2vw, 4rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 60ch;
+      margin-bottom: 12px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1rem;
+    }
+
+    .why {
+      padding-left: 14px;
+      border-left: 4px solid var(--gold);
+    }
+
+    .signal-map {
+      width: 100%;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: var(--shadow);
+    }
+
+    .signal-map strong {
+      display: block;
+      margin-bottom: 12px;
+      color: #ffffff;
+    }
+
+    .map-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .map-pill {
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--ink);
+      font-size: 0.92rem;
+      font-weight: 750;
+    }
+
+    section {
+      padding: 42px 0;
+      background: var(--paper);
+    }
+
+    section:nth-of-type(even) {
+      background: #ffffff;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(1.45rem, 4vw, 2.25rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .read-card {
+      max-width: 74ch;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid #c8d9d1;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      background: #eef5f0;
+      box-shadow: var(--shadow);
+    }
+
+    .read-card p {
+      margin-bottom: 0;
+      color: #20323a;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .proof-card,
+    .who-card,
+    .plan-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 10px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #fff1df;
+      color: #9a420e;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .start-card p,
+    .proof-card p,
+    .who-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .plan {
+      padding: 22px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #ffffff, #f4f8f6);
+      box-shadow: var(--shadow);
+    }
+
+    .team {
+      display: grid;
+      gap: 10px;
+      margin: 0 0 20px;
+    }
+
+    .role {
+      padding: 10px 12px;
+      border: 1px solid #cfe1da;
+      border-radius: 8px;
+      background: #ffffff;
+      font-weight: 750;
+      color: var(--green);
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 15px;
+      border: 1px solid #dce6e1;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: var(--blue);
+      color: #ffffff;
+      font-weight: 850;
+    }
+
+    .step h3 {
+      margin: 0 0 4px;
+      font-size: 1rem;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .stack span,
+    .customer-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #eef2f6;
+      color: #29435d;
+      font-size: 0.85rem;
+      font-weight: 750;
+    }
+
+    .who-card {
+      max-width: 84ch;
+      margin: 0 auto;
+      padding: 22px;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 0;
+    }
+
+    .proof-card {
+      overflow: hidden;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #eef2f6;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.04rem;
+    }
+
+    .proof-body a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--green);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .talk {
+      text-align: center;
+      background: #102720;
+      color: #ffffff;
+    }
+
+    .talk h2 {
+      margin-bottom: 10px;
+    }
+
+    .talk p {
+      margin: 0 auto 20px;
+      max-width: 42ch;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      max-width: 100%;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero {
+        padding: 72px 0 62px;
+      }
+
+      .map-row,
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .team {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      section {
+        padding: 58px 0;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr) 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Prepared for SECJUR</p>
+          <h1>Ship safer DCO AI with less risk today</h1>
+          <p>SECJUR already has the right product moment: compliance content, integrations, experts, and buyers who need trusted answers fast.</p>
+          <p class="why">We saw the AI Engineer signal for Lisbon and remote Portugal. It points to document summaries, Q&amp;A chat, Azure MLOps, and safer RAG inside DCO.</p>
+        </div>
+        <div class="signal-map" aria-label="AI delivery map">
+          <strong>What the pilot should protect</strong>
+          <div class="map-row">
+            <div class="map-pill">Private compliance documents</div>
+            <div class="map-pill">Clear source citations</div>
+            <div class="map-pill">PII-safe logs and evals</div>
+            <div class="map-pill">Release checks for DCO</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section aria-labelledby="our-read">
+      <div class="wrap">
+        <h2 id="our-read">Our read</h2>
+        <div class="read-card">
+          <p>The AI Engineer role says SECJUR is moving DCO AI from trials to live use. That is a bigger step than adding one more model call. The hard part is making document summarization and Q&amp;A chat safe for GDPR, ISO 27001, TISAX, and DORA work. DCO also lists many integrations, so answers need the right source and access rules. If this stays with one new hire alone, useful pilots can stall until buyers trust them.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="start">
+      <div class="wrap">
+        <h2 id="start">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">Noticed</span>
+            <p>DCO promotes many API connections, while the role asks for RAG evals and PII-safe observability. Start with a small AI test set from real compliance documents ahead of new chat flows.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Next step</span>
+            <p>The DCO login is a JavaScript-only app shell. Add a smoke test for app load, auth handoff, help links, and one evidence path on every release.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="do">
+      <div class="wrap">
+        <h2 id="do">What we'd do</h2>
+        <div class="plan">
+          <p>Use a dedicated Elinext squad under SECJUR's Product Owner for a six-week AI production pilot.</p>
+          <div class="team" aria-label="Proposed team">
+            <div class="role">AI Tech Lead</div>
+            <div class="role">Python Engineer</div>
+            <div class="role">Backend Engineer</div>
+            <div class="role">QA Automation</div>
+            <div class="role">DevOps</div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="num">1</div>
+              <div>
+                <h3>Pick the pilot path</h3>
+                <p>Map DCO AI flows: document summaries, Q&amp;A chat, and audit manager work. Choose one workflow for production.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div>
+                <h3>Build AI quality gates</h3>
+                <p>Create target answers, red-team prompts, PII checks, source checks, and weekly human review for RAG.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div>
+                <h3>Harden Azure delivery</h3>
+                <p>Package services with Docker, track model runs, add logs, and define rollback checks for product owners.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div>
+                <h3>Wire release QA</h3>
+                <p>Connect browser tests to DCO login, help center links, and the integration paths that feed evidence.</p>
+              </div>
+            </article>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span>Python</span>
+            <span>React</span>
+            <span>Node.js</span>
+            <span>QA automation</span>
+            <span>DevOps</span>
+            <span>Business analysis</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="who">
+      <div class="wrap">
+        <h2 id="who">Who is Elinext</h2>
+        <div class="who-card">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For a compliance SaaS team, the useful facts are ISO 27001 and ISO 9001, strong QA, Python, web, AI, and DevOps work. We have delivered for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TUI</strong>, and <strong>TRUMPF</strong>. We can work as a dedicated squad under your Product Owner, or ship a scoped pilot. That fits the AI Engineer gap without slowing SECJUR's own team.</p>
+          <div class="customers" aria-label="Named customers">
+            <span class="customer-pill">Siemens</span>
+            <span class="customer-pill">Broadcom</span>
+            <span class="customer-pill">Volkswagen</span>
+            <span class="customer-pill">TUI</span>
+            <span class="customer-pill">TRUMPF</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="proof">
+      <div class="wrap">
+        <h2 id="proof">Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-saas-platform-design-for-m365-security-m.png" alt="SaaS security monitoring case study preview">
+            <div class="proof-body">
+              <h3>SaaS platform for M365 security monitoring</h3>
+              <p>Elinext designed an Azure-based security SaaS that cut assessment work from hours to minutes.</p>
+              <a href="https://www.elinext.com/case-study/saas-platform-design/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-ai-powered-lead-management-software-to-h.png" alt="AI automation case study preview">
+            <div class="proof-body">
+              <h3>AI-powered lead management software</h3>
+              <p>Elinext built an AI workflow that reduced manual analysis and helped teams focus on priority leads.</p>
+              <a href="https://www.elinext.com/case-study/ai-powered-lead-management-software/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk" aria-labelledby="talk">
+      <div class="wrap">
+        <h2 id="talk">Start the AI pilot</h2>
+        <p>A short call can confirm the best first workflow.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
