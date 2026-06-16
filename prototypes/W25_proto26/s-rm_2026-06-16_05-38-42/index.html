@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S-RM Polus Engineering Brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/s-rm_2026-06-16_05-38-42/">
+  <meta name="description" content="A short engineering brief for S-RM's Polus and Corporate Intelligence scaling moment.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/s-rm_2026-06-16_05-38-42/">
+  <meta property="og:title" content="S-RM: scaling threat intelligence and Go delivery">
+  <meta property="og:description" content="A focused brief for Polus, Corporate Intelligence, and the current CTI plus Golang hiring signal.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/s-rm_2026-06-16_05-38-42/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="S-RM: scaling threat intelligence and Go delivery - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="S-RM: scaling threat intelligence and Go delivery">
+  <meta name="twitter:description" content="A focused brief for Polus, Corporate Intelligence, and the current CTI plus Golang hiring signal.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/s-rm_2026-06-16_05-38-42/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172321;
+      --muted: #5f6f69;
+      --paper: #f7f5ef;
+      --panel: #fffdfa;
+      --line: #ded8cb;
+      --forest: #153b3a;
+      --teal: #1f7a73;
+      --rust: #c45f2a;
+      --gold: #f0c05a;
+      --soft: #e8f0ea;
+      --shadow: 0 18px 50px rgba(23, 35, 33, 0.13);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+    section { padding: 48px 0; background: var(--paper); }
+    h1, h2, h3, p { margin: 0; }
+    h2 {
+      text-align: center;
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      line-height: 1.15;
+      margin-bottom: 22px;
+    }
+    p { font-size: 1rem; }
+    .eyebrow {
+      color: var(--rust);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: .76rem;
+      margin-bottom: 14px;
+    }
+    .hero {
+      background: linear-gradient(135deg, var(--forest), #24453f 62%, #573720);
+      color: #fffaf0;
+      padding: 54px 0 42px;
+      position: relative;
+    }
+    .hero .wrap { max-width: 980px; }
+    .hero h1 {
+      font-size: clamp(2.05rem, 7vw, 4.6rem);
+      line-height: .98;
+      max-width: 850px;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 720px;
+      color: #efe8d8;
+      margin-top: 18px;
+      font-size: clamp(1rem, 2.1vw, 1.2rem);
+    }
+    .hero .why {
+      border-left: 4px solid var(--gold);
+      padding-left: 16px;
+      color: #fff8e5;
+    }
+    .read {
+      background: #e2ece4;
+    }
+    .read-card {
+      width: 100%;
+      max-width: 74ch;
+      margin: 0 auto;
+      background: #f4fbf4;
+      border: 1px solid #c5d5ca;
+      border-left: 8px solid var(--teal);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .starts {
+      display: grid;
+      gap: 16px;
+    }
+    .start-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .label {
+      color: var(--teal);
+      font-size: .78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+    .plan {
+      background: #fbf7ed;
+    }
+    .plan-board {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .team {
+      display: grid;
+      gap: 10px;
+      margin: 18px 0;
+    }
+    .role {
+      background: var(--soft);
+      border: 1px solid #cad8ce;
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-weight: 700;
+      text-align: center;
+      font-size: .92rem;
+    }
+    .steps {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 13px;
+      align-items: start;
+      background: #f8faf6;
+      border: 1px solid #d7dfd4;
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--forest);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+    }
+    .step strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    .step p { color: var(--muted); }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .tag, .customer {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid #cfc6b6;
+      padding: 7px 10px;
+      background: #fffaf0;
+      font-weight: 700;
+      font-size: .88rem;
+    }
+    .about {
+      background: #f0eee6;
+    }
+    .about-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      max-width: 78ch;
+      margin: 0 auto;
+    }
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 0;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+    .case {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .case img {
+      width: 100%;
+      aspect-ratio: 16 / 8;
+      object-fit: cover;
+      background: #e3dfd3;
+    }
+    .case-body {
+      padding: 18px;
+    }
+    .case h3 {
+      font-size: 1.05rem;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .case p {
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .case a {
+      font-weight: 700;
+      color: var(--forest);
+    }
+    .talk {
+      background: var(--forest);
+      color: #fff8e8;
+      text-align: center;
+      padding: 48px 0;
+    }
+    .talk p {
+      margin: 0 auto 22px;
+      max-width: 42ch;
+      color: #efe5d2;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--gold);
+      color: #1a251f;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    @media (min-width: 680px) {
+      section { padding: 64px 0; }
+      .starts, .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .team { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .plan-board { padding: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow">Prepared for S-RM</div>
+        <h1>Helping S-RM scale intelligence products without slowing analysts</h1>
+        <p>A short engineering brief for the Polus and Corporate Intelligence moment: more threat work, more data sources, and more need for reliable product delivery now.</p>
+        <p class="why">We saw S-RM hiring for Cyber Threat Intelligence and Golang development. That points to a live push around intelligence products and delivery capacity.</p>
+      </div>
+    </section>
+
+    <section class="read">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p>Your signal is not just hiring. S-RM is adding Cyber Threat Intelligence and Go capacity at once. That points to pressure around intelligence delivery, platform integrations, and analyst workflows. Polus ASM and Polus MDR already promise real-time threat insight and easier reporting. The hard part is keeping that promise as more data sources, clients, and incidents arrive. If the backlog stays internal, analysts wait on engineers and client reports slow down.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="starts">
+          <article class="start-card">
+            <div class="label">What we noticed</div>
+            <p>The Go role names external data providers, OpenSearch, AWS, large datasets, and tests. Start with contract tests around provider changes before they reach analysts.</p>
+          </article>
+          <article class="start-card">
+            <div class="label">Useful next step</div>
+            <p>The managed-services path is image-heavy and script-heavy on mobile. Trim that page first, so demo traffic gets a faster product proof.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="plan-board">
+          <p>A dedicated squad under S-RM's product manager, with weekly demos and direct analyst feedback.</p>
+          <div class="team" aria-label="Proposed team">
+            <div class="role">Tech Lead</div>
+            <div class="role">Go/React</div>
+            <div class="role">Go/React</div>
+            <div class="role">QA Auto</div>
+            <div class="role">DevOps</div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="num">1</div>
+              <div><strong>Map the flow</strong><p>Audit Corporate Intelligence data flows, provider APIs, OpenSearch usage, and analyst handoffs into one delivery map.</p></div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div><strong>Guard the feeds</strong><p>Build contract tests and data-quality checks for priority providers, with alerts before bad feeds reach analysts.</p></div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div><strong>Ship one feature</strong><p>Move one backend feature through Go services, React UI, AWS deployment, and runbooks for support teams.</p></div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div><strong>Lighten the demo path</strong><p>Tune images and unused scripts on Polus pages, then track conversion and load behavior.</p></div>
+            </article>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span class="tag">React</span>
+            <span class="tag">Python</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">QA automation</span>
+            <span class="tag">DevOps</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="about-card">
+          <p>Elinext is a full-cycle software development company, active since 1997 across global markets. We have about 700 in-house specialists and PMs, with no freelancers or subcontractors in delivery. For security-heavy work, ISO 27001 and ISO 9001 give useful delivery guardrails. Our teams have served <strong>Broadcom</strong>, <strong>Siemens</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong> on complex systems for years. We cover backend, web, QA, DevOps, AI/ML, product design, and long-term support teams. For S-RM, that means one stable squad under your product owner, close to analysts and engineers.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case">
+            <img src="assets/case-router.jpg" alt="Remote network management case study image">
+            <div class="case-body">
+              <h3>Remote network and router management platform</h3>
+              <p>Go, React, AWS S3, Python, MongoDB, and PostgreSQL for high-volume telemetry and support workflows.</p>
+              <a href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">Read case study</a>
+            </div>
+          </article>
+          <article class="case">
+            <img src="assets/case-m365.jpg" alt="M365 security monitoring case study image">
+            <div class="case-body">
+              <h3>SaaS platform design for M365 security monitoring</h3>
+              <p>A security monitoring product moved from service work to a clearer SaaS platform with faster audits.</p>
+              <a href="https://www.elinext.com/case-study/saas-platform-design/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk">
+      <div class="wrap">
+        <h2>Talk through the first sprint</h2>
+        <p>We can scope the squad around one Polus workflow.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
