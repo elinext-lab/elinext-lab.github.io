@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/(?:[^/]+\/)?([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROLIM PLM delivery scaling brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/prolim_2026-06-16_02-28-27/">
+  <meta name="description" content="A short brief on scaling PROLIM's NX, Teamcenter X, and Salesforce delivery load.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/prolim_2026-06-16_02-28-27/">
+  <meta property="og:title" content="PROLIM PLM delivery scaling brief">
+  <meta property="og:description" content="A practical start point for NX, Teamcenter X, and Salesforce delivery load.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/prolim_2026-06-16_02-28-27/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="PROLIM PLM delivery scaling brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PROLIM PLM delivery scaling brief">
+  <meta name="twitter:description" content="A practical start point for NX, Teamcenter X, and Salesforce delivery load.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/prolim_2026-06-16_02-28-27/og-image.jpg">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17211f;
+      --muted: #596764;
+      --paper: #f6f3ec;
+      --panel: #ffffff;
+      --line: #d9ddd4;
+      --navy: #102538;
+      --green: #276353;
+      --rust: #b85b35;
+      --gold: #d7a540;
+      --blue: #3f6680;
+      --soft: #e7eee8;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+    p { margin: 0; }
+
+    .hero {
+      min-height: 82vh;
+      display: grid;
+      align-items: end;
+      color: #fff;
+      padding: 30px 18px 46px;
+      background:
+        linear-gradient(90deg, rgba(16, 37, 56, .95), rgba(39, 99, 83, .84)),
+        url("assets/case-manufacturing-execution-system.jpg") center / cover no-repeat;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 12px;
+      background: var(--gold);
+    }
+
+    .wrap {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #f5dca4;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 840px;
+      margin: 0;
+      font-size: clamp(40px, 8vw, 76px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 720px;
+      margin-top: 22px;
+      color: #f7f8f3;
+      font-size: clamp(18px, 2.2vw, 23px);
+    }
+
+    section {
+      padding: 58px 18px;
+      background: var(--paper);
+    }
+
+    section:nth-of-type(even) { background: #fffaf1; }
+
+    h2 {
+      margin: 0 auto 24px;
+      text-align: center;
+      font-size: clamp(28px, 5vw, 42px);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: min(920px, 100%);
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--soft);
+      border: 1px solid #c7d6cc;
+      border-left: 8px solid var(--green);
+      border-radius: 8px;
+      color: #18362e;
+      font-size: 18px;
+    }
+
+    .start-grid,
+    .case-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .case-card,
+    .cred {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: 0 16px 38px rgba(23, 33, 31, .08);
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 9px;
+      color: var(--rust);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .plan {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .plan h2 { color: #fff; }
+
+    .plan-shell {
+      width: min(1040px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .plan-intro {
+      max-width: 790px;
+      margin: 0 auto 8px;
+      text-align: center;
+      color: #dfe7e4;
+      font-size: 18px;
+    }
+
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      min-height: 34px;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: normal;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 8px;
+      background: rgba(255,255,255,.07);
+    }
+
+    .num {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #17211f;
+      font-weight: 900;
+    }
+
+    .step b {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff;
+      font-size: 18px;
+    }
+
+    .step span {
+      display: block;
+      color: #dbe5e1;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      justify-content: center;
+    }
+
+    .stack span {
+      border-radius: 6px;
+      padding: 7px 10px;
+      background: #f1e4c5;
+      color: #22342f;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .cred {
+      max-width: 900px;
+      margin: 0 auto;
+      font-size: 17px;
+    }
+
+    .logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .logos strong {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #edf2ef;
+      color: var(--green);
+      font-size: 13px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 20px;
+    }
+
+    .case-body h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      line-height: 1.15;
+    }
+
+    .case-body a {
+      display: inline-block;
+      margin-top: 14px;
+      color: var(--rust);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    section.talk {
+      background: var(--green);
+      color: #fff;
+      text-align: center;
+    }
+
+    .talk p {
+      margin: 0 auto 22px;
+      max-width: 560px;
+      color: #edf7f2;
+      font-size: 18px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 7px;
+      padding: 13px 18px;
+      background: #fff;
+      color: var(--green);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      section { padding: 76px 28px; }
+      .hero { padding: 42px 28px 58px; }
+      .start-grid,
+      .case-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">PROLIM growth brief</p>
+      <h1>Help PROLIM scale PLM delivery without slowing sales</h1>
+      <p class="why">Saw PROLIM hiring NX CAM, NX CAD, Salesforce, calibration, and Salesforce technical roles. That points to delivery load across Siemens PLM work, customer demos, and the systems behind sales.</p>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2>Our read</h2>
+      <p class="read-box">PROLIM is scaling the work around PLM, NX, Teamcenter, and Salesforce at the same time. The open roles suggest more demand for pre-sales demos, implementation help, and CRM changes than the core team can absorb. PROLIM's Teamcenter X page leads with cloud PLM trials, guided tutorials, and NX examples, so buyers likely need fast proof before they commit. Public Teamcenter users also mention training, setup, and large data speed as common friction. If these threads stay split, pilots can slow down and senior engineers get pulled into support work.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Where we'd start</h2>
+      <div class="start-grid">
+        <article class="start-card">
+          <span class="label">What we noticed</span>
+          <p>The Teamcenter X trial page asks visitors to contact sales before it answers many setup questions.</p>
+          <span class="label">Useful next step</span>
+          <p>Add a short readiness checklist for NX, ERP, BOM, and change workflows before the form.</p>
+        </article>
+        <article class="start-card">
+          <span class="label">What we noticed</span>
+          <p>Your hiring signal pairs NX application roles with Salesforce developers.</p>
+          <span class="label">Useful next step</span>
+          <p>Map each demo, quote, and support handoff in Salesforce first, then automate repeated updates.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="plan">
+    <div class="plan-shell">
+      <h2>What we'd do</h2>
+      <p class="plan-intro">A dedicated squad would work under Nathan or a PROLIM PM, with weekly demos and a six-week pilot focused on delivery flow.</p>
+      <div class="team">
+        <span class="pill">1 technical lead</span>
+        <span class="pill">1 Salesforce engineer</span>
+        <span class="pill">1 PLM integration engineer</span>
+        <span class="pill">1 QA automation engineer</span>
+        <span class="pill">1 front-end engineer</span>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="num">1</div>
+          <p><b>Map the handoffs</b><span>Audit Teamcenter X, NX CAD, NX CAM, and Salesforce handoffs, then rank bottlenecks by buyer impact and delivery risk.</span></p>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <p><b>Stabilize demo support</b><span>Build a demo support backlog with reusable scripts, sample data checks, and QA gates for common manufacturing scenarios.</span></p>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <p><b>Clean Salesforce flow</b><span>Clean Salesforce points that touch demos, quotes, cases, and engineer assignment, with clear owners for each status change.</span></p>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <p><b>Improve the buyer path</b><span>Ship a performance and content pass for the PLM pages, focused on mobile speed, clearer trial steps, and lower support load.</span></p>
+        </div>
+      </div>
+      <div class="stack">
+        <span>Salesforce</span>
+        <span>Java / .NET</span>
+        <span>React / Angular</span>
+        <span>QA automation</span>
+        <span>AWS / Azure</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Who is Elinext</h2>
+      <div class="cred">
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For PROLIM, the fit is enterprise delivery: PLM-style integrations, CRM work, QA, and web systems that support sales and service teams. Our teams have worked for Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. Elinext is certified for ISO 9001 and ISO 27001. We would plug into your PM rhythm as a dedicated team, then focus on the work above: faster demos, cleaner Salesforce flow, and fewer manual handoffs.</p>
+        <div class="logos" aria-label="Named customers">
+          <strong>Siemens</strong>
+          <strong>Broadcom</strong>
+          <strong>Volkswagen</strong>
+          <strong>TRUMPF</strong>
+          <strong>TUI</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Proof</h2>
+      <div class="case-grid">
+        <article class="case-card">
+          <img src="assets/case-manufacturing-execution-system.jpg" alt="Manufacturing execution system case study">
+          <div class="case-body">
+            <h3>Manufacturing Execution System</h3>
+            <p>Elinext formed five teams for a US MES provider whose older platform was hard to integrate with modern systems. The case reports strong ROI and ongoing support for client environments.</p>
+            <a href="https://www.elinext.com/case-study/manufacturing-execution-system/">Read the case study</a>
+          </div>
+        </article>
+        <article class="case-card">
+          <img src="assets/case-crm-building-equipment.jpg" alt="CRM system development case study">
+          <div class="case-body">
+            <h3>CRM for Building Equipment</h3>
+            <p>Elinext built a CRM for a US equipment manufacturer that needed better sales process control and less manual transfer between subsystems.</p>
+            <a href="https://www.elinext.com/case-study/crm-system-development-for-building-equipment-manufacturer/">Read the case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="talk">
+    <div class="wrap">
+      <h2>Start the conversation</h2>
+      <p>Share one workflow, and we will map a practical pilot.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
