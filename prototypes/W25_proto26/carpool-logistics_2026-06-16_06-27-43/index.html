@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carpool Logistics reporting brief by Elinext</title>
+  <meta name="description" content="A short proposal for making Carpool Logistics reporting, dashboards, and app exception views ready for scale.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/carpool-logistics_2026-06-16_06-27-43/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/carpool-logistics_2026-06-16_06-27-43/">
+  <meta property="og:title" content="Carpool Logistics reporting brief">
+  <meta property="og:description" content="Hiring for report accuracy, dashboards, and load visibility?">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/carpool-logistics_2026-06-16_06-27-43/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Carpool Logistics reporting brief — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Carpool Logistics reporting brief">
+  <meta name="twitter:description" content="Hiring for report accuracy, dashboards, and load visibility?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/carpool-logistics_2026-06-16_06-27-43/og-image.jpg">
+  <style>
+    :root {
+      --ink: #18232b;
+      --muted: #5c6872;
+      --paper: #f7f4ef;
+      --white: #ffffff;
+      --line: #d8d0c4;
+      --navy: #11313a;
+      --teal: #0f7d83;
+      --orange: #e96f34;
+      --green: #4d8d6e;
+      --soft: #ede6dc;
+      --shadow: 0 18px 60px rgba(24, 35, 43, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page {
+      width: 100%;
+    }
+
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+
+    section {
+      padding: 54px 0;
+      position: relative;
+    }
+
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 64px 0 58px;
+    }
+
+    .hero .wrap {
+      display: grid;
+      gap: 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: #dfeceb;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 13ch;
+      font-size: clamp(2.45rem, 8vw, 5.9rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: clamp(1.7rem, 5vw, 3rem);
+      line-height: 1.05;
+      margin-bottom: 24px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 1.04rem;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .hero-copy {
+      max-width: 650px;
+      font-size: clamp(1.04rem, 3vw, 1.35rem);
+      color: #d7e0de;
+    }
+
+    .why {
+      max-width: 680px;
+      padding-left: 18px;
+      border-left: 4px solid var(--orange);
+      color: #f3eee7;
+      font-weight: 650;
+    }
+
+    .read {
+      background: var(--paper);
+    }
+
+    .read-card {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      background: #fffaf1;
+      border: 1px solid #e1c8a8;
+      border-left: 8px solid var(--orange);
+      border-radius: 8px;
+      padding: clamp(22px, 5vw, 34px);
+      box-shadow: var(--shadow);
+      font-size: 1.06rem;
+    }
+
+    .start {
+      background: var(--soft);
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .label {
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .plan {
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    .plan h2 {
+      color: var(--white);
+    }
+
+    .plan-box {
+      background: #f8fbfb;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: clamp(22px, 5vw, 34px);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+    }
+
+    .squad {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 22px;
+    }
+
+    .pill {
+      border: 1px solid #b9d8d7;
+      background: #e8f3f1;
+      color: #16464b;
+      border-radius: 999px;
+      padding: 8px 11px;
+      font-size: 0.88rem;
+      font-weight: 750;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 16px;
+      background: var(--white);
+      border: 1px solid #d7e4e3;
+      border-radius: 8px;
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 850;
+    }
+
+    .step p,
+    .muted {
+      color: var(--muted);
+    }
+
+    .stack {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid #d7e4e3;
+      color: #32414a;
+      font-weight: 700;
+    }
+
+    .elinext {
+      background: var(--paper);
+    }
+
+    .elinext-card {
+      width: min(100%, 920px);
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: clamp(22px, 5vw, 34px);
+    }
+
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .customer-list strong {
+      border: 1px solid #d8c2a5;
+      background: #fff3e6;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.88rem;
+    }
+
+    .proof {
+      background: var(--soft);
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(24, 35, 43, 0.08);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 20px;
+    }
+
+    .case-body a {
+      display: inline-block;
+      margin-top: 10px;
+      color: var(--teal);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .talk {
+      background: #fffaf1;
+      text-align: center;
+      padding-bottom: 72px;
+    }
+
+    .talk p {
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 6px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 850;
+      text-decoration: none;
+      box-shadow: 0 10px 24px rgba(233, 111, 52, 0.22);
+    }
+
+    @media (min-width: 720px) {
+      .hero .wrap {
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.8fr);
+        align-items: end;
+      }
+
+      .hero-copy,
+      .why {
+        grid-column: 2;
+      }
+
+      .eyebrow,
+      h1 {
+        grid-column: 1;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      section {
+        padding: 72px 0;
+      }
+
+      .plan-box {
+        padding: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap">
+        <span class="eyebrow">Prepared for Michael Malakhov</span>
+        <h1 id="hero-title">Make Carpool reporting ready for faster vehicle volume</h1>
+        <p class="hero-copy">Carpool is scaling a real vehicle logistics platform, not a broker workflow. That growth now needs trusted reports, clean dashboards, and fast decisions across Finance and Operations.</p>
+        <p class="why">Why we're here: we saw Carpool hiring a Junior Reports Developer for SQL, Laravel, PHPUnit, and QuickSight work. That points to a report trust gap worth closing fast.</p>
+      </div>
+    </section>
+
+    <section class="read" aria-labelledby="read-title">
+      <div class="wrap">
+        <h2 id="read-title">Our read</h2>
+        <div class="read-card">
+          <p>Carpool is moving from strong logistics execution to stricter data control. The role names Monthly Financials, At Risk Accounts, and Load Tracking, so the pain is not just dashboard output. The hard part is making each number explainable across Finance, Operations, and product work. Your 2025 review also names API order intake, VIN-level pricing, tracking, and exception management. If those flows grow faster than reporting rules, teams lose time checking which view is true.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="start" aria-labelledby="start-title">
+      <div class="wrap">
+        <h2 id="start-title">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <p class="label">What we noticed</p>
+            <h3>Reports need a written source of truth.</h3>
+            <p>The job page already names Monthly Financials, At Risk Accounts, and Load Tracking. First step: define each metric, join, filter, and edge case before building more dashboard surface.</p>
+          </article>
+          <article class="start-card">
+            <p class="label">What we noticed</p>
+            <h3>App failures should become report events.</h3>
+            <p>Recent Android reviews mention GPS, inspection photos, verification, and lost delivery work. Next step: route those failures into Support and Operations queues with shipment context.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan" aria-labelledby="plan-title">
+      <div class="wrap">
+        <h2 id="plan-title">What we'd do</h2>
+        <div class="plan-box">
+          <p><strong>Engagement model:</strong> a dedicated squad under Carpool's PM or product owner, working beside your engineers for a six-week pilot.</p>
+          <div class="squad" aria-label="Team shape">
+            <span class="pill">1 tech lead</span>
+            <span class="pill">1 Laravel engineer</span>
+            <span class="pill">1 data engineer</span>
+            <span class="pill">1 QA engineer</span>
+            <span class="pill">part-time BA</span>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Map report truth</h3>
+                <p>Trace Monthly Financials, At Risk Accounts, and Load Tracking from MySQL tables to stakeholder decisions and edge cases.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Build tested report slices</h3>
+                <p>Add Laravel and Livewire report features with PHPUnit tests for filters, exports, calculations, and late-change regressions.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Turn app friction into queues</h3>
+                <p>Capture GPS gaps, failed inspection photos, and login problems as report events with owner and shipment status.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Ship dashboard handoff</h3>
+                <p>Publish QuickSight views with metric notes, sample reconciliations, and a short guide for Finance and Operations.</p>
+              </div>
+            </article>
+          </div>
+          <p class="stack">Relevant stack: PHP, Laravel, MySQL, PHPUnit, Node.js, Python, QA automation.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext" aria-labelledby="elinext-title">
+      <div class="wrap">
+        <h2 id="elinext-title">Who is Elinext</h2>
+        <div class="elinext-card">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Carpool, we would bring web, QA, data, and DevOps engineers who can work under your PM. Our delivery process is backed by ISO 9001 and ISO 27001. We have served Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. That mix fits a reporting squad where clean code, tests, and data trust all matter. We add focused capacity while your team keeps product control.</p>
+          <div class="customer-list" aria-label="Selected customers">
+            <strong>Siemens</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof" aria-labelledby="proof-title">
+      <div class="wrap">
+        <h2 id="proof-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-port.jpg" alt="Port operations case study cover">
+            <div class="case-body">
+              <h3>Real-time port operations software</h3>
+              <p>Elinext built logistics HMI tools for alarms, positioning, and operational coverage, saving half of the initial budget.</p>
+              <a href="https://www.elinext.com/case-study/streamlining-port-operations-hmi-management/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-terminals.jpg" alt="Card terminals case study cover">
+            <div class="case-body">
+              <h3>Transport card terminal software</h3>
+              <p>A dedicated Elinext developer helped a transport client clear a year-long backlog and improve onboard reservation handling.</p>
+              <a href="https://www.elinext.com/case-study/card-terminals-software-development-for-cruise-liners/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk" aria-labelledby="talk-title">
+      <div class="wrap">
+        <h2 id="talk-title">Talk through the pilot</h2>
+        <p>Share the report backlog. We will map the first sprint.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
