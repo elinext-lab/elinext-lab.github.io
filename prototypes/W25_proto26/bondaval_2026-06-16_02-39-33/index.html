@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BondavalOS full-stack scaling brief</title>
+  <meta name="description" content="A short proposal for keeping BondavalOS clear as the Engineering and Data team scales.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/bondaval_2026-06-16_02-39-33/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/bondaval_2026-06-16_02-39-33/">
+  <meta property="og:title" content="BondavalOS full-stack scaling brief">
+  <meta property="og:description" content="A short proposal for keeping BondavalOS clear as the Engineering and Data team scales.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/bondaval_2026-06-16_02-39-33/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="BondavalOS full-stack scaling brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BondavalOS full-stack scaling brief">
+  <meta name="twitter:description" content="A short proposal for keeping BondavalOS clear as the Engineering and Data team scales.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/bondaval_2026-06-16_02-39-33/og-image.jpg">
+  <style>
+    :root {
+      --ink: #18202c;
+      --muted: #596372;
+      --paper: #f6f8f9;
+      --white: #ffffff;
+      --line: #d9e2e7;
+      --navy: #151923;
+      --teal: #0f6f66;
+      --green: #d9eee8;
+      --amber: #c76b23;
+      --amber-soft: #fff0df;
+      --blue: #285d8f;
+      --shadow: 0 18px 42px rgba(21, 25, 35, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.52;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 58px 18px 44px;
+    }
+
+    .hero .wrap {
+      display: grid;
+      gap: 24px;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #a4d6cd;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: 2.28rem;
+      line-height: 1.08;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 740px;
+      margin-bottom: 14px;
+      color: #d8e1e8;
+    }
+
+    .why {
+      max-width: 760px;
+      border-left: 5px solid var(--amber);
+      padding: 16px 18px;
+      background: rgba(255, 255, 255, 0.07);
+      color: #f2f5f7;
+    }
+
+    section {
+      padding: 42px 18px;
+      background: var(--paper);
+    }
+
+    section h2 {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: 1.55rem;
+      line-height: 1.16;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .read {
+      background: #e9f2f1;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 80ch;
+      margin: 0 auto;
+      border-left: 6px solid var(--teal);
+      padding: 22px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      color: #28313d;
+      font-size: 1.01rem;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card,
+    .proof-card,
+    .step,
+    .team-box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 8px;
+      padding: 5px 9px;
+      background: var(--amber-soft);
+      color: #7c410d;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .start-card p {
+      margin-bottom: 0;
+      color: #303947;
+    }
+
+    .plan {
+      background: var(--white);
+    }
+
+    .plan-panel {
+      display: grid;
+      gap: 16px;
+      border-radius: 8px;
+      padding: 18px;
+      background: #13231f;
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .team-box {
+      padding: 18px;
+      background: #f7fbfa;
+      color: var(--ink);
+    }
+
+    .team-box h3,
+    .step h3,
+    .proof-card h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.25;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .team-box p {
+      margin-bottom: 12px;
+      color: #32404a;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .stack li,
+    .customer-tags span {
+      border: 1px solid #b6d8d0;
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: var(--green);
+      color: #113b36;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 15px;
+      color: var(--ink);
+    }
+
+    .num {
+      display: inline-grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--amber);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: #475363;
+    }
+
+    .about {
+      background: #f2f5f5;
+    }
+
+    .about-text {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .about-text p {
+      margin-bottom: 12px;
+    }
+
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #dce5e7;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-body p {
+      margin-bottom: 12px;
+      color: #46515e;
+    }
+
+    .proof-body a {
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .closing {
+      background: var(--navy);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .closing h2 {
+      margin-bottom: 10px;
+      color: var(--white);
+    }
+
+    .closing p {
+      max-width: 42ch;
+      margin: 0 auto 18px;
+      color: #dbe5eb;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border-radius: 8px;
+      padding: 12px 18px;
+      background: var(--amber);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero {
+        padding: 76px 28px 60px;
+      }
+
+      h1 {
+        font-size: 3.25rem;
+      }
+
+      section {
+        padding: 58px 28px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .plan-panel {
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+        padding: 22px;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <div class="wrap">
+        <div>
+          <p class="eyebrow">Prepared for Bondaval</p>
+          <h1>Helping Bondaval scale BondavalOS without slowing credit teams</h1>
+          <p>BondavalOS already gives credit teams one clear place to watch buyer risk, policy tasks, and live accounts receivable data. The next build push should protect that simple feel as more users and data flows arrive.</p>
+          <p class="why">Saw Bondaval is hiring a Full Stack Engineer in Engineering and Data, in London. That points to more delivery load on the product team while BondavalOS and the wider credit risk suite keep expanding.</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="read">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The hiring signal says Bondaval is adding product capacity, not just filling a seat. BondavalOS now covers risk monitoring, policy management, and buyer profiles, with accounts receivable tools tied to policy duties. That mix is valuable, but it also creates more paths that must stay simple for credit managers. If each new insurer, broker, funder, or data feed needs custom work, delivery can slow. The risk is clear: strong demand turns into slower releases and more pressure on Lei's data team.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">Noticed</span>
+            <p>BondavalOS says clients can onboard in days with no complicated integrations. Map the first data pull as a guided checklist so credit teams see what is needed before IT gets involved.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Next step</span>
+            <p>The product videos already contain fallback error states. Test those states on slow networks so a buyer never sees a blank risk story during review.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="plan-panel">
+          <div class="team-box">
+            <h3>Six-week squad pilot</h3>
+            <p>Dedicated squad under Bondaval's PO: one tech lead, two senior full-stack engineers, one QA, and one part-time UX designer.</p>
+            <ul class="stack" aria-label="Relevant stack">
+              <li>React</li>
+              <li>Node.js</li>
+              <li>Python</li>
+              <li>PostgreSQL</li>
+              <li>AWS</li>
+              <li>Playwright</li>
+            </ul>
+          </div>
+          <div class="steps" aria-label="Pilot milestones">
+            <div class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Map the data path</h3>
+                <p>Review the accounts receivable import path, policy task rules, and buyer profile fields with Bondaval's product and data owners.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Shape one guided flow</h3>
+                <p>Build one guided data setup flow for BondavalOS, using clear copy and states for missing files, slow feeds, and permissions.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Add release checks</h3>
+                <p>Add automated checks around risk screens, video fallbacks, and policy reminders so new releases do not break buyer trust.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Hand over cleanly</h3>
+                <p>Ship weekly demos, document decisions, and leave Lei's team with a backlog that separates data science from product plumbing.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="about-text">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For a regulated credit risk platform, the fit is full-stack delivery, QA, data engineering, and ISO 27001 plus ISO 9001 discipline. Teams have served Broadcom, Siemens, Volkswagen, TRUMPF, and TUI, so enterprise review habits are familiar. For Bondaval, that means a small squad can join your product rhythm, add web capacity, and keep the platform clear for credit managers. The goal is to help the core team ship without adding handover drag.</p>
+          <div class="customer-tags" aria-label="Named customers">
+            <span>Broadcom</span>
+            <span>Siemens</span>
+            <span>Volkswagen</span>
+            <span>TRUMPF</span>
+            <span>TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-insurance-web.jpg" alt="Insurance web app case study image">
+            <div class="proof-body">
+              <h3>Outstaffing for Insurance Web App Development</h3>
+              <p>A senior Node.js engineer helped an insurance client improve payment and invoice services across React and PostgreSQL work.</p>
+              <a href="https://www.elinext.com/case-study/outstaffing-for-web-app-development-for-a-top-notch-insurance-company/">Read the case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-insurance-ui.jpg" alt="Insurance UI case study image">
+            <div class="proof-body">
+              <h3>UI Development for Insurance Fulfillment</h3>
+              <p>Elinext modernized a real-time insurance interface and adapted it to accessibility and security needs.</p>
+              <a href="https://www.elinext.com/case-study/ui-development-for-insurance-fulfillment-solutions/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>Bring a specific BondavalOS flow, and we will map options.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
