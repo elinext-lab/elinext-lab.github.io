@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Myntro modernization brief by Elinext</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/myntro_2026-06-16_04-28-53/">
+  <meta name="description" content="A short proposal for helping Myntro move Backstage and core recovery systems forward while the team modernizes.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/myntro_2026-06-16_04-28-53/">
+  <meta property="og:title" content="Myntro modernization brief">
+  <meta property="og:description" content="A short brief on Backstage, system modernization, and the System Developer signal.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/myntro_2026-06-16_04-28-53/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Myntro modernization brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Myntro modernization brief">
+  <meta name="twitter:description" content="A short brief on Backstage, system modernization, and the System Developer signal.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/myntro_2026-06-16_04-28-53/og-image.jpg">
+  <style>
+    :root {
+      --ink: #0a2a39;
+      --text: #24333a;
+      --muted: #5c6b70;
+      --paper: #f9f7f5;
+      --white: #ffffff;
+      --soft: #edfefc;
+      --line: #d9e3df;
+      --blue: #a5c9cf;
+      --gold: #ffe69d;
+      --coral: #c96f43;
+      --green: #28765f;
+      --shadow: 0 18px 44px rgba(10, 42, 57, 0.11);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .section {
+      width: 100%;
+      padding: 54px 18px;
+    }
+
+    .inner {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: min(760px, 82vh);
+      display: grid;
+      align-items: center;
+      padding: 72px 18px 64px;
+      background: #0a2a39;
+      color: var(--white);
+    }
+
+    .hero .inner {
+      display: grid;
+      gap: 24px;
+    }
+
+    .brief-label {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      max-width: 100%;
+      padding: 7px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      color: #f4fbfb;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      font-size: clamp(2.35rem, 6vw, 5.8rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    h2 {
+      color: var(--ink);
+      font-size: clamp(1.72rem, 4vw, 3.05rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    h3 {
+      color: var(--ink);
+      font-size: 1.04rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 710px;
+      display: grid;
+      gap: 14px;
+      font-size: clamp(1rem, 2.4vw, 1.23rem);
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .why {
+      max-width: 760px;
+      padding: 16px 18px;
+      color: #102e37;
+      background: rgba(255, 230, 157, 0.94);
+      border-left: 5px solid var(--coral);
+      border-radius: 6px;
+      box-shadow: var(--shadow);
+    }
+
+    .read {
+      background: #e7f6f2;
+    }
+
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      background: #ffffff;
+      border-left: 7px solid var(--green);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-size: 1.06rem;
+    }
+
+    .start {
+      background: var(--paper);
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card {
+      padding: 20px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 10px 28px rgba(10, 42, 57, 0.08);
+    }
+
+    .tag {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      margin-bottom: 10px;
+      padding: 5px 9px;
+      color: #193b40;
+      background: var(--soft);
+      border: 1px solid #bde0dc;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .proposal {
+      background: #0a2a39;
+      color: var(--white);
+    }
+
+    .proposal h2,
+    .proposal h3 {
+      color: var(--white);
+    }
+
+    .proposal-panel {
+      display: grid;
+      gap: 22px;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.18);
+    }
+
+    .team {
+      display: grid;
+      gap: 10px;
+    }
+
+    .team-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .role {
+      padding: 8px 10px;
+      background: rgba(255, 230, 157, 0.16);
+      border: 1px solid rgba(255, 230, 157, 0.42);
+      border-radius: 999px;
+      color: #fff8da;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 16px;
+      background: #ffffff;
+      color: var(--text);
+      border-radius: 8px;
+    }
+
+    .num {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      color: #0a2a39;
+      background: var(--gold);
+      border-radius: 50%;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .step p {
+      margin-top: 7px;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .stack span {
+      padding: 7px 9px;
+      border-radius: 6px;
+      background: rgba(165, 201, 207, 0.22);
+      color: #e9fbff;
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+
+    .elinext {
+      background: #ffffff;
+    }
+
+    .elinext-copy {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffefa;
+      box-shadow: var(--shadow);
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .customers strong {
+      padding: 6px 9px;
+      color: var(--ink);
+      background: var(--gold);
+      border-radius: 999px;
+      font-size: 0.84rem;
+    }
+
+    .proof {
+      background: #eef5f4;
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(10, 42, 57, 0.08);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #dce7e4;
+    }
+
+    .case-body {
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .case-body a {
+      width: fit-content;
+      color: var(--green);
+      font-weight: 800;
+      border-bottom: 2px solid rgba(40, 118, 95, 0.28);
+    }
+
+    .talk {
+      background: var(--ink);
+      color: var(--white);
+      text-align: center;
+      padding-bottom: 68px;
+    }
+
+    .talk h2 {
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .talk p {
+      color: rgba(255, 255, 255, 0.78);
+      margin-bottom: 22px;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      color: #0a2a39;
+      background: var(--gold);
+      border-radius: 6px;
+      font-weight: 900;
+    }
+
+    @media (min-width: 720px) {
+      .section {
+        padding: 70px 28px;
+      }
+
+      .hero {
+        min-height: min(780px, 80vh);
+        padding: 88px 28px 72px;
+      }
+
+      .start-grid,
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-panel {
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.35fr);
+        align-items: start;
+        padding: 30px;
+      }
+
+      .steps {
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="inner">
+      <span class="brief-label">Prepared for Joachim Granath</span>
+      <h1>Helping Myntro ship safer recovery systems at scale</h1>
+      <div class="hero-copy">
+        <p>Myntro Collect and Backstage sit at a hard point: large case volume, regulated markets, and people who need clear choices when money is tight.</p>
+        <p class="why">Saw the System Developer signal around modernizing existing systems, building new services, and raising code quality. That looks like a delivery load worth unblocking before the roadmap queues up.</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section read">
+      <div class="inner">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Myntro is not only rebranding from Alektum; it is scaling a new trust promise. The System Developer role points to work across existing systems, new services, cloud, on-prem, testing, and integrations. That means Backstage cannot be just a client portal. It has to give live case, cash-flow, and reporting insight while teams modernize under load. If the work stays with a small core team, roadmap items can wait behind fixes. The risk is slower release cycles when Myntro most needs clear, compliant growth.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section start">
+      <div class="inner">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="tag">What we noticed</span>
+            <p>Backstage's public login ships a heavy first load, and Lighthouse flagged unused JavaScript and image delivery.</p>
+            <p><strong>Next step:</strong> set a route budget for login, shared assets, and the portal shell before adding more features.</p>
+          </article>
+          <article class="start-card">
+            <span class="tag">What we noticed</span>
+            <p>Old Alektum review pages show users arguing about case proof, contact volume, and invoice clarity.</p>
+            <p><strong>Next step:</strong> audit the payment journey around case status, written proof, and the next best action.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="inner">
+        <h2>What we'd do</h2>
+        <div class="proposal-panel">
+          <div class="team">
+            <h3>Dedicated squad under your PO or PM</h3>
+            <p>Run a six-week pilot with weekly demos, focused on Backstage stability, portal speed, and one visible journey upgrade.</p>
+            <div class="team-line" aria-label="Team shape">
+              <span class="role">Tech Lead</span>
+              <span class="role">2 full-stack engineers</span>
+              <span class="role">Frontend engineer</span>
+              <span class="role">QA automation</span>
+              <span class="role">DevOps part-time</span>
+            </div>
+            <div class="stack" aria-label="Relevant stack">
+              <span>.NET</span>
+              <span>C#</span>
+              <span>Angular or React</span>
+              <span>Azure</span>
+              <span>SQL Server</span>
+              <span>Playwright</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Map Backstage flows</h3>
+                <p>Trace login, case search, reporting, and integrations. Mark slow paths, manual handoffs, and unclear states for each market.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Stabilize core systems</h3>
+                <p>Add focused tests around payment, case status, and reporting APIs. Cut risky release work into weekly demo slices.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Modernize delivery path</h3>
+                <p>Split portal assets, clean unused JavaScript, and set Azure-ready build checks for cloud and on-prem releases.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Ship one useful upgrade</h3>
+                <p>Deliver one Backstage improvement, such as clearer case proof or faster report loading, with QA evidence and rollout notes.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section elinext">
+      <div class="inner">
+        <h2>Who is Elinext</h2>
+        <div class="elinext-copy">
+          <p>Elinext is a full-cycle software development provider, active since 1997, with about 700 in-house specialists and no freelancers. For a regulated platform team, the useful facts are ISO 9001 and ISO 27001, senior web and backend engineers, QA, DevOps, and dedicated teams that work under your PO or PM. Our client list includes Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. The same model fits the squad above: a small team that can improve Backstage while your core team keeps the main roadmap moving.</p>
+          <div class="customers" aria-label="Named customers">
+            <strong>Siemens</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proof">
+      <div class="inner">
+        <h2>Proof from similar work</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-crm-insurance-agents.jpg" alt="Insurance CRM case study image">
+            <div class="case-body">
+              <h3>CRM Software for Insurance Agents</h3>
+              <p>Financial CRM work with data sync, reporting, and less manual servicing work.</p>
+              <a href="https://www.elinext.com/case-study/crm-software-for-insurance-agents/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-document-collaboration-platform.jpg" alt="Document collaboration case study image">
+            <div class="case-body">
+              <h3>Document Collaboration Platform</h3>
+              <p>Regulated financial platform work with QA automation, DevOps, and stronger stability.</p>
+              <a href="https://www.elinext.com/case-study/document-collaboration-platform/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="inner">
+        <h2>Let's discuss the first sprint</h2>
+        <p>A short call can confirm the right scope.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
