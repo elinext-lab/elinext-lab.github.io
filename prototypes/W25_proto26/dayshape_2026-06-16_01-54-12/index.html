@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dayshape product engineering brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/dayshape_2026-06-16_01-54-12/">
+  <meta name="description" content="A short product engineering brief for Dayshape's current scaling moment.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/dayshape_2026-06-16_01-54-12/">
+  <meta property="og:title" content="Dayshape product engineering brief">
+  <meta property="og:description" content="A short brief on Dayshape's engineering hiring, integration load, and product scale.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/dayshape_2026-06-16_01-54-12/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Dayshape product engineering brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dayshape product engineering brief">
+  <meta name="twitter:description" content="A short brief on Dayshape's engineering hiring, integration load, and product scale.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/dayshape_2026-06-16_01-54-12/og-image.jpg">
+  <style>
+    :root {
+      --ink: #27233d;
+      --muted: #6b667d;
+      --purple: #7059e8;
+      --orange: #ff593b;
+      --teal: #096b64;
+      --paper: #fbfbfe;
+      --soft: #f0f7f6;
+      --line: #d8d5e8;
+      --white: #ffffff;
+      --shadow: 0 20px 60px rgba(39, 35, 61, 0.11);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: #27233d;
+      color: var(--white);
+      padding: 28px 0 42px;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: 0.35;
+      z-index: -1;
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 56px;
+    }
+
+    .logo-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      max-width: 220px;
+    }
+
+    .logo-card img {
+      width: 132px;
+    }
+
+    .prepared {
+      color: #d9d4ff;
+      font-size: 0.9rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      font-size: clamp(2.35rem, 8vw, 4.9rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .hero-text {
+      max-width: 720px;
+      margin-top: 18px;
+      color: #efeefe;
+      font-size: clamp(1rem, 2vw, 1.18rem);
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .tag {
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: #fff3ef;
+      background: rgba(255, 89, 59, 0.12);
+      font-size: 0.9rem;
+    }
+
+    section {
+      padding: 54px 0;
+      background: var(--paper);
+    }
+
+    section h2 {
+      text-align: center;
+      font-size: clamp(1.8rem, 4.5vw, 2.65rem);
+      line-height: 1.08;
+      margin-bottom: 22px;
+      letter-spacing: 0;
+    }
+
+    .read-panel {
+      max-width: 86ch;
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--soft);
+      border: 1px solid #b9d8d2;
+      border-left: 7px solid var(--teal);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-size: 1.05rem;
+    }
+
+    .start-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .start-card,
+    .proof-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .eyebrow {
+      color: var(--orange);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      margin-bottom: 8px;
+    }
+
+    .plan {
+      background: #fffaf7;
+      border-top: 1px solid #ffd4c9;
+      border-bottom: 1px solid #ffd4c9;
+    }
+
+    .plan-frame {
+      background: var(--white);
+      border: 1px solid #ffc3b5;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .team {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .role {
+      border-radius: 6px;
+      padding: 10px 12px;
+      background: #f3f1ff;
+      border: 1px solid #ddd7ff;
+      font-weight: 700;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fbfbff;
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--purple);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .step span,
+    .muted {
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .stack span,
+    .customer {
+      border-radius: 6px;
+      padding: 7px 9px;
+      background: #eaf6f4;
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+
+    .elinext {
+      background: #f6f6fb;
+    }
+
+    .elinext-copy {
+      max-width: 80ch;
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 8;
+      object-fit: cover;
+      background: #f3f3f7;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-body a {
+      display: inline-block;
+      margin-top: 10px;
+      font-weight: 800;
+      color: var(--purple);
+    }
+
+    .talk {
+      background: #27233d;
+      color: var(--white);
+      text-align: center;
+      padding-bottom: 62px;
+    }
+
+    .talk p {
+      color: #e9e6ff;
+      margin-bottom: 22px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 6px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero {
+        padding: 34px 0 70px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .team {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .plan-frame {
+        padding: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="topline">
+        <div class="logo-card" aria-label="Dayshape">
+          <img src="assets/dayshape-logo.svg" alt="Dayshape logo">
+        </div>
+        <div class="prepared">Prepared by Elinext</div>
+      </div>
+      <h1>Scale Dayshape delivery without slowing enterprise rollout</h1>
+      <p class="hero-text">Saw Dayshape hiring Software Engineers for product scale, usability, and steady feature delivery. This brief shows where an Elinext squad could take load from your team while the platform keeps moving.</p>
+      <div class="hero-tags" aria-label="Focus areas">
+        <span class="tag">.NET and Vue</span>
+        <span class="tag">Azure integrations</span>
+        <span class="tag">QA automation</span>
+        <span class="tag">Mobile web speed</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section aria-labelledby="our-read">
+      <div class="wrap">
+        <h2 id="our-read">Our read</h2>
+        <p class="read-panel">The hiring signal says Dayshape is pushing a mature SaaS product. It is not a small gap. Your Workable listing names scalability, usability, quality, performance, and maintainability. It also names configurability and customer success. That points to many product threads competing for the same senior engineering time. The risk is slower enterprise onboarding, because Dayshape sells deep integrations, data mapping, UAT, and configurable workflows.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="where-start">
+      <div class="wrap">
+        <h2 id="where-start">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <div class="eyebrow">What we noticed</div>
+            <p>Lighthouse showed mobile drag from third-party JavaScript and offscreen images on the public demo path.</p>
+            <p class="muted">Next step: defer HubSpot, Contentsquare, chat, and Lottie assets until clear user intent.</p>
+          </article>
+          <article class="start-card">
+            <div class="eyebrow">What we noticed</div>
+            <p>Current roles point to Workday, Salesforce, Snowflake, ADF, REST, and SQL integration pressure.</p>
+            <p class="muted">Next step: turn common data mappings into reusable templates with test fixtures.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan" aria-labelledby="what-do">
+      <div class="wrap">
+        <h2 id="what-do">What we'd do</h2>
+        <div class="plan-frame">
+          <p>A dedicated squad under Dayshape's Product and Engineering leads. Team shape: one tech lead, two senior full-stack engineers, one QA automation engineer, and one part-time UX designer.</p>
+          <div class="team" aria-label="Team shape">
+            <div class="role">Tech lead</div>
+            <div class="role">2 engineers</div>
+            <div class="role">QA automation</div>
+            <div class="role">UX design</div>
+          </div>
+          <div class="timeline">
+            <article class="step">
+              <div class="num">1</div>
+              <div><strong>Stabilize UI backlog</strong><span>Pair on Vue screens where scheduling, reporting, and dashboard flows need clearer state and faster paths.</span></div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div><strong>Harden integrations</strong><span>Turn Workday, Salesforce, Snowflake, and ADF mappings into tested patterns with clear error handling.</span></div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div><strong>Raise release confidence</strong><span>Add automated checks around booking, financial, and dashboard paths so changes ship with less rework.</span></div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div><strong>Reduce mobile web drag</strong><span>Defer noncritical scripts and resize heavy assets before prospects request a product demo.</span></div>
+            </article>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span>.NET</span>
+            <span>Vue.js</span>
+            <span>Azure Service Bus</span>
+            <span>SQL Server</span>
+            <span>Microsoft Azure</span>
+            <span>QA automation</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext" aria-labelledby="who">
+      <div class="wrap">
+        <h2 id="who">Who is Elinext</h2>
+        <div class="elinext-copy">
+          <p>Elinext is a full-cycle software development partner, active since 1997, with about 700 in-house specialists and no freelancers. For Dayshape, the fit is a dedicated product squad across web, backend, QA, data, and DevOps. We bring ISO 9001 and ISO 27001 practices. Our customers include:</p>
+          <div class="customers" aria-label="Named customers">
+            <strong class="customer">Broadcom</strong>
+            <strong class="customer">Siemens</strong>
+            <strong class="customer">TRUMPF</strong>
+            <strong class="customer">TUI</strong>
+            <strong class="customer">Volkswagen</strong>
+            <strong class="customer">TransPerfect</strong>
+          </div>
+          <p>The squad would extend your .NET, Vue, Azure, SQL Server, and QA capacity. Your leaders would keep product direction and customer context.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="proof">
+      <div class="wrap">
+        <h2 id="proof">Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-saas.png" alt="SaaS platform design case study image">
+            <div class="proof-body">
+              <h3>SaaS Platform Design for M365 Security Monitoring</h3>
+              <p class="muted">Elinext delivered Azure, .NET Core, Angular, Microsoft Graph, and SQL work for a SaaS platform. The platform launched with clearer audits and easier user adoption.</p>
+              <a href="https://www.elinext.com/case-study/saas-platform-design/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-qa.webp" alt="QA case study image">
+            <div class="proof-body">
+              <h3>QA for IT Infrastructure Management Software</h3>
+              <p class="muted">Elinext scaled QA for a complex multi-module product. The work improved release quality and made test coverage stronger over time.</p>
+              <a href="https://www.elinext.com/case-study/it-infrastructure-management-software-qa/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk" aria-labelledby="talk">
+      <div class="wrap">
+        <h2 id="talk">Talk through the pilot</h2>
+        <p>Share the backlog, and we will shape a useful first sprint.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
