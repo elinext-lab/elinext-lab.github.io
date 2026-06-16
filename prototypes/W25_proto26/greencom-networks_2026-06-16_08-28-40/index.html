@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var match = location.pathname.match(/\/prototypes\/([^/]+)\/?/);
+        var slug = match ? match[1] : '';
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GreenCom Networks energy-management brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/greencom-networks_2026-06-16_08-28-40/">
+  <meta name="description" content="A short reliability brief for GreenCom Networks and IQ Energy Management.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/greencom-networks_2026-06-16_08-28-40/">
+  <meta property="og:title" content="GreenCom Networks energy-management reliability brief">
+  <meta property="og:description" content="A practical read on live status, gateway trust, and energy data freshness.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/greencom-networks_2026-06-16_08-28-40/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="GreenCom Networks energy-management reliability brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GreenCom Networks energy-management reliability brief">
+  <meta name="twitter:description" content="A practical read on live status, gateway trust, and energy data freshness.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/greencom-networks_2026-06-16_08-28-40/og-image.jpg">
+  <style>
+    :root {
+      --ink: #152421;
+      --muted: #5f6f69;
+      --paper: #fbfdf8;
+      --panel: #ffffff;
+      --green: #108a5f;
+      --green-dark: #075d46;
+      --mint: #e7f4ed;
+      --line: #d6e3dc;
+      --amber: #f2a229;
+      --blue: #1e5778;
+      --shadow: 0 18px 48px rgba(18, 53, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: inherit; }
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+    section {
+      padding: 44px 0;
+      background: var(--paper);
+    }
+    .hero {
+      min-height: 80vh;
+      display: grid;
+      align-items: center;
+      background:
+        linear-gradient(135deg, rgba(231, 244, 237, 0.92), rgba(251, 253, 248, 0.96)),
+        radial-gradient(circle at top right, rgba(242, 162, 41, 0.18), transparent 36%);
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--green-dark);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 18px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--amber);
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 13ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.35rem, 9vw, 5.6rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+    h2 {
+      text-align: center;
+      font-size: clamp(1.65rem, 5vw, 2.65rem);
+      line-height: 1.08;
+      margin-bottom: 22px;
+      letter-spacing: 0;
+    }
+    h3 {
+      font-size: 1rem;
+      margin-bottom: 8px;
+      letter-spacing: 0;
+    }
+    .hero-copy {
+      max-width: 58ch;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.8vw, 1.18rem);
+      margin-bottom: 12px;
+    }
+    .why {
+      max-width: 58ch;
+      color: var(--ink);
+      font-weight: 650;
+      margin-bottom: 0;
+    }
+    .read-box {
+      width: min(100%, 920px);
+      margin: 0 auto;
+      padding: 28px;
+      background: #eff7f1;
+      border: 1px solid #b9d9c8;
+      border-left: 8px solid var(--green);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .read-box p {
+      margin: 0;
+      color: #21342e;
+      font-size: 1.03rem;
+    }
+    .start-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 22px;
+    }
+    .start-card, .case-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 10px 28px rgba(20, 45, 36, 0.08);
+    }
+    .label {
+      display: block;
+      color: var(--green-dark);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    .start-card p, .case-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+    .plan {
+      background: #f4f9f7;
+      border-block: 1px solid var(--line);
+    }
+    .plan-panel {
+      background: var(--green-dark);
+      color: #f5fff9;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .plan-top {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .pill {
+      display: inline-flex;
+      min-height: 34px;
+      align-items: center;
+      padding: 7px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #f7fffb;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      padding: 16px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    .num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--amber);
+      color: #1b211c;
+      font-weight: 900;
+    }
+    .step strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1rem;
+    }
+    .step span {
+      display: block;
+      color: #d8e9e1;
+      font-size: 0.94rem;
+    }
+    .cred {
+      max-width: 840px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .cred p {
+      margin-bottom: 18px;
+      color: var(--muted);
+    }
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    .customer-list strong {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--mint);
+      color: var(--green-dark);
+      border: 1px solid #c8e6d5;
+    }
+    .case-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 22px;
+    }
+    .case-card {
+      overflow: hidden;
+      padding: 0;
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #eef3ef;
+    }
+    .case-body {
+      padding: 18px;
+    }
+    .case-body a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .talk {
+      text-align: center;
+      background: #173b34;
+      color: #f8fff9;
+    }
+    .talk p {
+      color: #d9e9e2;
+      margin-bottom: 22px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: var(--amber);
+      color: #1b211c;
+      text-decoration: none;
+      font-weight: 900;
+    }
+
+    @media (min-width: 720px) {
+      section { padding: 64px 0; }
+      .hero { min-height: 78vh; }
+      .start-grid, .case-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .plan-panel { padding: 34px; }
+      .plan-top { grid-template-columns: 1.1fr 0.9fr; align-items: start; }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <span class="eyebrow"><span class="dot"></span>Prepared for GreenCom Networks</span>
+        <h1>GreenCom Networks brief for the next energy-management push</h1>
+        <p class="hero-copy">IQ Energy Management now sits where GreenCom's domain points. It promises smarter control for solar, batteries, EV charging, heat pumps, tariffs, and home energy goals.</p>
+        <p class="why">Why we are here: public app feedback points to live status, gateway, and data-freshness pain. Those are the exact places where home energy software must earn trust.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="our-read">
+      <div class="wrap">
+        <h2 id="our-read">Our read</h2>
+        <div class="read-box">
+          <p>GreenCom's old domain now sends users to IQ Energy Management. The focus is no longer only a white-label platform. It is now part of a wider Enphase home system with solar, battery, EV charging, heat pumps, tariffs, and AI forecasts. That mix makes live status and gateway trust the hard part. Public Enphase App reviews mention stale cache data, gateway connection errors, and slow real-time updates. If those signals stay noisy, homeowners may doubt the automation.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="start">
+      <div class="wrap">
+        <h2 id="start">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <h3>Live status is a trust moment</h3>
+            <p>Map each Live Status failure to gateway state, app cache, and cloud delay. Then route the fix to the right product team.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <h3>Give users longer data paths</h3>
+            <p>Review custom reports and export needs. Users ask for longer views when bills do not match app numbers.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan" aria-labelledby="what">
+      <div class="wrap">
+        <h2 id="what">What we'd do</h2>
+        <div class="plan-panel">
+          <div class="plan-top">
+            <div>
+              <h3>Six-week reliability sprint under your product owner</h3>
+              <p>A dedicated squad would work with your roadmap, demo weekly, and focus on live energy control.</p>
+            </div>
+            <div class="pill-row" aria-label="Team and stack">
+              <span class="pill">Tech Lead</span>
+              <span class="pill">2 mobile engineers</span>
+              <span class="pill">Backend engineer</span>
+              <span class="pill">QA automation</span>
+              <span class="pill">DevOps</span>
+              <span class="pill">Java</span>
+              <span class="pill">Node.js</span>
+              <span class="pill">React Native</span>
+              <span class="pill">Python</span>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="num">1</div>
+              <div><strong>Reliability map</strong><span>Trace live status from app screen to gateway, API, cache, and support message, then label each owner.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div><strong>Fresh data rules</strong><span>Fix cache behavior on battery state, energy flow, mode changes, and live production, with clear freshness rules.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div><strong>Reconnect flow</strong><span>Test Wi-Fi changes, weak signal, gateway offline, and Bluetooth or AP-mode fallbacks on real phones.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div><strong>Release proof</strong><span>Ship regression checks for Android, iOS, tablet, gateway reconnect, and export flows before each app release.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="elinext">
+      <div class="wrap cred">
+        <h2 id="elinext">Who is Elinext</h2>
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For GreenCom's energy work, the fit is practical: mobile, backend, QA, DevOps, and AI/ML teams can join as one squad. We hold ISO 9001 and ISO 27001, useful for connected-energy data and vendor trust. For energy and industrial clients, we use dedicated teams or scoped projects, so governance stays simple. The squad above can run under your product owner, with weekly demos and clear release checks.</p>
+        <div class="customer-list" aria-label="Named customers">
+          <strong>Siemens</strong>
+          <strong>Broadcom</strong>
+          <strong>Volkswagen</strong>
+          <strong>TRUMPF</strong>
+          <strong>TUI</strong>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="proof">
+      <div class="wrap">
+        <h2 id="proof">Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-ev-charging.jpg" alt="EV charging app case study preview">
+            <div class="case-body">
+              <span class="label">EV charging app</span>
+              <h3>Renewable charging on iOS and Android</h3>
+              <p>Close fit for connected energy flows.</p>
+              <a href="https://www.elinext.com/case-study/app-for-green-vehicle-charging/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-network-monitoring.jpg" alt="Network monitoring system case study preview">
+            <div class="case-body">
+              <span class="label">Monitoring system</span>
+              <h3>Alerts for infrastructure issues</h3>
+              <p>Useful pattern for gateway trust.</p>
+              <a href="https://www.elinext.com/case-study/network-monitoring-system/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk" aria-labelledby="talk">
+      <div class="wrap">
+        <h2 id="talk">Start the reliability sprint</h2>
+        <p>Share one flow; we will shape a pilot.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
