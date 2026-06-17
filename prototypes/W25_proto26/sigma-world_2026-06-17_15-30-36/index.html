@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W25_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SiGMA World Foundation growth brief</title>
+  <meta name="description" content="A short engineering brief for SiGMA World as Foundation partnerships grow around SiGMA Match.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/sigma-world_2026-06-17_15-30-36/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/sigma-world_2026-06-17_15-30-36/">
+  <meta property="og:title" content="SiGMA World Foundation growth brief">
+  <meta property="og:description" content="A focused read on SiGMA Match, Foundation partnerships, and the next build step.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/sigma-world_2026-06-17_15-30-36/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="SiGMA World Foundation growth brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SiGMA World Foundation growth brief">
+  <meta name="twitter:description" content="A focused read on SiGMA Match, Foundation partnerships, and the next build step.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/sigma-world_2026-06-17_15-30-36/og-image.jpg">
+  <style>
+    :root {
+      --navy: #171945;
+      --ink: #1b2235;
+      --muted: #667085;
+      --line: #dfe4ec;
+      --panel: #ffffff;
+      --paper: #f6f7fb;
+      --tint: #eef4ff;
+      --warm: #fff4e8;
+      --accent: #ff5a3c;
+      --cyan: #2db7c4;
+      --green: #68a063;
+      --shadow: 0 18px 48px rgba(23, 25, 69, .12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    body {
+      min-width: 0;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at 12% 16%, rgba(45, 183, 196, .22), transparent 28rem),
+        linear-gradient(135deg, #171945 0%, #243065 58%, #111a2f 100%);
+      color: #fff;
+      padding: 46px 18px 40px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 26px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #c8eff3;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 16px;
+      font-size: 36px;
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin-bottom: 0;
+      color: #e7ecff;
+      font-size: 17px;
+    }
+
+    .signal-box {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, .22);
+      background: rgba(255, 255, 255, .09);
+      padding: 18px;
+      border-radius: 8px;
+    }
+
+    .signal-box strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .signal-box span {
+      color: #d9e2ff;
+      font-size: 14px;
+    }
+
+    section {
+      padding: 42px 18px;
+      background: var(--paper);
+    }
+
+    section h2 {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: 26px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .read-card {
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto;
+      border-left: 6px solid var(--accent);
+      border-radius: 8px;
+      background: var(--tint);
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .read-card p {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .start-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 8px;
+      border-radius: 999px;
+      background: var(--warm);
+      padding: 5px 10px;
+      color: #8d2a14;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .start-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .proposal {
+      background: #fff;
+    }
+
+    .proposal-shell {
+      display: grid;
+      gap: 18px;
+      max-width: 1080px;
+      margin: 0 auto;
+      border: 1px solid #d8deeb;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .team-row {
+      display: grid;
+      gap: 10px;
+    }
+
+    .team-pill,
+    .stack-pill,
+    .customer-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .team-pill {
+      background: #e9f8fa;
+      color: #075965;
+    }
+
+    .plan-note {
+      border-radius: 8px;
+      background: var(--navy);
+      padding: 18px;
+      color: #fff;
+    }
+
+    .plan-note p {
+      margin: 0 0 10px;
+      color: #dfe7ff;
+      font-size: 15px;
+    }
+
+    .plan-note strong {
+      color: #fff;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 14px;
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin: 0 0 4px;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .stack-pill {
+      background: #f2f4f8;
+      color: #354052;
+    }
+
+    .elinext {
+      background: var(--paper);
+    }
+
+    .elinext-card {
+      max-width: 900px;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .elinext-card p {
+      margin-bottom: 14px;
+      font-size: 16px;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .customer-pill {
+      background: #17214a;
+      color: #fff;
+    }
+
+    .proof {
+      background: #fff;
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 16px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 14px 32px rgba(23, 25, 69, .08);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #eef1f6;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .case-body p {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .case-body a {
+      color: #173e8f;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .talk {
+      background: linear-gradient(135deg, #fff4e8, #eaf9fb);
+      text-align: center;
+    }
+
+    .talk h2 {
+      margin-bottom: 8px;
+    }
+
+    .talk p {
+      margin: 0 auto 18px;
+      max-width: 520px;
+      color: var(--muted);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      border-radius: 6px;
+      background: var(--accent);
+      padding: 12px 18px;
+      color: #fff;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      .hero {
+        padding: 70px 28px 58px;
+      }
+
+      h1 {
+        font-size: 54px;
+      }
+
+      section {
+        padding: 58px 28px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr) 310px;
+      }
+
+      .start-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .team-row {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .proposal-shell {
+        grid-template-columns: 280px minmax(0, 1fr);
+        padding: 22px;
+      }
+
+      .timeline {
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .step {
+        grid-template-columns: 1fr;
+      }
+
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1120px) {
+      h1 {
+        font-size: 62px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Prepared for Michael Mavrikios</p>
+          <h1>Help SiGMA Match keep pace with Foundation growth</h1>
+          <p>We saw SiGMA Foundation hiring for Partnerships and Operations. When that role lands, partner intake, donor reporting, and event follow-up will need the same care as SiGMA Match.</p>
+        </div>
+        <aside class="signal-box" aria-label="Why we're here">
+          <strong>Why we're here</strong>
+          <span>The signal points to more partner work, more proof needs, and more pressure on creative tech delivery.</span>
+        </aside>
+      </div>
+    </header>
+
+    <section aria-labelledby="read-title">
+      <div class="wrap">
+        <h2 id="read-title">Our read</h2>
+        <div class="read-card">
+          <p>That hire says the Foundation is moving from one-off projects to repeat partner work. SiGMA Match already carries a busy event flow. It covers ticket login, agendas, meetings, floor plans, QR exchange, badges, feedback, and recommendations. The risk is that new Foundation programs add another set of portals, reports, and approvals. If the creative team ships all of it alone, launches slow and partner data splits across tools.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="start-title">
+      <div class="wrap">
+        <h2 id="start-title">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>SiGMA Match is a PWA with offline cache and push. The login route still ships a large bundle. Split map, meetings, and profile tools after login.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>The Foundation asks visitors to bring projects forward. Map that intake to one small partner CRM before the new operations lead arrives.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal" aria-labelledby="proposal-title">
+      <div class="wrap">
+        <h2 id="proposal-title">What we'd do</h2>
+        <div class="proposal-shell">
+          <div class="plan-note">
+            <p><strong>Model:</strong> a dedicated squad under your product or creative owner.</p>
+            <p><strong>Pilot:</strong> six weeks, with one demo every week.</p>
+            <div class="stack" aria-label="Relevant stack">
+              <span class="stack-pill">PHP</span>
+              <span class="stack-pill">Vue</span>
+              <span class="stack-pill">React</span>
+              <span class="stack-pill">Node.js</span>
+              <span class="stack-pill">Python</span>
+              <span class="stack-pill">Flutter</span>
+            </div>
+          </div>
+          <div class="team-row" aria-label="Team shape">
+            <span class="team-pill">Tech Lead</span>
+            <span class="team-pill">Full-stack</span>
+            <span class="team-pill">Full-stack</span>
+            <span class="team-pill">UX/UI</span>
+            <span class="team-pill">QA</span>
+          </div>
+          <div class="timeline">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Map the journeys</h3>
+                <p>Map Foundation partner journeys against SiGMA Match touchpoints and define shared data for contacts, meetings, and projects.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Prototype the flow</h3>
+                <p>Prototype partner intake, project proof, and donor updates as real flows ready for Michael's creative review.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Lighten first use</h3>
+                <p>Refactor heavy PWA entry points so maps, meetings, and profile tools load after the first screen.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Harden event flows</h3>
+                <p>Add QA checks for ticket login, badge download, QR scan, and offline fallback before each event.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">5</span>
+              <div>
+                <h3>Hand over control</h3>
+                <p>Hand over a backlog, release plan, and metrics view for the incoming operations lead to own.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext" aria-labelledby="elinext-title">
+      <div class="wrap">
+        <h2 id="elinext-title">Who is Elinext</h2>
+        <div class="elinext-card">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For this work, the fit is a dedicated team beside your product owner. We bring ISO 9001 and ISO 27001 discipline when partner data, payments, and event access sit together. Teams have served Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. That matters for a brand that mixes media, events, and regulated gaming. The same team shape above gives you extra build capacity without pulling creative technology away from live events.</p>
+          <div class="customers" aria-label="Named customers">
+            <span class="customer-pill">Siemens</span>
+            <span class="customer-pill">Broadcom</span>
+            <span class="customer-pill">Volkswagen</span>
+            <span class="customer-pill">TRUMPF</span>
+            <span class="customer-pill">TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof" aria-labelledby="proof-title">
+      <div class="wrap">
+        <h2 id="proof-title">Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-livesv.jpg" alt="LiveSV case study image">
+            <div class="case-body">
+              <h3>LiveSV event portal</h3>
+              <p>Elinext built a mobile-optimized event portal, then kept improving the wider LiveSV ecosystem.</p>
+              <a href="https://www.elinext.com/case-study/livesv/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-matchmaking.jpg" alt="B2B matchmaking case study image">
+            <div class="case-body">
+              <h3>B2B matchmaking platform</h3>
+              <p>Elinext helped a European startup connect producers and retailers with web and mobile delivery.</p>
+              <a href="https://www.elinext.com/case-study/matchmaking-platform-for-artisan-retailers-in-germany/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk" aria-labelledby="talk-title">
+      <div class="wrap">
+        <h2 id="talk-title">Start the build conversation</h2>
+        <p>Bring a small squad to the next SiGMA cycle.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
