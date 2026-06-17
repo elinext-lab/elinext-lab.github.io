@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W25_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Saicon Infrastructure Delivery Brief | Elinext</title>
+  <meta name="description" content="A short brief for Saicon on keeping infrastructure delivery moving while senior PM hiring runs.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/saicon_2026-06-17_20-00-31/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/saicon_2026-06-17_20-00-31/">
+  <meta property="og:title" content="Saicon infrastructure delivery support brief">
+  <meta property="og:description" content="A focused read on the senior infrastructure PM signal and delivery gap.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/saicon_2026-06-17_20-00-31/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Saicon infrastructure delivery support brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Saicon infrastructure delivery support brief">
+  <meta name="twitter:description" content="A focused read on the senior infrastructure PM signal and delivery gap.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/saicon_2026-06-17_20-00-31/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5d6878;
+      --paper: #f7f8f5;
+      --white: #ffffff;
+      --navy: #101a2d;
+      --green: #2f715c;
+      --orange: #e8792b;
+      --blue: #2d5d88;
+      --line: #d9dfda;
+      --soft-green: #edf5ef;
+      --soft-orange: #fff2e8;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    body { line-height: 1.48; }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    section {
+      width: 100%;
+      padding: 54px 0;
+      background: var(--paper);
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      max-width: 850px;
+      margin-bottom: 18px;
+      font-size: clamp(2.35rem, 8vw, 4.9rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 24px;
+      text-align: center;
+      font-size: clamp(1.75rem, 5vw, 2.9rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.03rem;
+      letter-spacing: 0;
+    }
+
+    p { margin-bottom: 0; }
+
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      align-items: center;
+      color: #f5f7fb;
+      background: var(--navy);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      padding: 42px 0 34px;
+    }
+
+    .hero-copy,
+    .hero-figure,
+    .step,
+    .proof-card,
+    .start-card { min-width: 0; }
+
+    .eyebrow {
+      margin-bottom: 14px;
+      color: #ffd0ae;
+      font-size: .78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .hero-copy p {
+      max-width: 720px;
+      margin-bottom: 14px;
+      color: #dce5ef;
+      font-size: 1.03rem;
+    }
+
+    .why {
+      max-width: 760px;
+      padding: 16px 18px;
+      border-left: 4px solid var(--orange);
+      background: #1a2944;
+    }
+
+    .hero-figure {
+      width: 100%;
+      padding: 22px;
+      border: 1px solid #33445f;
+      background: #132139;
+    }
+
+    .signal-line {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #2c3e5a;
+    }
+
+    .signal-line:last-child { border-bottom: 0; }
+
+    .signal-line strong {
+      color: #ffd0ae;
+      font-size: .82rem;
+      text-transform: uppercase;
+    }
+
+    .signal-line span { color: #edf3f8; }
+
+    .read-card {
+      width: 100%;
+      max-width: 86ch;
+      margin: 0 auto;
+      padding: 26px;
+      border: 1px solid #c8d9cd;
+      border-left: 6px solid var(--green);
+      background: var(--soft-green);
+      font-size: 1.04rem;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card {
+      padding: 20px;
+      border: 1px solid #ead7c5;
+      background: var(--soft-orange);
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: #8e4616;
+      font-size: .76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .plan {
+      color: #f7fbff;
+      background: #142238;
+    }
+
+    .plan h2 { color: #ffffff; }
+
+    .plan-intro {
+      max-width: 78ch;
+      margin: 0 auto 24px;
+      text-align: center;
+      color: #cbd7e5;
+    }
+
+    .team-strip {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .role {
+      padding: 12px 14px;
+      border: 1px solid #3b506f;
+      background: #1d304f;
+      color: #f6f8fb;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border: 1px solid #314764;
+      background: #192a45;
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      background: var(--orange);
+      color: #1a140e;
+      font-weight: 900;
+    }
+
+    .step p,
+    .stack-note { color: #d3deea; }
+
+    .stack-note {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .who {
+      background: var(--white);
+    }
+
+    .who-box {
+      max-width: 86ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: #fbfcfa;
+    }
+
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .customer-tags strong {
+      padding: 7px 10px;
+      background: #e7edf4;
+      color: #1d3f60;
+      font-size: .9rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--white);
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-body p {
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .proof-body a {
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .cta {
+      color: #f8fbff;
+      background: var(--green);
+      text-align: center;
+    }
+
+    .cta p {
+      margin-bottom: 20px;
+      color: #eaf4ef;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      background: #ffffff;
+      color: #184b3c;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr);
+        align-items: center;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .team-strip {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1080px) {
+      section { padding: 68px 0; }
+      .hero { min-height: 84vh; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">Prepared for Raj Cherukumudi</div>
+          <h1>Keep infrastructure work moving while Saicon hires senior PMs</h1>
+          <p>Saicon already sells delivery, staffing, and managed services. This brief focuses on partner capacity behind your teams.</p>
+          <p class="why">We saw the Senior Infrastructure Project Manager hiring signal. That often means client infrastructure work is active now.</p>
+        </div>
+        <div class="hero-figure" aria-label="Signal summary">
+          <div class="signal-line"><strong>Signal</strong><span>Senior Infrastructure PM search</span></div>
+          <div class="signal-line"><strong>Risk</strong><span>Delivery waits for hiring</span></div>
+          <div class="signal-line"><strong>Fit</strong><span>White-label DevOps and QA support</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="read">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p>The infrastructure PM search says Saicon is scaling delivery control, not just headcount. Rocket Recruiter already promises role-specific matching, fraud checks, and curated talent pipelines. The harder part is keeping cloud, QA, and release work ready. If that work waits for a senior hire, client projects can slow down. For Raj, the risk is delivery pace while accounts still expect quick response.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="start">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">Noticed</span>
+            <p>Rocket Recruiter is sold around matching, fraud checks, and pipelines. Its public page shows no delivery telemetry for an infrastructure PM.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Next step</span>
+            <p>Start with a runbook map for deploy health, onboarding status, issue owners, and QA gates.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <p class="plan-intro">Use a dedicated squad under Saicon's PM or interim delivery owner. Start with a six-week pilot and weekly demos.</p>
+        <div class="team-strip" aria-label="Proposed team">
+          <div class="role">DevOps lead</div>
+          <div class="role">Cloud engineer</div>
+          <div class="role">Cloud engineer</div>
+          <div class="role">QA automation</div>
+          <div class="role">Delivery analyst</div>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="num">1</div>
+            <h3>Backlog map</h3>
+            <p>Map the active infrastructure backlog. Separate client-critical work from lower-risk work that can wait safely.</p>
+          </div>
+          <div class="step">
+            <div class="num">2</div>
+            <h3>Release checks</h3>
+            <p>Stabilize cloud and release paths. Add checks for access, build health, rollback, and environment drift.</p>
+          </div>
+          <div class="step">
+            <div class="num">3</div>
+            <h3>QA gates</h3>
+            <p>Add QA automation around handoffs. Cover smoke tests, data checks, and ticket-ready failure notes clearly.</p>
+          </div>
+          <div class="step">
+            <div class="num">4</div>
+            <h3>Saicon handoff</h3>
+            <p>Leave Saicon in control. Deliver weekly runbooks and status notes your client partners can reuse.</p>
+          </div>
+        </div>
+        <p class="stack-note">Useful stack: AWS, Azure, Jenkins, Java, .NET, Python, Selenium.</p>
+      </div>
+    </section>
+
+    <section class="who">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="who-box">
+          <p>Elinext is a full-cycle software development provider, serving global clients since 1997 across regions. We have about 700 in-house specialists, with no freelancers or subcontractors involved across roles. For Saicon, the fit is quiet partner capacity under your PM or delivery owner. Our teams cover DevOps, QA, Java, .NET, Python, cloud, and support handoffs for complex programs. ISO 9001 and ISO 27001 help with client-sensitive infrastructure and QA work like this. Customers include Siemens, Broadcom, Volkswagen, TRUMPF, and TUI, which shows enterprise delivery trust.</p>
+          <div class="customer-tags" aria-label="Selected customers">
+            <strong>Siemens</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-cicd.jpg" alt="CI/CD optimization case study cover">
+            <div class="proof-body">
+              <h3>CI/CD for infrastructure management</h3>
+              <p>Elinext reduced development time by 40% with Jenkins, QA, and Groovy.</p>
+              <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-testing.jpg" alt="Automated testing case study cover">
+            <div class="proof-body">
+              <h3>Automated testing for web delivery</h3>
+              <p>A long-running QA team scaled to 18 experts for a web platform.</p>
+              <a href="https://www.elinext.com/case-study/automated-testing-website-translation/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Talk through the gap</h2>
+        <p>We can review the PM gap and delivery load.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
