@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W25_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Valence planning workflow brief</title>
+  <meta name="description" content="A short proposal for Valence Surface Technologies on planning, MRP, work orders, and quality data flow.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/valence-surface-technologies_2026-06-17_14-30-17/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/valence-surface-technologies_2026-06-17_14-30-17/">
+  <meta property="og:title" content="Valence planning workflow brief">
+  <meta property="og:description" content="A scoped path to reduce MRP, work order, and quality data drag.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/valence-surface-technologies_2026-06-17_14-30-17/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Valence planning workflow brief — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Valence planning workflow brief">
+  <meta name="twitter:description" content="A scoped path to reduce MRP, work order, and quality data drag.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/valence-surface-technologies_2026-06-17_14-30-17/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17211b;
+      --muted: #5e6b63;
+      --line: #dbe4dc;
+      --soft: #f4f7f1;
+      --panel: #ffffff;
+      --deep: #183a2a;
+      --blue: #234f6c;
+      --accent: #bd6a32;
+      --accent-soft: #fbefe7;
+      --shadow: 0 18px 44px rgba(23, 33, 27, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: #fbfcf9;
+      line-height: 1.55;
+    }
+
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    section { padding: 44px 0; background: #fbfcf9; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: clamp(2.15rem, 6vw, 4.9rem); line-height: 1; letter-spacing: 0; max-width: 920px; }
+    h2 { font-size: clamp(1.55rem, 3vw, 2.35rem); line-height: 1.08; text-align: center; letter-spacing: 0; }
+    h3 { font-size: 1rem; line-height: 1.25; }
+    p { font-size: 1rem; }
+    .kicker { color: var(--accent); font-weight: 700; text-transform: uppercase; font-size: .78rem; }
+
+    .hero {
+      color: #f7fbf7;
+      background: #183a2a;
+      padding: 42px 0 38px;
+      border-bottom: 8px solid var(--accent);
+    }
+    .hero-grid { display: grid; gap: 28px; align-items: end; }
+    .hero p { max-width: 760px; color: #d8e7dd; font-size: 1.08rem; margin-top: 18px; }
+    .hero-note {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      border-radius: 8px;
+    }
+    .note-label { color: #f7c39d; font-weight: 700; font-size: .78rem; text-transform: uppercase; }
+    .note-text { color: #ffffff; font-size: .98rem; margin: 0; }
+
+    .read-card {
+      margin-top: 22px;
+      padding: 24px;
+      background: #eef4ef;
+      border: 1px solid #cad9cd;
+      border-left: 6px solid var(--accent);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .read-card p { max-width: 82ch; color: #25342b; }
+
+    .start-grid { display: grid; gap: 14px; margin-top: 24px; }
+    .start-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .start-card span {
+      display: inline-block;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: .84rem;
+    }
+    .start-card p { color: var(--muted); }
+
+    .plan {
+      background: #f1f4ec;
+    }
+    .plan-panel {
+      margin-top: 26px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .team-strip {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      background: var(--deep);
+      color: white;
+    }
+    .team-strip p { color: #dfece4; }
+    .team-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .team-tags span {
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      padding: 8px 10px;
+      color: #fff;
+      font-size: .9rem;
+      background: rgba(255,255,255,.08);
+    }
+    .steps { display: grid; gap: 12px; padding: 18px; }
+    .step {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 14px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+    .step-num {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+    }
+    .step p { color: var(--muted); margin-top: 5px; }
+    .stack {
+      padding: 0 18px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .stack span {
+      background: #eef3f7;
+      color: var(--blue);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-weight: 700;
+      font-size: .88rem;
+    }
+
+    .elinext-box {
+      margin-top: 24px;
+      padding: 22px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .customer-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .customer-tags strong {
+      background: #eef4ef;
+      border: 1px solid #d4e1d6;
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: .88rem;
+    }
+
+    .proof-grid { display: grid; gap: 16px; margin-top: 24px; }
+    .case-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .case-body { padding: 18px; }
+    .case-body p { color: var(--muted); margin: 8px 0 14px; }
+    .case-body a { color: var(--blue); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+
+    .talk {
+      text-align: center;
+      background: #183a2a;
+      color: #fff;
+      padding: 42px 0;
+    }
+    .talk h2 { color: #fff; }
+    .talk p { color: #d8e7dd; margin: 12px auto 22px; max-width: 52ch; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: white;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      section { padding: 58px 0; }
+      .hero { padding: 64px 0 54px; }
+      .hero-grid { grid-template-columns: minmax(0, 1fr) 330px; }
+      .start-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .team-strip { grid-template-columns: minmax(0, 1fr); padding: 24px; }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 24px; }
+      .stack { padding: 0 24px 24px; }
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 1080px) {
+      .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .step { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="kicker">Prepared for Valence Surface Technologies</div>
+        <h1>Help planners move work orders without data drag</h1>
+        <p>Saw Valence hiring Planners around customer requirements, MRP data, and work orders. Here is a focused way to remove slow handoffs before adding more planning load.</p>
+      </div>
+      <aside class="hero-note" aria-label="Why this brief exists">
+        <div class="note-label">Why we're here</div>
+        <p class="note-text">A Planner role often means more orders, more document checks, and more updates in MRP. That is where small software fixes can pay back fast.</p>
+      </aside>
+    </div>
+  </header>
+
+  <main>
+    <section aria-labelledby="our-read">
+      <div class="wrap">
+        <h2 id="our-read">Our read</h2>
+        <div class="read-card">
+          <p>Hiring Planners says Valence is adding capacity around order flow, not just headcount. The Wichita Planner role names customer requirements, engineering documents, work orders, and MRP database updates. That mix can slow delivery when one field is missing or one drawing revision changes. Valence already runs ProFlow for customer portal access, so the answer is likely a bridge, not a replacement. If planners become the manual link between systems, audits and delivery dates both get harder.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="start">
+      <div class="wrap">
+        <h2 id="start">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span>What we noticed</span>
+            <p>Valence Wichita links customers into ProFlow, while planner roles mention MRP updates. Map one PO-to-work-order path and mark each re-key point first.</p>
+          </article>
+          <article class="start-card">
+            <span>Useful next step</span>
+            <p>The role also checks engineering documents and customer specs. Build a small revision checklist before changing any core ERP or MRP system.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan" aria-labelledby="work">
+      <div class="wrap">
+        <h2 id="work">What we'd do</h2>
+        <div class="plan-panel">
+          <div class="team-strip">
+            <div>
+              <h3>Scoped six-week project under Robert's operations lead</h3>
+              <p>Team shape: one tech lead, one backend engineer, one QA automation specialist, and one business analyst.</p>
+              <div class="team-tags" aria-label="Team roles">
+                <span>Tech Lead</span><span>Backend</span><span>QA Automation</span><span>Business Analyst</span>
+              </div>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="step-num">1</div>
+              <div>
+                <h3>Trace one real order path</h3>
+                <p>Follow a customer PO through ProFlow, MRP, work order routing, and quality document output.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step-num">2</div>
+              <div>
+                <h3>Define controlled fields</h3>
+                <p>Lock the fields planners touch daily: part, drawing revision, approval, due date, process, and certificate need.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step-num">3</div>
+              <div>
+                <h3>Build a narrow bridge</h3>
+                <p>Create a small service or screen that cuts duplicate entry without moving ITAR data out of bounds.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step-num">4</div>
+              <div>
+                <h3>Prove it with QA</h3>
+                <p>Test revision changes, missing data, and work order edits before expanding beyond one facility.</p>
+              </div>
+            </article>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span>.NET / C#</span><span>Python</span><span>React</span><span>SQL Server</span><span>Playwright</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="who">
+      <div class="wrap">
+        <h2 id="who">Who is Elinext</h2>
+        <div class="elinext-box">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Valence, the useful parts are enterprise systems, QA, .NET, Python, React, and ISO 9001 plus ISO 27001 discipline. We have served industrial and global clients including Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. That matters here because this work needs controlled changes, clear tests, and respect for existing systems. We would support your operations team, not pull them into a large rebuild.</p>
+          <div class="customer-tags" aria-label="Named customers">
+            <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="proof">
+      <div class="wrap">
+        <h2 id="proof">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-mes.jpg" alt="Manufacturing execution system case study image">
+            <div class="case-body">
+              <h3>Manufacturing Execution System</h3>
+              <p>Elinext helped modernize an older MES and integrate it with client environments.</p>
+              <a href="https://www.elinext.com/case-study/manufacturing-execution-system/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-crm.jpg" alt="Manufacturing CRM and ERP case study image">
+            <div class="case-body">
+              <h3>Manufacturing CRM and ERP</h3>
+              <p>Elinext centralized process data and reduced manual transfer between business systems.</p>
+              <a href="https://www.elinext.com/case-study/crm-system-development-for-building-equipment-manufacturer/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk" aria-labelledby="talk">
+      <div class="wrap">
+        <h2 id="talk">Start with one order</h2>
+        <p>Pick one real planning path. We can show the gaps and a small fix.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
