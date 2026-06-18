@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W25_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jonas Club Software payments delivery brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/jonas-club-software_2026-06-18_10-17-29/">
+  <meta name="description" content="A focused brief for Jonas Club Software on payment delivery, QA automation, and release stability.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/jonas-club-software_2026-06-18_10-17-29/">
+  <meta property="og:title" content="Jonas Club Software payments delivery brief">
+  <meta property="og:description" content="A focused read on Jonas Payments delivery, QA, and release risk.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/jonas-club-software_2026-06-18_10-17-29/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Jonas Club Software payments delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Jonas Club Software payments delivery brief">
+  <meta name="twitter:description" content="A focused read on Jonas Payments delivery, QA, and release risk.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/jonas-club-software_2026-06-18_10-17-29/og-image.jpg">
+  <style>
+    :root {
+      --ink: #101925;
+      --muted: #53616f;
+      --navy: #071b2f;
+      --blue: #0c5c80;
+      --teal: #0fa8a1;
+      --orange: #d66a1d;
+      --cream: #f6f2ec;
+      --line: #d9e0e6;
+      --white: #ffffff;
+      --soft: #eef6f5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 0;
+      overflow-x: hidden;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      font-size: 16px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      background: var(--white);
+    }
+
+    .section.alt {
+      background: var(--cream);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 40px 18px 52px;
+    }
+
+    .hero .wrap {
+      display: grid;
+      gap: 28px;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #9ed7d2;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 790px;
+      margin-bottom: 18px;
+      font-size: clamp(2.2rem, 7vw, 4.6rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin-bottom: 14px;
+      color: #d8e6ee;
+      font-size: 1.05rem;
+    }
+
+    .signal {
+      border-left: 4px solid var(--orange);
+      padding-left: 16px;
+    }
+
+    .hero-note {
+      align-self: end;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 18px;
+      color: #c8d8e3;
+      background: #0d2944;
+    }
+
+    .hero-note strong {
+      display: block;
+      color: var(--white);
+      font-size: 1.65rem;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .section h2 {
+      text-align: center;
+      font-size: clamp(1.8rem, 5vw, 2.55rem);
+      line-height: 1.08;
+      margin-bottom: 22px;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      max-width: 82ch;
+      margin: 0 auto;
+      border-left: 5px solid var(--teal);
+      border-radius: 8px;
+      padding: 24px;
+      background: #e5f2ef;
+      box-shadow: 0 18px 42px rgba(7, 27, 47, 0.08);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      color: #223340;
+      font-size: 1.04rem;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .start-item,
+    .step,
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .start-item {
+      padding: 20px;
+      border-top: 4px solid var(--orange);
+    }
+
+    .start-item b {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--blue);
+    }
+
+    .start-item p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .plan {
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    .plan h2 {
+      color: var(--white);
+    }
+
+    .plan-intro {
+      max-width: 760px;
+      margin: 0 auto 26px;
+      text-align: center;
+      color: #d5e4eb;
+    }
+
+    .roles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .role {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      padding: 10px 12px;
+      background: #0d2944;
+      color: #eaf5f6;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .stack {
+      margin: 0 auto 26px;
+      max-width: 760px;
+      color: #bcd1dc;
+      text-align: center;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      padding: 18px;
+      background: #0d2944;
+      border-color: rgba(255, 255, 255, 0.17);
+    }
+
+    .num {
+      display: inline-grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      background: var(--teal);
+      color: #05202b;
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin-bottom: 6px;
+      color: var(--white);
+      font-size: 1.05rem;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: #c8d8e3;
+      font-size: 0.96rem;
+    }
+
+    .cred {
+      max-width: 82ch;
+      margin: 0 auto;
+      color: var(--muted);
+    }
+
+    .cred p {
+      margin-bottom: 0;
+    }
+
+    .cred strong {
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #dbe5eb;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
+
+    .case-body p {
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .case-body a {
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .cta {
+      background: var(--blue);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .cta h2 {
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .cta p {
+      margin-bottom: 22px;
+      color: #e3f0f4;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 280px;
+      min-height: 48px;
+      border-radius: 6px;
+      background: var(--white);
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section {
+        padding: 72px 28px;
+      }
+
+      .hero {
+        padding: 58px 28px 68px;
+      }
+
+      .hero .wrap {
+        grid-template-columns: minmax(0, 1fr) 260px;
+        align-items: end;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .roles {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <p class="eyebrow">Prepared for Jonas Club Software</p>
+          <h1>Keep Jonas Payments stable as new work ships</h1>
+          <p>Jonas Club is moving payments deeper into POS, online, and pre-authorized billing. That makes release quality a revenue issue, not only an engineering issue.</p>
+          <p class="signal">Why we're here: you are hiring a Payments Delivery Lead to own delivery, stabilization, beta customers, and escalations across Engineering, Finance, Support, Compliance, and payment partners.</p>
+        </div>
+        <aside class="hero-note">
+          <strong>6 weeks</strong>
+          A focused pilot for payment flow checks, release gates, and live issue paths.
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>That role says Jonas Payments is moving from a module to a core trust path. The hard part is not adding one more gateway. It is keeping POS, online payments, pre-authorized billing, ACH, and reconciliation in sync after each release. Your Payments page says the product supports POS, online, and pre-authorized payments in one platform. If edge cases stay late, small errors become client-visible payment issues and support fire drills. Manprit's infrastructure background makes uptime, rollback, and audit trails part of the same work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-item">
+            <b>Map the real payment paths.</b>
+            <p>Trace Mobile POS, ClubHouse Online statements, refunds, chargebacks, and settlement. Then turn them into one shared test matrix.</p>
+          </div>
+          <div class="start-item">
+            <b>Fix the payments page trust gap.</b>
+            <p>Our mobile audit found slow load and layout jump on Jonas Payments. Start with image sizing and critical CSS.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section plan">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <p class="plan-intro">A dedicated squad under your PO or Payments Delivery Lead for a six-week pilot, then monthly release support.</p>
+        <div class="roles" aria-label="Suggested team">
+          <div class="role">Payment tech lead</div>
+          <div class="role">2 backend engineers</div>
+          <div class="role">QA automation</div>
+          <div class="role">DevOps engineer</div>
+        </div>
+        <p class="stack">Likely stack: .NET or Java/Spring, Node.js, SQL, Playwright, Azure, and CI/CD.</p>
+        <div class="steps">
+          <article class="step">
+            <span class="num">1</span>
+            <h3>Audit payment paths</h3>
+            <p>Trace POS, online, pre-authorized billing, refunds, chargebacks, and reconciliation into one release risk map for each club setup.</p>
+          </article>
+          <article class="step">
+            <span class="num">2</span>
+            <h3>Automate regression</h3>
+            <p>Build Playwright and API tests for saved cards, ACH, failed captures, duplicate charges, and end-of-day POS close.</p>
+          </article>
+          <article class="step">
+            <span class="num">3</span>
+            <h3>Harden releases</h3>
+            <p>Add smoke checks, rollback notes, and payment partner handoff rules for each beta customer launch.</p>
+          </article>
+          <article class="step">
+            <span class="num">4</span>
+            <h3>Support adoption</h3>
+            <p>Turn live issues into dashboards, runbooks, and weekly defect reviews with Engineering, Finance, Support, and Compliance.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We work across web, backend, mobile, QA, DevOps, and managed teams. For a payment-heavy product, the useful facts are ISO 27001, ISO 9001, and long work with enterprise clients such as <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. Our team can join under your product owner, keep your code control in-house, and add the skills that are hard to hire fast. That fits the six-week payments squad above.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Proof from similar work</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-fintech.jpg" alt="Fintech transaction processing case study cover">
+            <div class="case-body">
+              <h3>Financial transaction processing</h3>
+              <p>Elinext built fintech modules for end-to-end corporate actions processing, working with the product team so releases were ready on time.</p>
+              <a href="https://www.elinext.com/case-study/solution-for-processing-and-management-of-securities-for-fintech/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-qa.jpg" alt="QA automation case study cover">
+            <div class="case-body">
+              <h3>QA for regulated software</h3>
+              <p>Elinext supplied full-scale QA with Playwright and JMeter, helping a large insurance platform stay stable after launch.</p>
+              <a href="https://www.elinext.com/case-study/dedicated-quality-assurance-services-for-us-insuretech/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>Bring one payment flow, and we will map the first sprint.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
