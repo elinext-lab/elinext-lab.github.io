@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W25_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vancouver Fraser Port Authority BI brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W25_proto26/vancouver-fraser-port-authority_2026-06-18_09-40-41/">
+  <meta name="description" content="A short, practical brief on PortVan eHub data quality, BI delivery, and an interim squad path for Vancouver Fraser Port Authority.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W25_proto26/vancouver-fraser-port-authority_2026-06-18_09-40-41/">
+  <meta property="og:title" content="Vancouver Fraser Port Authority BI delivery brief">
+  <meta property="og:description" content="A practical read on PortVan eHub, live port data, and the senior BI hiring moment.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/vancouver-fraser-port-authority_2026-06-18_09-40-41/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Vancouver Fraser Port Authority BI delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vancouver Fraser Port Authority BI delivery brief">
+  <meta name="twitter:description" content="A practical read on PortVan eHub, live port data, and the senior BI hiring moment.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W25_proto26/vancouver-fraser-port-authority_2026-06-18_09-40-41/og-image.jpg">
+  <style>
+    :root {
+      --ink: #132235;
+      --muted: #5d6d7e;
+      --soft: #f3f7f8;
+      --line: #cfdde3;
+      --blue: #0b4566;
+      --teal: #0f7b7e;
+      --green: #2f6b4f;
+      --orange: #d86f1d;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--white);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 44px 18px;
+      background: var(--white);
+    }
+
+    .section-title {
+      margin: 0 auto 20px;
+      text-align: center;
+      font-size: 1.75rem;
+      line-height: 1.15;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: #0b3154;
+      color: var(--white);
+      padding: 54px 18px 50px;
+    }
+
+    .hero .wrap {
+      display: grid;
+      gap: 24px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #aee0e1;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 0;
+      font-size: 2.25rem;
+      line-height: 1.08;
+    }
+
+    .hero p {
+      max-width: 720px;
+      margin: 0;
+      color: #e4f1f4;
+      font-size: 1.05rem;
+    }
+
+    .signal-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      width: 100%;
+      max-width: 760px;
+      border-left: 4px solid var(--orange);
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .signal-strip span {
+      color: #bde6e7;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .read {
+      background: #e9f3f1;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 72ch;
+      margin: 0 auto;
+      border-left: 5px solid var(--teal);
+      border-radius: 8px;
+      padding: 22px;
+      background: #fbfefd;
+      box-shadow: 0 12px 30px rgba(20, 52, 70, 0.08);
+    }
+
+    .read-box p,
+    .start-card p,
+    .who p,
+    .cta p {
+      margin: 0;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: #f8fbfc;
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--teal);
+      font-size: 0.86rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      background: #12334b;
+      color: var(--white);
+    }
+
+    .proposal .section-title,
+    .proposal .intro {
+      color: var(--white);
+    }
+
+    .intro {
+      max-width: 70ch;
+      margin: 0 auto 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .team {
+      display: grid;
+      gap: 10px;
+      margin: 0 auto 22px;
+      max-width: 860px;
+    }
+
+    .role {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .num {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 12px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #1b1b1b;
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1.08rem;
+    }
+
+    .step p {
+      margin: 0;
+      color: #dbe9ee;
+    }
+
+    .stack {
+      margin: 22px auto 0;
+      text-align: center;
+      color: #c6e7e8;
+      font-weight: 700;
+    }
+
+    .who {
+      background: #fff8f1;
+    }
+
+    .who-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      border: 1px solid #edd4bd;
+      border-radius: 8px;
+      padding: 22px;
+      background: var(--white);
+    }
+
+    .names {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .names strong {
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #e9f3f1;
+      color: var(--blue);
+      font-size: 0.9rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .case img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case h3 {
+      margin: 0 0 10px;
+      font-size: 1.12rem;
+      line-height: 1.25;
+    }
+
+    .case p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .case a {
+      color: var(--teal);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .cta {
+      background: #0b3154;
+      color: var(--white);
+      text-align: center;
+    }
+
+    .cta h2 {
+      margin: 0 0 10px;
+      font-size: 1.85rem;
+    }
+
+    .cta a {
+      display: inline-block;
+      margin-top: 22px;
+      border-radius: 8px;
+      padding: 13px 18px;
+      background: var(--orange);
+      color: #1d1a16;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section {
+        padding: 60px 28px;
+      }
+
+      .hero {
+        padding: 76px 28px 64px;
+      }
+
+      h1 {
+        font-size: 3.3rem;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .team {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Prepared for James Chao and VFPA engineering</p>
+        <h1>Help PortVan eHub turn live port data into decisions</h1>
+      </div>
+      <p>PortVan eHub already puts terminal, rail, cruise, congestion, and vessel data in users' hands. The next win is making that data easier to trust, test, and report.</p>
+      <p class="signal-strip"><span>Why we're here</span>Saw VFPA is hiring a Senior Business Intelligence Developer. That points to cleaner data models and stronger reports. It also points to short-term delivery capacity.</p>
+    </div>
+  </header>
+
+  <section class="section read">
+    <div class="wrap">
+      <h2 class="section-title">Our read</h2>
+      <div class="read-box">
+        <p>Your BI role shows a shift: port reports need to become daily decisions. That is hard when signals sit in many places. eHub, terminal feeds, rail crossings, and project systems all matter. The app listing says eHub covers truck waits, rail crossings, cruise schedules, congestion forecasts, and vessels. Android reviews still mention crashes around vessels and glitches at train crossings. A thin data layer can pull James's team into number checks, not capital work.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="section-title">Where we'd start</h2>
+      <div class="start-grid">
+        <div class="start-card">
+          <span class="label">What we noticed</span>
+          <p>Trace the eHub feed path from source systems to alerts. Add freshness checks before updates reach users. This targets crossing glitches and vessel screen risk.</p>
+        </div>
+        <div class="start-card">
+          <span class="label">Useful next step</span>
+          <p>Use the BI opening to define one shared model. It should cover terminals, rail, projects, and environment data. That makes dashboards easier to build and defend.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section proposal">
+    <div class="wrap">
+      <h2 class="section-title">What we'd do</h2>
+      <p class="intro">Engagement model: a dedicated squad under your PM or Product Owner. Six-week pilot with weekly demos.</p>
+      <div class="team">
+        <div class="role">Data architect</div>
+        <div class="role">Two data engineers</div>
+        <div class="role">BI developer</div>
+        <div class="role">QA automation</div>
+        <div class="role">Delivery lead</div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="num">1</span>
+          <strong>Discover data sources</strong>
+          <p>Map eHub, GPS Dashboard, terminal, rail, and project data flows in week one.</p>
+        </div>
+        <div class="step">
+          <span class="num">2</span>
+          <strong>Data quality layer</strong>
+          <p>Add validation, freshness checks, and alert rules before data feeds dashboards.</p>
+        </div>
+        <div class="step">
+          <span class="num">3</span>
+          <strong>BI pilot</strong>
+          <p>Build one Fabric dashboard for wait times, rail state, and project impacts.</p>
+        </div>
+        <div class="step">
+          <span class="num">4</span>
+          <strong>Release support</strong>
+          <p>Track Android and iOS issues, then run weekly demo and regression tests.</p>
+        </div>
+      </div>
+      <p class="stack">Stack fit: Microsoft Fabric, SQL, Azure, Python, .NET, Angular.</p>
+    </div>
+  </section>
+
+  <section class="section who">
+    <div class="wrap">
+      <h2 class="section-title">Who is Elinext</h2>
+      <div class="who-box">
+        <p>Elinext is a full-cycle software company with about 700 in-house specialists since 1997. We use no freelancers or subcontractors on delivery teams, only managed staff. For a port authority, ISO 27001 supports secure delivery; ISO 9001 supports quality controls. Our engineers cover Python, Java, .NET, Node.js, React, Angular, DevOps, QA, and data engineering. We have delivered software work for Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. That fits the squad above and supports your permanent BI hire as they ramp safely.</p>
+        <div class="names" aria-label="Selected customers">
+          <strong>Siemens</strong>
+          <strong>Broadcom</strong>
+          <strong>Volkswagen</strong>
+          <strong>TRUMPF</strong>
+          <strong>TUI</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="section-title">Proof</h2>
+      <div class="proof-grid">
+        <article class="case">
+          <img src="assets/case-port-operations.jpg" alt="Port operations software case study image">
+          <div class="case-body">
+            <h3>Real-time port operations HMI</h3>
+            <p>Elinext built real-time status and alarm software for straddle carriers and ship-to-shore cranes. The client saved half of its initial budget.</p>
+            <a href="https://www.elinext.com/case-study/streamlining-port-operations-hmi-management/">View case study</a>
+          </div>
+        </article>
+        <article class="case">
+          <img src="assets/case-sales-analytics.jpg" alt="Sales analytics platform case study image">
+          <div class="case-body">
+            <h3>Large-scale analytics platform</h3>
+            <p>Elinext built a web analytics platform for large daily records. It helps teams understand markets, dealers, and customers.</p>
+            <a href="https://www.elinext.com/case-study/sales-analytics-application-for-chainsaw-manufacturer/">View case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta">
+    <div class="wrap">
+      <h2>Talk through the data gap</h2>
+      <p>A short call can define the safest pilot.</p>
+      <a href="https://www.elinext.com/contacts/">Start the conversation</a>
+    </div>
+  </section>
+</body>
+</html>
