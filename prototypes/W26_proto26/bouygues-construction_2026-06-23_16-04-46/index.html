@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bouygues Construction architecture brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/bouygues-construction_2026-06-23_16-04-46/">
+  <meta name="description" content="A short architecture brief for Bouygues Construction IT, focused on Qoosy, field systems, and digital-twin integration.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/bouygues-construction_2026-06-23_16-04-46/">
+  <meta property="og:title" content="Bouygues Construction field systems architecture brief">
+  <meta property="og:description" content="A focused read on Qoosy, digital twins, and architecture delivery capacity.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/bouygues-construction_2026-06-23_16-04-46/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Bouygues Construction field systems architecture brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bouygues Construction field systems architecture brief">
+  <meta name="twitter:description" content="A focused read on Qoosy, digital twins, and architecture delivery capacity.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/bouygues-construction_2026-06-23_16-04-46/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17202f;
+      --muted: #5f6978;
+      --soft: #f5f7f8;
+      --line: #dfe5e8;
+      --orange: #f36c21;
+      --blue: #1a5967;
+      --green: #47745f;
+      --cream: #fffaf3;
+      --white: #ffffff;
+      --shadow: 0 18px 45px rgba(18, 32, 47, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--white);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 46px 18px;
+      background: var(--white);
+    }
+
+    .section.soft {
+      background: var(--soft);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 58px 18px 44px;
+      background: #142734;
+      color: var(--white);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #ffc39c;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 13ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.15rem, 9vw, 4.8rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(1.55rem, 5vw, 2.35rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.03rem;
+      line-height: 1.2;
+    }
+
+    .lead {
+      max-width: 60ch;
+      margin-bottom: 0;
+      color: #dce7ea;
+      font-size: 1.03rem;
+    }
+
+    .signal-panel {
+      display: grid;
+      gap: 12px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .signal-panel span {
+      color: #ffc39c;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .signal-panel strong {
+      display: block;
+      font-size: 1.15rem;
+      line-height: 1.25;
+    }
+
+    .signal-panel p {
+      margin: 0;
+      color: #dce7ea;
+    }
+
+    .read-card {
+      max-width: 82ch;
+      margin: 0 auto;
+      padding: 24px;
+      border-left: 5px solid var(--orange);
+      border-radius: 8px;
+      background: var(--cream);
+      box-shadow: var(--shadow);
+    }
+
+    .read-card p {
+      margin: 0;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .proof-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      overflow: hidden;
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--orange);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .start-card p,
+    .proof-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .plan {
+      padding: 24px;
+      border-radius: 8px;
+      background: #102f3d;
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .plan-intro {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .plan-intro p {
+      margin: 0;
+      color: #d9e7ea;
+    }
+
+    .team {
+      display: grid;
+      gap: 10px;
+    }
+
+    .team div {
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--ink);
+    }
+
+    .num {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step-title {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 800;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .stack span,
+    .customer-tags span {
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    .stack span {
+      padding: 7px 9px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #f7fbfd;
+      font-size: 0.84rem;
+    }
+
+    .elinext {
+      max-width: 84ch;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .elinext p {
+      color: var(--muted);
+    }
+
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .customer-tags span {
+      padding: 7px 10px;
+      background: #e9f2ef;
+      color: #274f42;
+      font-size: 0.86rem;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 8;
+      object-fit: cover;
+      background: #edf1f3;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-card a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .talk {
+      text-align: center;
+      background: #123426;
+      color: var(--white);
+    }
+
+    .talk p {
+      margin-bottom: 22px;
+      color: #dcebe4;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 22px;
+      border-radius: 6px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section {
+        padding: 64px 28px;
+      }
+
+      .hero {
+        padding: 80px 28px 64px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .plan-intro {
+        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      }
+
+      .team {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1180px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Prepared for Alexis Basley</p>
+        <h1>Architecture capacity for Bouygues Construction's field and project systems</h1>
+        <p class="lead">Saw Bouygues Construction IT is adding Software Asset Manager capacity while Alexis sets IS architecture standards. This brief focuses on the delivery gap behind Qoosy, digital twins, and interoperable field platforms.</p>
+      </div>
+      <aside class="signal-panel" aria-label="Why now">
+        <span>Why we're here</span>
+        <strong>Governance is rising while field tools scale.</strong>
+        <p>That is the right moment to turn DDD, APIs, and event flows into working delivery rules.</p>
+      </aside>
+    </div>
+  </header>
+
+  <section class="section soft">
+    <div class="wrap">
+      <h2>Our read</h2>
+      <div class="read-card">
+        <p>The signal points to stronger governance around a fast-moving IS landscape, not only license control. Alexis is also new in the architecture seat, so standards will matter before teams scale. Qoosy already joins claims, interventions, work orders, plans, digital models, offline requests, reporting, and warranties in one mobile flow. Bouygues also says it is investing in connected tools, site data, collaborative platforms, and digital twins. The hard part is turning that into clear domains, APIs, events, and release paths. Without that, each tool can grow useful on site but expensive to integrate later.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>Where we'd start</h2>
+      <div class="start-grid">
+        <article class="start-card">
+          <span class="label">What we noticed</span>
+          <h3>Qoosy spans several domains.</h3>
+          <p>Map claims, interventions, warranties, and digital-model views into owned domains and event names before more features land.</p>
+        </article>
+        <article class="start-card">
+          <span class="label">Useful next step</span>
+          <h3>Test one thin integration path.</h3>
+          <p>Trace one offline mobile request into a project or twin record, with sync rules and API contracts visible.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="wrap">
+      <h2>What we'd do</h2>
+      <div class="plan">
+        <div class="plan-intro">
+          <div>
+            <p><strong>Engagement model:</strong> a dedicated squad under your architecture roadmap, with weekly demos and your team owning the blueprint.</p>
+          </div>
+          <div class="team" aria-label="Team shape">
+            <div>1 solution architect</div>
+            <div>2 senior backend engineers</div>
+            <div>1 mobile engineer</div>
+            <div>1 DevOps / QA engineer</div>
+          </div>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <span class="num">1</span>
+            <div><span class="step-title">Architecture slice</span><p>Document Qoosy, twin, project, and asset domains, then mark owners, data events, and integration risks.</p></div>
+          </article>
+          <article class="step">
+            <span class="num">2</span>
+            <div><span class="step-title">Contracts first</span><p>Draft OpenAPI and async event examples for claims, interventions, warranties, and subcontractor progress.</p></div>
+          </article>
+          <article class="step">
+            <span class="num">3</span>
+            <div><span class="step-title">Delivery path</span><p>Set CI/CD, automated checks, and release gates for mobile, backend, and integration changes.</p></div>
+          </article>
+          <article class="step">
+            <span class="num">4</span>
+            <div><span class="step-title">Pilot build</span><p>Implement one traceable field request flow, from offline mobile capture to project system update.</p></div>
+          </article>
+        </div>
+        <div class="stack" aria-label="Relevant stack">
+          <span>Java / Spring</span>
+          <span>.NET / C#</span>
+          <span>React Native</span>
+          <span>Flutter</span>
+          <span>OpenAPI</span>
+          <span>CI/CD</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap elinext">
+      <h2>Who is Elinext</h2>
+      <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Bouygues Construction IT, the fit is enterprise delivery under clear architecture control: Java, .NET, mobile, QA, DevOps, and ISO 27001 / ISO 9001 practices. Teams like <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong> have used Elinext for complex software work. We can add implementation capacity without taking architectural control from Alexis. The squad above is built to follow your standards, make contracts explicit, and help internal teams move faster.</p>
+      <div class="customer-tags" aria-label="Named customers">
+        <span>Siemens</span>
+        <span>Broadcom</span>
+        <span>Volkswagen</span>
+        <span>TRUMPF</span>
+        <span>TUI</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="wrap">
+      <h2>Proof from nearby work</h2>
+      <div class="proof-grid">
+        <article class="proof-card">
+          <img src="assets/case-ai-driven-mobile-app.jpg" alt="AI-driven mobile app case study preview">
+          <div class="proof-body">
+            <h3>AI-driven mobile app for real estate and construction</h3>
+            <p>Production-ready field app in 16 days, with offline core workflows and AI-assisted delivery.</p>
+            <a href="https://www.elinext.com/case-study/ai-driven-mobile-app/">Read case study</a>
+          </div>
+        </article>
+        <article class="proof-card">
+          <img src="assets/case-ci-cd.jpg" alt="CI/CD optimization case study preview">
+          <div class="proof-body">
+            <h3>CI/CD for infrastructure management software</h3>
+            <p>Flexible pipelines reduced development time by 40% while keeping quality and security checks.</p>
+            <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">Read case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section talk">
+    <div class="wrap">
+      <h2>Talk through the roadmap</h2>
+      <p>A short call can test the pilot scope.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+    </div>
+  </section>
+</body>
+</html>
