@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Panel CIO transition support brief</title>
+  <meta name="description" content="A short proposal for keeping The Panel's recruitment platform work moving during CIO transition.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/the-panel_2026-06-23_17-34-25/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/the-panel_2026-06-23_17-34-25/">
+  <meta property="og:title" content="The Panel CIO transition support brief">
+  <meta property="og:description" content="A practical plan for job search, CV intake, and CRM handoff stability.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/the-panel_2026-06-23_17-34-25/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The Panel CIO transition support brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Panel CIO transition support brief">
+  <meta name="twitter:description" content="A practical plan for job search, CV intake, and CRM handoff stability.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/the-panel_2026-06-23_17-34-25/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172136;
+      --muted: #607086;
+      --paper: #fffaf7;
+      --panel: #ffffff;
+      --tint: #f5edf1;
+      --line: #e5d7dc;
+      --navy: #1b2840;
+      --magenta: #b0185a;
+      --orange: #f47b20;
+      --green: #43695b;
+      --shadow: 0 18px 45px rgba(27, 40, 64, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+    section {
+      padding: 58px 0;
+      background: var(--paper);
+      position: relative;
+      z-index: 1;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-size: clamp(2.25rem, 6vw, 5.2rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+      max-width: 11ch;
+    }
+    h2 {
+      text-align: center;
+      font-size: clamp(1.55rem, 3.4vw, 2.6rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+      margin-bottom: 22px;
+    }
+    h3 {
+      font-size: 1rem;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .eyebrow {
+      color: var(--magenta);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .hero {
+      min-height: 760px;
+      display: grid;
+      align-items: start;
+      padding: 28px 0 42px;
+      background:
+        linear-gradient(130deg, rgba(255,250,247,0.96) 0%, rgba(255,250,247,0.88) 55%, rgba(245,237,241,0.9) 100%),
+        url("assets/case-job-search.jpg") center / cover no-repeat;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 30px;
+      align-items: end;
+    }
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+    .brand-row img {
+      width: 122px;
+      max-height: 44px;
+      object-fit: contain;
+    }
+    .brief-pill {
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.72);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .why {
+      max-width: 44rem;
+      margin-top: 22px;
+      font-size: clamp(1rem, 2.1vw, 1.22rem);
+      color: #3b485c;
+      background: rgba(255,255,255,0.78);
+      border-left: 5px solid var(--magenta);
+      padding: 16px 18px;
+    }
+    .hero-note {
+      max-width: 32rem;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--tint);
+      border: 1px solid var(--line);
+      border-left: 7px solid var(--magenta);
+      box-shadow: var(--shadow);
+    }
+    .read-box p { font-size: 1.02rem; }
+    .start-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 22px;
+    }
+    .start-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .label {
+      display: inline-block;
+      color: var(--magenta);
+      font-weight: 700;
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+    }
+    .plan {
+      background: var(--navy);
+      color: #f8fbff;
+    }
+    .plan h2 { color: #ffffff; }
+    .plan-intro {
+      max-width: 66ch;
+      margin: 0 auto 26px;
+      text-align: center;
+      color: #cfd8e6;
+    }
+    .plan-board {
+      display: grid;
+      gap: 18px;
+    }
+    .team-card,
+    .step-card,
+    .stack-card {
+      background: #243451;
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .team-list,
+    .stack-list,
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 14px 0 0;
+      list-style: none;
+    }
+    .team-list li,
+    .stack-list li,
+    .customer-list li {
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.83rem;
+      background: rgba(255,255,255,0.10);
+      color: #edf3ff;
+    }
+    .step-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .step-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+    .num {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #111827;
+      font-weight: 800;
+    }
+    .step-card p,
+    .team-card p,
+    .stack-card p { color: #cfd8e6; }
+    .credible {
+      background: #ffffff;
+    }
+    .credible-box {
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 24px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+    .customer-list li {
+      background: #f1e8ed;
+      color: var(--magenta);
+      font-weight: 700;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+    .case-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #ece6e8;
+    }
+    .case-body { padding: 18px; }
+    .case-body a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--magenta);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .cta {
+      background: var(--green);
+      color: #ffffff;
+      text-align: center;
+      padding-bottom: 76px;
+    }
+    .cta h2 { color: #ffffff; }
+    .cta p {
+      max-width: 38rem;
+      margin: 0 auto 22px;
+      color: #e7f0ea;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 20px;
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--green);
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .muted { color: var(--muted); }
+
+    @media (min-width: 720px) {
+      section { padding: 78px 0; }
+      .hero {
+        min-height: 780px;
+        align-items: center;
+        padding: 34px 0 60px;
+      }
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.1fr) minmax(240px, 0.55fr);
+      }
+      .hero-note {
+        justify-self: end;
+        padding: 20px;
+        background: rgba(255,255,255,0.80);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .plan-board {
+        grid-template-columns: 0.92fr 1.5fr;
+        align-items: start;
+      }
+      .stack-card {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (min-width: 1060px) {
+      .hero { min-height: 820px; }
+      .plan-board {
+        grid-template-columns: 0.78fr 1.4fr 0.82fr;
+      }
+      .stack-card { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap">
+        <div class="brand-row">
+          <img src="assets/the-panel-logo.svg" alt="The Panel">
+          <span class="brief-pill">Prepared by Elinext</span>
+        </div>
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">Why we are here</p>
+            <h1 id="hero-title">Keep technology work moving during CIO change</h1>
+            <p class="why">We saw the fractional CIO, interim CIO, and Head of IT and Digital Transformation signals. That usually means the roadmap needs calm delivery while the long-term leader is still being settled.</p>
+          </div>
+          <p class="hero-note">This brief is about the live recruitment platform: Job Search, Upload CV, sector pages, and the handoff into CRM and recruiter workflows.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="read-title">
+      <div class="wrap">
+        <h2 id="read-title">Our read</h2>
+        <div class="read-box">
+          <p>The CIO signal points to more than one hire. It suggests The Panel wants firmer control over systems, data, security, and delivery. Your Technology &amp; Transformation page already covers product development, QA, DevOps, cloud, IT security, and infrastructure. That is the same work an interim CIO will need to steady first. If those paths wait for a permanent hire, job search, CV intake, and CRM handoff can keep adding small risks. The cost is not only technical debt. It is extra work for recruiters and weaker candidate flow.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="start-title">
+      <div class="wrap">
+        <h2 id="start-title">Where we would start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">Noticed</span>
+            <p>Your Technology &amp; Transformation page created sideways scroll in a phone-width check. The useful next step is a mobile pass on all sector pages, starting with filter chips and job cards.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Noticed</span>
+            <p>Upload CV depends on forms, consent, CAPTCHA, and likely CRM handoff. Test it with consent denied, blocked CAPTCHA, missing file, large file, and a valid submission.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan" aria-labelledby="plan-title">
+      <div class="wrap">
+        <h2 id="plan-title">What we would do</h2>
+        <p class="plan-intro">Use a dedicated squad under your interim or incoming CIO. Keep it short, visible, and easy for the new leader to inherit.</p>
+        <div class="plan-board">
+          <article class="team-card">
+            <h3>Team shape</h3>
+            <p>One tech lead, one full-stack engineer, one integration engineer, one QA automation engineer, and a part-time UX designer.</p>
+            <ul class="team-list">
+              <li>Tech lead</li>
+              <li>Full-stack</li>
+              <li>Integrations</li>
+              <li>QA</li>
+              <li>UX</li>
+            </ul>
+          </article>
+          <div>
+            <div class="step-list">
+              <article class="step-card">
+                <span class="num">1</span>
+                <div>
+                  <h3>Map the live flow</h3>
+                  <p>Trace Job Search, sector pages, Upload CV, filled jobs, alerts, and Bullhorn or CRM ownership into one delivery map.</p>
+                </div>
+              </article>
+              <article class="step-card">
+                <span class="num">2</span>
+                <div>
+                  <h3>Fix visible friction</h3>
+                  <p>Remove mobile overflow, tighten form states, and make empty or filled job pages clear for candidates.</p>
+                </div>
+              </article>
+              <article class="step-card">
+                <span class="num">3</span>
+                <div>
+                  <h3>Add regression cover</h3>
+                  <p>Automate checks for search filters, CV upload, consent, CAPTCHA loading, and job publication handoff.</p>
+                </div>
+              </article>
+              <article class="step-card">
+                <span class="num">4</span>
+                <div>
+                  <h3>Hand over cleanly</h3>
+                  <p>Give the CIO a short backlog, risk log, test pack, and owner map for the next quarter.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+          <article class="stack-card">
+            <h3>Relevant stack</h3>
+            <p>We would match the work to the platform and integrations, not force a rebuild.</p>
+            <ul class="stack-list">
+              <li>PHP</li>
+              <li>.NET / C#</li>
+              <li>Node.js</li>
+              <li>React or Angular</li>
+              <li>QA automation</li>
+              <li>DevOps</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="credible" aria-labelledby="elinext-title">
+      <div class="wrap">
+        <h2 id="elinext-title">Who is Elinext</h2>
+        <div class="credible-box">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build web, mobile, backend, QA, DevOps, and AI teams for clients in Europe, North America, Asia, the Middle East, and Australia. For a recruitment platform, the useful fit is a senior squad that can work under your product owner or CIO. Our ISO 9001 and ISO 27001 certifications support quality and security needs. Named customers include <strong>Broadcom</strong>, <strong>Siemens</strong>, and <strong>Volkswagen</strong>. That experience fits a short platform-stability sprint for The Panel.</p>
+          <ul class="customer-list" aria-label="Named customers">
+            <li>Broadcom</li>
+            <li>Siemens</li>
+            <li>Volkswagen</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="proof-title">
+      <div class="wrap">
+        <h2 id="proof-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-job-search.jpg" alt="Job search service case study image">
+            <div class="case-body">
+              <h3>Job Search Service for a German Startup</h3>
+              <p class="muted">Elinext built a modern HR job portal and made the full feature set ready for product-owner use.</p>
+              <a href="https://www.elinext.com/case-study/job-and-applicants-search-service/">View case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-applicant-tracking.jpg" alt="Applicant tracking case study image">
+            <div class="case-body">
+              <h3>Elinext Applicant Tracking</h3>
+              <p class="muted">A six-person team built candidate, vacancy, and admin modules to streamline active hiring.</p>
+              <a href="https://www.elinext.com/case-study/elinext-applicant-tracking/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" aria-labelledby="talk-title">
+      <div class="wrap">
+        <h2 id="talk-title">Start the conversation</h2>
+        <p>Share the current CIO brief, and we can scope the first sprint.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
