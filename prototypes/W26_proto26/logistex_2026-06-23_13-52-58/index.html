@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Logistex integration capacity brief</title>
+  <meta name="description" content="A short proposal for de-risking LWS Reflex integrations, test coverage, and AI-ready data work.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/logistex_2026-06-23_13-52-58/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/logistex_2026-06-23_13-52-58/">
+  <meta property="og:title" content="Logistex integration capacity brief">
+  <meta property="og:description" content="A short proposal for de-risking Reflex integration, test coverage, and AI-ready data work.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/logistex_2026-06-23_13-52-58/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Logistex integration capacity brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Logistex integration capacity brief">
+  <meta name="twitter:description" content="A short proposal for de-risking Reflex integration, test coverage, and AI-ready data work.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/logistex_2026-06-23_13-52-58/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5b6373;
+      --soft: #f6f3ee;
+      --paper: #fffdf8;
+      --purple: #57466f;
+      --plum: #372a4a;
+      --teal: #166f73;
+      --mint: #e6f2ee;
+      --amber: #e4a11b;
+      --line: #d9d2c8;
+      --dark: #151b27;
+      --dark-2: #202a3b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 20px;
+      background: var(--paper);
+    }
+
+    .inner {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .narrow {
+      max-width: 760px;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 860px;
+      margin-bottom: 18px;
+      font-size: clamp(2.35rem, 8vw, 5.2rem);
+      line-height: 0.98;
+      font-weight: 850;
+      color: #fffaf0;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: clamp(1.55rem, 5vw, 2.55rem);
+      line-height: 1.06;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+
+    .hero {
+      min-height: min(780px, 92vh);
+      display: grid;
+      align-items: end;
+      padding: 32px 20px 64px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(55, 42, 74, 0.96), rgba(21, 27, 39, 0.98)),
+        linear-gradient(90deg, rgba(228, 161, 27, 0.18) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: auto, 64px 64px, 64px 64px;
+    }
+
+    .hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      margin-bottom: 80px;
+      color: #d9e5e2;
+      font-size: 0.9rem;
+    }
+
+    .hero p {
+      max-width: 690px;
+      margin-bottom: 14px;
+      color: #efe8dd;
+      font-size: clamp(1rem, 2.5vw, 1.18rem);
+    }
+
+    .hero .why {
+      color: #dcebe8;
+    }
+
+    .read {
+      background: #eee8de;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 74ch;
+      margin: 0 auto;
+      padding: 26px;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: #fffaf1;
+      box-shadow: 0 20px 44px rgba(41, 36, 26, 0.08);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      color: #2c3140;
+      font-size: 1.05rem;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 26px;
+    }
+
+    .start-row {
+      display: grid;
+      gap: 8px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .label {
+      color: var(--purple);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .start-row p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .work {
+      background: var(--dark);
+      color: #f4f7fb;
+    }
+
+    .work h2,
+    .work .eyebrow {
+      color: #f4f7fb;
+    }
+
+    .work-intro {
+      max-width: 780px;
+      margin: 0 auto 28px;
+      text-align: center;
+      color: #c7d0df;
+    }
+
+    .roles,
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 18px 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .roles li,
+    .stack li {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.07);
+      color: #f9fbff;
+      font-size: 0.9rem;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background: var(--dark-2);
+    }
+
+    .num {
+      display: inline-grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--amber);
+      color: #1a1720;
+      font-weight: 850;
+    }
+
+    .step-title {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .step p {
+      margin: 0;
+      color: #c7d0df;
+    }
+
+    .who {
+      background: #f3f7f5;
+    }
+
+    .who p {
+      max-width: 82ch;
+      margin: 0 auto;
+      color: #303848;
+    }
+
+    .who strong {
+      display: inline-block;
+      margin: 2px 2px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--mint);
+      color: #105f63;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .case-copy {
+      padding: 18px;
+    }
+
+    .case-copy p {
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+
+    .case-copy a {
+      color: var(--teal);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .contact {
+      background: var(--plum);
+      color: #fff;
+      text-align: center;
+    }
+
+    .contact h2 {
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .contact p {
+      margin-bottom: 24px;
+      color: #eadff4;
+    }
+
+    .button {
+      display: inline-flex;
+      max-width: 100%;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      padding: 13px 18px;
+      background: var(--amber);
+      color: #1d1b20;
+      font-weight: 850;
+      text-decoration: none;
+      white-space: normal;
+    }
+
+    @media (min-width: 720px) {
+      .section {
+        padding: 76px 32px;
+      }
+
+      .hero {
+        padding: 38px 32px 78px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .hero-top {
+        margin-bottom: 140px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="inner">
+        <div class="hero-top">
+          <span>Prepared for Logistex</span>
+          <span>LWS Reflex integration brief</span>
+        </div>
+        <p class="eyebrow">Why we're here</p>
+        <h1>De-risk Reflex integrations while AI work moves forward</h1>
+        <p>LWS Reflex now sits at the centre of real warehouse flow: robots, conveyors, labels, data, handover proof, and client promises. That makes integration work a delivery risk.</p>
+        <p class="why">We saw current hiring for integration testing, software, DevOps, DBA, and BI roles, plus a Head of Integration signal. Here is where we would help first.</p>
+      </div>
+    </section>
+
+    <section class="section read">
+      <div class="inner">
+        <p class="eyebrow">Our read</p>
+        <h2>Integration is the pressure point</h2>
+        <div class="read-box">
+          <p>Your hiring signal says Logistex is scaling software delivery around integrated automation. The hard part is not one adapter or one dashboard. LWS Reflex controls WES/WCS flows across AMRs, conveyors, printers, bagging machines, and client systems. If test coverage lags, handover risk becomes a commercial risk. Warren's AI remit also needs clean event data before models can help live operations.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner narrow">
+        <p class="eyebrow">Where we'd start</p>
+        <h2>Two useful checks first</h2>
+        <div class="start-grid">
+          <div class="start-row">
+            <span class="label">What we noticed</span>
+            <p>Reflex FAQ says existing data can be mapped through the interface highway.</p>
+            <span class="label">Next step</span>
+            <p>Rank interfaces by failure impact, test cover, owner, and deploy frequency.</p>
+          </div>
+          <div class="start-row">
+            <span class="label">What we noticed</span>
+            <p>Your emulation article says WMS/WCS can connect as if to real MHE.</p>
+            <span class="label">Next step</span>
+            <p>Use that base to build contract tests for two high-risk partner flows.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section work">
+      <div class="inner">
+        <p class="eyebrow">What we'd do</p>
+        <h2>A six-week integration squad</h2>
+        <p class="work-intro">Engagement model: a dedicated squad under your PM for a focused pilot. Team shape: senior people who cover integration, QA, DevOps, and AI-ready data.</p>
+        <ul class="roles" aria-label="Team shape">
+          <li>1 tech lead</li>
+          <li>2 integration engineers</li>
+          <li>1 QA automation engineer</li>
+          <li>1 data and AI engineer</li>
+        </ul>
+        <ul class="stack" aria-label="Relevant stack">
+          <li>Java</li>
+          <li>.NET</li>
+          <li>Python</li>
+          <li>React</li>
+          <li>Angular</li>
+        </ul>
+        <div class="steps">
+          <article class="step">
+            <span class="num">1</span>
+            <div>
+              <span class="step-title">Risk map</span>
+              <p>Map the top Reflex interfaces and rank them by impact, ownership, test cover, and go-live risk.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="num">2</span>
+            <div>
+              <span class="step-title">Contract tests</span>
+              <p>Build emulation-ready contract tests for two partner flows before they touch live equipment and client acceptance.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="num">3</span>
+            <div>
+              <span class="step-title">Operational signals</span>
+              <p>Add logging and alerts around adapter failures, event delays, and throughput bottlenecks so issues show early.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="num">4</span>
+            <div>
+              <span class="step-title">AI-ready flow</span>
+              <p>Prepare one event pipeline for anomaly detection or root-cause support in Analytex, with clear data owners.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section who">
+      <div class="inner">
+        <p class="eyebrow">Who is Elinext</p>
+        <h2>Built for this kind of delivery</h2>
+        <p>Elinext is a full-cycle software development provider, active since 1997 across global markets. We have around 700 in-house specialists across engineering, QA, DevOps, design, management, and AI/ML. There are no freelancers or subcontractors, so delivery ownership stays clear. For Logistex, the fit is integration-heavy enterprise software, QA, DevOps, and AI-ready data work. Our teams meet ISO 9001 and ISO 27001 for quality and security. Work for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong> backs the squad above.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner">
+        <p class="eyebrow">Proof</p>
+        <h2>Proof from similar work</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-warehouse-management.jpg" alt="Warehouse management software case study">
+            <div class="case-copy">
+              <h3>Warehouse management microservices</h3>
+              <p>Elinext built warehouse connectors, parcel orchestration, barcode flows, Android scanning, logging, and monitoring. The work reduced manual label effort and strengthened throughput.</p>
+              <a href="https://www.elinext.com/case-study/warehouse-management-solutions/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-port-hmi.jpg" alt="Port operations HMI case study">
+            <div class="case-copy">
+              <h3>Real-time port operations HMI</h3>
+              <p>Elinext delivered real-time alarm and status software for straddle carriers and ship-to-shore cranes, using Python, Angular, Electron, and Redis.</p>
+              <a href="https://www.elinext.com/case-study/streamlining-port-operations-hmi-management/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact">
+      <div class="inner narrow">
+        <h2>Talk through the pilot</h2>
+        <p>We can review one Reflex flow with Warren's team.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
