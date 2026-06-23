@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Logistex integration delivery brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/logistex_2026-06-23_13-27-55/">
+  <meta name="description" content="A short proposal for Logistex on scaling integration testing and software capacity around LWS Reflex projects.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/logistex_2026-06-23_13-27-55/">
+  <meta property="og:title" content="Logistex integration delivery brief">
+  <meta property="og:description" content="A focused read on scaling integration testing and software capacity for LWS Reflex projects.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/logistex_2026-06-23_13-27-55/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Logistex integration delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Logistex integration delivery brief">
+  <meta name="twitter:description" content="A focused read on scaling integration testing and software capacity for LWS Reflex projects.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/logistex_2026-06-23_13-27-55/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17202e;
+      --muted: #5c6878;
+      --line: #d9dee7;
+      --paper: #fbfbf8;
+      --white: #ffffff;
+      --violet: #40315f;
+      --violet-dark: #211a35;
+      --green: #2f6f65;
+      --amber: #d98028;
+      --blue: #315b7d;
+      --tint: #eef3f2;
+      --soft: #f3efe8;
+      --shadow: 0 18px 45px rgba(27, 35, 48, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    body { min-width: 320px; }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: var(--violet-dark);
+      color: var(--white);
+      padding: 48px 0 34px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #f3c68b;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 13ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.25rem, 8vw, 5.1rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 42rem;
+      margin-bottom: 0;
+      color: #e9e5ef;
+      font-size: 1rem;
+    }
+
+    .system-map {
+      width: 100%;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: #2b2344;
+      box-shadow: var(--shadow);
+    }
+
+    .map-node,
+    .map-core {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .map-core {
+      margin: 12px 0;
+      background: var(--amber);
+      color: #211a35;
+    }
+
+    .map-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    section {
+      padding: 46px 0;
+      background: var(--paper);
+    }
+
+    .section-title {
+      margin: 0 auto 22px;
+      text-align: center;
+      font-size: clamp(1.55rem, 4.5vw, 2.25rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .read-card {
+      width: min(100%, 76ch);
+      margin: 0 auto;
+      padding: 24px;
+      border-left: 6px solid var(--amber);
+      border-top: 1px solid #e0dbd2;
+      border-right: 1px solid #e0dbd2;
+      border-bottom: 1px solid #e0dbd2;
+      background: var(--soft);
+      box-shadow: 0 10px 28px rgba(41, 35, 24, 0.08);
+    }
+
+    .read-card p,
+    .start-card p,
+    .who p,
+    .cta p { margin-bottom: 0; }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card,
+    .proof-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 32px rgba(23, 32, 46, 0.08);
+    }
+
+    .start-card { padding: 20px; }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 10px;
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .plan {
+      background: var(--tint);
+    }
+
+    .plan-panel {
+      display: grid;
+      gap: 18px;
+      padding: 0;
+    }
+
+    .team {
+      display: grid;
+      gap: 10px;
+    }
+
+    .role {
+      padding: 12px;
+      background: var(--white);
+      border: 1px solid #cfddd9;
+      color: var(--green);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 16px;
+      background: var(--white);
+      border: 1px solid #d7e2df;
+      box-shadow: 0 12px 32px rgba(23, 32, 46, 0.08);
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--violet);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .step span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .pill {
+      padding: 8px 10px;
+      background: #fff7ec;
+      border: 1px solid #edcfad;
+      color: #70420c;
+      font-weight: 700;
+      font-size: 0.86rem;
+    }
+
+    .who {
+      width: min(100%, 76ch);
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--violet);
+      color: #fff;
+    }
+
+    .who strong {
+      color: #f6c98f;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+
+    .proof-body p {
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .proof-body a {
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .cta {
+      background: var(--violet-dark);
+      color: #fff;
+      text-align: center;
+    }
+
+    .cta .wrap {
+      display: grid;
+      gap: 16px;
+      justify-items: center;
+    }
+
+    .cta h2 { margin-bottom: 0; }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 20px;
+      background: var(--amber);
+      color: #1f172d;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 640px) {
+      .map-row,
+      .start-grid,
+      .team {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 900px) {
+      .hero {
+        padding: 70px 0 52px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+      }
+
+      .plan-panel {
+        grid-template-columns: 0.78fr 1.22fr;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .team {
+        align-content: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Prepared for Steve Sharman</p>
+        <h1>Help Logistex reduce risk in integrated warehouse projects now</h1>
+        <p>We saw Logistex hiring for integration leadership and testing roles across WMS, software, controls, hardware, and suppliers. That points to a delivery moment where extra software capacity can protect project dates.</p>
+      </div>
+      <div class="system-map" aria-label="Integration delivery map">
+        <div class="map-row">
+          <div class="map-node">WMS / WCS</div>
+          <div class="map-node">PLCs and robotics</div>
+        </div>
+        <div class="map-core">Integration test evidence</div>
+        <div class="map-row">
+          <div class="map-node">Reflex adapters</div>
+          <div class="map-node">Analytex reporting</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Our read</h2>
+        <div class="read-card">
+          <p>The Head of Integration search says Logistex is scaling final delivery ownership. The hard part is not only hiring one leader. It is joining WMS, controls, PLCs, robotics, suppliers, and test evidence. LWS Reflex can run as WES or WCS, so interfaces carry real risk. If integration tests lag, FAT, SAT, UAT, and handover dates can slip. That puts delivery load on Steve's engineering, software, and project teams.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Turn the Head of Integration brief into a reusable test pack for WMS, WCS, PLC, AMR, and ASRS handoffs before site work starts.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Next useful step</span>
+            <p>Protect Analytex and Reflex reporting by splitting BI/API tickets from live controls work, so urgent dashboards do not block hardware tests.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2 class="section-title">What we'd do</h2>
+        <div class="plan-panel">
+          <div>
+            <p><strong>Model:</strong> a dedicated squad under your PO or Integration Test Manager.</p>
+            <div class="team" aria-label="Proposed team">
+              <div class="role">Tech Lead</div>
+              <div class="role">2 platform engineers</div>
+              <div class="role">QA automation</div>
+              <div class="role">DevOps / BI support</div>
+            </div>
+            <div class="stack" aria-label="Relevant stack">
+              <span class="pill">.NET</span>
+              <span class="pill">React</span>
+              <span class="pill">PostgreSQL</span>
+              <span class="pill">Oracle</span>
+              <span class="pill">Python</span>
+              <span class="pill">C++</span>
+            </div>
+          </div>
+          <ol class="steps">
+            <li class="step">
+              <span class="num">1</span>
+              <span><strong>Six-week pilot</strong><span>Pick one live integration stream and define remote-ready adapter, data, test, dashboard, and acceptance work.</span></span>
+            </li>
+            <li class="step">
+              <span class="num">2</span>
+              <span><strong>Test evidence pack</strong><span>Build checks for Reflex handoffs, supplier interfaces, database state, hardware test gates, and defect replay.</span></span>
+            </li>
+            <li class="step">
+              <span class="num">3</span>
+              <span><strong>Software delivery slice</strong><span>Ship one API, reporting, or release-flow slice that the site team can use during integration tests.</span></span>
+            </li>
+            <li class="step">
+              <span class="num">4</span>
+              <span><strong>Repeatable handover kit</strong><span>Leave templates for CI/CD, rollback, monitoring, defect triage, final acceptance evidence, and clean release notes.</span></span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Who is Elinext</h2>
+        <div class="who">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Logistex, the fit is industrial software, not generic web work. Our teams cover Java, .NET, C#, C++, Python, React, QA, DevOps, and AI/ML. We have delivered work for <strong>Siemens</strong>, <strong>TRUMPF</strong>, <strong>Volkswagen</strong>, and <strong>Broadcom</strong>. ISO 9001 and ISO 27001 help when quality and security matter. That makes us useful as extra software capacity around the plan above.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-warehouse.jpg" alt="Warehouse voice picking case study">
+            <div class="proof-body">
+              <h3>Voice Picking App for French Warehouse Management Systems</h3>
+              <p>Elinext built a warehouse worker app that connects voice picking with WMS flows.</p>
+              <a href="https://www.elinext.com/case-study/voice-picking-app-for-french-warehouse-management-systems/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-mes.jpg" alt="Manufacturing execution system case study">
+            <div class="proof-body">
+              <h3>Manufacturing Execution System</h3>
+              <p>Five Elinext teams support industrial software and client environment integration.</p>
+              <a href="https://www.elinext.com/case-study/manufacturing-execution-system/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2 class="section-title">Talk through the pilot</h2>
+        <p>We can review one integration stream with your team.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
