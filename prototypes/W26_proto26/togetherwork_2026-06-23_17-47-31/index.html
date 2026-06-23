@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Togetherwork Camp Platform Delivery Brief</title>
+  <meta name="description" content="A short delivery proposal for Togetherwork's CIRCUITREE camp platform, prepared by Elinext.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/togetherwork_2026-06-23_17-47-31/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/togetherwork_2026-06-23_17-47-31/">
+  <meta property="og:title" content="Togetherwork camp platform delivery brief">
+  <meta property="og:description" content="A focused read on CIRCUITREE delivery, quality, and parent-facing flow risks.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/togetherwork_2026-06-23_17-47-31/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Togetherwork camp platform delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Togetherwork camp platform delivery brief">
+  <meta name="twitter:description" content="A focused read on CIRCUITREE delivery, quality, and parent-facing flow risks.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/togetherwork_2026-06-23_17-47-31/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172426;
+      --muted: #5c6b67;
+      --paper: #fbfcfa;
+      --panel: #ffffff;
+      --line: #d7e0da;
+      --soft: #eef6f1;
+      --deep: #143b3a;
+      --orange: #e85d2a;
+      --gold: #f1b84b;
+      --teal: #147a74;
+      --green: #496f48;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0;
+    }
+
+    body { line-height: 1.5; }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    section {
+      width: 100%;
+      padding: 56px 0;
+      background: var(--paper);
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      color: #fff;
+      background:
+        linear-gradient(145deg, rgba(20, 59, 58, .98), rgba(23, 36, 38, .94)),
+        linear-gradient(90deg, rgba(232, 93, 42, .18), rgba(241, 184, 75, .12));
+    }
+
+    .hero-inner {
+      display: grid;
+      gap: 26px;
+      padding: 46px 0 28px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #ffd8be;
+      font-size: .76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      max-width: 820px;
+      margin-bottom: 18px;
+      font-size: clamp(2.25rem, 10vw, 5.2rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 780px;
+      margin-bottom: 15px;
+      color: #e5eee9;
+      font-size: 1.04rem;
+    }
+
+    .why {
+      max-width: 780px;
+      margin: 0;
+      padding: 16px 18px;
+      border-left: 5px solid var(--gold);
+      background: rgba(255,255,255,.1);
+      color: #fff5e9;
+    }
+
+    .signal-grid {
+      display: grid;
+      gap: 12px;
+      width: 100%;
+      max-width: 820px;
+    }
+
+    .signal {
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.08);
+    }
+
+    .signal strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff;
+      font-size: .82rem;
+      text-transform: uppercase;
+    }
+
+    .signal span { color: #dce8e4; }
+
+    .section-title {
+      margin: 0 auto 24px;
+      text-align: center;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .read-card {
+      width: 100%;
+      max-width: 86ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #bed2c8;
+      border-left: 7px solid var(--teal);
+      background: #e7f2ed;
+      color: #243734;
+      font-size: 1.02rem;
+    }
+
+    .start {
+      background: #fff;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .case-card,
+    .role-card,
+    .step,
+    .stack-card {
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .start-card {
+      padding: 20px;
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 10px;
+      color: var(--orange);
+      font-size: .75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .start-card h3,
+    .role-card h3,
+    .stack-card h3,
+    .case-card h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
+
+    .start-card p,
+    .case-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .plan {
+      background: var(--soft);
+    }
+
+    .plan-intro {
+      max-width: 74ch;
+      margin: 0 auto 22px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .plan-shell {
+      display: grid;
+      gap: 18px;
+    }
+
+    .role-card,
+    .stack-card {
+      padding: 20px;
+      background: #fffdf8;
+    }
+
+    .roles,
+    .stack,
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .roles li,
+    .stack li,
+    .customers li {
+      max-width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font-size: .86rem;
+      font-weight: 700;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 13px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .num {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--deep);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .about {
+      background: #fff;
+    }
+
+    .about-card {
+      max-width: 86ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+    }
+
+    .about-card p { margin-bottom: 14px; }
+
+    .about-card p:last-child { margin-bottom: 0; }
+
+    .customers {
+      margin: 12px 0;
+    }
+
+    .customers li {
+      border-color: #f2cda9;
+      background: #fff4e8;
+      color: #7a351a;
+    }
+
+    .proof {
+      background: var(--paper);
+    }
+
+    .case-card {
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .case-body {
+      padding: 20px;
+    }
+
+    .case-card a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--teal);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .talk {
+      color: #fff;
+      background: var(--deep);
+    }
+
+    .talk-box {
+      display: grid;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .talk h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.9rem, 6vw, 3.2rem);
+      line-height: 1.08;
+    }
+
+    .talk p {
+      margin-bottom: 0;
+      color: #dce8e4;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 260px;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 4px;
+      background: var(--gold);
+      color: #1f2518;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 680px) {
+      .signal-grid,
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .plan-shell {
+        grid-template-columns: .92fr 1.08fr;
+        align-items: stretch;
+      }
+
+      .stack-card { grid-column: 1 / -1; }
+
+      .talk-box {
+        grid-template-columns: 1fr auto;
+      }
+
+      .button {
+        width: auto;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      section { padding: 72px 0; }
+      .hero-inner { padding-top: 72px; }
+      .plan-shell {
+        grid-template-columns: .8fr 1.2fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-inner">
+        <div>
+          <p class="eyebrow">Prepared for Todd Schulte</p>
+          <h1>Make CIRCUITREE delivery steadier before the next camp season</h1>
+          <p class="hero-copy">Togetherwork's camp platform covers registration, billing, health forms, staff workflows, cabin assignments, reporting, and Bunk1 family updates. That is a wide surface to ship through one product lane.</p>
+          <p class="why"><strong>Why we're here.</strong> Saw you are hiring a Delivery Product Manager for the camp platform. The role joins roadmap work with backlog grooming, sprint readiness, story definition, and launch learning.</p>
+        </div>
+        <div class="signal-grid" aria-label="Product context">
+          <div class="signal">
+            <strong>Product</strong>
+            <span>CIRCUITREE for camp operations, with Bunk1 for parent engagement.</span>
+          </div>
+          <div class="signal">
+            <strong>Moment</strong>
+            <span>Summer is stability season. The rest of the year must ship next-season work.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Our read</h2>
+        <p class="read-card">That hiring signal says the camp product is moving from feature demand to delivery discipline. CIRCUITREE serves multi-session camps where summer stability comes first, then off-season feature work has to land fast. Public reviews praise the all-in-one data model, but also point to non-intuitive reports, slow updates, bugs, and limited integrations. Bunk1 reviews add parent-side issues around photo loading, linking campers, and message value. If those issues stay in the backlog, the new manager gets pressure without enough hands to turn discovery into shipped fixes.</p>
+      </div>
+    </section>
+
+    <section class="start">
+      <div class="wrap">
+        <h2 class="section-title">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <h3>Registration and login path</h3>
+            <p>Support docs show camp-specific account setup and social sign-on. First step: map the top parent login paths and remove dead ends before peak enrollment.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <h3>Reliability backlog</h3>
+            <p>G2 and Capterra users mention reports, front-end views, bugs, and integrations. First step: triage them into a six-week stability backlog.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2 class="section-title">What we'd do</h2>
+        <p class="plan-intro">We would place a dedicated squad under Togetherwork's Product and Strategy lead, with weekly demos and a narrow pilot tied to CIRCUITREE reliability.</p>
+        <div class="plan-shell">
+          <aside class="role-card">
+            <h3>Team shape</h3>
+            <ul class="roles">
+              <li>1 Tech Lead</li>
+              <li>2 senior web engineers</li>
+              <li>1 backend engineer</li>
+              <li>1 QA automation engineer</li>
+              <li>1 delivery BA</li>
+            </ul>
+          </aside>
+          <div class="timeline" aria-label="Six week delivery plan">
+            <article class="step">
+              <div class="num">1</div>
+              <div>
+                <strong>Find the real queue</strong>
+                <p>Audit CIRCUITREE backlog, support tickets, and Bunk1 reviews; group work into stability, discovery, and parent-flow fixes.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div>
+                <strong>Protect core flows</strong>
+                <p>Harden registration, login, photo loading, and reporting paths with automated checks around the most used camp workflows.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div>
+                <strong>Unblock integrations</strong>
+                <p>Add a thin integration lane for payments, email, and camp systems so new work does not stall releases.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div>
+                <strong>Leave a cadence</strong>
+                <p>Demo shipped fixes, publish delivery metrics, and leave the Delivery Product Manager with a repeatable cadence.</p>
+              </div>
+            </article>
+          </div>
+          <aside class="stack-card">
+            <h3>Relevant stack</h3>
+            <ul class="stack">
+              <li>.NET</li>
+              <li>React</li>
+              <li>Java</li>
+              <li>QA automation</li>
+              <li>Postman</li>
+              <li>AWS</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="about">
+      <div class="wrap">
+        <h2 class="section-title">Who is Elinext</h2>
+        <div class="about-card">
+          <p>Elinext is a full-cycle software development provider, active since 1997, with about 700 in-house specialists and no freelancers. For Togetherwork, the useful fit is a managed delivery squad that works under your Product and Strategy lead, not a black-box project. We bring senior web, backend, QA automation, DevOps, and BA capacity, plus ISO 9001 and ISO 27001 controls for quality and security.</p>
+          <ul class="customers" aria-label="Named customers">
+            <li>Broadcom</li>
+            <li>Siemens</li>
+            <li>Volkswagen</li>
+            <li>TUI</li>
+          </ul>
+          <p>That gives your Delivery Product Manager more execution power while Togetherwork keeps roadmap control.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof">
+      <div class="wrap">
+        <h2 class="section-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-edquants.jpg" alt="EdQuants school management software case study">
+            <div class="case-body">
+              <h3>School management software</h3>
+              <p>Elinext built a tablet-friendly school platform that replaced routine paper work with a few clicks.</p>
+              <a href="https://www.elinext.com/case-study/edquants/">View case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-cicd.jpg" alt="CI/CD optimization case study">
+            <div class="case-body">
+              <h3>CI/CD delivery optimization</h3>
+              <p>Elinext improved a release pipeline for a multi-solution provider and reduced development time from start to finish.</p>
+              <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk">
+      <div class="wrap talk-box">
+        <div>
+          <h2>Talk through the delivery plan</h2>
+          <p>A short call can confirm scope, risks, and fit.</p>
+        </div>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
