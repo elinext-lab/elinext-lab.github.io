@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arklok support capacity brief by Elinext</title>
+  <meta name="description" content="A short proposal for scaling Arklok's support portal, ticket flow, and asset data capacity as service demand grows.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/arklok_2026-06-23_15-22-17/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/arklok_2026-06-23_15-22-17/">
+  <meta property="og:title" content="Arklok support capacity brief">
+  <meta property="og:description" content="How Arklok can scale service desk, portal, and asset data work without slowing clients.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/arklok_2026-06-23_15-22-17/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Arklok support capacity brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Arklok support capacity brief">
+  <meta name="twitter:description" content="How Arklok can scale service desk, portal, and asset data work without slowing clients.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/arklok_2026-06-23_15-22-17/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17332f;
+      --muted: #5f6f6b;
+      --line: #d7e1de;
+      --paper: #f7faf8;
+      --white: #ffffff;
+      --green: #265c54;
+      --mint: #dfeee7;
+      --rust: #cf480c;
+      --amber: #f2b544;
+      --charcoal: #202628;
+      --shadow: 0 18px 50px rgba(23, 51, 47, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    body { min-width: 320px; }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .hero {
+      background: var(--green);
+      color: var(--white);
+      padding: 44px 18px 32px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: #ecf7f2;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--amber);
+      border-radius: 50%;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 18px 0 12px;
+      font-size: 2.35rem;
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0 0 12px;
+      color: #edf6f2;
+      font-size: 1.02rem;
+    }
+
+    .why {
+      border-left: 4px solid var(--amber);
+      padding-left: 14px;
+    }
+
+    section {
+      padding: 34px 18px;
+      background: var(--paper);
+    }
+
+    section:nth-of-type(even) { background: var(--white); }
+
+    .section-title {
+      margin: 0 auto 18px;
+      text-align: center;
+      font-size: 1.55rem;
+      line-height: 1.15;
+    }
+
+    .read-box {
+      max-width: 86ch;
+      margin: 0 auto;
+      padding: 22px;
+      background: #eaf4ef;
+      border: 1px solid #bed5cd;
+      border-left: 6px solid var(--green);
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p,
+    .start-card p,
+    .proof-card p,
+    .who p,
+    .cta p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card,
+    .proof-card {
+      padding: 18px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--rust);
+      font-weight: 800;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      background: var(--charcoal);
+      color: var(--white);
+    }
+
+    .proposal .section-title { color: var(--white); }
+
+    .proposal-shell {
+      display: grid;
+      gap: 16px;
+    }
+
+    .team {
+      padding: 20px;
+      background: #fff7ed;
+      color: var(--ink);
+      border: 1px solid #f4d7ba;
+    }
+
+    .team h3,
+    .step h3,
+    .proof-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      line-height: 1.2;
+    }
+
+    .team p { margin: 0 0 14px; color: var(--muted); }
+
+    .roles,
+    .stack,
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .roles li,
+    .stack li,
+    .customer-list strong {
+      display: inline-flex;
+      padding: 7px 9px;
+      background: var(--mint);
+      color: var(--green);
+      border: 1px solid #c7ded4;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      padding: 16px;
+      background: #2f383a;
+      border: 1px solid #4b5859;
+    }
+
+    .num {
+      display: inline-flex;
+      width: 30px;
+      height: 30px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      background: var(--amber);
+      color: #231b09;
+      font-weight: 800;
+    }
+
+    .step p { margin: 0; color: #cfdbd7; }
+
+    .who {
+      max-width: 86ch;
+      margin: 0 auto;
+      padding: 22px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .customer-list { margin-top: 14px; }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .proof-body { padding: 18px; }
+
+    .proof-card a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--green);
+      font-weight: 800;
+      text-decoration: none;
+      border-bottom: 2px solid var(--amber);
+    }
+
+    section.cta {
+      text-align: center;
+      background: var(--green);
+      color: var(--white);
+    }
+
+    .cta p {
+      max-width: 52ch;
+      margin: 0 auto 18px;
+      color: #eaf4ef;
+    }
+
+    .cta a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 20px;
+      background: var(--amber);
+      color: #211a08;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero { padding: 64px 28px 46px; }
+      section { padding: 50px 28px; }
+      h1 { font-size: 3.35rem; }
+      .start-grid,
+      .proposal-shell,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .step:last-child { grid-column: 1 / -1; }
+    }
+
+    @media (min-width: 1040px) {
+      .proposal-shell {
+        grid-template-columns: 0.85fr 1.15fr;
+        align-items: start;
+      }
+      .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .step:last-child { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Prepared for Andre Matos</span>
+      <h1>Scaling Arklok support without slowing the client journey</h1>
+      <p>Arklok already sells speed, control, and lower operating cost. The support platform now has to carry the same promise.</p>
+      <p class="why">Saw Arklok hiring for service desk, logistics, resident tech, and IT support while Andre is new CEO. This brief is about keeping support fast as Arklok scales.</p>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Our read</h2>
+      <div class="read-box">
+        <p>The signal says Arklok is adding service desk and resident technical capacity while support work grows. That usually means ticket flow, field routing, and asset data are getting heavier. Your own portal now covers pedidos, faturas, contratos, and real-time equipment monitoring, so the portal is part of delivery. If that data is late or split across tools, clients feel it as slow fixes and billing questions. Andre's first CEO year is the right time to add a flexible squad before growth becomes backlog.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Where we'd start</h2>
+      <div class="start-grid">
+        <div class="start-card">
+          <span class="label">Ticket intake</span>
+          <p>Your help center points clients to portal, bot, email, and phone. Start by making one ticket schema for asset tag, serial, address, requester, SLA, and contract family.</p>
+        </div>
+        <div class="start-card">
+          <span class="label">Asset truth</span>
+          <p>Your FAQ already covers inconsistent data, map address gaps, Ark.Ia count mismatch, and inactive equipment. Pick one owner system for each customer-facing field.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="proposal">
+    <div class="wrap">
+      <h2 class="section-title">What we'd do</h2>
+      <div class="proposal-shell">
+        <div class="team">
+          <h3>Dedicated squad under Arklok's PO or PM</h3>
+          <p>One technical lead, two full-stack engineers, one QA automation engineer, and one DevOps or data integration engineer.</p>
+          <ul class="roles">
+            <li>Tech Lead</li>
+            <li>Full-stack</li>
+            <li>QA Automation</li>
+            <li>DevOps</li>
+            <li>Data integration</li>
+          </ul>
+          <p style="margin-top:16px;">Relevant stack for the pilot:</p>
+          <ul class="stack">
+            <li>Java/Spring</li>
+            <li>.NET</li>
+            <li>React</li>
+            <li>Node.js</li>
+            <li>Python</li>
+            <li>QA automation</li>
+          </ul>
+        </div>
+        <div class="timeline">
+          <div class="step">
+            <span class="num">1</span>
+            <h3>Map the flow</h3>
+            <p>Map every support entry point, from mobile request to bot, email, phone, and Cervello ticket handoff.</p>
+          </div>
+          <div class="step">
+            <span class="num">2</span>
+            <h3>Normalize service data</h3>
+            <p>Build a shared service API that normalizes asset ID, contract family, location, requester, SLA, and billing status.</p>
+          </div>
+          <div class="step">
+            <span class="num">3</span>
+            <h3>Automate portal QA</h3>
+            <p>Add portal QA automation for request creation, ticket tracking, password reset, and active equipment monitoring flows.</p>
+          </div>
+          <div class="step">
+            <span class="num">4</span>
+            <h3>Pilot AI triage</h3>
+            <p>Pilot AI triage for common device issues, with clear handoff rules for N1, remote, and field teams.</p>
+          </div>
+          <div class="step">
+            <span class="num">5</span>
+            <h3>Demo and measure</h3>
+            <p>Ship weekly demos with Arklok leaders and measure fewer manual touches per resolved support request.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Who is Elinext</h2>
+      <div class="who">
+        <p>Elinext is a full-cycle software development company since 1997, with about 700 in-house specialists and no freelancers. For Arklok, the fit is practical: dedicated teams, Java, .NET, React, Python, QA, DevOps, and AI/ML under your own PO or PM. Our delivery model is backed by ISO 9001 and ISO 27001. We have served Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. That means we can add capacity around the portal and support stack without asking Arklok to slow its own teams.</p>
+        <div class="customer-list" aria-label="Named customers">
+          <strong>Siemens</strong>
+          <strong>Broadcom</strong>
+          <strong>Volkswagen</strong>
+          <strong>TRUMPF</strong>
+          <strong>TUI</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Proof</h2>
+      <div class="proof-grid">
+        <article class="proof-card">
+          <img src="assets/case-inventory.png" alt="Inventory management case study cover">
+          <div class="proof-body">
+            <h3>Inventory Management</h3>
+            <p>Elinext built asset management modules with a single interface, helping reduce time spent and lower equipment loss risk.</p>
+            <a href="https://www.elinext.com/case-study/elinext-inventory-management/">Read the case</a>
+          </div>
+        </article>
+        <article class="proof-card">
+          <img src="assets/case-router.jpg" alt="Remote router management case study cover">
+          <div class="proof-body">
+            <h3>Remote Network Management</h3>
+            <p>Elinext built a web and mobile platform that helped operators reduce support cost and improve customer communication.</p>
+            <a href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">Read the case</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <h2 class="section-title">Start the conversation</h2>
+      <p>A short call can test the fit for one support-platform pilot.</p>
+      <a href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
