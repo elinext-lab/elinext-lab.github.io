@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Valence planning workflow brief</title>
+  <meta name="description" content="A focused planning and MRP workflow brief for Valence Surface Technologies.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/valence-surface-technologies_2026-06-23_11-43-37/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/valence-surface-technologies_2026-06-23_11-43-37/">
+  <meta property="og:title" content="Valence planning workflow brief">
+  <meta property="og:description" content="For Valence's Planner hiring moment: MRP, work orders, portals, and certificate flow-down.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/valence-surface-technologies_2026-06-23_11-43-37/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Valence planning workflow brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Valence planning workflow brief">
+  <meta name="twitter:description" content="For Valence's Planner hiring moment: MRP, work orders, portals, and certificate flow-down.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/valence-surface-technologies_2026-06-23_11-43-37/og-image.jpg">
+  <style>
+    :root {
+      --ink: #182536;
+      --muted: #5a6572;
+      --line: #d9e0e6;
+      --paper: #f7f6f2;
+      --white: #ffffff;
+      --navy: #17253a;
+      --blue: #285f8f;
+      --green: #43765c;
+      --green-soft: #e8f1eb;
+      --orange: #d77a1d;
+      --orange-soft: #fff0dd;
+      --steel: #edf1f4;
+      --shadow: 0 18px 42px rgba(24, 37, 54, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+      background: var(--paper);
+    }
+
+    .section {
+      width: 100%;
+      padding: 48px 18px;
+      background: var(--paper);
+    }
+
+    .section.white {
+      background: var(--white);
+    }
+
+    .section.steel {
+      background: var(--steel);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 86vh;
+      display: flex;
+      align-items: center;
+      padding: 58px 18px 36px;
+      color: var(--white);
+      background: var(--navy);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .kicker {
+      margin: 0 0 16px;
+      color: #ffc27a;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 13ch;
+      margin-bottom: 18px;
+      font-size: 2.8rem;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 62ch;
+      color: #dce6ef;
+      font-size: 1.02rem;
+    }
+
+    .why {
+      padding-left: 16px;
+      border-left: 4px solid var(--orange);
+    }
+
+    .signal-panel {
+      width: 100%;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .signal-panel strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #ffffff;
+      font-size: 1.08rem;
+    }
+
+    .signal-panel span {
+      display: block;
+      color: #dce6ef;
+      font-size: 0.95rem;
+    }
+
+    .section h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: 1.9rem;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 24px;
+      border-left: 5px solid var(--green);
+      border-radius: 8px;
+      background: var(--green-soft);
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p {
+      margin: 0;
+      color: #253d32;
+      font-size: 1.02rem;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 10px;
+      color: var(--green);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .start-card p,
+    .intro,
+    .muted {
+      color: var(--muted);
+    }
+
+    .proposal-band {
+      padding: 30px;
+      border-top: 5px solid var(--orange);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .proposal-head {
+      display: grid;
+      gap: 16px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: var(--orange-soft);
+      color: #7b4316;
+      font-size: 0.84rem;
+      font-weight: 750;
+      white-space: normal;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfd;
+    }
+
+    .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--blue);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .stack span,
+    .customer-tag {
+      display: inline-flex;
+      padding: 6px 9px;
+      border-radius: 8px;
+      background: var(--steel);
+      color: #344152;
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+
+    .elinext-box {
+      width: 100%;
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 12px 28px rgba(24, 37, 54, 0.08);
+    }
+
+    .case-card img {
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: var(--steel);
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
+
+    .case-body p {
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+
+    .case-body a {
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      color: var(--white);
+      background: var(--navy);
+    }
+
+    .cta h2 {
+      color: var(--white);
+    }
+
+    .cta p {
+      max-width: 34ch;
+      margin: 0 auto 22px;
+      color: #dce6ef;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      .section {
+        padding: 64px 28px;
+      }
+
+      .hero {
+        padding: 70px 28px 46px;
+      }
+
+      h1 {
+        font-size: 4.4rem;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.8fr);
+      }
+
+      .section h2 {
+        font-size: 2.35rem;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-head {
+        grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      h1 {
+        font-size: 5.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="kicker">Prepared for Valence Surface Technologies</p>
+          <h1>Turn planning growth into clean MRP flow-down</h1>
+          <p>Valence already runs a complex outside-processing network. The next gain is cleaner planning data between customer portals, MRP records, work orders, and certificates.</p>
+          <p class="why">Saw the active Planner hiring push for Eastman and other sites. The role ties directly to MRP data, work orders, certs, and department schedules.</p>
+        </div>
+        <div class="signal-panel" aria-label="Planning signal">
+          <strong>The signal we would act on</strong>
+          <span>A Planner has to turn customer specs into clean work instructions. That is where small data gaps slow large programs.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>That Planner signal says Valence is adding control to production flow. The Eastman posting names MRP database work, work orders, and schedule flow by department. That is hard across sites with different portal paths, like Seattle MRP and Grove ProFlow. When planning data lives in many tools, teams retype specs and cert details. The cost is late answers for customers and weak line-of-sight for business development.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Your public pages show customer portals by location. The Planner role owns flow-down and MRP records.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Map one quote-to-cert flow from customer PO to portal login. Remove duplicate entry before adding headcount.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section steel">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-band">
+          <div class="proposal-head">
+            <div>
+              <p class="intro">We would run a scoped six-week pilot, owned by your operations lead.</p>
+              <p class="muted">The goal is not a new ERP. It is a clean bridge between MRP, portal status, work orders, and certificates.</p>
+            </div>
+            <div class="team" aria-label="Team shape">
+              <span class="pill">1 solution architect</span>
+              <span class="pill">2 senior .NET or Java devs</span>
+              <span class="pill">1 QA automation engineer</span>
+              <span class="pill">1 data engineer</span>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <span class="num">1</span>
+              <div>
+                <strong>Trace the flow</strong>
+                <p>Trace customer PO, blueprint, process spec, MRP record, traveler, and certificate steps for one active site.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <div>
+                <strong>Connect status</strong>
+                <p>Build a small integration layer that syncs MRP changes, portal status, and work-order documents daily.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <div>
+                <strong>Catch gaps early</strong>
+                <p>Add QA checks that flag missing specs, cert fields, and schedule conflicts before work reaches production.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <div>
+                <strong>Prove the pattern</strong>
+                <p>Demo weekly, then decide whether to extend the same pattern across other Valence locations next.</p>
+              </div>
+            </div>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span>.NET</span>
+            <span>Java</span>
+            <span>Python</span>
+            <span>MS SQL</span>
+            <span>React</span>
+            <span>QA automation</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="elinext-box">
+          <p>Elinext is a full-cycle software development company, active since 1997, with global delivery teams. Our team has about 700 in-house specialists across backend, web, QA, AI, and DevOps. We use no freelancers or subcontractors, which helps when scope touches controlled operations. For Valence, the fit is industrial software, .NET, Java, QA, and data engineering. We also bring ISO 9001 and ISO 27001 discipline for vendor risk and audits. Customers include Siemens, Broadcom, Volkswagen, TRUMPF, and TUI, so this squad can move fast.</p>
+          <div class="customers" aria-label="Named customers">
+            <strong class="customer-tag">Siemens</strong>
+            <strong class="customer-tag">Broadcom</strong>
+            <strong class="customer-tag">Volkswagen</strong>
+            <strong class="customer-tag">TRUMPF</strong>
+            <strong class="customer-tag">TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-manufacturing-execution-system.jpg" alt="Manufacturing execution system case study image">
+            <div class="case-body">
+              <h3>Manufacturing Execution System</h3>
+              <p>Elinext helped modernize a US MES platform and support live manufacturing integrations around the clock.</p>
+              <a href="https://www.elinext.com/case-study/manufacturing-execution-system/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-industrial-data-insights.jpg" alt="Industrial data insights case study image">
+            <div class="case-body">
+              <h3>Real-time Machine Data Insights</h3>
+              <p>Elinext built factory data tools that connect production lines and expose improvement signals.</p>
+              <a href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Start with one plant</h2>
+        <p>A short scoping call can pick the pilot flow.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
