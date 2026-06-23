@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Togetherwork camp delivery brief</title>
+  <meta name="description" content="A short delivery and QA brief for Togetherwork's camp platform, focused on seasonal readiness, mobile media reliability, and sprint-ready execution.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/togetherwork_2026-06-23_18-19-16/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/togetherwork_2026-06-23_18-19-16/">
+  <meta property="og:title" content="Togetherwork camp delivery brief">
+  <meta property="og:description" content="Getting the camp platform ready before the next busy season.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/togetherwork_2026-06-23_18-19-16/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Togetherwork camp delivery brief — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Togetherwork camp delivery brief">
+  <meta name="twitter:description" content="Getting the camp platform ready before the next busy season.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/togetherwork_2026-06-23_18-19-16/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172034;
+      --muted: #5f6b7f;
+      --soft: #f6f8f5;
+      --panel: #ffffff;
+      --line: #dce4d8;
+      --green: #00a85a;
+      --green-dark: #043f2c;
+      --orange: #ff7a00;
+      --blue: #0f2747;
+      --blue-soft: #eaf1f8;
+      --shadow: 0 18px 55px rgba(18, 35, 55, .12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--soft);
+      line-height: 1.55;
+    }
+    a { color: inherit; }
+    img { max-width: 100%; height: auto; display: block; }
+    .wrap {
+      width: min(100% - 32px, 1080px);
+      margin: 0 auto;
+    }
+    section { padding: 46px 0; background: var(--soft); }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-size: clamp(2.2rem, 8vw, 5.8rem);
+      line-height: .96;
+      letter-spacing: 0;
+      max-width: 10ch;
+    }
+    h2 {
+      text-align: center;
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      line-height: 1.08;
+      margin-bottom: 20px;
+      letter-spacing: 0;
+    }
+    h3 { font-size: 1.04rem; line-height: 1.25; letter-spacing: 0; }
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      color: var(--green-dark);
+      text-transform: uppercase;
+      font-size: .78rem;
+      letter-spacing: .08em;
+      margin-bottom: 18px;
+    }
+    .kicker::before {
+      content: "";
+      width: 26px;
+      height: 4px;
+      background: var(--green);
+      border-radius: 99px;
+    }
+    .hero {
+      color: white;
+      background:
+        linear-gradient(120deg, rgba(0, 168, 90, .18), rgba(255, 122, 0, .12)),
+        var(--blue);
+      padding: 44px 0 54px;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+    .hero p {
+      max-width: 45rem;
+      color: #dce8e7;
+      font-size: 1.05rem;
+    }
+    .hero .why {
+      border-left: 4px solid var(--orange);
+      padding-left: 16px;
+      margin-top: 26px;
+    }
+    .hero-note {
+      display: grid;
+      gap: 12px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .hero-note span {
+      font-size: .8rem;
+      color: #a9becf;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 800;
+    }
+    .hero-note strong {
+      font-size: 1.3rem;
+      line-height: 1.1;
+      color: white;
+    }
+    .read-card {
+      max-width: 76ch;
+      margin: 0 auto;
+      background: #edf6ef;
+      border: 1px solid #cfe5d3;
+      border-left: 8px solid var(--green);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .read-card p { color: #263846; }
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+    .start-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 10px 28px rgba(20, 37, 55, .07);
+    }
+    .label {
+      display: inline-block;
+      font-size: .75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--green-dark);
+      margin-bottom: 8px;
+    }
+    .proposal {
+      background: #fff;
+    }
+    .proposal-board {
+      display: grid;
+      gap: 18px;
+      background: var(--blue);
+      color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .proposal-intro {
+      display: grid;
+      gap: 14px;
+      border-bottom: 1px solid rgba(255,255,255,.15);
+      padding-bottom: 18px;
+    }
+    .team-tags, .stack-tags, .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .team-tags span, .stack-tags span, .customer-tags strong {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: .86rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .team-tags span { background: rgba(0,168,90,.2); border: 1px solid rgba(0,168,90,.5); }
+    .stack-tags span { background: rgba(255,122,0,.16); border: 1px solid rgba(255,122,0,.45); }
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .num {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #111;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+    .step p {
+      color: #dce8e7;
+      margin-top: 4px;
+    }
+    .elinext {
+      background: var(--blue-soft);
+    }
+    .cred {
+      max-width: 78ch;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #d6e1ed;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 12px 35px rgba(18, 35, 55, .08);
+    }
+    .customer-tags { margin-top: 14px; }
+    .customer-tags strong {
+      background: #eef8f1;
+      color: var(--green-dark);
+      border: 1px solid #cae7d1;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .case-card {
+      display: grid;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 12px 35px rgba(18, 35, 55, .08);
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #e8ecef;
+    }
+    .case-body {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+    }
+    .case-body a {
+      color: var(--green-dark);
+      font-weight: 900;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    .muted { color: var(--muted); }
+    .close {
+      background: var(--green-dark);
+      color: white;
+      text-align: center;
+      padding: 48px 0;
+    }
+    .close h2 { color: white; }
+    .close p {
+      color: #dce8e7;
+      max-width: 46rem;
+      margin: 0 auto 22px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      background: var(--orange);
+      color: #1a130b;
+      border-radius: 8px;
+      font-weight: 900;
+      text-decoration: none;
+      max-width: 100%;
+    }
+
+    @media (min-width: 720px) {
+      section { padding: 64px 0; }
+      .hero { padding: 72px 0 78px; }
+      .hero-grid { grid-template-columns: 1.2fr .8fr; }
+      .start-grid, .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proposal-board { padding: 28px; }
+      .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 1024px) {
+      .proposal-board {
+        grid-template-columns: .85fr 1.15fr;
+        align-items: start;
+      }
+      .proposal-intro {
+        border-bottom: 0;
+        border-right: 1px solid rgba(255,255,255,.15);
+        padding: 0 22px 0 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="kicker">Togetherwork camp stack</div>
+        <h1>Help the camp platform ship cleaner before summer demand</h1>
+        <p class="why">Saw the Delivery Product Manager search tied to the camp management platform. That usually means the team needs clearer sprint input, fewer release surprises, and more capacity before camps hit the next busy season.</p>
+      </div>
+      <aside class="hero-note" aria-label="brief focus">
+        <span>Brief focus</span>
+        <strong>CIRCUITREE delivery plus Bunk1 mobile reliability</strong>
+        <p>Six weeks to protect the flows camps and families touch most.</p>
+      </aside>
+    </div>
+  </header>
+
+  <section aria-labelledby="read-title">
+    <div class="wrap">
+      <h2 id="read-title">Our read</h2>
+      <div class="read-card">
+        <p>Togetherwork is moving a beloved camp product from one-off custom work toward a true SaaS model. The role description says the platform covers staff recruitment, parent registration, payment plans, bunk assignments, activity scheduling, and launch learning. That is a heavy surface for one delivery lane. Public reviews point to the same risk: camp teams like having registration, health forms, Bunk1 photos, and store work in one place, but they also call out scheduling, reports, support handoffs, and bugs. If this load stays uneven, summer fixes will keep stealing time from scalable roadmap work.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="start-title">
+    <div class="wrap">
+      <h2 id="start-title">Where we'd start</h2>
+      <div class="start-grid">
+        <div class="start-card">
+          <span class="label">Critical path</span>
+          <p>Map the seasonal path first: registration, payments, cabin assignments, staff setup, and Bunk1 photo updates. Give each flow a smoke test and owner before the Memorial Day freeze.</p>
+        </div>
+        <div class="start-card">
+          <span class="label">Mobile media</span>
+          <p>Recent Bunk1 users say photos load slowly or stop after the first album page. Start with image sizing, pagination, cache rules, and Android layout checks.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="proposal" aria-labelledby="do-title">
+    <div class="wrap">
+      <h2 id="do-title">What we'd do</h2>
+      <div class="proposal-board">
+        <div class="proposal-intro">
+          <h3>Dedicated squad under your Product Owner</h3>
+          <p>A six-week pilot that adds delivery capacity without taking control from Togetherwork's product team.</p>
+          <div class="team-tags" aria-label="team shape">
+            <span>Tech Lead</span><span>2 full-stack engineers</span><span>Mobile engineer</span><span>QA automation</span><span>UX/BA support</span>
+          </div>
+          <div class="stack-tags" aria-label="relevant stack">
+            <span>React</span><span>Angular</span><span>.NET</span><span>Node.js</span><span>Python</span><span>QA</span>
+          </div>
+        </div>
+        <div class="timeline" aria-label="pilot milestones">
+          <article class="step">
+            <span class="num">1</span>
+            <div><h3>Shape sprint-ready slices</h3><p>Turn the product backlog into release slices for registration, payments, scheduling, and Bunk1 touchpoints.</p></div>
+          </article>
+          <article class="step">
+            <span class="num">2</span>
+            <div><h3>Add flow checks</h3><p>Add automated checks around flows camp directors and parents touch during peak season, including login and booking paths.</p></div>
+          </article>
+          <article class="step">
+            <span class="num">3</span>
+            <div><h3>Fix mobile media pain</h3><p>Fix high-impact mobile media issues: image loading, album paging, Android button visibility, and crash-prone upload paths.</p></div>
+          </article>
+          <article class="step">
+            <span class="num">4</span>
+            <div><h3>Leave a release playbook</h3><p>Leave Jason's team with dashboards, test reports, and a release playbook the new product leader can run.</p></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="elinext" aria-labelledby="elinext-title">
+    <div class="wrap">
+      <h2 id="elinext-title">Who is Elinext</h2>
+      <div class="cred">
+        <p>Elinext is a full-cycle software development partner founded in 1997, with about 700 in-house specialists and no freelancers. For this work, the useful part is a dedicated team under your Product Owner, with backend, web, mobile, QA, BA, and DevOps support. Elinext holds ISO 9001 and ISO 27001, which matters for payments, family data, and release control. Teams have delivered for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. That same model fits a camp product that must ship safely before seasonal demand.</p>
+        <div class="customer-tags" aria-label="named customers">
+          <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="proof-title">
+    <div class="wrap">
+      <h2 id="proof-title">Proof</h2>
+      <div class="proof-grid">
+        <article class="case-card">
+          <img src="assets/case-povi-family-connect.jpg" alt="Povi Family Connect case study preview">
+          <div class="case-body">
+            <h3>Povi Family Connect</h3>
+            <p class="muted">Mobile and web work for parent-child communication. Elinext delivered a Swift app update that stayed smooth for end users.</p>
+            <a href="https://www.elinext.com/case-study/povi-family-connect/">Read the case study</a>
+          </div>
+        </article>
+        <article class="case-card">
+          <img src="assets/case-edquants.jpg" alt="EdQuants school management case study preview">
+          <div class="case-body">
+            <h3>EdQuants school management</h3>
+            <p class="muted">A responsive management system for tablets and desktops. Users moved routine paper work into a few clicks.</p>
+            <a href="https://www.elinext.com/case-study/edquants/">Read the case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="close" aria-labelledby="talk-title">
+    <div class="wrap">
+      <h2 id="talk-title">Start the conversation</h2>
+      <p>Share one camp flow, and we will outline the pilot scope.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
