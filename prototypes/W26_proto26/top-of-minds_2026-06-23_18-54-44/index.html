@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Top of Minds technology search brief</title>
+  <meta name="description" content="A short technical bridge proposal for Top of Minds' technology search platform.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/top-of-minds_2026-06-23_18-54-44/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/top-of-minds_2026-06-23_18-54-44/">
+  <meta property="og:title" content="Top of Minds technology search brief">
+  <meta property="og:description" content="A technical bridge for Head of Technology searches and vacancy platform delivery.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/top-of-minds_2026-06-23_18-54-44/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Top of Minds technology search brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Top of Minds technology search brief">
+  <meta name="twitter:description" content="A technical bridge for Head of Technology searches and vacancy platform delivery.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/top-of-minds_2026-06-23_18-54-44/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #5f6872;
+      --line: #d8dee4;
+      --paper: #ffffff;
+      --soft: #f5f7f9;
+      --deep: #0e2832;
+      --accent: #c74635;
+      --accent-soft: #ffe9e4;
+      --green: #19705d;
+      --gold: #d29b38;
+      --radius: 8px;
+      --shadow: 0 16px 38px rgba(23, 32, 42, 0.11);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      align-items: center;
+      position: relative;
+      padding: 72px 18px 84px;
+      color: #fff;
+      background: linear-gradient(rgba(9, 22, 27, 0.72), rgba(9, 22, 27, 0.76)), url("assets/topofminds-hero.jpg") center / cover no-repeat;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 10px;
+      background: linear-gradient(90deg, var(--accent), var(--gold), var(--green));
+    }
+
+    .wrap {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    .hero-content {
+      max-width: 760px;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #ffe1d9;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 13ch;
+      font-size: clamp(2.45rem, 8vw, 5.7rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: 22px 0 0;
+      color: #f6fbfc;
+      font-size: clamp(1rem, 2.8vw, 1.22rem);
+    }
+
+    section {
+      padding: 58px 18px;
+      background: var(--paper);
+    }
+
+    section:nth-of-type(2n + 1) {
+      background: var(--soft);
+    }
+
+    .section-title {
+      margin: 0 auto 24px;
+      text-align: center;
+      font-size: clamp(1.65rem, 4vw, 2.35rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: min(900px, 100%);
+      margin: 0 auto;
+      padding: 26px;
+      border-left: 6px solid var(--accent);
+      background: #fff7f4;
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      font-size: 1.04rem;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+
+    .start-card,
+    .case-card {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      overflow: hidden;
+      box-shadow: 0 10px 26px rgba(23, 32, 42, 0.07);
+    }
+
+    .start-card {
+      padding: 22px;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 10px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .start-card h3,
+    .case-body h3 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+      line-height: 1.25;
+    }
+
+    .start-card p,
+    .case-body p,
+    .intro {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    section.plan {
+      color: #fff;
+      background: var(--deep);
+    }
+
+    .plan .section-title,
+    .plan .intro {
+      color: #fff;
+    }
+
+    .plan-shell {
+      display: grid;
+      gap: 18px;
+    }
+
+    .team-card,
+    .steps {
+      min-width: 0;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .team-card h3,
+    .steps h3 {
+      margin: 0 0 14px;
+      font-size: 1.2rem;
+    }
+
+    .roles,
+    .stack,
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 14px 0 0;
+      list-style: none;
+    }
+
+    .roles li,
+    .stack li,
+    .customers li {
+      min-width: 0;
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #10232a;
+      background: #e7f4ef;
+    }
+
+    .stack li {
+      background: #fff0ca;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 12px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--accent);
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .step span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .elinext {
+      background: #fff;
+    }
+
+    .cred {
+      width: min(900px, 100%);
+      margin: 0 auto;
+      font-size: 1.02rem;
+    }
+
+    .cred p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .customers li {
+      color: #fff;
+      background: var(--deep);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: var(--soft);
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--accent);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .talk {
+      color: #fff;
+      text-align: center;
+      background: var(--deep);
+    }
+
+    .talk h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      letter-spacing: 0;
+    }
+
+    .talk p {
+      margin: 0 auto 22px;
+      color: #d8e9ec;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 20px;
+      border-radius: 6px;
+      color: #fff;
+      background: var(--accent);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .hero {
+        min-height: 82vh;
+        padding: 96px 32px 108px;
+      }
+
+      section {
+        padding: 76px 32px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .plan-shell {
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-content">
+      <p class="eyebrow">Prepared for Auke Bijnsdorp</p>
+      <h1>Keep technology searches moving while the platform catches up</h1>
+      <p>Saw Head of Technology and Head of Information Technology signals under Top of Minds. This brief shows how a small technical bridge team could protect vacancy delivery, candidate flow, and platform trust.</p>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Our read</h2>
+        <div class="read-box">
+          Saw the Head of Technology signal in business terms: Top of Minds is carrying more complex technology-leadership searches. That is more than a role to fill. It asks your own platform to support fast vacancy pages, confidential search work, employer-branding stories, and candidate data. Your site already calls the search approach tech-enabled and shows IT, Product, Scale-up, and Technology paths. If the product layer moves slowly, searches can still launch, but reporting and follow-up become harder than the brand promises.
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <h3>Vacancy pages are campaign assets.</h3>
+            <p>Your homepage combines filters, localized paths, images, and consultant contacts. Build a release checklist for each new search page: media, metadata, forms, tracking, and accessibility.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Next useful step</span>
+            <h3>Technology-role pages need mobile speed.</h3>
+            <p>The mobile audit flagged heavy media and unused scripts. Start with CTO and Head of Technology templates, then add checks before each campaign goes live.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2 class="section-title">What we'd do</h2>
+        <p class="intro">Use a dedicated squad under your PM or Head of Technology. The pilot runs six weeks, with a demo every week.</p>
+        <div class="plan-shell">
+          <aside class="team-card">
+            <h3>Team shape</h3>
+            <ul class="roles">
+              <li>Tech Lead</li>
+              <li>2 full-stack engineers</li>
+              <li>Data/AI engineer</li>
+              <li>QA automation</li>
+              <li>Part-time DevOps</li>
+            </ul>
+            <h3 style="margin-top:24px;">Relevant stack</h3>
+            <ul class="stack">
+              <li>PHP</li>
+              <li>React</li>
+              <li>Node.js</li>
+              <li>Python</li>
+              <li>.NET</li>
+              <li>QA automation</li>
+            </ul>
+          </aside>
+          <div class="steps">
+            <h3>Six-week pilot</h3>
+            <ol class="step-list">
+              <li class="step"><span class="num">1</span><span><strong>Map the search flow</strong>Trace one public vacancy and one confidential search from brief to shortlist and consultant reporting.</span></li>
+              <li class="step"><span class="num">2</span><span><strong>Harden key templates</strong>Improve media loading, mobile layout, accessible names, and tracking on technology-role campaign pages.</span></li>
+              <li class="step"><span class="num">3</span><span><strong>Automate launch QA</strong>Add checks for speed, forms, metadata, image text, and localized links before each page goes live.</span></li>
+              <li class="step"><span class="num">4</span><span><strong>Prototype candidate insight</strong>Create a small reporting view that shows source, status, and next action for active searches.</span></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext">
+      <div class="wrap">
+        <h2 class="section-title">Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Top of Minds, the fit is delivery capacity for web portals, data flows, QA, DevOps, and AI support while your technology lead sets direction. We hold ISO 9001 and ISO 27001, useful when candidate data and client search work need care. Teams have delivered for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. That means the squad above can support the Head of Technology without replacing that role.</p>
+          <ul class="customers" aria-label="Selected customers">
+            <li>Siemens</li>
+            <li>Broadcom</li>
+            <li>Volkswagen</li>
+            <li>TRUMPF</li>
+            <li>TUI</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-applicant-tracking.jpg" alt="Applicant tracking case study preview">
+            <div class="case-body">
+              <h3>Elinext. Applicant Tracking</h3>
+              <p>Built candidate and vacancy modules with Angular, ASP.NET, and MSSQL to streamline active hiring workflows.</p>
+              <a href="https://www.elinext.com/case-study/elinext-applicant-tracking/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-job-search-service.jpg" alt="Job search service case study preview">
+            <div class="case-body">
+              <h3>Job Search Service for a German Startup</h3>
+              <p>Delivered a modern job portal with Java, MongoDB, AngularJS, and Spring WebFlux for a German launch.</p>
+              <a href="https://www.elinext.com/case-study/job-and-applicants-search-service/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk">
+      <div class="wrap">
+        <h2>Start the technology bridge</h2>
+        <p>A short call can map the first pilot.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
