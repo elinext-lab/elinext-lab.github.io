@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QRIOS Life Science Hiring Brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/qrios_2026-06-25_11-30-16/">
+  <meta name="description" content="A focused brief for QRIOS on Life Science hiring, candidate portals, and secure delivery flow.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/qrios_2026-06-25_11-30-16/">
+  <meta property="og:title" content="QRIOS Life Science hiring needs a cleaner delivery flow">
+  <meta property="og:description" content="A short brief on QRIOS hiring, portal QA, and consultant handoffs.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/qrios_2026-06-25_11-30-16/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="QRIOS Life Science hiring needs a cleaner delivery flow - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="QRIOS Life Science hiring needs a cleaner delivery flow">
+  <meta name="twitter:description" content="A short brief on QRIOS hiring, portal QA, and consultant handoffs.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/qrios_2026-06-25_11-30-16/og-image.jpg">
+  <style>
+    :root {
+      --ink: #1f2930;
+      --muted: #5e6b72;
+      --paper: #fbfaf7;
+      --panel: #ffffff;
+      --soft: #eef4f3;
+      --line: #d8dfdc;
+      --dark: #22313a;
+      --orange: #ff6e00;
+      --cyan: #0098c2;
+      --green: #69bd28;
+      --shadow: 0 18px 45px rgba(31, 41, 48, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    section { padding: 56px 0; background: var(--paper); }
+    h1, h2, h3, p { margin: 0; }
+    h2 {
+      text-align: center;
+      font-size: clamp(1.65rem, 2vw, 2.25rem);
+      line-height: 1.15;
+      margin-bottom: 24px;
+    }
+    p { font-size: 1rem; }
+
+    .hero {
+      background: var(--dark);
+      color: #fff;
+      padding: 54px 0 48px;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+    .eyebrow {
+      color: #9ee5df;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: .78rem;
+      margin-bottom: 14px;
+    }
+    h1 {
+      font-size: clamp(2.35rem, 8vw, 4.9rem);
+      line-height: .98;
+      max-width: 880px;
+      letter-spacing: 0;
+    }
+    .hero-copy {
+      display: grid;
+      gap: 14px;
+      max-width: 760px;
+      color: #e9f0ee;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .pill {
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: #f9fbfb;
+      font-size: .9rem;
+      background: rgba(255,255,255,.06);
+    }
+
+    .read-box {
+      background: #fff7ef;
+      border: 1px solid #ffd0ad;
+      border-left: 7px solid var(--orange);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      max-width: 78ch;
+      margin: 0 auto;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+    .start-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .label {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--cyan);
+      font-weight: 700;
+      font-size: .86rem;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .label::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      flex: 0 0 auto;
+    }
+
+    .plan {
+      background: #edf2ef;
+    }
+    .plan-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      display: grid;
+      gap: 22px;
+    }
+    .team {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .role {
+      border-left: 4px solid var(--cyan);
+      background: #f7fbfb;
+      padding: 11px 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      min-height: 50px;
+    }
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+    }
+    .num {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+    .step h3 {
+      font-size: 1rem;
+      line-height: 1.2;
+      margin-bottom: 5px;
+    }
+    .step p { color: var(--muted); }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: #eaf5f8;
+      color: #11546a;
+      font-weight: 700;
+      font-size: .88rem;
+    }
+
+    .elinext {
+      background: #fff;
+    }
+    .cred {
+      max-width: 76ch;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .customers {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .customer {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-weight: 800;
+      background: var(--soft);
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+    .case {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .case img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #e5e8e6;
+    }
+    .case-body {
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+    .case h3 { font-size: 1.12rem; }
+    .case p { color: var(--muted); }
+    .case a {
+      color: var(--cyan);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .talk {
+      background: var(--dark);
+      color: #fff;
+      text-align: center;
+      padding: 48px 0;
+    }
+    .talk h2 { margin-bottom: 8px; }
+    .talk p { color: #dce8e6; margin-bottom: 22px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 6px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      section { padding: 70px 0; }
+      .hero { padding: 80px 0 70px; }
+      .hero-grid { grid-template-columns: 1.1fr .9fr; }
+      .start-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .team { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .plan-panel { padding: 30px; }
+    }
+
+    @media (min-width: 1100px) {
+      .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .step { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">QRIOS Life Science brief</p>
+          <h1>Make the Life Science hiring push easier to run</h1>
+        </div>
+        <div class="hero-copy">
+          <p>QRIOS is growing its Life Science bench while also running public candidate and consultant portals. That mix needs fast hiring, clean data flow, and trust in every application step.</p>
+          <p>We saw QRIOS hiring a Processingenjör / Process Developer for pharma and biotech work in Stockholm/Uppsala. That role points to active demand for GMP, CAPA, tech transfer, and process validation capacity.</p>
+          <div class="hero-meta">
+            <span class="pill">Life Science</span>
+            <span class="pill">Candidate portal</span>
+            <span class="pill">Consultant handoff</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The signal says QRIOS is scaling specialist Life Science delivery, not just filling one open seat. The Process Developer role names GMP, CAPA, tech transfer, QA/R&D work, and process validation. That makes screening and assignment matching harder than normal recruitment. If the data stays split between jobs, CVs, portals, and consultant notes, good candidates can slow down before client work starts. The business cost is lost speed when pharma and biotech clients need safe capacity now.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">What we noticed</span>
+            <p>The Process Developer advert names optimization, tech transfer, CAPA, QA/R&D collaboration, and validation. A useful next step is a reusable screening matrix that maps each candidate to those workstreams before interviews start.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Next step</span>
+            <p>The CV route spans qrios.se, Teamtailor, and the Intelliplan consultant portal. A lightweight data-flow check would reduce duplicate entry, unclear consent state, and handoff gaps.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="plan-panel">
+          <p>We would place a dedicated squad under your product or business owner for a six-week pilot, with weekly demos and a narrow Life Science portal scope.</p>
+          <div class="team" aria-label="Team shape">
+            <div class="role">Tech lead</div>
+            <div class="role">Full-stack engineer</div>
+            <div class="role">QA automation</div>
+            <div class="role">Data / AI engineer</div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="num">1</div>
+              <div>
+                <h3>Map the journey</h3>
+                <p>Map candidate and consultant flows from job ad, CV registration, Teamtailor, and Intelliplan into one simple operating map.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div>
+                <h3>Shape the data</h3>
+                <p>Build a screening and assignment data model around GMP, CAPA, tech transfer, validation, and customer project needs.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div>
+                <h3>Harden release checks</h3>
+                <p>Add automated checks for portal speed, accessibility, consent, and public client-side configuration before each release.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div>
+                <h3>Show delivery status</h3>
+                <p>Pilot secure analytics for open roles, consultant readiness, and handoff status, with weekly demos to Anders' team.</p>
+              </div>
+            </article>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span class="chip">React</span>
+            <span class="chip">Angular</span>
+            <span class="chip">.NET</span>
+            <span class="chip">Node.js</span>
+            <span class="chip">Python</span>
+            <span class="chip">QA automation</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For QRIOS, the fit is practical: we build web portals, data flows, QA automation, and AI/ML tools for regulated teams. Our delivery base includes ISO 9001 and ISO 27001, which matters when candidate data, client data, and Life Science workflows meet. The proposed squad would work under your product owner, so QRIOS keeps control while delivery moves faster.</p>
+          <div class="customers">
+            <strong class="customer">Broadcom</strong>
+            <strong class="customer">Siemens</strong>
+            <strong class="customer">Volkswagen</strong>
+            <strong class="customer">TRUMPF</strong>
+            <strong class="customer">TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case">
+            <img src="assets/case-applicant.jpg" alt="Applicant tracking case study preview">
+            <div class="case-body">
+              <h3>Applicant Tracking</h3>
+              <p>Built candidate and vacancy modules for a hiring flow, then planned, designed, developed, and released the first version.</p>
+              <a href="https://www.elinext.com/case-study/elinext-applicant-tracking/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case">
+            <img src="assets/case-pharma.jpg" alt="Pharma data analytics case study preview">
+            <div class="case-body">
+              <h3>QA and Data Analytics in Pharma</h3>
+              <p>Automated MATLAB/Python validation for pharma analytics workflows, reducing manual checks and improving data reliability.</p>
+              <a href="https://www.elinext.com/case-study/qa-and-data-analytics-in-pharma-industry/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>A short call is enough to decide fit.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
