@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sportway live-production scale brief</title>
+  <meta name="description" content="A short engineering brief for Sportway's next live-production scale phase.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/sportway_2026-06-25_07-30-24/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/sportway_2026-06-25_07-30-24/">
+  <meta property="og:title" content="Sportway live-production scale brief">
+  <meta property="og:description" content="A short engineering brief for Sportway's next live-production scale phase.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/sportway_2026-06-25_07-30-24/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sportway live-production scale brief — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sportway live-production scale brief">
+  <meta name="twitter:description" content="A short engineering brief for Sportway's next live-production scale phase.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/sportway_2026-06-25_07-30-24/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5e6b7c;
+      --line: #dbe3ea;
+      --paper: #f6f8f5;
+      --panel: #ffffff;
+      --warm: #fff3df;
+      --sun: #f28b22;
+      --green: #2f7d6d;
+      --blue: #255c7c;
+      --deep: #15293a;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    body { min-width: 0; }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a { color: inherit; }
+
+    .page {
+      width: 100%;
+      background:
+        linear-gradient(180deg, #fffaf2 0, #f6f8f5 380px),
+        var(--paper);
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    section {
+      padding: 54px 0;
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      padding: 68px 0 52px;
+      background: #fffaf2;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 16px;
+      font-size: 40px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 22px;
+      font-size: 26px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 17px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 680px;
+      margin-bottom: 0;
+      color: #334154;
+      font-size: 18px;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 28px;
+      border: 1px solid #cfded9;
+      border-left: 8px solid var(--green);
+      border-radius: 8px;
+      background: #eef6f2;
+      color: #263747;
+    }
+
+    .read-box p,
+    .start-card p,
+    .plan-card p,
+    .about-box p,
+    .proof-card p,
+    .cta p { margin-bottom: 0; }
+
+    .start-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .start-card {
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 8px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .plan {
+      background: #fef7eb;
+      border-top: 1px solid #ecd4af;
+      border-bottom: 1px solid #ecd4af;
+    }
+
+    .plan-shell {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+
+    .team-card,
+    .plan-card {
+      padding: 22px;
+      border: 1px solid #e4c89d;
+      border-radius: 8px;
+      background: #fffdf8;
+    }
+
+    .roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #e8f3ee;
+      color: #1f5c4e;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: normal;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .plan-card {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+    }
+
+    .num {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--sun);
+      color: #231606;
+      font-weight: 800;
+    }
+
+    .plan-card p,
+    .proof-card p,
+    .start-card p { color: var(--muted); }
+
+    .about-box {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 28px;
+      border-radius: 8px;
+      background: var(--deep);
+      color: #eef5f3;
+    }
+
+    .about-box p { color: #d7e2df; }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .customers strong {
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      color: #ffffff;
+      font-size: 13px;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 8;
+      object-fit: cover;
+    }
+
+    .proof-body { padding: 18px; }
+
+    .proof-card a {
+      display: inline-flex;
+      margin-top: 12px;
+      color: var(--green);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      background: #eaf2f0;
+      border-top: 1px solid #cfddd9;
+    }
+
+    .cta h2 { margin-bottom: 8px; }
+
+    .button {
+      display: inline-flex;
+      margin-top: 20px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--sun);
+      color: #231606;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .wrap { width: min(1120px, calc(100% - 56px)); }
+      h1 { font-size: 56px; }
+      h2 { font-size: 32px; }
+      .start-grid,
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .plan-shell { grid-template-columns: .78fr 1.22fr; align-items: start; }
+    }
+
+    @media (min-width: 1080px) {
+      section { padding: 66px 0; }
+      .hero { padding-top: 86px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Prepared for Johan Gustavsson</p>
+        <h1>Sportway scaling needs a tighter live-production core</h1>
+        <p class="hero-copy">Saw Sportway just raised growth capital after bringing Studio Automated in-house. This brief focuses on the engineering load behind global expansion, more cameras, and richer fan products.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The signal says Sportway is moving from strong product pull to global delivery. Your own backend role points to Java services, microservices, real-time data, and high load behind the streaming platform. That usually means the hard work is no longer one feature at a time. It is keeping match setup, camera status, graphics, OTT delivery, payments, and coaching data in one clean flow. If that flow stays fragile, new markets can create support load faster than product value.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">What we noticed</span>
+            <p>The Studio App guide asks clubs to check network, app version, and phone setup. Add an in-app readiness check before the broadcast window.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Your backend role names streaming, real-time data, and scale. Map one match path from schedule to stream health before adding more teams.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="plan-shell">
+          <div class="team-card">
+            <h3>Dedicated squad under Sportway's PO</h3>
+            <p>Start with a six-week platform pilot, then keep the best people as a steady delivery squad.</p>
+            <div class="roles" aria-label="Team shape">
+              <span class="pill">Tech Lead</span>
+              <span class="pill">2 Java engineers</span>
+              <span class="pill">DevOps engineer</span>
+              <span class="pill">QA automation</span>
+              <span class="pill">React support</span>
+            </div>
+            <div class="roles" aria-label="Relevant stack">
+              <span class="pill">Java</span>
+              <span class="pill">Spring Boot</span>
+              <span class="pill">React</span>
+              <span class="pill">Docker</span>
+              <span class="pill">Kubernetes</span>
+              <span class="pill">CI/CD</span>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="plan-card">
+              <span class="num">1</span>
+              <div>
+                <h3>Trace the live path</h3>
+                <p>Map Java microservices, feeds, and camera events that carry live production, overlays, subscriptions, and coaching data.</p>
+              </div>
+            </div>
+            <div class="plan-card">
+              <span class="num">2</span>
+              <div>
+                <h3>Harden one API lane</h3>
+                <p>Build one hardened API path for venue status, stream health, and match metadata before wider market rollout.</p>
+              </div>
+            </div>
+            <div class="plan-card">
+              <span class="num">3</span>
+              <div>
+                <h3>Automate release checks</h3>
+                <p>Add automated checks around real-time graphics, mobile Studio flows, payment hooks, and replay creation before each release.</p>
+              </div>
+            </div>
+            <div class="plan-card">
+              <span class="num">4</span>
+              <div>
+                <h3>Show readiness early</h3>
+                <p>Stand up dashboards that show camera readiness, network risk, and content jobs before a match goes live.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="about-box">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Sportway, the fit is backend, web, QA, DevOps, and cloud work under your product lead. We hold ISO 9001 and ISO 27001 certifications, useful for media, payment, and youth-sport data. Our named customers include:</p>
+          <div class="customers">
+            <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong>
+          </div>
+          <p>That means we can add capacity without changing Sportway's product direction.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-subtitle.jpg" alt="Subtitle management web application case study">
+            <div class="proof-body">
+              <h3>Subtitle management web app</h3>
+              <p>React and CI/CD work for media workflows.</p>
+              <a href="https://www.elinext.com/case-study/web-application-for-seamless-subtitle-management/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-smarttv.jpg" alt="SmartTV streaming application case study">
+            <div class="proof-body">
+              <h3>Kartina TV SmartTV app</h3>
+              <p>Stable streaming app across limited devices.</p>
+              <a href="https://www.elinext.com/case-study/kartinatv/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>We can review one live-production path with your team.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
