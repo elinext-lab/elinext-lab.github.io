@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Monument Cloud Operations Brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/monument-bank_2026-06-25_09-23-27/">
+  <meta name="description" content="A focused plan for app reliability and BPaaS delivery at Monument.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/monument-bank_2026-06-25_09-23-27/">
+  <meta property="og:title" content="Monument cloud operations brief">
+  <meta property="og:description" content="A focused plan for app reliability and BPaaS delivery.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/monument-bank_2026-06-25_09-23-27/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Monument cloud operations brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Monument cloud operations brief">
+  <meta name="twitter:description" content="A focused plan for app reliability and BPaaS delivery.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/monument-bank_2026-06-25_09-23-27/og-image.jpg">
+  <style>
+    :root {
+      --ink: #182333;
+      --muted: #66717d;
+      --paper: #fbfaf7;
+      --white: #ffffff;
+      --line: #d9d4cb;
+      --sage: #5f776d;
+      --sage-soft: #eef4f0;
+      --gold: #b08a43;
+      --gold-soft: #f7efd9;
+      --coral: #cf6048;
+      --charcoal: #111820;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: inherit; }
+
+    .page {
+      width: 100%;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      background: var(--paper);
+    }
+
+    .section.alt { background: var(--white); }
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      background: var(--charcoal);
+      color: var(--white);
+      padding: 48px 18px 64px;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 10px;
+      background: linear-gradient(90deg, var(--sage), var(--gold), var(--coral));
+      z-index: -1;
+    }
+
+    .hero .wrap {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: #dce7e2;
+      font-size: .82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      max-width: 12ch;
+      margin-top: 18px;
+      font-size: clamp(2.5rem, 9vw, 5.8rem);
+      line-height: .97;
+      letter-spacing: 0;
+    }
+    .hero-copy {
+      display: grid;
+      gap: 16px;
+      max-width: 760px;
+      margin-top: 20px;
+      color: #e6ece9;
+      font-size: clamp(1.02rem, 2vw, 1.24rem);
+    }
+    .hero-copy strong { color: var(--gold-soft); }
+
+    .mini-panel {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      padding: 18px;
+      border-radius: 8px;
+      display: grid;
+      gap: 12px;
+    }
+    .mini-panel div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.14);
+      padding-bottom: 12px;
+      color: #e9efed;
+      font-size: .95rem;
+    }
+    .mini-panel div:last-child { border-bottom: 0; padding-bottom: 0; }
+    .mini-panel span { color: #aebbb6; }
+
+    .section h2 {
+      text-align: center;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+      margin-bottom: 22px;
+    }
+    .section-lede {
+      max-width: 68ch;
+      margin: 0 auto 28px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 1.03rem;
+    }
+
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      background: var(--sage-soft);
+      border: 1px solid #c6d5cd;
+      border-left: 6px solid var(--sage);
+      border-radius: 8px;
+      padding: 22px;
+      font-size: 1.06rem;
+    }
+
+    .start-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .start-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      min-width: 0;
+    }
+    .label {
+      color: var(--gold);
+      display: block;
+      font-size: .78rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .proposal {
+      background: var(--charcoal);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 22px;
+      display: grid;
+      gap: 20px;
+    }
+    .proposal-top {
+      display: grid;
+      gap: 14px;
+      align-items: start;
+    }
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .pill {
+      display: inline-flex;
+      max-width: 100%;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: #eef4f0;
+      font-size: .88rem;
+      background: rgba(255,255,255,.07);
+      white-space: normal;
+    }
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--gold);
+      color: var(--charcoal);
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+    .step strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1rem;
+    }
+    .step p { color: #cbd5d0; }
+
+    .identity {
+      max-width: 82ch;
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+    }
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .customers strong {
+      display: inline-flex;
+      border: 1px solid #d8c08a;
+      background: var(--gold-soft);
+      color: #4b3712;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: .88rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .case-card {
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      min-width: 0;
+    }
+    .case-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .case-body {
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+    .case-body p { color: var(--muted); }
+    .case-body a {
+      font-weight: 800;
+      color: var(--sage);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .talk {
+      text-align: center;
+      background: var(--sage-soft);
+    }
+    .talk .wrap {
+      max-width: 760px;
+      display: grid;
+      gap: 16px;
+      justify-items: center;
+    }
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 100%;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--charcoal);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .hero .wrap {
+        grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
+      }
+      .mini-panel { align-self: end; }
+      .proposal { padding: 32px; }
+      .proposal-top {
+        grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+      }
+    }
+
+    @media (max-width: 520px) {
+      .section { padding: 44px 16px; }
+      .hero { min-height: 94vh; padding: 36px 16px 54px; }
+      .mini-panel div { flex-direction: column; gap: 3px; }
+      .start-grid, .proof-grid { grid-template-columns: 1fr; }
+      .step { grid-template-columns: 1fr; }
+      .case-card img { height: 150px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <span class="eyebrow">Prepared for Graham Law</span>
+          <h1>Keeping Monument simple as the banking platform scales</h1>
+          <div class="hero-copy">
+            <p>Monument already has a loved savings app. The next challenge is keeping releases calm while the same cloud-native platform grows into BPaaS for other banks.</p>
+            <p><strong>Why we're here:</strong> Monument Technology just raised seed funding, is implementing Castle Trust Bank, and is hiring delivery roles around data migration and cloud-led banking.</p>
+          </div>
+        </div>
+        <div class="mini-panel" aria-label="Research notes">
+          <div><span>Product</span><strong>Mobile savings app</strong></div>
+          <div><span>Scale signal</span><strong>BPaaS rollout</strong></div>
+          <div><span>Ops focus</span><strong>Release health</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Monument already has the rare part: users call the savings app simple and fast. The signal says the next load is not basic app polish; it is scale. Monument Technology is taking the same cloud-native banking platform to external banks, with Castle Trust now moving savings onto it. That puts cloud operations in the middle of app releases, client migrations, support flows, and platform SLAs. If those paths drift, the bank can keep growing while Graham's team absorbs the noise.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Your own mobile FAQ names TS6, TS8, and TS9 paths. Join those codes to app version, device, VPN, and support ticket data, then make them release gates.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Reviews and Reddit point to ISA transfer provider gaps. Add a pre-check before transfer intent, so users know supported providers and support sees the failed step.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal">
+          <div class="proposal-top">
+            <div>
+              <span class="label">Engagement model</span>
+              <p>Use a dedicated squad under Monument's PO/PM and Graham's cloud operations lead. Start with a six-week pilot and weekly demos.</p>
+              <div class="team" aria-label="Proposed team">
+                <span class="pill">Cloud/DevOps lead</span>
+                <span class="pill">Backend engineer</span>
+                <span class="pill">Mobile release engineer</span>
+                <span class="pill">QA automation engineer</span>
+                <span class="pill">Data migration engineer</span>
+              </div>
+            </div>
+            <div>
+              <span class="label">Relevant stack</span>
+              <p>Java, Node.js, Python, React, Angular, Kubernetes, cloud DevOps, QA automation, and data pipelines.</p>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div><strong>Map release health</strong><p>Trace release health across iOS, Android, web, and BPaaS environments, then connect each alert to version, owner, and rollback path.</p></div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div><strong>Add high-risk smoke tests</strong><p>Build smoke tests for login, device switch, transfer start, app chat, maintenance state, and the app download path.</p></div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div><strong>Harden client migrations</strong><p>Create a migration rehearsal pack for Castle Trust-style clients, with data checks, cutover gates, and incident roles.</p></div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div><strong>Clean the mobile entry path</strong><p>Tune the mobile web entry path by deferring non-critical scripts and checking download calls before campaigns run.</p></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="identity">
+          <p>Elinext is a full-cycle software development company active since 1997. We have about 700 in-house specialists and use no freelancers. For fintech work, ISO 27001 and ISO 9001 matter. Our teams cover Java, .NET, Node.js, Python, React, Angular, and DevOps. We have delivered finance, banking, and payment projects across Europe and North America. We can add cloud, backend, mobile, QA, and data engineers under your PM. That gives Graham extra hands for release and migration work without losing control.</p>
+          <div class="customers" aria-label="Named customers">
+            <strong>Broadcom</strong>
+            <strong>Siemens</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <p class="section-lede">Two relevant Elinext projects from regulated finance and banking delivery.</p>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-backend.jpg" alt="Banking backend case study cover">
+            <div class="case-body">
+              <h3>Backend App Development for Banking</h3>
+              <p>Elinext built backend search and sync work for a banking app supplier, using Kubernetes, Docker, Java, Quarkus, and Elasticsearch.</p>
+              <a href="https://www.elinext.com/case-study/backend-app-development-for-banking/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-liquidity.jpg" alt="Cash and liquidity case study cover">
+            <div class="case-body">
+              <h3>Cash and Liquidity Management App</h3>
+              <p>A UK fintech project used Java, Spring, Azure Kubernetes, Prometheus, Angular, MongoDB, and PostgreSQL for bank-scale processing.</p>
+              <a href="https://www.elinext.com/case-study/cash-and-liquidity-management-app/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>Compare notes on the pilot in one short call.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Open Elinext contacts</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
