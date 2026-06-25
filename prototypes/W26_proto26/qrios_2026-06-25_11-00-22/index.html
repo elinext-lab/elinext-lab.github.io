@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QRIOS Life Science QA delivery brief | Elinext</title>
+  <meta name="description" content="A short QRIOS brief on scaling regulated Life Science QA, consultant handovers, and test automation.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/qrios_2026-06-25_11-00-22/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/qrios_2026-06-25_11-00-22/">
+  <meta property="og:title" content="QRIOS Life Science QA delivery brief">
+  <meta property="og:description" content="A short QRIOS brief on scaling regulated Life Science QA, consultant handovers, and test automation.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/qrios_2026-06-25_11-00-22/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="QRIOS Life Science QA delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="QRIOS Life Science QA delivery brief">
+  <meta name="twitter:description" content="A short QRIOS brief on scaling regulated Life Science QA, consultant handovers, and test automation.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/qrios_2026-06-25_11-00-22/og-image.jpg">
+  <style>
+    :root {
+      --ink: #151515;
+      --muted: #5f6368;
+      --line: #d9dde2;
+      --paper: #fffdf6;
+      --panel: #ffffff;
+      --soft: #f3f7f4;
+      --dark: #17202a;
+      --gold: #ffd43b;
+      --teal: #177a75;
+      --blue: #3867b7;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    img { display: block; max-width: 100%; height: auto; }
+    .wrap { width: min(100% - 32px, 1120px); margin: 0 auto; }
+    .hero {
+      background: var(--dark);
+      color: #fff;
+      padding: 56px 0 42px;
+      border-bottom: 8px solid var(--gold);
+    }
+    .hero .wrap { display: grid; gap: 24px; }
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      max-width: 820px;
+      font-size: clamp(34px, 8vw, 68px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 720px;
+      color: #e4e8ec;
+      font-size: clamp(17px, 2.5vw, 21px);
+    }
+    section { padding: 48px 0; background: var(--paper); }
+    section h2 {
+      text-align: center;
+      font-size: clamp(25px, 4vw, 38px);
+      line-height: 1.12;
+      margin-bottom: 20px;
+      letter-spacing: 0;
+    }
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      background: #eef5ef;
+      border: 1px solid #cadae0;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      padding: 22px;
+      font-size: 18px;
+    }
+    .start-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: 1fr;
+    }
+    .start-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .label {
+      display: block;
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      margin-bottom: 8px;
+    }
+    .proposal {
+      background: #f7f2d7;
+      border-top: 1px solid #e4dca7;
+      border-bottom: 1px solid #e4dca7;
+    }
+    .proposal-intro {
+      max-width: 760px;
+      margin: 0 auto 22px;
+      text-align: center;
+      font-size: 18px;
+    }
+    .team-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 0 auto 22px;
+      max-width: 820px;
+    }
+    .pill {
+      border: 1px solid #c7b850;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: #fffbe2;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .steps {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+    .step {
+      background: var(--panel);
+      border: 1px solid #d9cf78;
+      border-radius: 8px;
+      padding: 18px;
+      min-width: 0;
+    }
+    .num {
+      display: inline-grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      margin-bottom: 12px;
+      border-radius: 999px;
+      background: var(--dark);
+      color: var(--gold);
+      font-weight: 800;
+    }
+    .step strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .step p { color: var(--muted); }
+    .stack {
+      margin: 22px auto 0;
+      max-width: 760px;
+      text-align: center;
+      color: #384149;
+      font-size: 15px;
+    }
+    .elinext-box {
+      max-width: 82ch;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      font-size: 17px;
+    }
+    .logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .logos strong {
+      background: #edf2fb;
+      border: 1px solid #cbd8ef;
+      border-radius: 999px;
+      padding: 6px 10px;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    .case {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .case-body { padding: 18px; }
+    .case h3 {
+      font-size: 20px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .case p { color: var(--muted); margin-bottom: 14px; }
+    .case a {
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    .talk {
+      background: var(--dark);
+      color: #fff;
+      text-align: center;
+      padding: 46px 0;
+    }
+    .talk h2 { color: #fff; margin-bottom: 10px; }
+    .talk p {
+      max-width: 520px;
+      margin: 0 auto 22px;
+      color: #d9e0e8;
+      font-size: 18px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 22px;
+      border-radius: 8px;
+      background: var(--gold);
+      color: var(--ink);
+      font-weight: 800;
+      text-decoration: none;
+    }
+    @media (min-width: 740px) {
+      .hero { padding: 82px 0 60px; }
+      section { padding: 64px 0; }
+      .start-grid, .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .read-box, .elinext-box { padding: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Prepared for QRIOS</span>
+      <h1>Scale Life Science QA without slowing delivery</h1>
+      <p>QRIOS is adding Life Science roles around process development, validation, and QA. Here is how we would help make that growth easier to run.</p>
+      <p>Saw the Process Developer role for pharma and biotech work in Stockholm and Uppsala. It points to more regulated delivery load, not just more hiring.</p>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2>Our read</h2>
+      <div class="read-box">
+        <p>QRIOS is adding Life Science capacity around process development, QA, validation, and WFM consulting. That says the hard part is not only finding people. It is keeping the delivery model clear when consultants work inside regulated client teams. Your Life Science pages name MDR, pharma, MedTech, biotech, and food technology. If QA automation and CI/CD stay separate from field work, handovers slow down and senior experts carry too much review load.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Where we'd start</h2>
+      <div class="start-grid">
+        <div class="start-card">
+          <span class="label">What we noticed</span>
+          <p>Your job board splits roles by Life Science, Engineering, HR, location, and remote mode. Add a regulated-delivery checklist to each Life Science role, so QA, CAPA, and validation needs are captured before screening.</p>
+        </div>
+        <div class="start-card">
+          <span class="label">Useful next step</span>
+          <p>The Consulting Portal page is a short bridge to one portal. Split it into new consultant and active assignment paths, then add prompts for training, certificates, benefits, and support.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="proposal">
+    <div class="wrap">
+      <h2>What we'd do</h2>
+      <p class="proposal-intro">Use a dedicated QA and DevOps squad under your PM. Start with a six-week pilot on one Life Science assignment path, with weekly demos and a clear handover.</p>
+      <div class="team-strip" aria-label="Suggested team shape">
+        <span class="pill">QA Lead</span>
+        <span class="pill">Automation Engineer</span>
+        <span class="pill">Automation Engineer</span>
+        <span class="pill">DevOps Engineer</span>
+        <span class="pill">Part-time BA</span>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="num">1</span>
+          <strong>Map delivery gates</strong>
+          <p>Map the Life Science path from role intake to onboarding, with QA gates for GMP, MDR, CAPA, and tech transfer work.</p>
+        </div>
+        <div class="step">
+          <span class="num">2</span>
+          <strong>Build test assets</strong>
+          <p>Build a reusable .NET automation starter pack for APIs, web flows, and regression tests used across client assignments.</p>
+        </div>
+        <div class="step">
+          <span class="num">3</span>
+          <strong>Wire CI checks</strong>
+          <p>Connect checks to CI/CD so test evidence, release notes, and defect trends are ready before client reviews.</p>
+        </div>
+        <div class="step">
+          <span class="num">4</span>
+          <strong>Leave a playbook</strong>
+          <p>Document a handover playbook Philip's distributed teams can use across developers, architects, DevOps, and consultant managers.</p>
+        </div>
+      </div>
+      <p class="stack"><strong>Relevant stack:</strong> .NET, C#, Angular, Python, CI/CD, cloud DevOps.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Who is Elinext</h2>
+      <div class="elinext-box">
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For this work, the useful part is our QA, DevOps, .NET, Angular, and healthcare delivery depth. We hold ISO 9001 and ISO 27001, which fits regulated Life Science work. Our teams have delivered for the customers below. That gives QRIOS a partner who can join under your PM and turn QA automation into a repeatable delivery asset.</p>
+        <div class="logos" aria-label="Named customers">
+          <strong>Broadcom</strong>
+          <strong>Siemens</strong>
+          <strong>Volkswagen</strong>
+          <strong>TRUMPF</strong>
+          <strong>TUI</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Proof</h2>
+      <div class="proof-grid">
+        <article class="case">
+          <img src="assets/case-clinical-trials.jpg" alt="Clinical trials software QA case study">
+          <div class="case-body">
+            <h3>Quality Assurance for Clinical Trials Software</h3>
+            <p>Elinext supported a live SaaS platform for clinical trial management, collaboration, and secure regulated document work.</p>
+            <a href="https://www.elinext.com/case-study/qa-for-clinical-trials-software/">Read the case study</a>
+          </div>
+        </article>
+        <article class="case">
+          <img src="assets/case-healthcare-privacy.jpg" alt="Healthcare data privacy QA case study">
+          <div class="case-body">
+            <h3>Automation QA for Healthcare Data Privacy</h3>
+            <p>Elinext added automation QA support for a complex healthcare data product with many sources and migration cases.</p>
+            <a href="https://www.elinext.com/case-study/automation-qa-for-healthcare-data-privacy/">Read the case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="talk">
+    <div class="wrap">
+      <h2>Talk through the pilot</h2>
+      <p>Bring one live assignment and we map the first sprint.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+    </div>
+  </section>
+</body>
+</html>
