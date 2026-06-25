@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W26_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Monument delivery brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W26_proto26/monument_2026-06-25_09-12-27/">
+  <meta name="description" content="A short engineering brief for Monument's Savings and BPaaS delivery moment.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W26_proto26/monument_2026-06-25_09-12-27/">
+  <meta property="og:title" content="Monument: scaling Savings and bank-in-a-box delivery">
+  <meta property="og:description" content="A short engineering brief for Monument's app and platform growth moment.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/monument_2026-06-25_09-12-27/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Monument: scaling Savings and bank-in-a-box delivery - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Monument: scaling Savings and bank-in-a-box delivery">
+  <meta name="twitter:description" content="A short engineering brief for Monument's app and platform growth moment.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W26_proto26/monument_2026-06-25_09-12-27/og-image.jpg">
+  <style>
+    :root {
+      --ink: #162026;
+      --muted: #59686f;
+      --line: #d8e1df;
+      --paper: #f7f4eb;
+      --white: #ffffff;
+      --navy: #102735;
+      --teal: #1a8f84;
+      --amber: #d88929;
+      --wine: #8f3350;
+      --mint: #e4f3ee;
+      --bluewash: #eaf1f2;
+      --shadow: 0 18px 45px rgba(15, 39, 53, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 56px 18px 46px;
+    }
+
+    .wrap {
+      width: min(100% - 36px, 1080px);
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #a9cbc4;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 16px;
+      font-size: clamp(2.15rem, 8vw, 5rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 690px;
+      margin-bottom: 12px;
+      color: #d8e7e4;
+      font-size: 1rem;
+    }
+
+    .hero-panel {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .hero-panel span {
+      display: inline-flex;
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(216, 137, 41, 0.18);
+      color: #ffd8a3;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    section {
+      padding: 44px 0;
+      background: var(--paper);
+    }
+
+    section:nth-of-type(even) {
+      background: var(--white);
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: clamp(1.65rem, 5vw, 2.6rem);
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 22px;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: var(--mint);
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p,
+    .start-card p,
+    .plan-card p,
+    .cred p,
+    .case-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--wine);
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .plan {
+      background: #e9f0ef;
+    }
+
+    .plan-panel {
+      display: grid;
+      gap: 18px;
+      padding: 20px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .plan-summary {
+      display: grid;
+      gap: 12px;
+    }
+
+    .plan-summary strong {
+      color: #ffd8a3;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .plan-card {
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.17);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .num {
+      display: inline-grid;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 10px;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--amber);
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    .plan-card h3 {
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+
+    .plan-card p,
+    .plan-summary p {
+      color: #dce7e4;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .stack span,
+    .customers span {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--bluewash);
+      color: var(--navy);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .cred {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 22px;
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 0;
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: var(--bluewash);
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 6px;
+      font-size: 1.1rem;
+    }
+
+    .case-body a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--teal);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    section.cta {
+      background: var(--navy);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .cta p {
+      margin-bottom: 22px;
+      color: #d8e7e4;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      max-width: 100%;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--amber);
+      color: var(--navy);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .hero {
+        padding: 78px 0 64px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.7fr);
+      }
+
+      section {
+        padding: 62px 0;
+      }
+
+      .start-grid,
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .plan-panel {
+        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+        padding: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Prepared for Shaun Bohannon</p>
+        <h1>Helping Monument scale savings and banking platform delivery</h1>
+        <p>A short engineering brief for Monument's next growth phase.</p>
+        <p>Why we're here: Monument is hiring Savings tech roles while Monument Technology raises funding and adds bank clients. That is a good time to harden app journeys.</p>
+      </div>
+      <div class="hero-panel" aria-label="Research focus">
+        <span>Focus</span>
+        <p>Mobile savings flows, BPaaS release risk, and support paths that protect client trust.</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Your signal shows a bank scaling Savings delivery and BPaaS at once. Monument now has active Savings roles across engineering, product, and design. Monument Technology just raised seed funding and added Castle Trust Bank. That creates two delivery fronts with one trust standard. Reviews praise simple setup, yet flag ISA transfers, chat, device login, and crashes. If these edges stay unmanaged, growth can turn support into product debt.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">Observed</span>
+            <p>Keep the one-device rule, but add a clearer trusted-device recovery path. Reviewers describe approval loops across iPhone and iPad, so test step-up checks with biometrics.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Next step</span>
+            <p>Treat ISA transfer and chat faults as one service journey. A daily review across app, servicing, and partner APIs would show where clients wait.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="plan-panel">
+          <div class="plan-summary">
+            <p><strong>Engagement model:</strong> a dedicated squad under Shaun's product and platform leads.</p>
+            <p><strong>Team:</strong> 1 delivery lead, 2 mobile engineers, 1 backend engineer, 1 QA automation engineer, 1 DevOps engineer.</p>
+            <p><strong>Pilot:</strong> six weeks, with a weekly demo and clear go or hold gates.</p>
+            <div class="stack" aria-label="Relevant stack">
+              <span>React Native</span>
+              <span>Flutter</span>
+              <span>Node.js</span>
+              <span>Java</span>
+              <span>Docker</span>
+              <span>Kubernetes</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="plan-card">
+              <span class="num">1</span>
+              <h3>Trace core journeys</h3>
+              <p>Map onboarding, device changes, withdrawals, ISA transfers, and in-app chat from app event to service case.</p>
+            </article>
+            <article class="plan-card">
+              <span class="num">2</span>
+              <h3>Automate release checks</h3>
+              <p>Build regression packs for transfer, login, and support flows across iOS and Android release branches.</p>
+            </article>
+            <article class="plan-card">
+              <span class="num">3</span>
+              <h3>Harden service health</h3>
+              <p>Add checks for partner APIs, app versions, and servicing queues before issues reach client support.</p>
+            </article>
+            <article class="plan-card">
+              <span class="num">4</span>
+              <h3>Set release gates</h3>
+              <p>Create a release playbook for Savings and BPaaS changes, with clear go or hold criteria.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development partner, active since 1997 in finance and telecom. We have ~700 in-house specialists and do not use freelancers or subcontractors. Our teams cover mobile, web, backend, QA, AI, DevOps, and delivery management. For regulated work, we bring ISO 9001 and ISO 27001 delivery habits. Named clients include Siemens, Broadcom, Volkswagen, TRUMPF, and TUI across complex global software work. For Monument, that means senior engineers who can join your roadmap, respect controls, and reduce hiring delay.</p>
+          <div class="customers" aria-label="Named customers">
+            <span>Siemens</span>
+            <span>Broadcom</span>
+            <span>Volkswagen</span>
+            <span>TRUMPF</span>
+            <span>TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-neobank.jpg" alt="Neobank mobile app case study image">
+            <div class="case-body">
+              <h3>NeoBank Application Development</h3>
+              <p>Elinext built a Flutter banking app with backend integration for a Western Europe fintech.</p>
+              <a href="https://www.elinext.com/case-study/neobank-application-development/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-banking-qa.jpg" alt="Banking QA case study image">
+            <div class="case-body">
+              <h3>Banking QA Services</h3>
+              <p>A long-running banking QA engagement improved release control, test coverage, and late defect handling.</p>
+              <a href="https://www.elinext.com/case-study/qa-services-for-banking-app/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Start a practical conversation</h2>
+        <p>Bring the review notes; we will bring a pilot plan.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
