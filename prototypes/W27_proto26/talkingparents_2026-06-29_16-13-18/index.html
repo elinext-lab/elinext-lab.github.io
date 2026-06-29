@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TalkingParents backend reliability brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/talkingparents_2026-06-29_16-13-18/">
+  <meta name="description" content="A short proposal for scaling TalkingParents backend reliability, records, transcripts, and release quality.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/talkingparents_2026-06-29_16-13-18/">
+  <meta property="og:title" content="TalkingParents backend reliability brief">
+  <meta property="og:description" content="A focused plan for records, transcripts, plan changes, and backend scale.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/talkingparents_2026-06-29_16-13-18/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="TalkingParents backend reliability brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TalkingParents backend reliability brief">
+  <meta name="twitter:description" content="A focused plan for records, transcripts, plan changes, and backend scale.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/talkingparents_2026-06-29_16-13-18/og-image.jpg">
+  <style>
+    :root {
+      --ink: #183047;
+      --muted: #5a6d7e;
+      --paper: #fbfaf7;
+      --panel: #ffffff;
+      --soft: #eef6f4;
+      --blue: #173a63;
+      --teal: #0f7b78;
+      --orange: #ee7b2f;
+      --line: #dbe5e7;
+      --shadow: 0 18px 48px rgba(24, 48, 71, .12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+    section {
+      padding: 56px 0;
+      background: var(--paper);
+      position: relative;
+      z-index: 1;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      font-size: clamp(2.2rem, 7vw, 5.4rem);
+      line-height: .98;
+      max-width: 15ch;
+      margin-bottom: 24px;
+    }
+    h2 {
+      text-align: center;
+      font-size: clamp(1.7rem, 4vw, 3rem);
+      line-height: 1.08;
+      margin-bottom: 24px;
+    }
+    h3 { font-size: 1.02rem; margin-bottom: 8px; }
+    p { font-size: 1rem; }
+    .eyebrow {
+      display: inline-block;
+      color: var(--teal);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: .78rem;
+      margin-bottom: 18px;
+    }
+    .hero {
+      min-height: auto;
+      display: grid;
+      align-items: start;
+      padding: 88px 0 44px;
+      background: #f7fbfb;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+    .why {
+      max-width: 58ch;
+      font-size: 1.08rem;
+      color: #31495f;
+    }
+    .signal-strip {
+      display: grid;
+      gap: 12px;
+      border-left: 6px solid var(--orange);
+      padding: 18px;
+      background: var(--panel);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .signal-strip span {
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .read-box {
+      background: #eaf3f0;
+      border: 1px solid #cfe1dc;
+      border-left: 8px solid var(--teal);
+      border-radius: 8px;
+      padding: 28px;
+      max-width: 78ch;
+      margin: 0 auto;
+    }
+    .start-grid, .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+    .start-card, .case-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(24, 48, 71, .07);
+    }
+    .label {
+      color: var(--orange);
+      font-weight: 700;
+      font-size: .78rem;
+      text-transform: uppercase;
+    }
+    .proposal {
+      background: #173a63;
+      color: #f6fbff;
+      padding: 64px 0;
+    }
+    .proposal h2 { color: #ffffff; }
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+    }
+    .team {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .role {
+      background: rgba(255,255,255,.11);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-weight: 700;
+    }
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+    .step {
+      background: #ffffff;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 18px;
+      display: grid;
+      gap: 8px;
+    }
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 700;
+    }
+    .step-title { display: block; font-weight: 700; font-size: 1.05rem; }
+    .step p { color: #536576; margin: 0; }
+    .cred {
+      background: #ffffff;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .cred-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 28px;
+      border: 1px solid var(--line);
+    }
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .pill {
+      border: 1px solid #bad1d1;
+      background: #edf7f5;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 700;
+      font-size: .86rem;
+    }
+    .case-card { overflow: hidden; padding: 0; }
+    .case-body { padding: 20px; }
+    .case-card img {
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      width: 100%;
+      background: #e8eef2;
+    }
+    .case-card a {
+      color: var(--teal);
+      font-weight: 700;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    .cta {
+      text-align: center;
+      background: #f1f7f5;
+    }
+    .cta p { color: var(--muted); }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 20px;
+      margin-top: 10px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      section { padding: 72px 0; }
+      h1 { max-width: 11ch; }
+      .hero {
+        min-height: 78vh;
+        align-items: end;
+        padding: 36px 0 44px;
+      }
+      .hero-grid {
+        grid-template-columns: 1.3fr .7fr;
+        gap: 52px;
+      }
+      .start-grid, .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .proposal-grid {
+        grid-template-columns: .8fr 1.2fr;
+        align-items: start;
+      }
+      .team {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow">Prepared for Louis Erickson</span>
+          <h1>Scale TalkingParents safely without adding more backend strain</h1>
+          <p class="why">Saw the Senior Backend Engineer opening and the product shift to paid plans. This brief shows where a small Elinext squad could reduce load while your team protects court-ready records.</p>
+        </div>
+        <div class="signal-strip" aria-label="Why this brief exists">
+          <strong>Why we're here</strong>
+          <span>TalkingParents is hiring backend and product lifecycle help while users lean on records, calls, plans, and support every day.</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Hiring Senior Backend Engineers says TalkingParents is scaling core systems, not only adding features. The hard part is that your product is also the record users trust in court. Recent app reviews mention plan changes, call transcripts, missed notifications, and old record search. Those are not small defects for this market. If backend load keeps landing on the core team, support tickets rise and product work slows.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">Noticed</span>
+            <p>Recent reviews tie plan changes to blocked access and downgrade confusion. First step: map every app-store, web, waiver, and record-access state.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Noticed</span>
+            <p>Users name call transcripts, PDFs, notifications, and old message search as stress points. Add synthetic checks before each release.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-grid">
+          <div>
+            <p>Use a dedicated squad under your PO or PM for a six-week pilot.</p>
+            <div class="team" aria-label="Team shape">
+              <div class="role">1 Backend Tech Lead</div>
+              <div class="role">2 Senior Backend Engineers</div>
+              <div class="role">1 QA Automation Engineer</div>
+              <div class="role">1 DevOps Engineer</div>
+            </div>
+            <p>Relevant stack: Java, .NET, Node.js, Python, AWS, automated QA.</p>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <span class="num">1</span>
+              <span class="step-title">Map trust-critical flows</span>
+              <p>Trace plan changes, record access, call transcripts, messages, and support handoffs across web, iOS, and Android.</p>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <span class="step-title">Add release gates</span>
+              <p>Build automated checks for downgrade paths, PDF records, old-message search, transcript jobs, and notification delivery.</p>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <span class="step-title">Expose support diagnostics</span>
+              <p>Give support clear account state, billing source, transcript status, and delivery history without engineering help.</p>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <span class="step-title">Tune backend visibility</span>
+              <p>Add alerts and dashboards around slow jobs, failed events, retries, and app-version-specific delivery gaps by release and platform.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cred">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="cred-box">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For TalkingParents, the fit is backend, QA, DevOps, and sensitive-data delivery. We hold ISO 9001 and ISO 27001, and have delivered work for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. That matters when records, transcripts, and account states need steady delivery. The same model above gives you senior capacity without slowing your core team.</p>
+          <div class="pill-list" aria-label="Named customer examples">
+            <span class="pill">Siemens</span>
+            <span class="pill">Broadcom</span>
+            <span class="pill">Volkswagen</span>
+            <span class="pill">TRUMPF</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof from similar work</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-patient-portal.jpg" alt="Patient portal case study preview">
+            <div class="case-body">
+              <h3>Patient Portal for a Healthcare Company</h3>
+              <p>Elinext built a secure web portal on AWS for regulated patient data and multi-country privacy needs.</p>
+              <a href="https://www.elinext.com/case-study/patient-portal-for-healthcare-company/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-automation-qa.jpg" alt="Automation QA case study preview">
+            <div class="case-body">
+              <h3>Automation QA for Healthcare Data Privacy</h3>
+              <p>Elinext added QA automation and CI support when manual QA no longer matched product complexity.</p>
+              <a href="https://www.elinext.com/case-study/automation-qa-for-healthcare-data-privacy/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Start a focused pilot</h2>
+        <p>Six weeks is enough to prove the fit.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
