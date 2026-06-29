@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UBDS Digital secure delivery brief</title>
+  <meta name="description" content="A short proposal for scaling UBDS Digital cloud delivery without adding security review debt.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/ubds-digital_2026-06-29_09-00-17/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/ubds-digital_2026-06-29_09-00-17/">
+  <meta property="og:title" content="UBDS Digital secure delivery brief">
+  <meta property="og:description" content="A short plan for scaling cloud delivery after LDC backing, without adding security review debt.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/ubds-digital_2026-06-29_09-00-17/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="UBDS Digital secure delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="UBDS Digital secure delivery brief">
+  <meta name="twitter:description" content="A short plan for scaling cloud delivery after LDC backing, without adding security review debt.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/ubds-digital_2026-06-29_09-00-17/og-image.jpg">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #162033;
+      --muted: #667085;
+      --soft: #f4f7f9;
+      --line: #d8e0e7;
+      --navy: #152238;
+      --teal: #0d8b86;
+      --orange: #e66a2c;
+      --green: #2d7d58;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--white);
+      line-height: 1.5;
+    }
+
+    body {
+      font-size: 16px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 48px 18px 42px;
+    }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 26px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #9edbd7;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 16px;
+      font-size: clamp(2rem, 6vw, 4.5rem);
+      line-height: 1.03;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 720px;
+      margin-bottom: 0;
+      color: #dce8ef;
+      font-size: 1.05rem;
+    }
+
+    .signal {
+      border-left: 5px solid var(--orange);
+      padding-left: 16px;
+    }
+
+    .hero-note {
+      align-self: end;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.06);
+      padding: 18px;
+      border-radius: 8px;
+    }
+
+    .hero-note strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    section {
+      padding: 42px 18px;
+      background: var(--white);
+    }
+
+    section.alt {
+      background: var(--soft);
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: clamp(1.55rem, 4vw, 2.35rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: #e9f6f5;
+      padding: 22px;
+      box-shadow: 0 14px 32px rgba(20, 34, 56, 0.08);
+    }
+
+    .read-box p {
+      margin: 0;
+      font-size: 1.02rem;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .proof-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      padding: 20px;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 10px;
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      background: #f8fbfb;
+    }
+
+    .proposal-panel {
+      border: 1px solid #b7d7d2;
+      border-radius: 8px;
+      background: var(--white);
+      overflow: hidden;
+      box-shadow: 0 20px 42px rgba(20, 34, 56, 0.1);
+    }
+
+    .proposal-head {
+      display: grid;
+      gap: 16px;
+      padding: 22px;
+      background: #dff2ef;
+    }
+
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: start;
+    }
+
+    .pill {
+      display: inline-flex;
+      max-width: 100%;
+      border-radius: 999px;
+      background: var(--navy);
+      color: var(--white);
+      padding: 7px 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      white-space: normal;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr);
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .num {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .step p,
+    .start-card p,
+    .proof-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .stack {
+      padding: 0 18px 22px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .who {
+      max-width: 82ch;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      background: var(--white);
+    }
+
+    .logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .logos strong {
+      border: 1px solid #bdd0dc;
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: #f6fafb;
+      font-size: 0.88rem;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 14px;
+    }
+
+    .proof-card h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      line-height: 1.25;
+    }
+
+    .proof-card a {
+      display: inline-flex;
+      margin-top: 12px;
+      color: var(--teal);
+      font-weight: 700;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .cta {
+      background: var(--navy);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .cta p {
+      margin-bottom: 20px;
+      color: #dce8ef;
+    }
+
+    .button {
+      display: inline-flex;
+      max-width: 100%;
+      justify-content: center;
+      border-radius: 6px;
+      background: var(--orange);
+      color: var(--white);
+      padding: 13px 18px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .sources {
+      margin-top: 18px;
+      color: #9aa9b7;
+      font-size: 0.85rem;
+    }
+
+    @media (min-width: 760px) {
+      .hero {
+        padding: 70px 28px 58px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.7fr) minmax(240px, 0.8fr);
+      }
+
+      section {
+        padding: 58px 28px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-head {
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 0.9fr);
+        align-items: center;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Prepared for Frederick Tromp</p>
+        <h1>UBDS Digital can scale cloud delivery without adding security debt</h1>
+        <p class="signal">Saw UBDS Group's LDC backing and new cloud, data, and full-stack hiring. This brief looks at how to add delivery capacity while Frederick keeps security architecture clear.</p>
+      </div>
+      <aside class="hero-note" aria-label="Why we are here">
+        <strong>Why we're here</strong>
+        <p>The moment is about growth. The hard part is keeping secure delivery patterns simple.</p>
+      </aside>
+    </div>
+  </header>
+
+  <section class="alt">
+    <div class="wrap">
+      <h2>Our read</h2>
+      <div class="read-box">
+        <p>UBDS is moving from strong specialist growth into a larger delivery machine. The LDC news says the next step is organic growth, acquisitions, and more reach. Your live roles point to cloud-native apps, AWS DevOps, Azure data, React, TypeScript, and Python. That mix can add client value, but it also adds review paths for Frederick's security architecture team. If each squad handles patterns alone, SOC, GovAssure, and managed services work can slow at the handoff. The risk is repeatable delivery under strict security rules.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Where we'd start</h2>
+      <div class="start-grid">
+        <article class="start-card">
+          <span class="label">Site check</span>
+          <p>On narrow phones, the SOC and managed services pages push wider than the screen. Next step: fix the oversized element and run this check before campaigns.</p>
+        </article>
+        <article class="start-card">
+          <span class="label">Buyer path check</span>
+          <p>Public search points to services, not app listings. Next step: treat SOC, GovAssure, and Cloud Platforms as product journeys with one secure assessment path.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="proposal">
+    <div class="wrap">
+      <h2>What we'd do</h2>
+      <div class="proposal-panel">
+        <div class="proposal-head">
+          <div>
+            <p><strong>Engagement model:</strong> a dedicated squad under UBDS product and security leadership.</p>
+            <p><strong>Team shape:</strong> 1 tech lead, 2 senior full-stack engineers, 1 DevOps engineer, 1 QA automation engineer.</p>
+          </div>
+          <div class="team" aria-label="Relevant stack">
+            <span class="pill">React</span>
+            <span class="pill">TypeScript</span>
+            <span class="pill">Python</span>
+            <span class="pill">Node.js</span>
+            <span class="pill">Azure</span>
+            <span class="pill">AWS</span>
+          </div>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <span class="num">1</span>
+            <div>
+              <strong>Map patterns</strong>
+              <p>Map security patterns across SOC, GovAssure, Cloud Platforms, and live roles, then define one review checklist for new squads.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="num">2</span>
+            <div>
+              <strong>Build a reference path</strong>
+              <p>Build a small reference app path with React, TypeScript, Python APIs, and Azure or AWS controls.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="num">3</span>
+            <div>
+              <strong>Add delivery gates</strong>
+              <p>Add CI/CD checks for secrets, dependency risk, IaC drift, and release evidence before client demos.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="num">4</span>
+            <div>
+              <strong>Package the playbooks</strong>
+              <p>Turn findings into reusable playbooks for secure app delivery, data pipelines, and cloud landing zones.</p>
+            </div>
+          </article>
+        </div>
+        <p class="stack">Pilot: 6 weeks, weekly demos, clear handover to UBDS owners.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Who is Elinext</h2>
+      <div class="who">
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For security-led work, ISO 27001 and ISO 9001 matter because process and information security are part of the build. We can cover web, backend, QA, DevOps, and AI/data work inside one team. The relevant fit here is a dedicated squad under UBDS leadership, not a loose vendor handoff. Frederick can keep the architecture rules, while Elinext adds delivery speed around them.</p>
+        <div class="logos" aria-label="Named customers">
+          <strong>Siemens</strong>
+          <strong>Broadcom</strong>
+          <strong>Volkswagen</strong>
+          <strong>TRUMPF</strong>
+          <strong>TUI</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <h2>Proof</h2>
+      <div class="proof-grid">
+        <article class="proof-card">
+          <img src="assets/case-web-application-builder.jpg" alt="App Builder for a Microsoft Services Provider case study image">
+          <h3>App Builder for a Microsoft Services Provider</h3>
+          <p>Elinext rebuilt a reusable builder with Azure Kubernetes, React, TypeScript, and Java after a one-off page failed.</p>
+          <a href="https://www.elinext.com/case-study/web-application-builder/">Read the case study</a>
+        </article>
+        <article class="proof-card">
+          <img src="assets/case-ci-cd-optimization.jpg" alt="CI/CD optimization case study image">
+          <h3>CI/CD Optimization for Infrastructure Software</h3>
+          <p>A dedicated team tuned release pipelines for infrastructure products while keeping quality and security measures in place.</p>
+          <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">Read the case study</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <h2>Talk through the pilot</h2>
+      <p>A short call is enough to test fit.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      <p class="sources">Sources: UBDS website, LDC news, Built In jobs, Elinext case studies.</p>
+    </div>
+  </section>
+</body>
+</html>
