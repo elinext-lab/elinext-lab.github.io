@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Templafy engineering capacity brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/templafy_2026-06-29_11-30-16/">
+  <meta name="description" content="A focused engineering brief for Templafy as it hires senior engineering capacity.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/templafy_2026-06-29_11-30-16/">
+  <meta property="og:title" content="Templafy: keep document AI work moving while hiring">
+  <meta property="og:description" content="A short proposal for senior engineering and QA support around Templafy's document generation platform.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/templafy_2026-06-29_11-30-16/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Templafy: keep document AI work moving while hiring — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Templafy: keep document AI work moving while hiring">
+  <meta name="twitter:description" content="A short proposal for senior engineering and QA support around Templafy's document generation platform.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/templafy_2026-06-29_11-30-16/og-image.jpg">
+  <style>
+    :root {
+      --ink: #143033;
+      --muted: #5b6a68;
+      --paper: #fbfcf8;
+      --mist: #edf4ef;
+      --line: #cddbd3;
+      --teal: #22746f;
+      --leaf: #85b15b;
+      --coral: #d85d45;
+      --gold: #d69b3a;
+      --white: #ffffff;
+      --shadow: 0 18px 48px rgba(20, 48, 51, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration-thickness: 0.08em;
+      text-underline-offset: 0.18em;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at top left, rgba(133, 177, 91, 0.34), transparent 34rem),
+        linear-gradient(135deg, #123033 0%, #1e4f4d 58%, #f0b44d 150%);
+      color: var(--white);
+      padding: 56px 0 40px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 999px;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 820px;
+      margin-top: 18px;
+      font-size: clamp(2.25rem, 8vw, 5.4rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 650px;
+      margin-top: 22px;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: clamp(1rem, 2.4vw, 1.2rem);
+    }
+
+    .signal {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(10px);
+    }
+
+    .signal b {
+      color: #fff4d7;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+    }
+
+    .signal p {
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    section {
+      padding: 46px 0;
+      background: var(--paper);
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.75rem, 4vw, 3rem);
+      line-height: 1.05;
+      margin-bottom: 22px;
+    }
+
+    .read-box {
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 24px;
+      border-left: 6px solid var(--coral);
+      border-radius: 8px;
+      background: #eaf2ee;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p {
+      color: #263f3f;
+      font-size: 1.02rem;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .proof-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 12px 34px rgba(20, 48, 51, 0.08);
+      overflow: hidden;
+    }
+
+    .start-card {
+      padding: 20px;
+    }
+
+    .label {
+      color: var(--coral);
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .start-card h3,
+    .proof-card h3 {
+      margin-top: 8px;
+      font-size: 1.16rem;
+      line-height: 1.2;
+    }
+
+    .start-card p,
+    .proof-card p {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .proposal {
+      background: #f3f6ed;
+    }
+
+    .proposal-panel {
+      display: grid;
+      gap: 18px;
+      padding: 22px;
+      border-radius: 8px;
+      background: var(--ink);
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .proposal-head {
+      display: grid;
+      gap: 14px;
+    }
+
+    .proposal-head p {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .pill {
+      display: inline-flex;
+      max-width: 100%;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.11);
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #1b2320;
+      font-weight: 900;
+    }
+
+    .step strong {
+      display: block;
+      font-size: 1rem;
+      color: var(--white);
+    }
+
+    .step span {
+      display: block;
+      margin-top: 4px;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .cred {
+      background: var(--white);
+    }
+
+    .cred-box {
+      max-width: 80ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf8;
+      box-shadow: var(--shadow);
+    }
+
+    .cred-box p + p {
+      margin-top: 10px;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .customers strong {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #eaf2ee;
+      color: var(--teal);
+      font-size: 0.88rem;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-card a {
+      display: inline-flex;
+      margin-top: 12px;
+      color: var(--teal);
+      font-weight: 800;
+    }
+
+    .talk {
+      background: linear-gradient(135deg, #f7fbf2 0%, #e4f0ea 100%);
+      text-align: center;
+    }
+
+    .talk p {
+      margin: 8px auto 0;
+      max-width: 48ch;
+      color: var(--muted);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      margin-top: 22px;
+      padding: 0 18px;
+      border-radius: 8px;
+      background: var(--coral);
+      color: var(--white);
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 10px 24px rgba(216, 93, 69, 0.26);
+    }
+
+    @media (min-width: 760px) {
+      .wrap {
+        width: min(1120px, calc(100% - 56px));
+      }
+
+      .hero {
+        padding: 80px 0 64px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.55fr);
+      }
+
+      section {
+        padding: 64px 0;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-panel {
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+        padding: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">Prepared for Templafy</div>
+        <h1>Keep document AI work moving while you hire</h1>
+        <p class="hero-copy">Templafy is adding senior engineering capacity while its document generation platform grows across Office, Google Workspace, Salesforce, MCP, and APIs.</p>
+      </div>
+      <div class="signal">
+        <b>Why we're here</b>
+        <p>Saw the Senior Software Engineer opening. While that search runs, Elinext can add senior hands to protect roadmap pace and product quality.</p>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Our read</h2>
+      <div class="read-box">
+        <p>Your Senior Software Engineer search points to a team scaling the Templafy platform, not just backfilling a seat. Templafy now spans Document Agents, automated template management, email signatures, integrations, MCP, and API work. That is a wide surface for one product team to keep stable. Public reviews praise brand control, but also mention upload limits and clunky integrations. If the gap stays open, roadmap work and release quality can compete for the same senior time.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Where we'd start</h2>
+      <div class="start-grid">
+        <article class="start-card">
+          <div class="label">What we noticed</div>
+          <h3>Large assets need earlier checks</h3>
+          <p>G2 users mention upload limits, and Templafy help pages list file-size limits. Add a pre-upload check and admin lint report before assets reach the library.</p>
+        </article>
+        <article class="start-card">
+          <div class="label">Next useful move</div>
+          <h3>Office add-ins deserve a release matrix</h3>
+          <p>Templafy support covers Microsoft 365 add-in distribution and Mac Office access issues. Put install, manifest, version, and access checks into one regression suite.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="proposal">
+    <div class="wrap">
+      <h2 class="section-title">What we'd do</h2>
+      <div class="proposal-panel">
+        <div class="proposal-head">
+          <h3>Dedicated squad under your PO or PM</h3>
+          <p>A six-week pilot adds bridge capacity without slowing the permanent hire search.</p>
+          <div class="roles" aria-label="Team roles">
+            <span class="pill">1 senior full-stack engineer</span>
+            <span class="pill">1 QA automation engineer</span>
+            <span class="pill">1 DevOps support role</span>
+            <span class="pill">React</span>
+            <span class="pill">Angular</span>
+            <span class="pill">Node.js</span>
+            <span class="pill">.NET</span>
+            <span class="pill">Python</span>
+          </div>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="num">1</div>
+            <div><strong>Map one product slice</strong><span>Pick uploads, add-ins, or integrations, then map current tests, release steps, and unclear owner points.</span></div>
+          </div>
+          <div class="step">
+            <div class="num">2</div>
+            <div><strong>Ship inside your sprint</strong><span>Join your backlog and deliver small fixes for library, Office, or API work with weekly demos.</span></div>
+          </div>
+          <div class="step">
+            <div class="num">3</div>
+            <div><strong>Add regression cover</strong><span>Automate the highest-risk checks for uploads, manifests, supported Office versions, and core integration paths.</span></div>
+          </div>
+          <div class="step">
+            <div class="num">4</div>
+            <div><strong>Hand back cleanly</strong><span>Leave runbooks, test notes, and code context so the new senior hire starts faster.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cred">
+    <div class="wrap">
+      <h2 class="section-title">Who is Elinext</h2>
+      <div class="cred-box">
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For a product like Templafy, the fit is a dedicated team that can join your PO or PM and add senior web, backend, QA, and DevOps capacity.</p>
+        <div class="customers">
+          <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong>
+        </div>
+        <p>We bring ISO 9001 and ISO 27001 practices, plus enterprise delivery history with these named customers. Our teams cover React, Angular, Node.js, .NET, Python, QA automation, and cloud delivery. That is the same shape behind the pilot above: senior hands, clear scope, and proof every week.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Proof</h2>
+      <div class="proof-grid">
+        <article class="proof-card">
+          <img src="assets/case-bond-document-management.jpg" alt="Document management case study cover">
+          <div class="proof-body">
+            <div class="label">Document workflows</div>
+            <h3>Contract Management Software for Bond Trading</h3>
+            <p>Elinext built a web platform for document exchange, due diligence, approval levels, QA, DevOps, and complex collaboration.</p>
+            <a href="https://www.elinext.com/case-study/software-for-bond-trading-document-management/">View case study</a>
+          </div>
+        </article>
+        <article class="proof-card">
+          <img src="assets/case-esg-qa-automation.jpg" alt="QA automation case study cover">
+          <div class="proof-body">
+            <div class="label">QA automation</div>
+            <h3>ESG Software QA Transformation</h3>
+            <p>Elinext set up JavaScript and Cypress testing so a web platform could release faster with less manual test load.</p>
+            <a href="https://www.elinext.com/case-study/esg-software-qa-transformation/">View case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="talk">
+    <div class="wrap">
+      <h2 class="section-title">Start a focused call</h2>
+      <p>Talk through the gap and a small first sprint.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
