@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cyberhawk iHawk Geospatial Software Brief</title>
+  <meta name="description" content="A short proposal for improving iHawk geospatial data flow, QA, and public demo speed.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/cyberhawk_2026-06-29_12-30-21/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/cyberhawk_2026-06-29_12-30-21/">
+  <meta property="og:title" content="Cyberhawk iHawk geospatial software brief">
+  <meta property="og:description" content="A focused read on scaling iHawk data flow, QA, and demo speed.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/cyberhawk_2026-06-29_12-30-21/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Cyberhawk iHawk geospatial software brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cyberhawk iHawk geospatial software brief">
+  <meta name="twitter:description" content="A focused read on scaling iHawk data flow, QA, and demo speed.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/cyberhawk_2026-06-29_12-30-21/og-image.jpg">
+  <style>
+    :root {
+      --ink: #14211f;
+      --muted: #5e6b66;
+      --paper: #f7faf6;
+      --white: #ffffff;
+      --line: #d8e3dc;
+      --deep: #0c2b28;
+      --green: #2e7d61;
+      --mint: #e7f4ee;
+      --amber: #f5a623;
+      --blue: #234c7c;
+      --shadow: 0 18px 48px rgba(12, 43, 40, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .page { width: 100%; }
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+    section {
+      padding: 56px 0;
+      background: var(--paper);
+      position: relative;
+      z-index: 1;
+    }
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      background:
+        radial-gradient(circle at 88% 16%, rgba(245, 166, 35, 0.18), transparent 28%),
+        linear-gradient(135deg, #09251f 0%, #103b35 100%);
+      color: var(--white);
+      padding: 48px 0;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0 0 0 auto;
+      width: 38%;
+      background: #f4efdf;
+      clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%);
+      opacity: 0.95;
+      z-index: 0;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      padding: 6px 10px;
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      letter-spacing: 0;
+      color: #dbeee8;
+      background: rgba(255,255,255,0.08);
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 12ch;
+      font-size: clamp(2.35rem, 9vw, 5.6rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+      margin: 18px 0;
+    }
+    .hero p {
+      max-width: 62ch;
+      color: #e4f1ec;
+      font-size: 1rem;
+    }
+    .why {
+      border-left: 4px solid var(--amber);
+      padding-left: 14px;
+      margin-bottom: 0;
+    }
+    .signal-map {
+      width: 100%;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.94);
+      color: var(--ink);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .signal-map h3 { font-size: 1rem; margin-bottom: 14px; }
+    .path {
+      display: grid;
+      gap: 10px;
+    }
+    .path span {
+      display: flex;
+      align-items: center;
+      min-height: 46px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      background: var(--mint);
+      border: 1px solid var(--line);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.7rem, 5vw, 2.6rem);
+      margin-bottom: 24px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+    .read-card {
+      max-width: 78ch;
+      margin: 0 auto;
+      background: #eaf4ef;
+      border: 1px solid #c8ddd4;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: 0 12px 28px rgba(46, 125, 97, 0.08);
+    }
+    .read-card p { margin: 0; }
+    .start-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .start-card, .case-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 8px 22px rgba(20,33,31,0.06);
+    }
+    .label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--green);
+      font-weight: 800;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    .proposal {
+      background: var(--deep);
+      color: var(--white);
+    }
+    .proposal .section-title { color: var(--white); }
+    .proposal-shell {
+      display: grid;
+      gap: 18px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .team {
+      background: var(--white);
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .roles, .stack, .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .pill {
+      border-radius: 999px;
+      padding: 8px 10px;
+      background: var(--mint);
+      color: var(--deep);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      background: #f8fbf9;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid #d5e6dd;
+    }
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--amber);
+      color: #1b1912;
+      font-weight: 800;
+    }
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+    .step p { margin: 0; color: var(--muted); }
+    .cred {
+      background: var(--white);
+    }
+    .cred-card {
+      max-width: 78ch;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+    }
+    .customer-list strong {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #eef3fb;
+      color: var(--blue);
+      font-size: 0.86rem;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .case-card {
+      overflow: hidden;
+      padding: 0;
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 8;
+      object-fit: cover;
+      background: #eef3ef;
+    }
+    .case-body { padding: 18px; }
+    .case-card h3 { margin-bottom: 8px; font-size: 1.1rem; }
+    .case-card p { color: var(--muted); }
+    .case-card a {
+      color: var(--green);
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .final {
+      background: #e9f2ee;
+      text-align: center;
+      padding-bottom: 64px;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: var(--deep);
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 800;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 720px) {
+      .wrap { width: min(100% - 56px, 1120px); }
+      .hero-grid { grid-template-columns: 1.05fr 0.95fr; }
+      .path { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .start-grid, .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proposal-shell { grid-template-columns: 0.85fr 1.15fr; padding: 24px; }
+      section { padding: 72px 0; }
+    }
+
+    @media (min-width: 1080px) {
+      .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 719px) {
+      .hero::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow">Prepared for Duncan Jamieson</span>
+          <h1>Help iHawk turn more geospatial data into action</h1>
+          <p>iHawk already brings aerial inspection, LiDAR, imagery, and survey data into one place for critical infrastructure teams.</p>
+          <p class="why"><strong>Why we're here:</strong> Duncan leads geospatial work at Cyberhawk, while iHawk now ties Visualive AI, Analytica surveys, and inspection data into a larger software moment.</p>
+        </div>
+        <div class="signal-map" aria-label="Engagement path diagram">
+          <h3>One useful path to tighten first</h3>
+          <div class="path">
+            <span>Capture</span>
+            <span>Match to assets</span>
+            <span>Review in Visualive</span>
+            <span>Export to GIS or EAM</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Our read</h2>
+        <div class="read-card">
+          <p>This looks like a scale and trust moment, not a simple site update. iHawk is now the data layer for inspections, Visualive, and Analytica. The Ondas deal also puts more weight on software, AI, and integrations. That creates pressure on Duncan's geospatial team to keep large imagery, LiDAR, and workflows clean. If data paths stay split, customers get slower insight from very good field capture.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">Noticed</span>
+            <p>iHawk maps aerial data to assets, but the public story now spans many modules. We would map upload to GIS/EAM export, then remove duplicate tagging.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Next step</span>
+            <p>The public mobile audit is slow for a visual data brand. Compressing the video-heavy first path would help buyers reach demo value faster.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal">
+      <div class="wrap">
+        <h2 class="section-title">What we'd do</h2>
+        <div class="proposal-shell">
+          <div class="team">
+            <span class="label">Engagement</span>
+            <p>A dedicated squad under your PO for a six-week pilot.</p>
+            <div class="roles">
+              <span class="pill">Tech lead</span>
+              <span class="pill">Two full-stack engineers</span>
+              <span class="pill">QA engineer</span>
+              <span class="pill">Part-time UX designer</span>
+            </div>
+            <span class="label" style="margin-top:18px;">Stack fit</span>
+            <div class="stack">
+              <span class="pill">Angular</span>
+              <span class="pill">.NET</span>
+              <span class="pill">Python</span>
+              <span class="pill">AWS S3</span>
+              <span class="pill">Docker</span>
+              <span class="pill">GIS/EAM APIs</span>
+            </div>
+          </div>
+          <div class="timeline">
+            <div class="step">
+              <span class="num">1</span>
+              <div><strong>Map the path</strong><p>Map upload, asset matching, Visualive review, and GIS/EAM export so hidden delays become visible to everyone.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <div><strong>Prototype the fix</strong><p>Prototype one cleaner geospatial data path using Angular, Python, .NET, and cloud storage patterns for large files.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <div><strong>Add QA gates</strong><p>Add QA checks for LiDAR, orthomosaic, image, and video records before they reach customer workspaces.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <div><strong>Speed the demo</strong><p>Tune the public demo path and heavy media so field buyers see iHawk faster on mobile.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cred">
+      <div class="wrap">
+        <h2 class="section-title">Who is Elinext</h2>
+        <div class="cred-card">
+          <p>Elinext is a full-cycle software development partner founded in 1997, with about 700 in-house specialists. Those teams cover web, mobile, backend, QA, DevOps, AI, business analysis, and product design. We use dedicated teams under your PO, with no freelancers and no subcontractors. For Cyberhawk, that fits enterprise web, data, QA, DevOps, and AI support. We hold ISO 9001 and ISO 27001 for quality and information security. Our teams have served large customers like Siemens, Broadcom, Volkswagen, TRUMPF, TUI, and TransPerfect.</p>
+          <div class="customer-list" aria-label="Named customers">
+            <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong><strong>TransPerfect</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-lidar.jpg" alt="LiDAR management case study visual">
+            <div class="case-body">
+              <h3>LiDAR Management Solution</h3>
+              <p>Elinext built Java and Angular modules to set up, configure, and manage LiDAR systems under a tight timeline.</p>
+              <a href="https://www.elinext.com/case-study/lidar-management-solution/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-machine-data.jpg" alt="Machine data insights case study visual">
+            <div class="case-body">
+              <h3>Real-time Data Insights</h3>
+              <p>Elinext built an Angular, .NET, and Python platform that turns industrial machine data into action.</p>
+              <a href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="final">
+      <div class="wrap">
+        <h2 class="section-title">Talk through the pilot</h2>
+        <p>We can review the data path together.</p>
+        <a class="cta" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
