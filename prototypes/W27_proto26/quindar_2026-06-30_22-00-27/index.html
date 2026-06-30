@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quindar mission software delivery brief</title>
+  <meta name="description" content="A focused proposal for scaling Quindar Mission Management delivery across full-stack, DevOps, and secure government workflows.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/quindar_2026-06-30_22-00-27/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/quindar_2026-06-30_22-00-27/">
+  <meta property="og:title" content="Quindar mission software delivery brief">
+  <meta property="og:description" content="Scaling secure Mission Management work without slowing core delivery.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/quindar_2026-06-30_22-00-27/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Quindar mission software delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Quindar mission software delivery brief">
+  <meta name="twitter:description" content="Scaling secure Mission Management work without slowing core delivery.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/quindar_2026-06-30_22-00-27/og-image.jpg">
+  <style>
+    :root {
+      --ink: #102033;
+      --muted: #5b6c7f;
+      --paper: #f7f5f0;
+      --panel: #ffffff;
+      --line: #d9e0e8;
+      --navy: #101827;
+      --blue: #245c7a;
+      --cyan: #dceff2;
+      --mint: #eaf4ee;
+      --orange: #f47b20;
+      --gold: #f0b747;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      color: var(--white);
+      background:
+        linear-gradient(135deg, rgba(16, 24, 39, .95), rgba(36, 92, 122, .86)),
+        url("assets/quindar-product-hero.png") center right / cover no-repeat;
+      padding: 42px 0 44px;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #cfe8ef;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 790px;
+      margin-bottom: 18px;
+      font-size: clamp(2.25rem, 7vw, 4.55rem);
+      line-height: .98;
+      letter-spacing: 0;
+    }
+
+    .lede,
+    .why {
+      max-width: 760px;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+    }
+
+    .lede {
+      color: #edf7fa;
+      margin-bottom: 14px;
+    }
+
+    .why {
+      color: #fff5e8;
+      border-left: 4px solid var(--orange);
+      padding-left: 14px;
+      margin-bottom: 0;
+    }
+
+    section {
+      padding: 44px 0;
+      background: var(--paper);
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.55rem, 5vw, 2.35rem);
+      line-height: 1.08;
+      margin-bottom: 20px;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #b8d5df;
+      border-left: 6px solid var(--blue);
+      background: var(--cyan);
+      border-radius: 8px;
+      box-shadow: 0 16px 34px rgba(16, 32, 51, .08);
+    }
+
+    .read-box p,
+    .start-card p,
+    .who p,
+    .cta p {
+      margin-bottom: 0;
+    }
+
+    .start {
+      background: #fffdf8;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .proof-card,
+    .team-card,
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--blue);
+      font-size: .78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .plan {
+      background: var(--white);
+    }
+
+    .proposal {
+      display: grid;
+      gap: 18px;
+    }
+
+    .team-card {
+      padding: 22px;
+      background: linear-gradient(135deg, #102033, #245c7a);
+      color: var(--white);
+    }
+
+    .team-card p {
+      margin-bottom: 16px;
+      color: #e7f4f6;
+    }
+
+    .roles,
+    .stack-list,
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .roles li,
+    .stack-list li,
+    .customers li {
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: .86rem;
+      font-weight: 800;
+      white-space: normal;
+    }
+
+    .roles li {
+      background: rgba(255, 255, 255, .14);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, .18);
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 14px;
+      padding: 17px;
+      box-shadow: 0 12px 28px rgba(16, 32, 51, .06);
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 900;
+    }
+
+    .step h3,
+    .proof-card h3 {
+      margin-bottom: 6px;
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+
+    .step p,
+    .proof-card p,
+    .start-card p {
+      color: var(--muted);
+    }
+
+    .stack {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 8px;
+      background: var(--mint);
+      border: 1px solid #cce1d4;
+    }
+
+    .stack p {
+      margin: 0 0 10px;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .stack-list li,
+    .customers li {
+      background: var(--white);
+      border: 1px solid var(--line);
+      color: var(--ink);
+    }
+
+    .who {
+      background: #f3f7f8;
+    }
+
+    .who-box {
+      max-width: 82ch;
+      margin: 0 auto;
+      padding: 24px;
+      border-radius: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+    }
+
+    .who .customers {
+      margin-top: 16px;
+    }
+
+    .proof {
+      background: var(--paper);
+    }
+
+    .proof-card {
+      overflow: hidden;
+      box-shadow: 0 14px 30px rgba(16, 32, 51, .07);
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #d8dde5;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-card a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      background: var(--navy);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .cta .section-title {
+      margin-bottom: 10px;
+    }
+
+    .cta p {
+      color: #dce8ee;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .hero {
+        padding: 64px 0 62px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal {
+        grid-template-columns: .85fr 1.15fr;
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Prepared for Tyler Mclain and Quindar</p>
+        <h1>Quindar can scale mission software without slowing core delivery</h1>
+        <p class="lede">A short engineering brief for the Full Stack hire signal and the work around Mission Management, C2, AWS, React, and government programs as Quindar grows secure mission operations.</p>
+        <p class="why">Saw Quindar is hiring a Full Stack Engineer to build Python, AWS, APIs, CI/CD, and React/TypeScript work for satellite operations and U.S. government programs.</p>
+      </div>
+    </section>
+
+    <section class="read">
+      <div class="wrap">
+        <h2 class="section-title">Our read</h2>
+        <div class="read-box">
+          <p>The Full Stack role says Quindar is scaling both mission-specific work and the core Mission Management platform. That means product engineers must keep building C2, APIs, and React tools while also meeting government reliability and security needs. Your site says Mission Management unifies planning, flight dynamics, command and control, event response, and Portal access. That breadth creates integration pressure across customer programs, not just feature work. If delivery load grows faster than platform patterns, teams can spend more time stitching systems than improving mission readiness.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="start">
+      <div class="wrap">
+        <h2 class="section-title">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>The Full Stack role spans AWS, GraphQL, Kubernetes, Terraform, and CI/CD. Standard service templates and release checks should land before more mission-unique work stacks up.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Lighthouse found oversized responsive images and weak form contrast on quindar.space. Fixing those is a fast proof of the quality bar buyers expect in operator tools.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2 class="section-title">What we'd do</h2>
+        <div class="proposal">
+          <aside class="team-card">
+            <h3>Dedicated squad under your PM</h3>
+            <p>Eight-week pilot, weekly demos, and direct pairing with Quindar engineers.</p>
+            <ul class="roles">
+              <li>Tech Lead</li>
+              <li>2 Full-stack Engineers</li>
+              <li>DevOps Engineer</li>
+              <li>QA Automation</li>
+            </ul>
+          </aside>
+          <div>
+            <div class="steps">
+              <article class="step">
+                <span class="num">1</span>
+                <div>
+                  <h3>Map shared paths</h3>
+                  <p>Map Mission Management service paths across C2, Plan, Event, and Portal, then choose shared API and release patterns.</p>
+                </div>
+              </article>
+              <article class="step">
+                <span class="num">2</span>
+                <div>
+                  <h3>Harden delivery templates</h3>
+                  <p>Build hardened Python and React delivery templates with logging, security checks, test data, and GitHub Actions gates.</p>
+                </div>
+              </article>
+              <article class="step">
+                <span class="num">3</span>
+                <div>
+                  <h3>Ship one workflow</h3>
+                  <p>Pair with Quindar engineers on one government workflow, keeping architecture reviews and weekly demos inside your cadence.</p>
+                </div>
+              </article>
+              <article class="step">
+                <span class="num">4</span>
+                <div>
+                  <h3>Leave useful handoff</h3>
+                  <p>Leave behind runbooks, Terraform notes, and automated smoke tests Tyler's platform team can own after the pilot.</p>
+                </div>
+              </article>
+            </div>
+            <div class="stack">
+              <p>Relevant stack</p>
+              <ul class="stack-list">
+                <li>Python</li>
+                <li>React</li>
+                <li>TypeScript</li>
+                <li>AWS</li>
+                <li>Terraform</li>
+                <li>GitHub Actions</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="who">
+      <div class="wrap">
+        <h2 class="section-title">Who is Elinext</h2>
+        <div class="who-box">
+          <p>Elinext is a full-cycle software development provider, active since 1997, with about 700 in-house specialists and no freelancers. For Quindar, the useful fit is secure team augmentation: DevOps, Python, frontend, QA, and cloud engineers working under your product lead. Elinext holds ISO 9001 and ISO 27001, which matters for security-sensitive delivery. Our customer history includes Siemens, Broadcom, Volkswagen, TRUMPF, TUI, and TransPerfect. That mix helps us support the squad above without adding hiring drag or vendor sprawl. It also gives Tyler a team that can blend with platform standards, not a black box delivery group.</p>
+          <ul class="customers">
+            <li>Siemens</li>
+            <li>Broadcom</li>
+            <li>Volkswagen</li>
+            <li>TRUMPF</li>
+            <li>TUI</li>
+            <li>TransPerfect</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof">
+      <div class="wrap">
+        <h2 class="section-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-remote-network.jpg" alt="Remote network platform case study cover">
+            <div class="proof-body">
+              <h3>Remote network and router management platform</h3>
+              <p>Web and DevOps work for a high-volume infrastructure product using React, Python, AWS S3, Kubernetes, and PostgreSQL.</p>
+              <a href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">View case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-devops-pharma.jpg" alt="DevOps optimization case study cover">
+            <div class="proof-body">
+              <h3>DevOps speed-up for regulated software</h3>
+              <p>AWS and secure delivery support that reduced build, test, and deploy time while keeping performance steady.</p>
+              <a href="https://www.elinext.com/case-study/optimizing-and-speeding-up-software-development-for-pharmaceutical-companies/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2 class="section-title">Start the next sprint</h2>
+        <p>Bring one focused squad into Quindar's roadmap this month.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
