@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BayOne Solutions Java delivery brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/bayone-solutions_2026-06-30_04-00-18/">
+  <meta name="description" content="A short BayOne Solutions brief on scaling Java delivery, QA automation, and candidate trust without adding infrastructure drag.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/bayone-solutions_2026-06-30_04-00-18/">
+  <meta property="og:title" content="BayOne Solutions Java delivery brief">
+  <meta property="og:description" content="A short brief on scaling Java delivery, QA automation, and candidate trust without adding infrastructure drag.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/bayone-solutions_2026-06-30_04-00-18/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="BayOne Solutions Java delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BayOne Solutions Java delivery brief">
+  <meta name="twitter:description" content="A short brief on scaling Java delivery, QA automation, and candidate trust without adding infrastructure drag.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/bayone-solutions_2026-06-30_04-00-18/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17211f;
+      --muted: #5e6863;
+      --paper: #f6f4ee;
+      --panel: #ffffff;
+      --line: #d8ded7;
+      --green: #216e63;
+      --green-dark: #0f3936;
+      --mint: #dbece7;
+      --violet: #6552a5;
+      --amber: #f2a44d;
+      --rose: #f3ddd2;
+      --blue: #d6e8ef;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    p,
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+    }
+
+    .section {
+      width: 100%;
+      padding: 42px 18px;
+      background: var(--paper);
+    }
+
+    .section.white {
+      background: var(--panel);
+    }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 90vh;
+      display: grid;
+      align-items: center;
+      padding: 30px 18px 46px;
+      color: #f8fbf8;
+      background:
+        linear-gradient(135deg, rgba(15, 57, 54, 0.96), rgba(33, 110, 99, 0.94)),
+        repeating-linear-gradient(90deg, rgba(242, 164, 77, 0.14) 0, rgba(242, 164, 77, 0.14) 1px, transparent 1px, transparent 34px);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .logo-tile {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 13px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--green-dark);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+    }
+
+    .logo-tile img {
+      width: 118px;
+      height: auto;
+    }
+
+    .logo-tile span {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 920px;
+      margin-top: 22px;
+      font-size: clamp(2.05rem, 5.8vw, 4.3rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 66ch;
+      margin-top: 22px;
+      color: #e7f4ef;
+      font-size: 1.05rem;
+    }
+
+    .why {
+      max-width: 68ch;
+      margin-top: 16px;
+      color: #fff3d8;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .signal-board {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      width: 100%;
+      max-width: 560px;
+    }
+
+    .signal {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .signal span {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--amber);
+      color: var(--green-dark);
+      font-weight: 900;
+    }
+
+    .signal strong {
+      display: block;
+      font-size: 0.98rem;
+    }
+
+    .signal small {
+      display: block;
+      margin-top: 2px;
+      color: #d6ebe6;
+      font-size: 0.84rem;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: clamp(1.55rem, 5vw, 2.35rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: min(100%, 900px);
+      margin: 24px auto 0;
+      padding: 24px;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      background: var(--mint);
+      color: #183d38;
+      box-shadow: 0 16px 44px rgba(32, 87, 78, 0.12);
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .start-card,
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    .start-card {
+      padding: 20px;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--violet);
+      font-size: 0.76rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .start-card p,
+    .case-card p {
+      color: var(--muted);
+    }
+
+    .proposal {
+      color: #f8fbf8;
+      background: var(--green-dark);
+    }
+
+    .proposal h2 {
+      color: #ffffff;
+    }
+
+    .proposal-intro {
+      max-width: 760px;
+      margin: 18px auto 0;
+      text-align: center;
+      color: #d9ebe6;
+    }
+
+    .delivery-map {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 26px;
+    }
+
+    .team-card,
+    .step-card,
+    .stack-card {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+    }
+
+    .team-card,
+    .stack-card {
+      padding: 20px;
+    }
+
+    .team-list,
+    .stack-list,
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--green-dark);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .step-card {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .num {
+      display: grid;
+      width: 44px;
+      height: 44px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--amber);
+      color: var(--green-dark);
+      font-weight: 900;
+    }
+
+    .step-title {
+      display: block;
+      color: #ffffff;
+      font-weight: 850;
+    }
+
+    .step-card p,
+    .stack-card p,
+    .team-card p {
+      margin-top: 4px;
+      color: #d9ebe6;
+    }
+
+    .cred-box {
+      width: min(100%, 900px);
+      margin: 24px auto 0;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 14px 38px rgba(28, 43, 39, 0.08);
+    }
+
+    .cred-box p + p {
+      margin-top: 10px;
+    }
+
+    .customer-list strong {
+      color: var(--green-dark);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: var(--blue);
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      font-size: 1.08rem;
+      line-height: 1.25;
+    }
+
+    .case-body p {
+      margin-top: 8px;
+    }
+
+    .case-body a {
+      display: inline-flex;
+      margin-top: 12px;
+      color: var(--green);
+      font-weight: 850;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .talk {
+      text-align: center;
+      background: var(--rose);
+    }
+
+    .talk p {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: min(100%, 260px);
+      min-height: 48px;
+      margin-top: 22px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--green-dark);
+      color: #ffffff;
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    @media (min-width: 900px) {
+      .section {
+        padding: 64px 28px;
+      }
+
+      .hero {
+        padding: 46px 28px 58px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .delivery-map {
+        grid-template-columns: minmax(250px, 0.75fr) minmax(0, 1.25fr);
+        align-items: stretch;
+      }
+
+      .stack-card {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      }
+
+      .delivery-map {
+        grid-template-columns: 280px minmax(0, 1fr) 260px;
+      }
+
+      .stack-card {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="logo-tile">
+            <img src="assets/bayone-logo.png" alt="BayOne Solutions logo">
+            <span>Prepared by Elinext</span>
+          </div>
+          <h1>Scale Java delivery without adding IT infrastructure drag</h1>
+          <p class="hero-copy">BayOne already helps large companies compete like startups. The next risk is keeping delivery, QA, and candidate trust clean while Java demand grows.</p>
+          <p class="why">Saw BayOne hiring for Java Software Engineer work tied to high-traffic web apps, automation suites, and cross-team delivery. That fits Pradeep's infrastructure and vendor coordination world.</p>
+        </div>
+        <div class="signal-board" aria-label="Brief signals">
+          <div class="signal"><span>1</span><div><strong>Java/API delivery</strong><small>High-traffic apps and architecture handoff</small></div></div>
+          <div class="signal"><span>2</span><div><strong>QA automation</strong><small>Smoke, functional, and regression coverage</small></div></div>
+          <div class="signal"><span>3</span><div><strong>Recruiting trust</strong><small>Clearer job seeker verification path</small></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The Java hiring signal says BayOne is adding delivery capacity, not only filling a one-off role. The public Software Engineer posting names high-traffic web apps, automation suites, and work across architects, BAs, PMs, customers, and developers. That mix often creates a handoff problem between application teams and infrastructure owners. If the test path and access model stay loose, more headcount can create more release drag. Pradeep is close to that risk because he owns secure IT environments and vendor coordination.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">What we noticed</span>
+            <p>BayOne's Java and SQE postings both point to API tests, regression suites, and database checks.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Create one shared Java/API test template, then use it as a gate before adding more delivery work.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Indexed Reddit threads show candidates asking how to verify BayOne recruiter contact and data requests.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Add recruiter verification, official domain guidance, and data-request timing to every job seeker page.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <p class="proposal-intro">Use a dedicated squad under BayOne's IT or product owner. Keep scope narrow: Java delivery, QA gates, and job path trust.</p>
+        <div class="delivery-map">
+          <div class="team-card">
+            <span class="label">Team shape</span>
+            <p>1 tech lead, 2 Java/full-stack engineers, 1 QA automation engineer, and 1 DevOps/SRE engineer.</p>
+            <div class="team-list">
+              <span class="pill">Tech lead</span>
+              <span class="pill">Java</span>
+              <span class="pill">QA</span>
+              <span class="pill">DevOps</span>
+            </div>
+          </div>
+          <div class="timeline">
+            <div class="step-card">
+              <span class="num">1</span>
+              <div><strong class="step-title">Map the handoff</strong><p>Review one Java flow, access model, environments, and test gaps with Pradeep's infrastructure rules in view.</p></div>
+            </div>
+            <div class="step-card">
+              <span class="num">2</span>
+              <div><strong class="step-title">Build the gate</strong><p>Add API contract checks, smoke tests, and regression labels that run before release or client handoff.</p></div>
+            </div>
+            <div class="step-card">
+              <span class="num">3</span>
+              <div><strong class="step-title">Clean the public path</strong><p>Improve job seeker verification content and reduce first-view page weight on BayOne's core pages.</p></div>
+            </div>
+            <div class="step-card">
+              <span class="num">4</span>
+              <div><strong class="step-title">Hand over cleanly</strong><p>Document runbooks, ownership, CI rules, and a backlog for the next BayOne delivery slice.</p></div>
+            </div>
+          </div>
+          <div class="stack-card">
+            <span class="label">Relevant stack</span>
+            <p>Java, Spring, React, Azure, Docker, Playwright, and API testing.</p>
+            <div class="stack-list">
+              <span class="pill">Java</span>
+              <span class="pill">Spring</span>
+              <span class="pill">Azure</span>
+              <span class="pill">Docker</span>
+              <span class="pill">Playwright</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="cred-box">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We work across web, backend, QA, DevOps, mobile, AI, and product design teams.</p>
+          <p>For BayOne, the strongest fit is ISO 27001 delivery discipline, ISO 9001 quality practice, and dedicated squads that work under your owner. Our named customers include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>.</p>
+          <p>That makes us useful when the work must move fast, but still fit secure infrastructure rules.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-infrastructure-qa.jpg" alt="IT infrastructure QA case study image">
+            <div class="case-body">
+              <h3>QA for IT infrastructure software</h3>
+              <p>Elinext supported a multi-module infrastructure KPI system for more than 12 years, scaling QA coverage as needs changed.</p>
+              <a href="https://www.elinext.com/case-study/it-infrastructure-management-software-qa/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-router-platform.jpg" alt="Remote router management platform case study image">
+            <div class="case-body">
+              <h3>Remote network management platform</h3>
+              <p>A Java, Spring, Azure Kubernetes, React, and data platform helped providers manage network and router issues at scale.</p>
+              <a href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>A short review can confirm scope and ownership.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
