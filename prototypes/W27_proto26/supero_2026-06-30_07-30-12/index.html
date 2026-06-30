@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grupo Supero delivery capacity brief</title>
+  <meta name="description" content="A short brief on scaling Supero's cloud, data, SRE, and Node delivery lanes without slowing active work.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/supero_2026-06-30_07-30-12/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/supero_2026-06-30_07-30-12/">
+  <meta property="og:title" content="Grupo Supero delivery capacity brief">
+  <meta property="og:description" content="Scaling cloud, data, SRE, and Node delivery while active client work keeps moving.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/supero_2026-06-30_07-30-12/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Grupo Supero delivery capacity brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Grupo Supero delivery capacity brief">
+  <meta name="twitter:description" content="Scaling cloud, data, SRE, and Node delivery while active client work keeps moving.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/supero_2026-06-30_07-30-12/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172132;
+      --muted: #5d6978;
+      --line: #d9e2ea;
+      --soft: #f4f7f8;
+      --warm: #fff5e9;
+      --green: #0d7b67;
+      --blue: #154c7d;
+      --orange: #ff7a00;
+      --navy: #101827;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--white);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    body { min-width: 320px; }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: inherit; }
+    p, h1, h2, h3 { margin-top: 0; }
+
+    .page { width: 100%; background: var(--white); }
+    .wrap { width: min(1120px, calc(100% - 36px)); margin: 0 auto; }
+
+    .hero {
+      color: var(--white);
+      background:
+        linear-gradient(135deg, rgba(16, 24, 39, .96), rgba(17, 82, 86, .9)),
+        url("assets/case-router.jpg") center / cover no-repeat;
+      padding: 46px 0 42px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #c8f0e8;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 790px;
+      margin-bottom: 18px;
+      font-size: clamp(2.1rem, 7vw, 4.4rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .lede,
+    .why {
+      max-width: 760px;
+      font-size: clamp(1rem, 2.3vw, 1.2rem);
+    }
+
+    .lede { color: #eaf8f4; margin-bottom: 14px; }
+
+    .why {
+      margin-bottom: 0;
+      padding-left: 14px;
+      border-left: 4px solid var(--orange);
+      color: #fff1e4;
+    }
+
+    section {
+      padding: 42px 0;
+      background: var(--white);
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.55rem, 5vw, 2.3rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+      margin-bottom: 20px;
+    }
+
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #b6d6ce;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      background: #e9f4f1;
+      box-shadow: 0 16px 34px rgba(13, 123, 103, .08);
+    }
+
+    .read-box p { margin: 0; font-size: 1.03rem; }
+
+    .start { background: var(--soft); }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card,
+    .team-card,
+    .step,
+    .proof-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .start-card { padding: 18px; }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--green);
+      font-size: .78rem;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .start-card p,
+    .team-card p,
+    .step p,
+    .proof-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .proposal {
+      color: var(--white);
+      background: var(--navy);
+    }
+
+    .proposal .section-title { color: var(--white); }
+
+    .proposal-shell {
+      display: grid;
+      gap: 18px;
+    }
+
+    .team-card {
+      padding: 22px;
+      background: #17243a;
+      border-color: rgba(255, 255, 255, .14);
+    }
+
+    .team-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.12rem;
+      line-height: 1.25;
+    }
+
+    .team-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .1);
+      color: #edf7f5;
+      font-size: .88rem;
+      font-weight: 800;
+    }
+
+    .stack {
+      margin-top: 18px;
+      color: #c9d7e3;
+      font-size: .95rem;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 13px;
+      padding: 16px;
+      color: var(--ink);
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin-bottom: 5px;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .about-box {
+      max-width: 82ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #cbd9e1;
+      border-radius: 8px;
+      background: #f8fbfc;
+    }
+
+    .about-box p { margin-bottom: 0; color: #2d3d4e; }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .customer {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #e7f3f0;
+      color: var(--green);
+      font-weight: 900;
+      font-size: .88rem;
+    }
+
+    .proof { background: var(--warm); }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card { overflow: hidden; }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .proof-body { padding: 18px; }
+
+    .proof-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+      line-height: 1.25;
+    }
+
+    .proof-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 900;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .final {
+      padding: 48px 0;
+      color: var(--white);
+      text-align: center;
+      background: linear-gradient(135deg, #0b6f62, #101827);
+    }
+
+    .final h2 {
+      margin-bottom: 10px;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+    }
+
+    .final p {
+      max-width: 42ch;
+      margin: 0 auto 20px;
+      color: #e8f4f1;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero { padding: 74px 0 70px; }
+      section { padding: 64px 0; }
+      .start-grid,
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proposal-shell {
+        grid-template-columns: .78fr 1.22fr;
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Prepared for Bruno Belini and Grupo Supero</p>
+        <h1>Helping Supero scale cloud, data, and Node delivery</h1>
+        <p class="lede">Your open roles point to more than staff growth. They show active pressure across cloud governance, SRE, data platforms, and product delivery.</p>
+        <p class="why">Why we're here: Supero is hiring SRE/DevOps, cloud security, Databricks, Node, React, Python, requirements, and QA talent at the same time.</p>
+      </div>
+    </header>
+
+    <section aria-labelledby="read-title">
+      <div class="wrap">
+        <h2 class="section-title" id="read-title">Our read</h2>
+        <div class="read-box">
+          <p>The signal says Supero is scaling several delivery lanes at once. SRE, cloud security, Databricks, Node, React, and QA roles usually mean more client work is moving into critical paths. APIPASS also makes integration, monitoring, and governance part of the public story. The hard part is keeping quality rules, cloud standards, and release flow consistent. If that slips, delivery stays busy but Bruno's team carries more review, incident, and hiring load.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="start" aria-labelledby="start-title">
+      <div class="wrap">
+        <h2 class="section-title" id="start-title">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>The SRE role asks for Kubernetes, Terraform, SonarQube, observability, SLOs, and AI for operations.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Create one delivery scorecard for CI, cloud policy, incident signals, and release risk.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>APIPASS and Supero public pages load slowly on mobile, with heavy scripts and images.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Run a focused public-site pass before adding more demo traffic or campaign spend.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal" aria-labelledby="do-title">
+      <div class="wrap">
+        <h2 class="section-title" id="do-title">What we'd do</h2>
+        <div class="proposal-shell">
+          <aside class="team-card">
+            <h3>Dedicated squad under Supero's PO or technical lead.</h3>
+            <p>Six-week pilot, weekly demos, and one backlog for platform delivery relief.</p>
+            <div class="team-list" aria-label="Team shape">
+              <span class="pill">Tech Lead</span>
+              <span class="pill">Node engineer</span>
+              <span class="pill">React engineer</span>
+              <span class="pill">DevOps engineer</span>
+              <span class="pill">QA automation</span>
+            </div>
+            <p class="stack">Stack fit: Node.js, React, Python, Azure, AWS, Kubernetes, Terraform, Playwright.</p>
+          </aside>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Map active lanes</h3>
+                <p>Map APIPASS, cloud, data, and Node delivery work. Mark owners, risk, release gates, and missing automation.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Harden delivery checks</h3>
+                <p>Add SonarQube, API contract tests, Terraform checks, and smoke tests around key client and integration flows.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>Build visibility</h3>
+                <p>Create a compact view for CI health, cloud policy drift, incidents, and slow public pages.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Ship useful backlog</h3>
+                <p>Close selected Node, React, DevOps, and QA tasks while Supero keeps control of client context.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="about-title">
+      <div class="wrap">
+        <h2 class="section-title" id="about-title">Who is Elinext</h2>
+        <div class="about-box">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Supero, the fit is extra delivery depth in web, backend, QA, DevOps, and data work. We bring ISO 9001 and ISO 27001 practices into teams that need stable delivery and clear security rules. Our client history includes <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. That matches the squad above: useful capacity, clear process, and controlled handoff.</p>
+          <div class="customers" aria-label="Named customers">
+            <span class="customer">Siemens</span>
+            <span class="customer">Broadcom</span>
+            <span class="customer">Volkswagen</span>
+            <span class="customer">TRUMPF</span>
+            <span class="customer">TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof" aria-labelledby="proof-title">
+      <div class="wrap">
+        <h2 class="section-title" id="proof-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-router.jpg" alt="Remote network management platform case study">
+            <div class="proof-body">
+              <h3>Remote network and router management platform</h3>
+              <p>Elinext built an AI-powered web, mobile, and DevOps platform that processes router payloads at very high scale.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-qa.jpg" alt="Internal QA testing tool case study">
+            <div class="proof-body">
+              <h3>Internal QA tool for faster release checks</h3>
+              <p>Elinext used Node.js, React, AWS, Swagger, and DynamoDB to reduce manual QA effort and shorten test cycles.</p>
+              <a class="proof-link" href="https://www.elinext.com/case-study/internal-testing-tool/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="final" aria-labelledby="talk-title">
+      <div class="wrap">
+        <h2 id="talk-title">Start the conversation</h2>
+        <p>We can share a pilot plan for one delivery lane.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
