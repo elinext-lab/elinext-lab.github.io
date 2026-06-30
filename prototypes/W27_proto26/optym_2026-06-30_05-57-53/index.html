@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Optym backend scaling brief | Elinext</title>
+  <meta name="description" content="A focused backend reliability brief for Optym's LoadAi and LoadOps scaling moment.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/optym_2026-06-30_05-57-53/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/optym_2026-06-30_05-57-53/">
+  <meta property="og:title" content="Optym backend scaling brief">
+  <meta property="og:description" content="What to tighten as LoadAi and LoadOps scale real-time dispatch decisions.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/optym_2026-06-30_05-57-53/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Optym backend scaling brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Optym backend scaling brief">
+  <meta name="twitter:description" content="What to tighten as LoadAi and LoadOps scale real-time dispatch decisions.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/optym_2026-06-30_05-57-53/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172024;
+      --muted: #5d6b70;
+      --paper: #f7f8f5;
+      --white: #ffffff;
+      --teal: #006b64;
+      --teal-soft: #dcefed;
+      --orange: #e66b2f;
+      --amber: #f4c667;
+      --blue: #213f7a;
+      --line: #d8ded9;
+      --shadow: 0 18px 45px rgba(24, 45, 49, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 20px;
+      background: var(--paper);
+    }
+
+    .section.alt {
+      background: #eef5f1;
+    }
+
+    .section.dark {
+      background: #11272b;
+      color: #f6fbf8;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      width: 100%;
+      padding: 64px 20px 58px;
+      background: #123236;
+      color: #fbfffb;
+      border-bottom: 8px solid var(--orange);
+    }
+
+    .hero-inner {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      gap: 28px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--amber);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 870px;
+      margin-bottom: 18px;
+      font-size: clamp(2.1rem, 8vw, 4.7rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(1.6rem, 5vw, 2.65rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      font-size: clamp(1.02rem, 3vw, 1.18rem);
+      color: #dfecea;
+    }
+
+    .hero-copy p {
+      margin-bottom: 14px;
+    }
+
+    .signal-strip {
+      display: grid;
+      gap: 12px;
+      width: 100%;
+      max-width: 720px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-left: 5px solid var(--amber);
+      border-radius: 8px;
+    }
+
+    .signal-strip strong {
+      color: #ffffff;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+      background: #e2f0ed;
+      border: 1px solid #badbd5;
+      border-left: 7px solid var(--teal);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-size: 1.03rem;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+      width: 100%;
+    }
+
+    .start-card,
+    .case-card,
+    .cred-box {
+      width: 100%;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .start-card {
+      padding: 22px;
+      border-top: 5px solid var(--orange);
+    }
+
+    .label {
+      display: inline-flex;
+      width: fit-content;
+      margin-bottom: 10px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .proposal {
+      display: grid;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .team-card,
+    .plan-card {
+      width: 100%;
+      padding: 24px;
+      background: #ffffff;
+      color: var(--ink);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .roles {
+      display: grid;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .role {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 10px 12px;
+      background: #eef5f1;
+      border-radius: 8px;
+      color: #1f3032;
+      font-weight: 700;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      flex: 0 0 10px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .step {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: auto 1fr;
+      padding: 16px;
+      background: #f7f9f5;
+      border: 1px solid #dce4de;
+      border-radius: 8px;
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .step-title {
+      display: block;
+      color: #152326;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .step p {
+      grid-column: 2;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .stack span,
+    .customer span {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #f1f5f7;
+      color: #1f3032;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .cred-box {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .customer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 2.3 / 1;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 20px;
+    }
+
+    .case-body p {
+      color: var(--muted);
+    }
+
+    .case-body a {
+      font-weight: 800;
+      color: var(--teal);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .cta {
+      text-align: center;
+      background: #16393d;
+      color: #f8fffb;
+    }
+
+    .cta p {
+      color: #dbe9e6;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 48px;
+      margin-top: 12px;
+      padding: 13px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 76px 28px;
+      }
+
+      .hero {
+        padding: 86px 28px 78px;
+      }
+
+      .hero-inner {
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 0.42fr);
+        align-items: end;
+      }
+
+      .signal-strip {
+        justify-self: end;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal {
+        grid-template-columns: minmax(260px, 0.36fr) minmax(0, 1fr);
+      }
+    }
+
+    @media (min-width: 1120px) {
+      .section {
+        padding-left: 36px;
+        padding-right: 36px;
+      }
+
+      .hero {
+        padding-left: 36px;
+        padding-right: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div>
+        <p class="eyebrow">Prepared for Pankaj Rawat</p>
+        <h1>Helping Optym scale real-time dispatch systems without slowing teams</h1>
+        <div class="hero-copy">
+          <p>LoadAi and LoadOps sit in high-trust freight workflows. Small backend gaps can slow planners, drivers, documents, and payment paths.</p>
+          <p>Why we're here: Optym is hiring a senior Node.js backend engineer for scalable APIs, optimization workflows, and real-time decisions.</p>
+        </div>
+      </div>
+      <aside class="signal-strip" aria-label="Signal summary">
+        <strong>Signal we noticed</strong>
+        <span>Backend scale for live dispatch, algorithm, and product work.</span>
+      </aside>
+    </div>
+  </header>
+
+  <main>
+    <section class="section alt" aria-labelledby="our-read">
+      <div class="wrap">
+        <h2 id="our-read">Our Read</h2>
+        <div class="read-box">
+          <p>The Node.js backend role says Optym is scaling the services behind live optimization workflows. LoadAi connects with a carrier's TMS, ELD, load boards, and market-rate data. That means every API delay can slow a planner who needs a fast driver-load match. Public LoadOps mobile reviews also point to login, update, document upload, and route issues. If those paths stay fragile, new AI planning value can be lost at the edge.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="start">
+      <div class="wrap">
+        <h2 id="start">Where We'd Start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <h3>LoadAi mobile page speed</h3>
+            <p>The LoadAi page showed a long mobile main-content load in our local Lighthouse run. Trim heavy hero media and defer non-critical scripts before more campaign traffic lands there.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Next useful step</span>
+            <h3>Driver-app failure map</h3>
+            <p>LoadOps reviews mention login resets, update blocks, and bill-of-lading upload failures. Map those events into backend logs around auth, uploads, app versions, and dispatch status.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark" aria-labelledby="work">
+      <div class="wrap">
+        <h2 id="work">What We'd Do</h2>
+        <div class="proposal">
+          <article class="team-card">
+            <span class="label">Engagement</span>
+            <h3>Six-week backend reliability pilot</h3>
+            <p class="muted">A dedicated squad works under Optym's PO or PM, with weekly demos and shared issue tracking.</p>
+            <div class="roles" aria-label="Team shape">
+              <div class="role"><span class="dot"></span>1 Tech Lead</div>
+              <div class="role"><span class="dot"></span>2 senior Node.js engineers</div>
+              <div class="role"><span class="dot"></span>1 QA automation engineer</div>
+              <div class="role"><span class="dot"></span>1 DevOps engineer</div>
+            </div>
+            <div class="stack" aria-label="Relevant stack">
+              <span>Node.js</span><span>TypeScript</span><span>React</span><span>Python</span><span>Java</span><span>.NET</span>
+            </div>
+          </article>
+          <article class="plan-card">
+            <span class="label">Milestones</span>
+            <div class="steps">
+              <div class="step">
+                <span class="num">1</span>
+                <span class="step-title">Trace the live paths</span>
+                <p>Trace auth, uploads, dispatch updates, and LoadAi integration calls from mobile app to backend services.</p>
+              </div>
+              <div class="step">
+                <span class="num">2</span>
+                <span class="step-title">Protect high-risk APIs</span>
+                <p>Build Node.js service tests around key APIs, with contract checks for TMS, ELD, and load-board inputs.</p>
+              </div>
+              <div class="step">
+                <span class="num">3</span>
+                <span class="step-title">Gate each release</span>
+                <p>Add release gates for LoadOps mobile versions, upload failures, and slow optimization responses before customer release.</p>
+              </div>
+              <div class="step">
+                <span class="num">4</span>
+                <span class="step-title">Demo against field feedback</span>
+                <p>Set weekly demos with Pankaj's team so fixes match product priorities and current field feedback.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="elinext">
+      <div class="wrap">
+        <h2 id="elinext">Who Is Elinext</h2>
+        <div class="cred-box">
+          <p>Elinext is a full-cycle software development provider, active since 1997, with about 700 in-house specialists and no freelancers. We build web, backend, mobile, QA, AI/ML, and DevOps teams for clients across the US, Europe, Asia, the Middle East, and Australia/NZ. Our work has supported:</p>
+          <div class="customer" aria-label="Named customers">
+            <span>Broadcom</span><span>Siemens</span><span>Volkswagen</span><span>TRUMPF</span><span>TUI</span><span>Parrot</span><span>TransPerfect</span>
+          </div>
+          <p>ISO 9001 and ISO 27001 practices help when transport platforms handle customer data, driver data, and operational decisions. For Optym, that means a dedicated squad can extend Pankaj's team without changing how product and engineering already work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" aria-labelledby="proof">
+      <div class="wrap">
+        <h2 id="proof">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-warehouse.jpg" alt="Warehouse management case study preview">
+            <div class="case-body">
+              <h3>Warehouse Management Microservices</h3>
+              <p>Logistics backend, Android scanning, Web API, QA, and service monitoring improved warehouse flow and reduced manual work.</p>
+              <a href="https://www.elinext.com/case-study/warehouse-management-solutions/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-fleet.jpg" alt="Fleet management case study preview">
+            <div class="case-body">
+              <h3>Fleet Management App</h3>
+              <p>A mobile and web system helped drivers accept tasks, share live location, and keep delivery teams in sync.</p>
+              <a href="https://www.elinext.com/case-study/fleet-management-app-for-logistics-solution-provider-in-the-usa/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta" aria-labelledby="talk">
+      <div class="wrap">
+        <h2 id="talk">Talk Through The Pilot</h2>
+        <p>A short call can test scope, team shape, and fit.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
