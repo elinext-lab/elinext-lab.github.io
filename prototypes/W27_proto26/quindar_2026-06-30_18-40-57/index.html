@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quindar mission software delivery brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/quindar_2026-06-30_18-40-57/">
+  <meta name="description" content="A short engineering brief for Quindar's mission software scale-up.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/quindar_2026-06-30_18-40-57/">
+  <meta property="og:title" content="Quindar mission software delivery brief">
+  <meta property="og:description" content="A scoped engineering read on Quindar's mission software scale-up.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/quindar_2026-06-30_18-40-57/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Quindar mission software delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Quindar mission software delivery brief">
+  <meta name="twitter:description" content="A scoped engineering read on Quindar's mission software scale-up.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/quindar_2026-06-30_18-40-57/og-image.jpg">
+  <style>
+    :root {
+      --ink: #101827;
+      --muted: #5c687a;
+      --line: #d9e1ea;
+      --paper: #f7f8f4;
+      --white: #ffffff;
+      --navy: #101b34;
+      --blue: #2747a8;
+      --teal: #2a7f75;
+      --amber: #f08b32;
+      --soft-blue: #eef3ff;
+      --soft-teal: #eaf6f2;
+      --soft-amber: #fff1e2;
+      --shadow: 0 18px 45px rgba(16, 24, 39, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    body { min-width: 320px; }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .hero,
+    section {
+      width: 100%;
+      padding: 48px 18px;
+      background: var(--paper);
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      background:
+        linear-gradient(135deg, rgba(16, 27, 52, 0.94), rgba(39, 71, 168, 0.82)),
+        url("assets/case-network-router.jpg");
+      background-size: cover;
+      background-position: center;
+      color: var(--white);
+    }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      padding: 7px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 999px;
+      color: #ffe8d0;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.35rem, 10vw, 5.7rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 61ch;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+    }
+
+    .hero-note {
+      padding: 18px;
+      border-left: 4px solid var(--amber);
+      background: rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(5px);
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(1.65rem, 4.5vw, 2.5rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .read {
+      background: var(--soft-blue);
+    }
+
+    .read-box {
+      width: min(100%, 78ch);
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #c8d6f5;
+      border-left: 6px solid var(--blue);
+      background: #f9fbff;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p,
+    .intro p,
+    .who p,
+    .cta p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .start {
+      background: var(--white);
+    }
+
+    .observations {
+      display: grid;
+      gap: 16px;
+    }
+
+    .observation,
+    .step,
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .observation {
+      padding: 20px;
+      border-top: 4px solid var(--teal);
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--teal);
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .observation p,
+    .step p,
+    .case-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .work {
+      color: var(--white);
+      background: var(--navy);
+    }
+
+    .work h2,
+    .work .subline {
+      color: var(--white);
+    }
+
+    .subline {
+      width: min(100%, 76ch);
+      margin: 0 auto 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .team-strip {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .role {
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #dce6f7;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      background: #14213f;
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .num {
+      display: inline-grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--amber);
+      color: var(--navy);
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin-bottom: 0;
+      color: var(--white);
+      font-size: 1rem;
+    }
+
+    .step p { color: #bfcae0; }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 22px;
+      justify-content: center;
+    }
+
+    .stack span,
+    .customers strong {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+      color: #fff2de;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .who {
+      background: var(--soft-teal);
+    }
+
+    .who-box {
+      width: min(100%, 82ch);
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #cce3dc;
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .customers strong {
+      background: var(--soft-amber);
+      color: #8a460b;
+    }
+
+    .proof {
+      background: var(--white);
+    }
+
+    .cases {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+
+    .case-body a {
+      display: inline-flex;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      background: var(--soft-amber);
+      text-align: center;
+    }
+
+    .button {
+      display: inline-flex;
+      max-width: 100%;
+      margin-top: 22px;
+      padding: 13px 18px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    a,
+    span { overflow-wrap: anywhere; }
+
+    @media (min-width: 700px) {
+      .hero,
+      section { padding: 70px 32px; }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.55fr);
+      }
+
+      .observations,
+      .cases {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .team-strip {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .steps {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Prepared for Quindar</span>
+        <h1>Keep mission software moving while Quindar scales up</h1>
+        <p>Quindar Mission Management is becoming the common picture for more missions, fleets, and partners. The hard part is keeping platform work fast as each program adds an interface.</p>
+      </div>
+      <div class="hero-note">
+        <p>Saw Quindar hiring for Python, AWS, APIs, React, GraphQL, and Kubernetes. That points to delivery load across core product and customer work.</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="read">
+    <div class="wrap">
+      <h2>Our read</h2>
+      <div class="read-box">
+        <p>The hiring signal says Quindar is scaling mission workflows, not adding one seat. The role ties APIs, AWS, React, and GraphQL to satellite operations. That creates a bottleneck when senior engineers split platform quality and program-specific needs. Fleet Planning and Access Windows are a clear example. Quindar moved planning from spreadsheets and side talks into one workflow. If it stays there, roadmap and customer delivery can start to conflict.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="start">
+    <div class="wrap">
+      <h2>Where we'd start</h2>
+      <div class="observations">
+        <div class="observation">
+          <span class="label">What we noticed</span>
+          <p>Your Fleet Planning note names spreadsheet planning and side talks. Tag every plan, access-window check, export, and manual fix. This shows where work still leaves Quindar.</p>
+        </div>
+        <div class="observation">
+          <span class="label">Useful next step</span>
+          <p>The current role spans AWS APIs, React, GraphQL, Terraform, and secure programs. Split backlog into core, mission-specific, and non-classified support lanes before adding outside capacity.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="work">
+    <div class="wrap">
+      <h2>What we'd do</h2>
+      <p class="subline">A dedicated squad under Quindar's PO or engineering lead. Start with a six-week pilot on non-classified platform work.</p>
+      <div class="team-strip" aria-label="Proposed team shape">
+        <div class="role">Tech Lead</div>
+        <div class="role">Python/AWS</div>
+        <div class="role">Python/AWS</div>
+        <div class="role">React/TS</div>
+        <div class="role">QA Automation</div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="num">1</span>
+          <h3>Map the handoffs</h3>
+          <p>Trace Fleet Planning, Access Windows, and API handoffs. Mark every manual step that slows a mission workflow.</p>
+        </div>
+        <div class="step">
+          <span class="num">2</span>
+          <h3>Build test fixtures</h3>
+          <p>Create versioned simulator data for ground-provider availability, access windows, events, and common API edge cases.</p>
+        </div>
+        <div class="step">
+          <span class="num">3</span>
+          <h3>Harden delivery checks</h3>
+          <p>Add CI checks for Docker, Kubernetes, Terraform, and AWS paths before code reaches mission-facing environments.</p>
+        </div>
+        <div class="step">
+          <span class="num">4</span>
+          <h3>Polish operator flows</h3>
+          <p>Improve React and TypeScript states around planning, exports, empty windows, and error recovery paths.</p>
+        </div>
+      </div>
+      <div class="stack" aria-label="Relevant stack">
+        <span>Python</span><span>React</span><span>TypeScript</span><span>AWS</span><span>Node.js</span><span>QA automation</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="who">
+    <div class="wrap">
+      <h2>Who is Elinext</h2>
+      <div class="who-box">
+        <p>Elinext is a full-cycle software development company active since 1997. It has about 700 in-house specialists and no freelancers. We build web, backend, QA, DevOps, mobile, and AI/ML systems. Our process is backed by ISO 9001 and ISO 27001. Relevant named customers include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. Elinext also supports dedicated teams under a client PO. That matches the six-week platform pilot above. For Quindar, the fit is a controlled squad for clear platform tasks. Your team keeps mission ownership.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="proof">
+    <div class="wrap">
+      <h2>Proof</h2>
+      <div class="cases">
+        <article class="case-card">
+          <img src="assets/case-network-router.jpg" alt="Network management platform case study image">
+          <div class="case-body">
+            <h3>Remote network and router management platform</h3>
+            <p>Elinext built a telecom platform with React, Python, AWS S3, Kubernetes, and high-volume device payload processing.</p>
+            <a href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">Read case study</a>
+          </div>
+        </article>
+        <article class="case-card">
+          <img src="assets/case-patient-portal.jpg" alt="Secure patient portal case study image">
+          <div class="case-body">
+            <h3>Secure AWS patient portal</h3>
+            <p>Elinext delivered a secure SaaS portal with AWS, DevOps, GraphQL, and regulated data requirements.</p>
+            <a href="https://www.elinext.com/case-study/patient-portal-for-healthcare-company/">Read case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <h2>Talk through the pilot</h2>
+      <p>Bring one workflow. We will map a focused support lane.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Start a short conversation</a>
+    </div>
+  </section>
+</body>
+</html>
