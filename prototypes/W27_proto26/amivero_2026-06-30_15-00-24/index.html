@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amivero Python delivery brief</title>
+  <meta name="description" content="A focused brief for Amivero on Python full-stack delivery, secure releases, and useful first steps.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/amivero_2026-06-30_15-00-24/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/amivero_2026-06-30_15-00-24/">
+  <meta property="og:title" content="Amivero Python delivery brief">
+  <meta property="og:description" content="A focused brief for Amivero's full-stack hiring moment.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/amivero_2026-06-30_15-00-24/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Amivero Python delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Amivero Python delivery brief">
+  <meta name="twitter:description" content="A focused brief for Amivero's full-stack hiring moment.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/amivero_2026-06-30_15-00-24/og-image.jpg">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5f6975;
+      --paper: #fbfaf7;
+      --white: #ffffff;
+      --navy: #07151f;
+      --orange: #f37428;
+      --cyan: #31c2e7;
+      --mint: #dff4ec;
+      --line: #d7dde3;
+      --soft: #f1f4f6;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    section { padding: 44px 0; background: var(--paper); }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: clamp(2.25rem, 8vw, 5.4rem); line-height: .98; max-width: 900px; letter-spacing: 0; }
+    h2 { text-align: center; font-size: clamp(1.65rem, 4vw, 2.6rem); line-height: 1.08; margin-bottom: 18px; }
+    h3 { font-size: 1rem; line-height: 1.2; }
+    p { font-size: 1rem; }
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(7, 21, 31, .96), rgba(7, 21, 31, .88)),
+        url("https://amivero.com/assets/link_preview.png") center / cover no-repeat;
+      color: var(--white);
+      padding: 58px 0 42px;
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+    }
+    .eyebrow {
+      color: var(--cyan);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: .78rem;
+      margin-bottom: 18px;
+    }
+    .hero p {
+      max-width: 680px;
+      color: #e7eef4;
+      font-size: 1.08rem;
+      margin-top: 20px;
+    }
+    .read-band { background: #eaf1f0; }
+    .read-card {
+      background: var(--white);
+      border-left: 6px solid var(--orange);
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 74ch;
+      box-shadow: 0 12px 30px rgba(23, 32, 42, .08);
+    }
+    .start-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+    .start-row {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      display: grid;
+      gap: 8px;
+    }
+    .label {
+      color: var(--orange);
+      font-weight: 700;
+      font-size: .8rem;
+      text-transform: uppercase;
+    }
+    .plan {
+      background: var(--navy);
+      color: var(--white);
+    }
+    .plan h2 { color: var(--white); }
+    .plan-intro {
+      max-width: 72ch;
+      margin: 0 auto 24px;
+      text-align: center;
+      color: #dbe5ec;
+    }
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .pill {
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: #f6fbff;
+      background: rgba(49, 194, 231, .12);
+      font-size: .92rem;
+    }
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      background: #112532;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--navy);
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      flex: none;
+    }
+    .step h3 { color: #ffffff; margin-bottom: 4px; }
+    .step p { color: #dbe5ec; font-size: .96rem; }
+    .cred { background: var(--mint); }
+    .cred p {
+      max-width: 80ch;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 18px;
+    }
+    .tag {
+      background: var(--white);
+      border: 1px solid #b9d7cc;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-weight: 700;
+      font-size: .9rem;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .case {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .case img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: var(--soft);
+    }
+    .case-body { padding: 18px; }
+    .case p { color: var(--muted); margin: 8px 0 12px; }
+    .case a { color: var(--navy); font-weight: 700; text-decoration-color: var(--orange); }
+    .cta {
+      background: var(--orange);
+      color: var(--navy);
+      text-align: center;
+      padding-bottom: 60px;
+    }
+    .cta p { margin: 0 auto 20px; max-width: 44ch; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 800;
+    }
+    @media (min-width: 760px) {
+      .hero { padding: 76px 0 56px; }
+      section { padding: 62px 0; }
+      .start-row { grid-template-columns: 180px 1fr; align-items: start; }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (min-width: 1100px) {
+      .hero { min-height: 84vh; }
+      .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .step { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Prepared for Dave Larrimore and Amivero</p>
+        <h1>Scaling Python delivery for federal mission platforms</h1>
+        <p>Saw Amivero is hiring a Full Stack Developer (Python) in Ashburn, after recent platform, RPA, GenAI, and SecOps openings. This brief shows where outside capacity could help without slowing mission teams.</p>
+      </div>
+    </section>
+
+    <section class="read-band">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p>The signal says Amivero is adding full-stack capacity for active federal delivery. The Python role names PostgreSQL, Spring Boot, Angular, microservices, AWS, and CI/CD. That mix points to more than one feature gap. It points to delivery load across services, UI, data, tests, and release evidence. Amivero already sells Andiamo for secure delivery, so the bar is high inside your own teams. If senior engineers carry all of that work, sprint demos slow down and client trust gets harder to protect.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-row">
+            <div class="label">What we noticed</div>
+            <p>The Python opening spans backend services, Angular UI, PostgreSQL, AWS, regression testing, and release planning. Split the first backlog into mission features and release gates, then give one outside squad clear ownership of the gates.</p>
+          </div>
+          <div class="start-row">
+            <div class="label">Next useful step</div>
+            <p>Lighthouse flags heavy media and layout movement on the Solution Accelerators page. Reserve media space and serve smaller responsive assets before sending more prospects to see the accelerators in action.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <p class="plan-intro">Use a dedicated squad under Amivero's PO or PM. Start with a six-week pilot tied to one mission backlog, one release path, and weekly demos.</p>
+        <div class="team" aria-label="Proposed team">
+          <span class="pill">Tech lead</span>
+          <span class="pill">2 full-stack engineers</span>
+          <span class="pill">QA automation</span>
+          <span class="pill">DevOps engineer</span>
+          <span class="pill">Python, Java, Angular, AWS</span>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="num">1</div>
+            <div>
+              <h3>Map the pilot</h3>
+              <p>Align the pilot to one mission backlog and map Python services, Angular flows, data stores, and release gates.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">2</div>
+            <div>
+              <h3>Harden delivery</h3>
+              <p>Add regression tests, API contract checks, CI/CD evidence, and clear review points for secure releases.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">3</div>
+            <div>
+              <h3>Ship focused work</h3>
+              <p>Build small features in Python, Spring Boot, and Angular while your team owns mission direction.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">4</div>
+            <div>
+              <h3>Transfer control</h3>
+              <p>Hand over test packs, runbooks, release notes, and backlog notes so Amivero keeps full ownership afterwards.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cred">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We support web, mobile, backend, QA, DevOps, AI/ML, and data work under a dedicated-team model. For Amivero, the key fit is secure enterprise delivery with ISO 9001 and ISO 27001 practices, plus teams used to Python, Java, Angular, AWS, and QA automation. Our named customers include <strong>Broadcom</strong>, <strong>Siemens</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. That fits the squad above: steady delivery support without taking product control away from Amivero.</p>
+        <div class="logos" aria-label="Named customers">
+          <span class="tag">Broadcom</span>
+          <span class="tag">Siemens</span>
+          <span class="tag">Volkswagen</span>
+          <span class="tag">TRUMPF</span>
+          <span class="tag">TUI</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case">
+            <img src="assets/case-legal-document-review.jpg" alt="Legal document review case study preview">
+            <div class="case-body">
+              <h3>Legal document review platform</h3>
+              <p>Elinext built a US web app for document review, indexing, and categorization using Angular, Docker, Kafka, and MongoDB.</p>
+              <a href="https://www.elinext.com/case-study/app-for-legal-document-review-and-production/">Read case study</a>
+            </div>
+          </article>
+          <article class="case">
+            <img src="assets/case-network-router.jpg" alt="Remote network platform case study preview">
+            <div class="case-body">
+              <h3>High-scale platform engineering</h3>
+              <p>Elinext helped build an AI-powered platform with Spring, Java, React, Python, PostgreSQL, MongoDB, and AWS S3.</p>
+              <a href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>Pick one backlog, then decide if a squad fits.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
