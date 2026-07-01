@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReOrbit ground software support for satellite delivery programs</title>
+  <meta name="description" content="A short Elinext proposal for ReOrbit ground software, mission operations, and secure delivery scale.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/reorbit_2026-07-01_06-30-13/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/reorbit_2026-07-01_06-30-13/">
+  <meta property="og:title" content="ReOrbit ground software support for satellite delivery programs">
+  <meta property="og:description" content="A focused brief for UKKO, SILTA, OrbitCloud, and secure ground software growth.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/reorbit_2026-07-01_06-30-13/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="ReOrbit ground software support for satellite delivery programs — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ReOrbit ground software support for satellite delivery programs">
+  <meta name="twitter:description" content="A focused brief for UKKO, SILTA, OrbitCloud, and secure ground software growth.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/reorbit_2026-07-01_06-30-13/og-image.jpg">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172032;
+      --muted: #586272;
+      --paper: #f6f8fb;
+      --white: #ffffff;
+      --line: #d9e0ea;
+      --navy: #101a2f;
+      --blue: #225c9c;
+      --cyan: #42a7c8;
+      --orange: #e9783f;
+      --green: #6aa56f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+    }
+
+    .section {
+      width: 100%;
+      padding: 46px 18px;
+      background: var(--paper);
+    }
+
+    .section.white {
+      background: var(--white);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 34px 18px 50px;
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #a8d8e9;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: 34px;
+      line-height: 1.08;
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: 26px;
+      line-height: 1.15;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .hero p {
+      max-width: 690px;
+      margin-bottom: 14px;
+      color: #d9e7f2;
+      font-size: 17px;
+    }
+
+    .hero-media {
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: #0a1224;
+    }
+
+    .hero-media img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      opacity: 0.88;
+    }
+
+    .caption {
+      padding: 12px 14px;
+      color: #bdd3df;
+      font-size: 13px;
+    }
+
+    .read-box {
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid #b8d6e3;
+      border-left: 5px solid var(--cyan);
+      border-radius: 8px;
+      background: #eaf5f8;
+      color: #203143;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card,
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      border-radius: 8px;
+      background: #14233d;
+      color: var(--white);
+      box-shadow: 0 24px 48px rgba(16, 26, 47, 0.2);
+    }
+
+    .proposal-head {
+      display: grid;
+      gap: 16px;
+      padding: 22px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #e8f3fa;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .num {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 16px;
+    }
+
+    .step p,
+    .proposal-head p {
+      margin-bottom: 0;
+      color: #dce7f0;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 18px 22px;
+    }
+
+    .stack span,
+    .customer {
+      border: 1px solid rgba(34, 92, 156, 0.22);
+      border-radius: 999px;
+      padding: 6px 9px;
+      background: #eef5fb;
+      color: #1c4d80;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .company-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfe;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body p {
+      color: var(--muted);
+    }
+
+    .case-body a {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .cta {
+      text-align: center;
+      background: #dfeef1;
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      margin-top: 12px;
+      border-radius: 6px;
+      padding: 12px 18px;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 62px 28px;
+      }
+
+      .hero {
+        padding: 56px 28px 64px;
+      }
+
+      h1 {
+        font-size: 40px;
+      }
+
+      h2 {
+        font-size: 32px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-head {
+        grid-template-columns: minmax(0, 1.1fr) minmax(240px, 0.9fr);
+        padding: 28px;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 24px;
+      }
+
+      .stack {
+        padding: 0 24px 28px;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.2fr) minmax(360px, 0.8fr);
+      }
+
+      h1 {
+        max-width: 760px;
+        font-size: 38px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Prepared for Ivars Svekris</p>
+          <h1>ReOrbit ground software support for satellite delivery programs</h1>
+          <p>You are expanding software work around sovereign satellites, connected systems, and mission operations. This brief shows where Elinext would add useful capacity first.</p>
+          <p>Saw the Senior Ground Software Engineer role for UKKO, SILTA, and future missions. It points to a ground software load that must stay reliable and secure.</p>
+        </div>
+        <figure class="hero-media">
+          <img src="assets/reorbit-satellite.webp" alt="ReOrbit satellite visual">
+          <figcaption class="caption">Public ReOrbit product imagery, used to frame the engineering context.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The ground software role says ReOrbit is moving from product build to delivery scale. It names satellite communications, spacecraft databases, mission operations, and UKKO, SILTA, and future missions. That likely means more test data, more mission rules, and more handoffs between flight, ground, and security teams. OrbitCloud adds D2D links and orbital AI, so ground tools must stay clear for operators. If this layer lags, launch reviews slow down and senior engineers carry too much glue work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we’d start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <h3>Digital twin meets mission operations</h3>
+            <p>Silta’s digital twin is built for training and mission tuning, while the role asks for spacecraft database and mission operations software.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <h3>Make hard scenarios repeatable</h3>
+            <p>Start with a shared test harness for telemetry loss, database mismatch, and recovery paths before those cases reach live reviews.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>What we’d do</h2>
+        <div class="proposal">
+          <div class="proposal-head">
+            <div>
+              <h3>Six-week dedicated squad under your PO or PM</h3>
+              <p>One Tech Lead, two ground software engineers, one QA automation engineer, and one DevOps/security engineer.</p>
+            </div>
+            <div class="roles" aria-label="Team roles">
+              <span class="pill">Tech Lead</span>
+              <span class="pill">Ground Software</span>
+              <span class="pill">QA Automation</span>
+              <span class="pill">DevOps/Security</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <strong>Mission map</strong>
+                <p>Map UKKO, SILTA, and OrbitCloud workflows into one backlog, with risks tied to reviews and AIT handoffs.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <strong>Test harness</strong>
+                <p>Build repeatable simulators for spacecraft database changes, telemetry flows, and mission procedures before live operations.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <strong>Release track</strong>
+                <p>Add CI checks for Java, Python, and C++ services, with traceable evidence for security review.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <strong>Operator support</strong>
+                <p>Prepare clear runbooks and light status views, so operators see failure causes and recovery steps faster.</p>
+              </div>
+            </article>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span>Java</span>
+            <span>Python</span>
+            <span>C/C++</span>
+            <span>React</span>
+            <span>Node.js</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="company-box">
+          <p>Elinext is a full-cycle software development company founded in 1997, with about 700 in-house specialists. We use no freelancers and no subcontractors, so delivery control and knowledge stay clear. For ReOrbit, our fit is secure engineering, QA, DevOps, and complex backend work for critical systems. We hold ISO 9001 and ISO 27001 for quality and information security. Teams have served Siemens, Broadcom, Volkswagen, TRUMPF, and TUI on long software programs. We work under your product owner and provide evidence your space engineers need.</p>
+          <div class="customers" aria-label="Named customers">
+            <span class="customer">Siemens</span>
+            <span class="customer">Broadcom</span>
+            <span class="customer">Volkswagen</span>
+            <span class="customer">TRUMPF</span>
+            <span class="customer">TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-network-monitoring.webp" alt="Network monitoring case study preview">
+            <div class="case-body">
+              <h3>AI-Tool For Monitoring Telecom Networks Worldwide</h3>
+              <p>Elinext helped build software that tracks complex infrastructure and supports fast response to changing operational needs.</p>
+              <a href="https://www.elinext.com/case-study/network-monitoring-software/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-it-integrity.webp" alt="IT integrity case study preview">
+            <div class="case-body">
+              <h3>IT Integrity Management System</h3>
+              <p>A telecom integrity system helped check network devices in real time and reduce infrastructure risk.</p>
+              <a href="https://www.elinext.com/case-study/it-integrity-management/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Start the ground software talk</h2>
+        <p>Bring one current bottleneck; we will map the first sprint.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
