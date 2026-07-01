@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tandem Health patient access workflow brief</title>
+  <meta name="description" content="A short proposal for strengthening Tandem Health patient access and internal workflow handoffs.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/tandem-health_2026-07-01_14-00-39/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/tandem-health_2026-07-01_14-00-39/">
+  <meta property="og:title" content="Tandem Health patient access workflow brief">
+  <meta property="og:description" content="A practical read on Tandem Health portal, scheduling, refill, and billing handoffs.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/tandem-health_2026-07-01_14-00-39/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Tandem Health patient access workflow brief — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Tandem Health patient access workflow brief">
+  <meta name="twitter:description" content="A practical read on Tandem Health portal, scheduling, refill, and billing handoffs.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/tandem-health_2026-07-01_14-00-39/og-image.jpg">
+  <style>
+    :root {
+      --ink: #15312f;
+      --muted: #5c6b69;
+      --line: #d8e2de;
+      --paper: #f6f8f7;
+      --white: #ffffff;
+      --teal: #2b7b72;
+      --deep: #173b34;
+      --mint: #e2f0ec;
+      --orange: #f07c47;
+      --blue: #284d72;
+      --shadow: 0 18px 45px rgba(18, 48, 44, 0.11);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .section {
+      width: 100%;
+      padding: 52px 18px;
+      background: var(--paper);
+    }
+    .section.white { background: var(--white); }
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 760px;
+      font-size: 38px;
+      line-height: 1.08;
+      margin-bottom: 18px;
+      font-weight: 760;
+    }
+    h2 {
+      text-align: center;
+      font-size: 27px;
+      line-height: 1.18;
+      margin-bottom: 22px;
+    }
+    h3 {
+      font-size: 17px;
+      line-height: 1.22;
+      margin-bottom: 8px;
+    }
+    p { font-size: 16px; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 999px;
+      color: #e8f4f0;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+    .hero {
+      color: var(--white);
+      background:
+        linear-gradient(125deg, rgba(23,59,52,.96), rgba(40,77,114,.9)),
+        radial-gradient(circle at 90% 20%, rgba(240,124,71,.38), transparent 32%);
+      padding: 54px 18px 42px;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 26px;
+      align-items: center;
+    }
+    .hero p {
+      max-width: 730px;
+      color: #e1ece9;
+      margin-bottom: 14px;
+    }
+    .why {
+      padding-left: 16px;
+      border-left: 4px solid var(--orange);
+      color: #fff7f2;
+    }
+    .map {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 8px;
+      padding: 18px;
+      background: rgba(255,255,255,.08);
+    }
+    .map-title {
+      font-size: 13px;
+      color: #d7e8e4;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    .map-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .map-node {
+      min-height: 58px;
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .map-node strong { display: block; font-size: 14px; }
+    .map-node span { display: block; color: #d5e5e1; font-size: 13px; }
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      background: #e6f2ee;
+      border: 1px solid #c8ddd7;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .read-box p { margin-bottom: 0; }
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+    .start-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 10px 28px rgba(21,49,47,.07);
+    }
+    .label {
+      display: inline-block;
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .plan {
+      background: var(--deep);
+      color: var(--white);
+    }
+    .plan h2 { color: var(--white); }
+    .plan .intro {
+      max-width: 780px;
+      margin: 0 auto 24px;
+      text-align: center;
+      color: #dbe9e6;
+    }
+    .squad {
+      display: grid;
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .role {
+      padding: 13px 14px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.11);
+      border: 1px solid rgba(255,255,255,.18);
+      font-weight: 700;
+    }
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--ink);
+    }
+    .num {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--white);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+    .step p { margin-bottom: 0; color: var(--muted); }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 22px;
+    }
+    .pill {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      color: #edf7f4;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .who {
+      max-width: 82ch;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .customers strong {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--mint);
+      color: var(--deep);
+      font-size: 13px;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+    .case {
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .case img {
+      width: 100%;
+      aspect-ratio: 2.3 / 1;
+      object-fit: cover;
+    }
+    .case-body { padding: 18px; }
+    .case p { color: var(--muted); }
+    .case a {
+      font-weight: 800;
+      color: var(--teal);
+      text-decoration: none;
+    }
+    .cta {
+      text-align: center;
+      background: var(--deep);
+      color: var(--white);
+      padding-bottom: 60px;
+    }
+    .cta p {
+      color: #dbe8e4;
+      margin-bottom: 22px;
+    }
+    .button {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section { padding: 68px 28px; }
+      .hero { padding: 72px 28px 58px; }
+      h1 { font-size: 54px; }
+      h2 { font-size: 34px; }
+      .hero-grid { grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); }
+      .map-row { grid-template-columns: 1fr 1fr; }
+      .start-grid { grid-template-columns: 1fr 1fr; }
+      .squad { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .proof-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">Prepared for Tyler Calloway</div>
+          <h1>Keep Tandem Health patient access and internal work in sync</h1>
+          <p>Tandem already gives patients online paths for appointments, refills, bill pay, and portal access. The next gain is making those paths easier to support.</p>
+          <p class="why">Why we're here: we saw a Tandem Health internal-tooling hiring signal around operations and billing. We checked Tandem SC's public patient paths to see where that work could help.</p>
+        </div>
+        <div class="map" aria-label="Patient access handoff map">
+          <div class="map-title">Confirmed public handoffs</div>
+          <div class="map-row">
+            <div class="map-node"><strong>Portal</strong><span>Athenahealth account flow</span></div>
+            <div class="map-node"><strong>Scheduling</strong><span>Luma patient route</span></div>
+            <div class="map-node"><strong>Refills</strong><span>Portal plus pharmacy links</span></div>
+            <div class="map-node"><strong>Billing</strong><span>Guest pay and support</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The internal-tooling signal says Tandem may be tightening the work behind billing, invoicing, and daily operations. At the same time, your public patient path crosses Athenahealth for the portal, Luma for online scheduling, and separate pharmacy refill links. That split can help you move fast, but it also creates handoffs that staff must explain and support. If internal tools lag behind those patient steps, billing questions and refill follow-up can pull people back to manual work. The risk is not one broken app; it is small gaps across care access, pharmacy, and back office work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Map every patient action from the homepage: appointment, portal account, refill, bill pay, and pharmacy links.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Tag the handoff owner and system of record for each step, so staff can see where a patient is stuck.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">What reviews suggest</span>
+            <p>Athena app users often mention message alerts, login friction, appointment details, and prescription routing.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Turn those themes into QA checks for Tandem's portal support scripts and linked patient paths.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section plan">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <p class="intro">Run a six-week dedicated squad under Tandem's owner. The goal is not a new portal. It is better workflow visibility across the tools patients already touch.</p>
+        <div class="squad" aria-label="Team shape">
+          <div class="role">Tech Lead</div>
+          <div class="role">Full-stack Engineer</div>
+          <div class="role">QA Automation</div>
+          <div class="role">DevOps Specialist</div>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="num">1</div>
+            <div><h3>Discovery map</h3><p>Trace portal, scheduling, refill, bill-pay, and billing data flows with Tyler's infrastructure view and operations owners.</p></div>
+          </div>
+          <div class="step">
+            <div class="num">2</div>
+            <div><h3>Pilot integration</h3><p>Build a small internal service that logs handoff status, errors, and ownership without touching clinical records.</p></div>
+          </div>
+          <div class="step">
+            <div class="num">3</div>
+            <div><h3>Workflow QA</h3><p>Add tests for login, scheduling, refill, notification, and bill-pay paths across mobile and desktop browsers.</p></div>
+          </div>
+          <div class="step">
+            <div class="num">4</div>
+            <div><h3>Staff view</h3><p>Ship a simple staff view for open issues, patient handoff state, and weekly exception trends.</p></div>
+          </div>
+        </div>
+        <div class="stack" aria-label="Relevant stack">
+          <span class="pill">Node.js</span>
+          <span class="pill">.NET</span>
+          <span class="pill">React</span>
+          <span class="pill">Angular</span>
+          <span class="pill">AWS</span>
+          <span class="pill">QA automation</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap who">
+        <h2>Who is Elinext</h2>
+        <p>Elinext is a full-cycle software development provider, active since 1997, with about 700 in-house specialists and no freelancers. For a healthcare group like Tandem, the useful parts are ISO 27001 and ISO 9001 practices, healthcare delivery experience, and teams that can work under your Product Owner or PM. We have also delivered work for Siemens, Broadcom, Volkswagen, TRUMPF, and TUI, so our teams are used to enterprise rules and careful change control. That fits this pilot: a small squad can strengthen internal tools while Tyler keeps infrastructure, access, and reliability in view.</p>
+        <div class="customers" aria-label="Selected Elinext customers">
+          <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case">
+            <img src="assets/case-patient-portal.jpg" alt="Patient portal healthcare case study">
+            <div class="case-body">
+              <h3>Patient Portal for a Healthcare Company</h3>
+              <p>Elinext built a secure portal with AWS, Angular, Node.js, GraphQL, and DevOps support for medical exam access.</p>
+              <a href="https://www.elinext.com/case-study/patient-portal-for-healthcare-company/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case">
+            <img src="assets/case-billing-software.jpg" alt="Medical practice and billing software case study">
+            <div class="case-body">
+              <h3>Medical Practice and Billing Software</h3>
+              <p>Elinext supported a medical billing platform through certification work, feature delivery, and third-party integrations.</p>
+              <a href="https://www.elinext.com/case-study/healthcare-crm-system/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>A short call can validate the workflow map.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
