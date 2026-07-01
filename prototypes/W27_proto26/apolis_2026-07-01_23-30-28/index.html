@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Apolis full-stack delivery brief</title>
+  <meta name="description" content="A short delivery brief for Apolis, focused on active full-stack hiring and the careers workflow.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/apolis_2026-07-01_23-30-28/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/apolis_2026-07-01_23-30-28/">
+  <meta property="og:title" content="Apolis full-stack delivery brief">
+  <meta property="og:description" content="A proposal for keeping Apolis delivery moving while full-stack hiring stays active.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/apolis_2026-07-01_23-30-28/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Apolis full-stack delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Apolis full-stack delivery brief">
+  <meta name="twitter:description" content="A proposal for keeping Apolis delivery moving while full-stack hiring stays active.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/apolis_2026-07-01_23-30-28/og-image.jpg">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #627087;
+      --paper: #ffffff;
+      --soft: #f4f7f9;
+      --mist: #eef7f4;
+      --navy: #0f1f34;
+      --blue: #245c9f;
+      --teal: #0f8b7a;
+      --gold: #f1b83b;
+      --line: #dce4ea;
+      --shadow: 0 18px 50px rgba(20, 35, 55, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      background: var(--paper);
+    }
+
+    .section.soft {
+      background: var(--soft);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .narrow {
+      max-width: 850px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 1.85rem;
+      line-height: 1.15;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gold);
+      font-weight: 760;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 2px;
+      background: var(--gold);
+    }
+
+    .hero {
+      background: var(--navy);
+      color: #f7fbff;
+      padding: 68px 18px 54px;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 32px;
+      align-items: end;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.35rem, 9vw, 5rem);
+      line-height: 0.98;
+      max-width: 11ch;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 18px;
+      max-width: 620px;
+      font-size: 1.05rem;
+      color: #d8e4ee;
+    }
+
+    .why {
+      padding: 18px;
+      border-left: 4px solid var(--gold);
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      color: #ffffff;
+    }
+
+    .signal-strip {
+      display: grid;
+      gap: 10px;
+      margin-top: 34px;
+      color: #d7e5ef;
+    }
+
+    .signal-item {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      font-size: 0.9rem;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--mist);
+      border: 1px solid #c8e4dc;
+      border-left: 6px solid var(--teal);
+      padding: 26px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-size: 1.05rem;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .case-card {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(22, 38, 58, 0.08);
+    }
+
+    .start-card {
+      padding: 20px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .label {
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .plan {
+      background: #102238;
+      color: #f6fbff;
+      padding: 30px 18px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .plan-head {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .plan h3 {
+      font-size: 1.45rem;
+      line-height: 1.2;
+    }
+
+    .team-line {
+      color: #d9e7f3;
+      max-width: 760px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .num {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #101c2b;
+      font-weight: 800;
+    }
+
+    .step-title {
+      display: block;
+      font-weight: 800;
+      margin-bottom: 4px;
+      color: #ffffff;
+    }
+
+    .step p {
+      color: #cbdbea;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .pill {
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 0.86rem;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .elinext {
+      max-width: 900px;
+      margin: 0 auto;
+      font-size: 1.02rem;
+      display: grid;
+      gap: 14px;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .customer {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #e8f0f8;
+      color: #12365f;
+      font-weight: 760;
+      font-size: 0.85rem;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #e8edf2;
+    }
+
+    .case-body {
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .case-body h3 {
+      font-size: 1.08rem;
+      line-height: 1.25;
+    }
+
+    .case-body p {
+      color: var(--muted);
+    }
+
+    .case-body a {
+      color: var(--blue);
+      font-weight: 760;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      background: #f7fbff;
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+    }
+
+    .cta p {
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 20px;
+      border-radius: 8px;
+      background: var(--teal);
+      color: white;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      .section {
+        padding: 74px 28px;
+      }
+
+      .hero {
+        padding: 86px 28px 66px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 0.92fr) minmax(360px, 0.78fr);
+      }
+
+      .signal-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .plan {
+        padding: 34px;
+      }
+
+      .timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .hero h1 {
+        font-size: 5.45rem;
+      }
+
+      .plan-head {
+        grid-template-columns: 0.75fr 1fr;
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">Prepared for Apolis</div>
+          <h1>Keep Apolis full-stack delivery moving while hiring stays hot</h1>
+        </div>
+        <div class="hero-copy">
+          <p>Your careers feed points to real delivery load. It spans enterprise systems, web apps, AI, and data. The risk is delivery drag while rare full-stack profiles stay open.</p>
+          <p class="why">Saw the Spring, TX Full Stack Developer role in your June feed. It mixes Ignition, industrial protocols, SQL, APIs, and web UI.</p>
+        </div>
+      </div>
+      <div class="signal-strip" aria-label="Brief context">
+        <div class="signal-item">Signal: active full-stack hiring</div>
+        <div class="signal-item">Surface: careers and job workflow</div>
+        <div class="signal-item">Fit: delivery squad under Apolis</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="wrap narrow">
+        <h2>Our Read</h2>
+        <div class="read-box">
+          <p>Apolis looks busy in the right way. The live careers feed shows several Full Stack roles. It also shows SAP, Java, Oracle, AI, and testing demand. The Spring role blends Ignition, industrial protocols, SQL, APIs, and web UI. That mix can slow delivery if one hire must cover every layer. If backlog and hiring move at different speeds, client work can slip.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft">
+      <div class="wrap">
+        <h2>Where We'd Start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <div class="label">What we noticed</div>
+            <p>Split the Spring role into integration, API, UI, and release lanes.</p>
+            <div class="label">Useful next step</div>
+            <p>Check if one senior generalist is enough, or a small squad is safer.</p>
+          </article>
+          <article class="start-card">
+            <div class="label">What we noticed</div>
+            <p>The careers flow is dynamic and script-heavy on public pages.</p>
+            <div class="label">Useful next step</div>
+            <p>Test mobile search, job details, resume upload, and apply first.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>What We'd Do</h2>
+        <div class="plan">
+          <div class="plan-head">
+            <h3>A 6-week squad to clear the hardest full-stack lane</h3>
+            <div class="team-line">
+              <p>Dedicated squad under Apolis's PM. One tech lead, two senior full-stack engineers, QA automation, and part-time DevOps.</p>
+            </div>
+          </div>
+          <div class="timeline">
+            <article class="step">
+              <div class="num">1</div>
+              <div>
+                <span class="step-title">Map the role</span>
+                <p>Map the Spring role into integration, API, UI, and release tasks. Agree the pilot backlog with Apolis.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div>
+                <span class="step-title">Ship the first slice</span>
+                <p>Ship the highest-risk web/API slice first. Add SQL and service tests before wider UI work.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div>
+                <span class="step-title">Harden the workflow</span>
+                <p>Automate checks around search, details, apply states, and release flow. Keep weekly demos tied to role outcomes.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div>
+                <span class="step-title">Hand over cleanly</span>
+                <p>Hand over docs, test packs, and a next-quarter plan for React, Java, AWS, and SQL needs.</p>
+              </div>
+            </article>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span class="pill">React</span>
+            <span class="pill">Node.js</span>
+            <span class="pill">Java / .NET</span>
+            <span class="pill">SQL</span>
+            <span class="pill">AWS</span>
+            <span class="pill">API testing</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft">
+      <div class="wrap narrow">
+        <h2>Who Is Elinext</h2>
+        <div class="elinext">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build web, mobile, backend, QA, DevOps, AI, and data teams for clients across the US, Europe, and Asia. Our delivery model fits this brief: a dedicated team works under your PM, like remote in-house engineers. We bring ISO 9001 and ISO 27001 practices, plus delivery history with named customers.</p>
+          <div class="customers" aria-label="Named customers">
+            <span class="customer">Siemens</span>
+            <span class="customer">Broadcom</span>
+            <span class="customer">Volkswagen</span>
+            <span class="customer">TRUMPF</span>
+            <span class="customer">TUI</span>
+            <span class="customer">TransPerfect</span>
+          </div>
+          <p>For Apolis, that means a controlled engineering lane beside your own recruiting and client delivery teams.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-industrial.jpg" alt="Industrial machine performance data case study">
+            <div class="case-body">
+              <div class="label">Manufacturing web and DevOps</div>
+              <h3>Real-time Data Insights of Machines Performance</h3>
+              <p>Machine data connected to OEE improvement insight.</p>
+              <a href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-outstaffing.jpg" alt="Outstaffing for web app development case study">
+            <div class="case-body">
+              <div class="label">Web app outstaffing</div>
+              <h3>Outstaffing for Web App Development</h3>
+              <p>One senior developer raised productivity and lowered operations cost.</p>
+              <a href="https://www.elinext.com/case-study/outstaffing-for-web-app-development-for-a-top-notch-insurance-company/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap narrow">
+        <h2>Talk Through The Pilot</h2>
+        <p>We can map the first sprint in one call.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
