@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NSI Luxembourg PSF Java and Angular Delivery Brief</title>
+  <meta name="description" content="A short delivery brief for NSI Luxembourg PSF as it scales Java, Angular, and AWS engineering inside PSF controls.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/nsi-luxembourg-psf_2026-07-01_12-00-09/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/nsi-luxembourg-psf_2026-07-01_12-00-09/">
+  <meta property="og:title" content="NSI Luxembourg PSF Java and Angular delivery brief">
+  <meta property="og:description" content="A focused plan for scaling Java, Angular, and AWS delivery without loosening PSF controls.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/nsi-luxembourg-psf_2026-07-01_12-00-09/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="NSI Luxembourg PSF Java and Angular delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="NSI Luxembourg PSF Java and Angular delivery brief">
+  <meta name="twitter:description" content="A focused plan for scaling Java, Angular, and AWS delivery without loosening PSF controls.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/nsi-luxembourg-psf_2026-07-01_12-00-09/og-image.jpg">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172235;
+      --muted: #5f6b7a;
+      --line: #d9e1ea;
+      --paper: #ffffff;
+      --soft: #f4f7fb;
+      --blue: #135ea8;
+      --navy: #10233f;
+      --green: #20816d;
+      --orange: #e6733f;
+      --orange-soft: #fff0e8;
+      --shadow: 0 18px 45px rgba(16, 35, 63, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      background: var(--paper);
+    }
+
+    .section.alt {
+      background: var(--soft);
+    }
+
+    .wrap {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--orange);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 13ch;
+      margin-bottom: 18px;
+      font-size: 2.45rem;
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.7rem;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .hero {
+      padding: 34px 18px 58px;
+      background: linear-gradient(135deg, #0f203b 0%, #123f6d 64%, #135ea8 100%);
+      color: #fff;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero p {
+      max-width: 62ch;
+      color: #e5edf6;
+    }
+
+    .hero-visual {
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-visual img {
+      width: 100%;
+      aspect-ratio: 1.32 / 1;
+      object-fit: cover;
+      background: #fff;
+    }
+
+    .hero-caption {
+      padding: 12px 14px;
+      color: #dce7f3;
+      font-size: 0.88rem;
+    }
+
+    .read-box {
+      width: min(920px, 100%);
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #c9d8e8;
+      border-left: 6px solid var(--blue);
+      border-radius: 8px;
+      background: #edf5fd;
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      color: #31445c;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .note-card,
+    .case-card,
+    .step,
+    .team-box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(16, 35, 63, 0.06);
+    }
+
+    .note-card {
+      padding: 18px;
+    }
+
+    .note-label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .proposal {
+      background: #10233f;
+      color: #fff;
+    }
+
+    .proposal h2,
+    .proposal h3 {
+      color: #fff;
+    }
+
+    .proposal p {
+      color: #d8e1ec;
+    }
+
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .team-box {
+      padding: 20px;
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .role,
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .role {
+      background: #fff;
+      color: var(--navy);
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 16px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .num {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange-soft);
+      color: var(--orange);
+      font-weight: 800;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .step h3 {
+      color: var(--ink);
+    }
+
+    .stack {
+      margin-top: 20px;
+      color: #d8e1ec;
+    }
+
+    .tag {
+      margin: 4px 4px 0 0;
+      background: rgba(230, 115, 63, 0.18);
+      color: #ffe7da;
+      border: 1px solid rgba(230, 115, 63, 0.34);
+    }
+
+    .cred {
+      width: min(900px, 100%);
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .customer-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .customer-strip strong {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #e9f2fb;
+      color: var(--blue);
+      font-size: 0.86rem;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 1.7 / 1;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-link {
+      display: inline-flex;
+      margin-top: 8px;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .cta {
+      text-align: center;
+      background: #f7fbff;
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      margin-top: 12px;
+      padding: 12px 18px;
+      border-radius: 6px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 10px 20px rgba(230, 115, 63, 0.24);
+    }
+
+    @media (min-width: 760px) {
+      .section { padding: 72px 28px; }
+      .hero { padding: 46px 28px 74px; }
+      .hero-grid,
+      .proposal-grid {
+        grid-template-columns: 1fr 0.82fr;
+      }
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      h1 { font-size: 4.1rem; }
+      h2 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Prepared for Didier Blaise</p>
+          <h1>Scaling Java and Angular delivery without adding governance risk</h1>
+          <p>Saw NSI Luxembourg hiring for Medior and Junior Full Stack Engineers across Java, Angular, and AWS. Here is how we would help the team add capacity while keeping PSF delivery controls clear.</p>
+        </div>
+        <figure class="hero-visual">
+          <img src="assets/nsi-applications.png" alt="NSI Applications visual">
+          <figcaption class="hero-caption">NSI Applications: modernization, custom apps, GIS, Power Platform, and maintenance.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Your signal points to more than one open seat. NSI is growing application delivery for clients that need Agile development, cloud infrastructure, support, and AI. The Medior role names Java, Angular, AWS, SQL, Scrum, and shippable features. That mix often means teams need more delivery capacity, but cannot lower PSF controls. If the backlog grows while hiring moves slowly, project work can slip or senior engineers become reviewers only. The risk is not just speed. It is keeping secure delivery habits while new people join.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="note-card">
+            <span class="note-label">What we noticed</span>
+            <p>The Applications page joins modernization, security, scalability, GIS, Power Platform, and maintenance. First step: sort the Java and Angular backlog by risk, owner, and release path.</p>
+          </div>
+          <div class="note-card">
+            <span class="note-label">Useful next step</span>
+            <p>The public Applications page is strong in content but heavy on mobile. Add a small release checklist for assets, scripts, tests, and PSF evidence.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-grid">
+          <div class="team-box">
+            <h3>Dedicated squad under your PO or PM</h3>
+            <p>A six-week pilot that adds delivery capacity without changing NSI ownership. Weekly demos keep risk, scope, and quality visible.</p>
+            <div class="roles">
+              <span class="role">1 Tech Lead</span>
+              <span class="role">2 Java Engineers</span>
+              <span class="role">1 Angular Engineer</span>
+              <span class="role">1 AWS DevOps</span>
+              <span class="role">1 QA Automation</span>
+            </div>
+            <p class="stack">Relevant stack:
+              <span class="tag">Java</span>
+              <span class="tag">Spring</span>
+              <span class="tag">Angular</span>
+              <span class="tag">AWS</span>
+              <span class="tag">SQL</span>
+              <span class="tag">QA automation</span>
+            </p>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div><h3>Backlog and control map</h3><p>Split current Java and Angular work by client risk, release date, data access, and required review evidence.</p></div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div><h3>Delivery lane setup</h3><p>Set the squad inside your Scrum cadence, with coding rules, branch flow, test gates, and weekly demo notes.</p></div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div><h3>First feature slice</h3><p>Ship one bounded Java and Angular slice with AWS checks, SQL review, automated tests, and release evidence.</p></div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div><h3>Scale or stop decision</h3><p>Review output, defects, handover quality, and security fit before adding more people or widening scope.</p></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap cred">
+        <h2>Who is Elinext</h2>
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We fit this need because we build Java, web, QA, DevOps, and cloud teams for regulated clients, with ISO 9001 and ISO 27001 controls. Our named customers include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, and <strong>TRUMPF</strong>. For NSI, the point is simple: a controlled squad can add output while your leaders keep ownership, review, and delivery rules. The same model supports short pilots and longer team extension.</p>
+        <div class="customer-strip" aria-label="Named customers">
+          <strong>Siemens</strong>
+          <strong>Broadcom</strong>
+          <strong>Volkswagen</strong>
+          <strong>TRUMPF</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-securities.jpg" alt="Financial software case study image">
+            <div class="case-body">
+              <h3>Processing and management of securities</h3>
+              <p>Elinext built Java, Spring, and Angular features for a global FinTech corporate-actions platform, working with the client's product team.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/solution-for-processing-and-management-of-securities-for-fintech/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-integrity.jpg" alt="IT integrity case study image">
+            <div class="case-body">
+              <h3>IT integrity management system</h3>
+              <p>Elinext delivered a Java, Spring, and DevOps system for continuous compliance, real-time checks, and clear infrastructure risk follow-up.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/it-integrity-management/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Start the conversation</h2>
+        <p>Review one pilot squad and one backlog slice.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
