@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Optym backend scaling brief</title>
+  <meta name="description" content="A focused Elinext proposal for scaling backend reliability around Optym's AI decision tools.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/optym_2026-07-01_23-00-14/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/optym_2026-07-01_23-00-14/">
+  <meta property="og:title" content="Optym backend scaling brief">
+  <meta property="og:description" content="A focused plan for real-time optimization APIs, integrations, and field reliability.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/optym_2026-07-01_23-00-14/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Optym backend scaling brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Optym backend scaling brief">
+  <meta name="twitter:description" content="A focused plan for real-time optimization APIs, integrations, and field reliability.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/optym_2026-07-01_23-00-14/og-image.jpg">
+  <style>
+    :root {
+      --ink: #102235;
+      --muted: #5a6877;
+      --line: #dbe4e7;
+      --paper: #f7faf9;
+      --panel: #ffffff;
+      --blue: #174c7c;
+      --cyan: #0f8fa8;
+      --orange: #f57c22;
+      --green: #3e7f65;
+      --soft: #eaf4f2;
+      --navy: #0e273d;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+    img { max-width: 100%; height: auto; display: block; }
+    .section { padding: 54px 18px; background: var(--paper); }
+    .section.alt { background: #eef6f4; }
+    .wrap { width: 100%; max-width: 1080px; margin: 0 auto; }
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--cyan);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: clamp(2.15rem, 5vw, 4.8rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(1.7rem, 3vw, 2.7rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+    h3 { font-size: 1.05rem; line-height: 1.25; margin-bottom: 8px; }
+    p { color: var(--muted); }
+    .hero {
+      position: relative;
+      min-height: 84vh;
+      display: grid;
+      align-items: center;
+      padding: 72px 18px 92px;
+      color: #f5fbff;
+      background:
+        linear-gradient(135deg, rgba(14,39,61,0.94), rgba(17,76,124,0.84)),
+        url("assets/case-fleet-management.jpg") center/cover no-repeat;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 76px;
+      background: linear-gradient(to bottom, rgba(247,250,249,0), var(--paper));
+      pointer-events: none;
+    }
+    .hero .wrap { position: relative; z-index: 1; }
+    .hero p {
+      max-width: 660px;
+      color: #d9e9ee;
+      font-size: 1.05rem;
+    }
+    .hero .signal {
+      max-width: 720px;
+      padding-left: 18px;
+      border-left: 5px solid var(--orange);
+    }
+    .read-box {
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 24px;
+      background: #f0f8f6;
+      border: 1px solid #cfe2dc;
+      border-left: 6px solid var(--cyan);
+      border-radius: 8px;
+    }
+    .read-box p { margin: 0; color: #2b4654; }
+    .starts {
+      display: grid;
+      gap: 16px;
+    }
+    .start-card {
+      padding: 18px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 12px 28px rgba(16,34,53,0.06);
+    }
+    .start-card strong { display: block; margin-bottom: 6px; color: var(--blue); }
+    .start-card p { margin: 0; }
+    .plan {
+      overflow: hidden;
+      background: var(--navy);
+      color: #eef9fb;
+      border-radius: 8px;
+      box-shadow: 0 24px 56px rgba(14,39,61,0.18);
+    }
+    .plan-head {
+      display: grid;
+      gap: 14px;
+      padding: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.16);
+    }
+    .role-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 11px;
+      color: #ecfbff;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+    .timeline {
+      display: grid;
+      gap: 0;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+    .step:last-child { border-bottom: 0; }
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      color: var(--navy);
+      background: var(--orange);
+      border-radius: 50%;
+      font-weight: 900;
+    }
+    .step b { display: block; margin-bottom: 4px; }
+    .step p { margin: 0; color: #bed2da; }
+    .stack { margin-top: 12px; color: var(--muted); }
+    .cred {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .tag {
+      padding: 7px 10px;
+      background: #e8f1f4;
+      border-radius: 999px;
+      color: var(--blue);
+      font-weight: 800;
+      font-size: 0.88rem;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .case-card {
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 12px 28px rgba(16,34,53,0.06);
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 2.3 / 1;
+      object-fit: cover;
+      background: #dde8e8;
+    }
+    .case-body { padding: 18px; }
+    .case-body p { margin-bottom: 12px; }
+    .case-body a {
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+      border-bottom: 2px solid var(--orange);
+    }
+    .cta {
+      text-align: center;
+      background: var(--navy);
+      color: #f6fbff;
+    }
+    .cta h2 { color: #f6fbff; }
+    .cta p {
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #c6dbe2;
+    }
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 48px;
+      margin-top: 10px;
+      padding: 12px 18px;
+      color: #112235;
+      background: var(--orange);
+      border-radius: 8px;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section { padding: 74px 32px; }
+      .hero { padding: 88px 32px 120px; }
+      .starts, .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .plan-head { grid-template-columns: 1fr 1.2fr; align-items: center; padding: 30px; }
+      .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .step { min-height: 168px; border-right: 1px solid rgba(255,255,255,0.12); }
+      .step:nth-child(2n) { border-right: 0; }
+      .step:nth-last-child(-n+2) { border-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap">
+        <p class="eyebrow">Prepared for Ravi Ahuja and Optym</p>
+        <h1 id="hero-title">Scaling real-time backend capacity for Optym's AI decision tools</h1>
+        <p class="signal">Saw Optym hiring a senior Node.js backend engineer for reliable APIs that support optimization workflows and real-time decisions. Here is where we would help first.</p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="read-title">
+      <div class="wrap">
+        <h2 id="read-title">Our read</h2>
+        <div class="read-box">
+          <p>The hiring signal points to product scale, not routine maintenance. LoadAi depends on TMS data, driver hours, pay models, freight needs, and cost inputs. That makes the backend a trust layer for dispatchers. LoadOps reviews also show field pain around login, documents, and connection state. If those seams lag behind roadmap work, planners may see smart recommendations but drivers still hit blocked work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" aria-labelledby="start-title">
+      <div class="wrap">
+        <h2 id="start-title">Where we'd start</h2>
+        <div class="starts">
+          <article class="start-card">
+            <strong>Field trust check</strong>
+            <p>LoadOps reviews mention failed login and document upload restarts. Trace auth and document queues across mobile, API, and storage before more field features land.</p>
+          </article>
+          <article class="start-card">
+            <strong>Integration map</strong>
+            <p>LoadAi and LTL Suite lean on TMS, loadboard, ELD, GPS, and document inputs. Map owners, retry rules, data freshness, and tests for each source.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="do-title">
+      <div class="wrap">
+        <h2 id="do-title">What we'd do</h2>
+        <div class="plan">
+          <div class="plan-head">
+            <div>
+              <p class="eyebrow">6-week dedicated squad pilot</p>
+              <h3>Under Optym's PO or PM, with weekly demos.</h3>
+            </div>
+            <div>
+              <div class="role-row" aria-label="Team shape">
+                <span class="pill">1 backend lead</span>
+                <span class="pill">2 Node.js engineers</span>
+                <span class="pill">1 QA automation</span>
+                <span class="pill">1 DevOps engineer</span>
+              </div>
+            </div>
+          </div>
+          <div class="timeline">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <b>Map the critical flows</b>
+                <p>Document LoadAi, LoadOps, and RouteMax API paths that touch dispatch, auth, documents, and status updates.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <b>Stabilize auth and documents</b>
+                <p>Add targeted checks around login, password reset, document scan upload, retry state, and bill-of-lading handoff.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <b>Harden integrations</b>
+                <p>Create contract tests and failure dashboards for TMS, loadboard, ELD, GPS, and document intelligence inputs.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <b>Ship with the product team</b>
+                <p>Join sprint rituals, cut backend tickets, and demo working API improvements against real freight workflows.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <p class="stack">Stack fit: Node.js, TypeScript, React, Python, Java, AWS, Docker, CI/CD, API automation.</p>
+      </div>
+    </section>
+
+    <section class="section alt" aria-labelledby="elinext-title">
+      <div class="wrap">
+        <h2 id="elinext-title">Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build backend, web, mobile, AI/ML, QA, and DevOps teams for clients in the US, Europe, Asia, and beyond. Our work is backed by ISO 9001 and ISO 27001 practices. For Optym, the fit is a senior squad that can join your PM flow and raise backend delivery capacity without slowing product owners.</p>
+          <div class="logos" aria-label="Named customers">
+            <span class="tag">Siemens</span>
+            <span class="tag">Broadcom</span>
+            <span class="tag">Volkswagen</span>
+            <span class="tag">TRUMPF</span>
+            <span class="tag">TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="proof-title">
+      <div class="wrap">
+        <h2 id="proof-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-fleet-management.jpg" alt="Fleet management logistics case study cover">
+            <div class="case-body">
+              <h3>Fleet Management App for a US Logistics Provider</h3>
+              <p>Live location SDK and API workflows helped drivers accept tasks and stream order tracking.</p>
+              <a href="https://www.elinext.com/case-study/fleet-management-app-for-logistics-solution-provider-in-the-usa/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-warehouse-management.jpg" alt="Warehouse management case study cover">
+            <div class="case-body">
+              <h3>Continuous Microservices for Warehouse Management</h3>
+              <p>Backend services, synchronized logic, and scanning workflows reduced manual work and errors.</p>
+              <a href="https://www.elinext.com/case-study/warehouse-management-solutions/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta" aria-labelledby="talk-title">
+      <div class="wrap">
+        <h2 id="talk-title">Talk through the pilot</h2>
+        <p>We can review the backend pressure points and shape a small first sprint.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
