@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VISEO Iberia CDP and Azure API Delivery Brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/viseo-iberia_2026-07-01_16-19-14/">
+  <meta name="description" content="A short delivery brief for VISEO Iberia's Customer Data Platform API and Azure hiring signal.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/viseo-iberia_2026-07-01_16-19-14/">
+  <meta property="og:title" content="VISEO Iberia: scaling CDP APIs on Azure">
+  <meta property="og:description" content="A focused brief for API quality, Azure automation, and CDP delivery capacity.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/viseo-iberia_2026-07-01_16-19-14/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="VISEO Iberia: scaling CDP APIs on Azure - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VISEO Iberia: scaling CDP APIs on Azure">
+  <meta name="twitter:description" content="A focused brief for API quality, Azure automation, and CDP delivery capacity.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/viseo-iberia_2026-07-01_16-19-14/og-image.jpg">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #617087;
+      --blue: #164aa4;
+      --cyan: #00a1b7;
+      --orange: #f36b21;
+      --line: #d8e2ef;
+      --soft: #f3f7fb;
+      --paper: #ffffff;
+      --tint: #e9f4f7;
+      --dark: #101a2c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      background: var(--paper);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 78vh;
+      display: grid;
+      align-items: center;
+      padding: 52px 18px 44px;
+      background:
+        linear-gradient(135deg, rgba(16, 26, 44, 0.96), rgba(22, 74, 164, 0.88)),
+        linear-gradient(45deg, #101a2c, #00a1b7);
+      color: white;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #bce8ef;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 18px;
+      font-size: clamp(2.2rem, 8vw, 5rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 670px;
+      color: #e6eef9;
+      font-size: 1.05rem;
+    }
+
+    .hero-card {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 18px;
+    }
+
+    .signal-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: #f5f8fc;
+      font-size: 0.96rem;
+    }
+
+    .signal-list li {
+      padding-left: 16px;
+      border-left: 3px solid var(--orange);
+    }
+
+    .section h2 {
+      text-align: center;
+      font-size: clamp(1.7rem, 5vw, 2.55rem);
+      line-height: 1.12;
+      margin-bottom: 22px;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      max-width: 74ch;
+      margin: 0 auto;
+      border-left: 5px solid var(--cyan);
+      border-radius: 8px;
+      background: var(--tint);
+      padding: 22px;
+      box-shadow: 0 16px 40px rgba(28, 53, 84, 0.08);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      font-size: 1.03rem;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 26px;
+    }
+
+    .start-card,
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdff;
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 10px;
+      color: var(--blue);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .start-card p,
+    .case-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .proposal {
+      background: var(--dark);
+      color: white;
+    }
+
+    .proposal h2 {
+      color: white;
+    }
+
+    .proposal-intro {
+      max-width: 780px;
+      margin: 0 auto 28px;
+      color: #dce8f6;
+      text-align: center;
+    }
+
+    .plan {
+      display: grid;
+      gap: 16px;
+    }
+
+    .step {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.07);
+      padding: 18px;
+    }
+
+    .badge {
+      display: inline-grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      margin-bottom: 12px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: white;
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: #d6e1ef;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    .stack span,
+    .customer-pill {
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: rgba(255, 255, 255, 0.12);
+      color: white;
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+
+    .cred {
+      max-width: 840px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .cred p {
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .customer-pill {
+      background: #eef4fb;
+      color: var(--blue);
+    }
+
+    .proof {
+      background: var(--soft);
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 26px;
+    }
+
+    .case-card {
+      padding: 0;
+      overflow: hidden;
+      background: white;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.12rem;
+    }
+
+    .case-body a {
+      display: inline-block;
+      margin-top: 14px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .talk {
+      background: #fff7f1;
+      text-align: center;
+    }
+
+    .talk p {
+      max-width: 560px;
+      margin: 0 auto 22px;
+      color: var(--muted);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 100%;
+      min-height: 48px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: white;
+      padding: 12px 20px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 72px 28px;
+      }
+
+      .hero {
+        padding: 70px 28px 52px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+      }
+
+      .start-grid,
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .plan {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1120px) {
+      .plan {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Prepared for VISEO Iberia</p>
+          <h1>Scaling CDP APIs without slowing Salesforce delivery</h1>
+          <p>Saw VISEO Iberia is hiring for Python APIs and Azure work inside a Customer Data Platform. This brief shows where a small pod could help first.</p>
+          <p>For a Salesforce architect, that likely means more client data work, more integration checks, and more pressure on delivery quality.</p>
+        </div>
+        <aside class="hero-card" aria-label="Signal">
+          <ul class="signal-list">
+            <li>Python APIs with FastAPI or Flask</li>
+            <li>Azure Functions and Azure DevOps</li>
+            <li>CDP integrations in production</li>
+            <li>Quality, security, monitoring, logging</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The hiring signal says VISEO Iberia is adding capacity around a Customer Data Platform, not only adding one backend engineer. The work names Python APIs, Azure Functions, Azure DevOps, Data Engineering, and production support. That mix points to a bottleneck between client promise, CRM data, and platform delivery. If the API layer is thin, Salesforce workshops can create scope faster than teams can validate it. The risk is slower client rollouts and more load on architects like Lenin.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">Noticed</span>
+            <p>The job post names API quality, security, performance, monitoring, and logging. First step: map each CDP API to an owner, alert, test, and rollback path.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Next step</span>
+            <p>The public site already uses Salesforce, analytics, consent, and Cloudflare tooling. First step: check data events from web to CRM/CDP before adding more integrations.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <p class="proposal-intro">Use a dedicated squad under VISEO's PO or architecture lead. Start with a six-week pilot, weekly demos, and clear handoff notes.</p>
+        <div class="plan">
+          <article class="step">
+            <span class="badge">1</span>
+            <h3>API health map</h3>
+            <p>Review CDP API flows, errors, logs, and release points with VISEO's Salesforce and Data Engineering teams.</p>
+          </article>
+          <article class="step">
+            <span class="badge">2</span>
+            <h3>Azure hardening</h3>
+            <p>Improve Azure Functions, DevOps pipelines, environment rules, and rollback checks for safer production changes.</p>
+          </article>
+          <article class="step">
+            <span class="badge">3</span>
+            <h3>Delivery pod</h3>
+            <p>Add one Python API engineer, one Azure DevOps engineer, one QA automation engineer, and optional data support.</p>
+          </article>
+          <article class="step">
+            <span class="badge">4</span>
+            <h3>Workshop-ready docs</h3>
+            <p>Ship concise API notes, test evidence, and Salesforce handoff points for each client requirement.</p>
+          </article>
+        </div>
+        <div class="stack" aria-label="Relevant stack">
+          <span>Python</span>
+          <span>FastAPI</span>
+          <span>Flask</span>
+          <span>Azure Functions</span>
+          <span>Azure DevOps</span>
+          <span>Postman</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap cred">
+        <h2>Who is Elinext</h2>
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build web, backend, mobile, QA, DevOps, and AI/ML teams for clients in Europe, North America, Asia, and Australia. For VISEO, the relevant fit is Python, Azure delivery, QA automation, and dedicated squads working under your lead. Elinext holds ISO 9001 and ISO 27001 certifications. Named customers include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>.</p>
+        <div class="customers" aria-label="Named customers">
+          <span class="customer-pill">Siemens</span>
+          <span class="customer-pill">Broadcom</span>
+          <span class="customer-pill">Volkswagen</span>
+          <span class="customer-pill">TRUMPF</span>
+          <span class="customer-pill">TUI</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proof">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-web-application-builder.jpg" alt="Microsoft services provider app builder case study">
+            <div class="case-body">
+              <h3>App Builder for a Microsoft Services Provider</h3>
+              <p>Elinext built a reusable app builder using Azure, React, TypeScript, MongoDB, and DevOps for a Microsoft-focused provider.</p>
+              <a href="https://www.elinext.com/case-study/web-application-builder/">View case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-api-integration.jpg" alt="API integration case study">
+            <div class="case-body">
+              <h3>Application for Integration with Financial Organizations</h3>
+              <p>Elinext helped connect an application to many external APIs, shortening time to market for a complex integration product.</p>
+              <a href="https://www.elinext.com/case-study/app-for-integration-with-financial-organizations/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="wrap">
+        <h2>Start the conversation</h2>
+        <p>Share one API flow, and we can outline a first sprint.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
