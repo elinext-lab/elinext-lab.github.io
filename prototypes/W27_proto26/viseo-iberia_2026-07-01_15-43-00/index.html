@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VISEO Iberia API squad brief</title>
+  <meta name="description" content="A short proposal for scaling Python APIs and Azure delivery around VISEO Iberia's Customer Data Platform work.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/viseo-iberia_2026-07-01_15-43-00/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/viseo-iberia_2026-07-01_15-43-00/">
+  <meta property="og:title" content="VISEO Iberia: scaling Python APIs on Azure">
+  <meta property="og:description" content="A concise brief for Customer Data Platform API delivery, prepared by Elinext.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/viseo-iberia_2026-07-01_15-43-00/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="VISEO Iberia: scaling Python APIs on Azure - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VISEO Iberia: scaling Python APIs on Azure">
+  <meta name="twitter:description" content="A concise brief for Customer Data Platform API delivery, prepared by Elinext.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/viseo-iberia_2026-07-01_15-43-00/og-image.jpg">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #102323;
+      --muted: #5e706d;
+      --deep: #073b3a;
+      --teal: #08766c;
+      --mint: #dff4ec;
+      --paper: #fbfcf8;
+      --panel: #ffffff;
+      --line: #d9e5df;
+      --accent: #f26a3d;
+      --gold: #d8a51d;
+      --soft: #f4f8f1;
+      --shadow: 0 18px 50px rgba(7, 59, 58, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+      background: var(--paper);
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      background: var(--paper);
+    }
+
+    .section:nth-of-type(odd) {
+      background: #f6faf4;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      align-items: center;
+      padding: 44px 18px 34px;
+      background:
+        linear-gradient(140deg, rgba(7, 59, 58, 0.96), rgba(12, 96, 84, 0.94)),
+        url("assets/case-router-platform.jpg") center / cover;
+      color: #ffffff;
+    }
+
+    .hero .wrap {
+      display: grid;
+      gap: 28px;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      max-width: 100%;
+      padding: 7px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      color: #dcf4ee;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 1020px;
+      font-size: clamp(2.35rem, 5vw, 4.7rem);
+      line-height: 1.02;
+      font-weight: 820;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 680px;
+      color: #ecfff9;
+      font-size: clamp(1rem, 2.2vw, 1.25rem);
+    }
+
+    .hero-panel {
+      width: 100%;
+      max-width: 720px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding-top: 12px;
+    }
+
+    .signal-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .signal-pill {
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      padding: 8px 10px;
+      font-size: 0.9rem;
+      color: #f9fffb;
+    }
+
+    .section-title {
+      max-width: 760px;
+      margin: 0 auto 22px;
+      text-align: center;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1.05;
+      font-weight: 800;
+    }
+
+    .read-card {
+      max-width: 86ch;
+      margin: 0 auto;
+      padding: 26px;
+      background: #e7f3ec;
+      border-left: 6px solid var(--teal);
+      box-shadow: var(--shadow);
+      font-size: 1.04rem;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: 1fr;
+      margin-top: 8px;
+    }
+
+    .start-card,
+    .case-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 14px 34px rgba(16, 35, 35, 0.07);
+    }
+
+    .start-card {
+      padding: 22px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .label {
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      background: var(--deep);
+      color: #ffffff;
+    }
+
+    .proposal .section-title {
+      color: #ffffff;
+    }
+
+    .proposal-shell {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+
+    .team-card,
+    .steps-card {
+      background: #ffffff;
+      color: var(--ink);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: var(--shadow);
+    }
+
+    .team-card {
+      padding: 24px;
+    }
+
+    .team-card h3,
+    .steps-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+    }
+
+    .roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin: 16px 0;
+    }
+
+    .role {
+      padding: 8px 10px;
+      background: var(--mint);
+      color: var(--deep);
+      font-size: 0.88rem;
+      font-weight: 760;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .stack span,
+    .customer {
+      padding: 7px 9px;
+      background: #f2f7f4;
+      border: 1px solid var(--line);
+      color: var(--deep);
+      font-size: 0.84rem;
+      font-weight: 760;
+    }
+
+    .steps-card {
+      padding: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 15px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .step:last-child {
+      border-bottom: 0;
+    }
+
+    .num {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 850;
+    }
+
+    .step-title {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 800;
+      font-size: 1.02rem;
+    }
+
+    .step p,
+    .muted {
+      color: var(--muted);
+    }
+
+    .elinext-card {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 26px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 18px;
+      display: grid;
+      gap: 9px;
+    }
+
+    .case-body h3 {
+      font-size: 1.08rem;
+      line-height: 1.25;
+    }
+
+    .case-body a {
+      width: fit-content;
+      font-weight: 800;
+      color: var(--teal);
+      text-decoration: none;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .talk {
+      text-align: center;
+      background: #fffaf0;
+    }
+
+    .talk .wrap {
+      display: grid;
+      justify-items: center;
+      gap: 14px;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      background: var(--deep);
+      color: #ffffff;
+      font-weight: 820;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section {
+        padding: 76px 28px;
+      }
+
+      .hero {
+        padding: 64px 28px 42px;
+      }
+
+      .hero-panel {
+        grid-template-columns: 1fr auto;
+        align-items: center;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-shell {
+        grid-template-columns: 0.9fr 1.1fr;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .hero {
+        min-height: 92vh;
+      }
+
+      .section {
+        padding: 88px 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow">Prepared for VISEO Iberia</div>
+        <h1>Scaling Customer Data APIs without slowing cloud delivery</h1>
+        <p class="hero-copy">Saw VISEO Iberia is hiring a Python Software Engineer for APIs and Azure. The role points to live Customer Data Platform work, where delivery quality matters.</p>
+        <div class="hero-panel" aria-label="signal summary">
+          <div class="signal-row">
+            <span class="signal-pill">Python APIs</span>
+            <span class="signal-pill">Azure Functions</span>
+            <span class="signal-pill">Azure DevOps</span>
+          </div>
+          <span class="signal-pill">by Elinext</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Our read</h2>
+        <p class="read-card">That role says you are growing data integration work, not just filling a seat. The job names Python APIs, Azure Functions, Azure DevOps, logging, and production support. That mix usually means the Customer Data Platform is already live. The risk is not one missing developer. It is API change, release quality, and support load hitting Sergio's team at the same time. If that stays manual, delivery slows while architects spend time unblocking builds.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Your job brief ties FastAPI or Flask to Azure Functions and Azure DevOps.</p>
+            <span class="label">Useful next step</span>
+            <p>Create one shared API contract and test template before new integrations branch.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>VISEO's Data Analytics page names @ccelerator4 for Cloud Data pipelines.</p>
+            <span class="label">Useful next step</span>
+            <p>Add pipeline health checks and logging rules to each reusable pattern.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2 class="section-title">What we'd do</h2>
+        <div class="proposal-shell">
+          <article class="team-card">
+            <h3>Dedicated API squad</h3>
+            <p>Use a dedicated squad under Sergio's architecture lead for a six-week pilot.</p>
+            <div class="roles" aria-label="team shape">
+              <span class="role">Cloud/API lead</span>
+              <span class="role">2 Python engineers</span>
+              <span class="role">DevOps engineer</span>
+              <span class="role">QA automation</span>
+            </div>
+            <p class="muted">Relevant stack for the pilot:</p>
+            <div class="stack">
+              <span>Python</span>
+              <span>FastAPI / Flask</span>
+              <span>Azure Functions</span>
+              <span>Azure DevOps</span>
+              <span>Databricks</span>
+            </div>
+          </article>
+          <article class="steps-card">
+            <div class="step">
+              <span class="num">1</span>
+              <div><span class="step-title">Map the delivery path</span><p>Map CDP integrations, current API contracts, Azure Functions, and CI/CD gaps into one delivery board.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <div><span class="step-title">Harden API patterns</span><p>Build FastAPI or Flask templates with OpenAPI checks, auth guardrails, retries, and clear error handling.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <div><span class="step-title">Clean the release path</span><p>Add Azure DevOps pipelines for tests, deploy previews, rollback notes, and environment config checks.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <div><span class="step-title">Prepare production support</span><p>Set logging, alert rules, and support runbooks so product teams see failures before users do.</p></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Who is Elinext</h2>
+        <div class="elinext-card">
+          <p>Elinext is a full-cycle software development company, active since 1997 across Europe and beyond. We have about 700 in-house specialists, with no freelancers and no subcontractors involved. Our teams cover Python, .NET, cloud, QA, DevOps, data engineering, and AI/ML work. We are ISO 9001 and ISO 27001 certified for quality and information security. We have served Broadcom, Siemens, Volkswagen, TRUMPF, TUI, and other global enterprise teams. For this pilot, Sergio keeps architecture control while Elinext owns daily delivery pressure and test depth.</p>
+          <div class="customers" aria-label="named customers">
+            <strong class="customer">Broadcom</strong>
+            <strong class="customer">Siemens</strong>
+            <strong class="customer">Volkswagen</strong>
+            <strong class="customer">TRUMPF</strong>
+            <strong class="customer">TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-router-platform.jpg" alt="Router management platform case study cover">
+            <div class="case-body">
+              <span class="label">Azure and Python platform</span>
+              <h3>Remote Network and Router Management Platform</h3>
+              <p>Built with Azure Kubernetes and Python for high-volume payloads and support workflows.</p>
+              <a href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-gamification.jpg" alt="Gamification platform case study cover">
+            <div class="case-body">
+              <span class="label">Azure data engineering</span>
+              <h3>Gamification Solution for Retailers Worldwide</h3>
+              <p>Azure Kubernetes, .NET, Docker, and data engineering supported global clients.</p>
+              <a href="https://www.elinext.com/case-study/gamification-solution-for-retailers-worldwide/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="wrap">
+        <h2 class="section-title">Discuss the API squad</h2>
+        <p>A short technical call is enough to test fit.</p>
+        <a class="cta" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
