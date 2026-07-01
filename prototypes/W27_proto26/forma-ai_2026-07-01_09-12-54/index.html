@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forma.ai backend scaling brief</title>
+  <meta name="description" content="A short proposal for Forma.ai's backend Applications hiring moment, prepared by Elinext.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/forma-ai_2026-07-01_09-12-54/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/forma-ai_2026-07-01_09-12-54/">
+  <meta property="og:title" content="Forma.ai backend scaling brief">
+  <meta property="og:description" content="A concrete squad plan for Forma.ai's Applications hiring moment.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/forma-ai_2026-07-01_09-12-54/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Forma.ai backend scaling brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Forma.ai backend scaling brief">
+  <meta name="twitter:description" content="A concrete squad plan for Forma.ai's Applications hiring moment.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/forma-ai_2026-07-01_09-12-54/og-image.jpg">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #142033;
+      --muted: #536176;
+      --line: #d9e0e8;
+      --paper: #fbfcfe;
+      --soft: #eef4f8;
+      --navy: #111b2d;
+      --purple: #5635c8;
+      --teal: #0f8b8d;
+      --orange: #ff7a00;
+      --green: #2f7d55;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    body {
+      min-width: 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+
+    section {
+      padding: 48px 0;
+      background: var(--paper);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at 85% 18%, rgba(15, 139, 141, 0.22), transparent 30%),
+        linear-gradient(135deg, #111b2d 0%, #1a2440 58%, #2b2454 100%);
+      color: var(--white);
+      padding: 64px 0 52px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 999px;
+      color: #c9d5e6;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 920px;
+      font-size: 2.45rem;
+      line-height: 1.08;
+      letter-spacing: 0;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      max-width: 760px;
+      color: #dce5f1;
+      font-size: 1.04rem;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      line-height: 1.15;
+      margin-bottom: 22px;
+    }
+
+    .read-box {
+      background: #edf5f4;
+      border: 1px solid #c8dedb;
+      border-left: 7px solid var(--teal);
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 76ch;
+      margin: 0 auto;
+      color: #1c3443;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .case-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 12px 34px rgba(18, 32, 51, 0.06);
+    }
+
+    .label {
+      color: var(--purple);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .start-card strong,
+    .case-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1.02rem;
+    }
+
+    .proposal {
+      background: #f3f5f1;
+    }
+
+    .proposal-panel {
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 18px 48px rgba(17, 27, 45, 0.18);
+    }
+
+    .team-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 22px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #e8edf5;
+      padding: 7px 10px;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      padding: 15px;
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--orange);
+      color: #111b2d;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .step b {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.98rem;
+    }
+
+    .step span,
+    .proposal-panel p {
+      color: #d5ddeb;
+    }
+
+    .stack {
+      color: #d5ddeb;
+      margin-top: 18px;
+      font-size: 0.95rem;
+    }
+
+    .elinext {
+      background: var(--white);
+    }
+
+    .cred {
+      max-width: 82ch;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .logos {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .logos strong {
+      border-radius: 999px;
+      background: #eef0ff;
+      color: #31236d;
+      padding: 7px 10px;
+      font-size: 0.86rem;
+    }
+
+    .case-card {
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: var(--soft);
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body a {
+      display: inline-block;
+      margin-top: 10px;
+      color: var(--green);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      background: #111b2d;
+      color: var(--white);
+      text-align: center;
+      padding: 54px 0;
+    }
+
+    .cta p {
+      color: #d7e0ed;
+      margin-bottom: 22px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      border-radius: 6px;
+      background: var(--orange);
+      color: #111b2d;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .wrap {
+        width: min(100% - 56px, 1120px);
+      }
+
+      section {
+        padding: 62px 0;
+      }
+
+      .hero {
+        padding: 88px 0 72px;
+      }
+
+      h1 {
+        font-size: 4rem;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-panel {
+        padding: 32px;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      h1 {
+        font-size: 4.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow">Prepared for Paresh Bhandari</div>
+        <h1>Support Forma.ai's next backend hiring push without slowing delivery</h1>
+        <p>Saw the Staff Back End Engineer signal and your GCC scale-up across engineering, analytics, implementation, and customer operations. This brief shows where a small Elinext squad could reduce delivery pressure without changing ownership.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <p class="read-box">The Staff Back End Engineer signal says Forma.ai is scaling the application layer behind Operator, Architect, Prophet, and data integrations. That usually means more enterprise data feeds, more plan logic, and more customer-specific edge cases at the same time. Public reviews praise visibility and support, but several users ask for more admin control, clearer reporting, and fresher dashboards. That points to a bottleneck between backend delivery and customer operations. If it stays tight, new enterprise rollouts can lean too much on senior internal engineers.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <div class="label">Noticed</div>
+            <strong>Data promise meets data reality</strong>
+            <p>Forma.ai promises validation and cleansing from any source. Reviews still mention stale or inaccurate data.</p>
+            <p><strong>Next step:</strong> Trace feed to dashboard, then add clear retry and last-updated states.</p>
+          </article>
+          <article class="start-card">
+            <div class="label">Noticed</div>
+            <strong>Admins want more safe control</strong>
+            <p>Reviewers ask for more control over reports and plan logic, without losing governance.</p>
+            <p><strong>Next step:</strong> Pilot role-based report edits for one enterprise account path.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-panel">
+          <p><strong>Engagement model:</strong> a dedicated squad under Forma.ai's Product and Engineering leads, with weekly demos and shared backlog control.</p>
+          <div class="team-row" aria-label="Team shape">
+            <span class="pill">Backend lead</span>
+            <span class="pill">2 senior backend engineers</span>
+            <span class="pill">Data engineer</span>
+            <span class="pill">QA automation</span>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="num">1</div>
+              <div><b>Map the path</b><span>Map one enterprise rollout path from source data to seller dashboard, including validation, exceptions, retries, and admin handoffs.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div><b>Add capacity</b><span>Add backend capacity for one high-priority Applications queue item while your team keeps product ownership.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div><b>Lock reliability</b><span>Build automated checks around feed freshness, payout calculations, and report permissions so customer operations can trust each release.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div><b>Handover cleanly</b><span>Demo weekly with engineering and customer operations, then leave handover notes, tests, and release-ready tickets.</span></div>
+            </div>
+          </div>
+          <p class="stack"><strong>Relevant stack:</strong> Java, Node.js, Python, React, Angular, and QA automation.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <p class="cred">Elinext is a full-cycle software development company founded in 1997, with about 700 in-house specialists and no freelancers. For Forma.ai, the fit is practical: we can add senior backend, data, QA, and web engineers under your own Product Owner. Our work is backed by ISO 9001 and ISO 27001, and by delivery history with Siemens, Broadcom, Volkswagen, and TUI. That matters here because the proposed squad must handle enterprise data, careful release work, and customer-facing reliability without adding management load.</p>
+        <div class="logos" aria-label="Selected customers">
+          <strong>Siemens</strong>
+          <strong>Broadcom</strong>
+          <strong>Volkswagen</strong>
+          <strong>TUI</strong>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-sales-analytics.jpg" alt="Sales analytics platform case study image">
+            <div class="case-body">
+              <strong>Sales Analytics Platform</strong>
+              <p>Elinext built a web data platform that processes around 30 million dealer, customer, and sales records daily.</p>
+              <a href="https://www.elinext.com/case-study/sales-analytics-application-for-chainsaw-manufacturer/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-outstaffing-web.jpg" alt="Outstaffing web app case study image">
+            <div class="case-body">
+              <strong>Outstaffing for Web App Development</strong>
+              <p>A senior Node.js developer helped reduce operating cost and improve business operations productivity for an insurance platform.</p>
+              <a href="https://www.elinext.com/case-study/outstaffing-for-web-app-development-for-a-top-notch-insurance-company/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>We can scope one backend lane in a short call.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
