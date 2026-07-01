@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sharegain AI production brief</title>
+  <meta name="description" content="A short engineering brief for Sharegain's SLaaS MAX AI delivery moment.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/sharegain_2026-07-01_07-00-28/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/sharegain_2026-07-01_07-00-28/">
+  <meta property="og:title" content="Sharegain's AI roadmap needs production guardrails">
+  <meta property="og:description" content="A short brief on turning SLaaS MAX agent work into reliable product delivery.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/sharegain_2026-07-01_07-00-28/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sharegain's AI roadmap needs production guardrails - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sharegain's AI roadmap needs production guardrails">
+  <meta name="twitter:description" content="A short brief on turning SLaaS MAX agent work into reliable product delivery.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/sharegain_2026-07-01_07-00-28/og-image.jpg">
+  <style>
+    :root {
+      --ink: #142033;
+      --muted: #5f6b7a;
+      --paper: #fbfaf7;
+      --white: #ffffff;
+      --navy: #10192b;
+      --blue: #244f86;
+      --green: #7dbb78;
+      --orange: #f26b2f;
+      --line: #d9ded8;
+      --soft: #eff5ed;
+      --warm: #fff2e8;
+      --shadow: 0 14px 38px rgba(20, 32, 51, .12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .hero {
+      color: var(--white);
+      background:
+        linear-gradient(135deg, rgba(16, 25, 43, .98), rgba(22, 60, 78, .96)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0, rgba(255,255,255,.05) 1px, transparent 1px, transparent 28px);
+      padding: 44px 18px 54px;
+    }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    .hero .wrap {
+      padding: 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 20px;
+      color: #d5f0d2;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 3px;
+      background: var(--orange);
+      border-radius: 2px;
+    }
+
+    h1 {
+      max-width: 880px;
+      margin: 0;
+      font-size: clamp(36px, 8vw, 76px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 700px;
+      margin: 22px 0 0;
+      color: #edf4f2;
+      font-size: 18px;
+    }
+
+    section {
+      padding: 48px 0;
+      background: var(--paper);
+    }
+
+    section:nth-of-type(2n) {
+      background: var(--white);
+    }
+
+    h2 {
+      margin: 0 auto 22px;
+      text-align: center;
+      font-size: clamp(28px, 6vw, 42px);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      background: #eef6ef;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-size: 18px;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .start-card {
+      padding: 20px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 10px 22px rgba(20, 32, 51, .07);
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .plan {
+      color: var(--white);
+      background: var(--navy);
+    }
+
+    .plan h2 {
+      color: var(--white);
+    }
+
+    .plan-intro {
+      max-width: 74ch;
+      margin: 0 auto 24px;
+      color: #dce5ea;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .roles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0 auto 24px;
+      max-width: 760px;
+    }
+
+    .role {
+      min-height: 52px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 8px;
+      background: rgba(255,255,255,.06);
+      color: #f7fbfb;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 14px;
+      padding: 18px;
+      background: #f6f8f6;
+      color: var(--ink);
+      border-radius: 8px;
+    }
+
+    .num {
+      display: inline-grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      margin: 0 0 5px;
+      font-size: 18px;
+    }
+
+    .step p {
+      color: #4d5866;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 22px;
+    }
+
+    .stack span,
+    .customer {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--warm);
+      color: #7d3418;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .about-copy {
+      max-width: 78ch;
+      margin: 0 auto;
+      font-size: 18px;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .case {
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 10px 24px rgba(20, 32, 51, .08);
+    }
+
+    .case img {
+      width: 100%;
+      aspect-ratio: 2.3 / 1;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .case p {
+      color: var(--muted);
+    }
+
+    .case a {
+      display: inline-flex;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .talk {
+      background: #eaf1f5;
+      text-align: center;
+    }
+
+    .talk h2 {
+      margin-bottom: 12px;
+    }
+
+    .talk p {
+      max-width: 48ch;
+      margin: 0 auto 22px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero {
+        padding: 74px 32px 86px;
+      }
+
+      section {
+        padding: 70px 0;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .roles {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .timeline {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .step {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Prepared for Shlomi Assaf</p>
+      <h1>Sharegain's AI roadmap needs production guardrails for SLaaS MAX</h1>
+      <p class="why">Saw Sharegain is hiring an AI Software Engineer for agent systems, model quality, cloud apps, and microservices. That points to real delivery pressure behind SLaaS MAX, not a lab experiment.</p>
+    </div>
+  </header>
+
+  <section aria-labelledby="read-title">
+    <div class="wrap">
+      <h2 id="read-title">Our read</h2>
+      <div class="read-box">
+        <p>Your signal says Sharegain is moving AI from research into daily product work. SLaaS MAX already promises to scan portfolios, score demand, trigger outreach, and track results across millions of retail accounts. The hard part is no longer the idea; it is making agents reliable inside a regulated lending flow. One weak prompt, stale market signal, or unclear client message can slow adoption. Shlomi's team also carries the core SLaaS platform, with .NET, TypeScript, Angular, microservices, and Kubernetes in use.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="start-title">
+    <div class="wrap">
+      <h2 id="start-title">Where we'd start</h2>
+      <div class="start-grid">
+        <div class="start-card">
+          <span class="label">What we noticed</span>
+          <p>SLTech lists loan-critical modules: matching, pricing, market data, corporate actions, collateral, billing, and dashboards.</p>
+        </div>
+        <div class="start-card">
+          <span class="label">Useful next step</span>
+          <p>Map the first AI workflow across those handoffs, then add eval tests for each decision point.</p>
+        </div>
+        <div class="start-card">
+          <span class="label">What we noticed</span>
+          <p>Public fully paid lending threads keep asking about recall rights, tax treatment, and counterparty risk.</p>
+        </div>
+        <div class="start-card">
+          <span class="label">Useful next step</span>
+          <p>Make automated outreach pass clear policy checks before any message reaches a client.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="plan" aria-labelledby="plan-title">
+    <div class="wrap">
+      <h2 id="plan-title">What we'd do</h2>
+      <p class="plan-intro">Use a dedicated squad under your product owner for a six-week pilot. The goal is one production AI path that is tested, monitored, and safe to expand.</p>
+      <div class="roles" aria-label="Proposed team shape">
+        <div class="role">Tech Lead</div>
+        <div class="role">2 AI/backend engineers</div>
+        <div class="role">Angular/.NET engineer</div>
+        <div class="role">QA automation</div>
+        <div class="role">Part-time DevOps</div>
+        <div class="role">Weekly demo cadence</div>
+      </div>
+      <div class="timeline">
+        <article class="step">
+          <span class="num">1</span>
+          <div>
+            <strong>Trace the workflow</strong>
+            <p>Trace one SLaaS MAX flow from market signal to client outreach, with risk owners and fallback rules named.</p>
+          </div>
+        </article>
+        <article class="step">
+          <span class="num">2</span>
+          <div>
+            <strong>Test the agents</strong>
+            <p>Build an eval harness for prompts, tool calls, and outputs, using real edge cases from lending operations.</p>
+          </div>
+        </article>
+        <article class="step">
+          <span class="num">3</span>
+          <div>
+            <strong>Ship behind flags</strong>
+            <p>Release a small feature with monitoring for model quality, latency, and exception paths.</p>
+          </div>
+        </article>
+        <article class="step">
+          <span class="num">4</span>
+          <div>
+            <strong>Harden delivery</strong>
+            <p>Add regression tests around microservice contracts, Angular states, and cloud deploy steps before wider rollout.</p>
+          </div>
+        </article>
+      </div>
+      <div class="stack" aria-label="Relevant stack">
+        <span>.NET</span>
+        <span>TypeScript</span>
+        <span>Angular</span>
+        <span>Kubernetes</span>
+        <span>Docker</span>
+        <span>AWS / Azure</span>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="elinext-title">
+    <div class="wrap">
+      <h2 id="elinext-title">Who is Elinext</h2>
+      <div class="about-copy">
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Sharegain, the fit is finance-grade delivery, AI/ML, .NET, Angular, QA, and DevOps under one roof. Our work is backed by ISO 9001 and ISO 27001 controls, which matters for regulated platforms. Teams have delivered for Broadcom, Siemens, Volkswagen, TRUMPF, and TUI. For this pilot, Elinext would plug into Shlomi's roadmap as an engineering squad, not a slideware team.</p>
+      </div>
+      <div class="customers" aria-label="Named customers">
+        <span class="customer">Broadcom</span>
+        <span class="customer">Siemens</span>
+        <span class="customer">Volkswagen</span>
+        <span class="customer">TRUMPF</span>
+        <span class="customer">TUI</span>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="proof-title">
+    <div class="wrap">
+      <h2 id="proof-title">Proof</h2>
+      <div class="proof-grid">
+        <article class="case">
+          <img src="assets/case-securities-processing.jpg" alt="Abstract image for securities processing case study">
+          <div class="case-body">
+            <h3>Securities processing for global fintech</h3>
+            <p>Elinext built dashboards and workflows for complex securities operations, working with the client's product team.</p>
+            <a href="https://www.elinext.com/case-study/solution-for-processing-and-management-of-securities-for-fintech/">Read case study</a>
+          </div>
+        </article>
+        <article class="case">
+          <img src="assets/case-banking-qa.png" alt="Banking QA case study visual">
+          <div class="case-body">
+            <h3>QA for a banking web app</h3>
+            <p>Elinext added banking QA and release support, reducing post-release defects and shortening delivery cycles.</p>
+            <a href="https://www.elinext.com/case-study/qa-services-for-banking-app/">Read case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="talk" aria-labelledby="talk-title">
+    <div class="wrap">
+      <h2 id="talk-title">Talk through the pilot</h2>
+      <p>A focused call is enough to test fit.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
