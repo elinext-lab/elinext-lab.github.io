@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prophesee Hearth Migration Brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/prophesee_2026-07-01_10-30-27/">
+  <meta name="description" content="A short Prophesee brief on helping Hearth carry Metavision and OpenEB users into Mantara field deployments.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/prophesee_2026-07-01_10-30-27/">
+  <meta property="og:title" content="Prophesee: help Hearth reach the field">
+  <meta property="og:description" content="A short brief on moving Metavision and OpenEB users toward Mantara field use.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/prophesee_2026-07-01_10-30-27/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Prophesee: help Hearth reach the field - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Prophesee: help Hearth reach the field">
+  <meta name="twitter:description" content="A short brief on moving Metavision and OpenEB users toward Mantara field use.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/prophesee_2026-07-01_10-30-27/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17201d;
+      --muted: #5f6d68;
+      --paper: #f6f7f3;
+      --panel: #ffffff;
+      --soft: #e8f1ed;
+      --line: #d9e2dc;
+      --dark: #111815;
+      --teal: #1e7567;
+      --orange: #e86d2f;
+      --gold: #f4b34f;
+      --shadow: 0 18px 48px rgba(17, 24, 21, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 48px 18px;
+      background: var(--paper);
+    }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: var(--dark);
+      color: #f8fbf7;
+      padding: 40px 18px 26px;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: #a8d7c9;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 18px;
+      font-size: clamp(2rem, 8vw, 4.8rem);
+      line-height: 1.03;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 660px;
+      color: #d7e5dd;
+      font-size: 1.05rem;
+    }
+
+    .why {
+      max-width: 720px;
+      margin-bottom: 24px;
+      color: #f3f6f1;
+      font-size: 1.05rem;
+    }
+
+    .hero-visual {
+      margin-top: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #0b100e;
+      box-shadow: var(--shadow);
+    }
+
+    .caption {
+      padding: 10px 12px;
+      color: #c8d6ce;
+      font-size: 0.82rem;
+    }
+
+    .read-card {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid #bcd2c8;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: var(--soft);
+      box-shadow: 0 10px 26px rgba(30, 117, 103, 0.08);
+    }
+
+    .read-card p {
+      margin: 0;
+      font-size: 1.02rem;
+    }
+
+    .start-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .start-card,
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-flex;
+      width: fit-content;
+      margin-bottom: 10px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #fff1e8;
+      color: #9a4218;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .proposal {
+      background: #eef3ef;
+    }
+
+    .proposal-box {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      padding: 20px;
+      border-radius: 8px;
+      background: #12211d;
+      color: #f5faf6;
+      box-shadow: var(--shadow);
+    }
+
+    .team {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .team li {
+      min-height: 58px;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 8px;
+      background: #f8fbf7;
+      color: var(--ink);
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .step p,
+    .start-card p,
+    .case-card p,
+    .who p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .stack span,
+    .customer {
+      display: inline-flex;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: #e3efe9;
+      color: #174b42;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .who {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 22px;
+      border-radius: 8px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .case-body {
+      padding: 16px;
+    }
+
+    .case-card a {
+      display: inline-flex;
+      margin-top: 12px;
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .talk {
+      background: var(--dark);
+      color: #f8fbf7;
+      text-align: center;
+    }
+
+    .talk h2 {
+      margin-bottom: 10px;
+    }
+
+    .talk p {
+      margin: 0 auto 22px;
+      color: #cfddd5;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--gold);
+      color: #17110a;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section {
+        padding: 64px 28px;
+      }
+
+      .hero {
+        padding: 58px 28px 34px;
+      }
+
+      .hero-visual {
+        max-height: 420px;
+      }
+
+      .hero-visual img {
+        max-height: 370px;
+        object-fit: cover;
+      }
+
+      .start-grid,
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-box {
+        grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+        padding: 28px;
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .hero {
+        padding-top: 72px;
+      }
+
+      .proposal-box {
+        gap: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Prepared for James Wightman, Application Director</p>
+        <h1>Help Hearth reach the field without slowing Mantara</h1>
+        <p class="lead">Prophesee has moved from SDK-led adoption to a field-ready counter-drone system.</p>
+        <p class="why">We saw the June 2026 launch of Mantara and Hearth, plus the new funding. That says your application team must support Metavision users while a new platform reaches the field.</p>
+        <figure class="hero-visual" aria-label="Prophesee Mantara launch image">
+          <img src="assets/prophesee-mantara.jpg" alt="Prophesee Mantara launch visual">
+          <figcaption class="caption">Official Prophesee launch image for Mantara and Hearth.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="our-read">
+      <div class="wrap">
+        <h2 id="our-read">Our read</h2>
+        <div class="read-card">
+          <p>The signal says Prophesee is scaling from Metavision SDK and OpenEB into Hearth. That is not only a product launch. It is a user migration, support, and test problem. The official launch says Hearth will carry existing Metavision and OpenEB applications forward. If that path feels hard, field teams lose time and Mantara pilots slow down. James's application team likely needs extra hands that can work across C++, Python, devices, and customer examples.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="start">
+      <div class="wrap">
+        <h2 id="start">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">Noticed</span>
+            <h3>OpenEB issues show live setup friction.</h3>
+            <p>Start with a small compatibility board for GenX320, EVK4, Raspberry Pi, Python bindings, and file conversion paths.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Next step</span>
+            <h3>Hearth needs a clear migration path.</h3>
+            <p>Publish one pilot guide that maps Metavision and OpenEB examples to Hearth, with tests users can run before support calls.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal" aria-labelledby="work">
+      <div class="wrap">
+        <h2 id="work">What we'd do</h2>
+        <div class="proposal-box">
+          <div>
+            <h3>Six-week dedicated squad under your PM</h3>
+            <p>One Tech Lead, two C++/Python application engineers, one DevOps/QA engineer, and one technical writer.</p>
+            <ul class="team">
+              <li>C++ and Python SDK work</li>
+              <li>Device and simulator tests</li>
+              <li>CI, packages, Docker paths</li>
+              <li>Guides and sample apps</li>
+            </ul>
+            <div class="stack" aria-label="Relevant stack">
+              <span>C/C++</span><span>Python</span><span>Node.js</span><span>Docker</span><span>DevOps</span><span>QA</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="num">1</div>
+              <div>
+                <h3>Map migration paths</h3>
+                <p>Map Metavision and OpenEB use cases into Hearth paths, with sample apps for GenX320, EVK4, and Raspberry Pi.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div>
+                <h3>Build test coverage</h3>
+                <p>Build device and simulator tests around sensor streaming, file conversion, Python bindings, and update flows.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div>
+                <h3>Harden setup paths</h3>
+                <p>Harden customer setup with packages, Docker images, CI scripts, and short guides for x64 and ARM boards.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div>
+                <h3>Demo every week</h3>
+                <p>Run weekly demos with James's team and leave a release checklist they can reuse after the pilot.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="who">
+      <div class="wrap">
+        <h2 id="who">Who is Elinext</h2>
+        <div class="who">
+          <p>Elinext is a full-cycle software development company founded in 1997, with about 700 in-house specialists and no freelancers. For Prophesee, the fit is our mix of C/C++, Python, QA, DevOps, and embedded-adjacent product work. We are ISO 9001 and ISO 27001 certified, which helps when release process and security matter. Named customers include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. The same dedicated-team model would plug into your application roadmap without forcing a large fixed-scope project.</p>
+          <div class="customers" aria-label="Named customers">
+            <span class="customer">Siemens</span><span class="customer">Broadcom</span><span class="customer">Volkswagen</span><span class="customer">TRUMPF</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="proof">
+      <div class="wrap">
+        <h2 id="proof">Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-industrial-solution-offering-operational-data-and-insights.jpg" alt="Industrial data case study visual">
+            <div class="case-body">
+              <h3>Real-time machine data insights</h3>
+              <p>Elinext built a manufacturing platform that reads machine data and helps improve production decisions.</p>
+              <a href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-car-audio-system-environment.jpg" alt="Embedded automotive case study visual">
+            <div class="case-body">
+              <h3>Embedded automotive system work</h3>
+              <p>Elinext supported C++ and Android work for products tied to signal processing and flying machines.</p>
+              <a href="https://www.elinext.com/case-study/car-audio-system-environment/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk" aria-labelledby="talk">
+      <div class="wrap">
+        <h2 id="talk">Start the conversation</h2>
+        <p>Bring extra application capacity without slowing the core team.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+
