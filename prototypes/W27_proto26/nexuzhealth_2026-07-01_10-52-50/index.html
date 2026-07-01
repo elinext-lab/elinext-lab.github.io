@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nexuzhealth Java delivery brief</title>
+  <meta name="description" content="A short proposal for scaling CWS and Mynexuzhealth delivery with Java, QA, DevOps, and security support.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/nexuzhealth_2026-07-01_10-52-50/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/nexuzhealth_2026-07-01_10-52-50/">
+  <meta property="og:title" content="Nexuzhealth Java delivery brief">
+  <meta property="og:description" content="Scaling CWS safely while Mynexuzhealth demand keeps rising.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/nexuzhealth_2026-07-01_10-52-50/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Nexuzhealth Java delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Nexuzhealth Java delivery brief">
+  <meta name="twitter:description" content="Scaling CWS safely while Mynexuzhealth demand keeps rising.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/nexuzhealth_2026-07-01_10-52-50/og-image.jpg">
+  <style>
+    :root {
+      --ink: #14213d;
+      --muted: #5b6678;
+      --plum: #51284f;
+      --plum-dark: #301a33;
+      --teal: #027a73;
+      --mint: #e8f6f1;
+      --cream: #f8f5ef;
+      --paper: #ffffff;
+      --line: #dfe6e2;
+      --orange: #ff7a00;
+      --shadow: 0 18px 50px rgba(20, 33, 61, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--cream);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page {
+      width: 100%;
+      background: var(--cream);
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 20px;
+    }
+
+    .inner {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(81, 40, 79, 0.96), rgba(2, 122, 115, 0.92)),
+        linear-gradient(90deg, #51284f, #027a73);
+      padding: 64px 20px 58px;
+    }
+
+    .hero .inner {
+      max-width: 980px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 18px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 999px;
+      color: #fdf8ef;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .tag::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 820px;
+      margin-bottom: 18px;
+      font-size: clamp(34px, 7vw, 64px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(26px, 5vw, 42px);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 18px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 720px;
+      margin-bottom: 0;
+      color: #f6eee5;
+      font-size: 18px;
+    }
+
+    .read {
+      background: var(--paper);
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 26px;
+      border-left: 7px solid var(--orange);
+      border-radius: 8px;
+      background: #f0faf6;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      font-size: 18px;
+    }
+
+    .start {
+      background: #f7fbf9;
+    }
+
+    .start-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .start-card,
+    .proof-card {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(20, 33, 61, 0.08);
+    }
+
+    .start-card {
+      padding: 22px;
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 10px;
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .start-card p,
+    .proof-card p,
+    .who p,
+    .cta p {
+      color: var(--muted);
+    }
+
+    .work {
+      background: var(--plum-dark);
+      color: #fff;
+    }
+
+    .work h2 {
+      color: #fff;
+    }
+
+    .work-intro {
+      max-width: 760px;
+      margin: 0 auto 28px;
+      text-align: center;
+      color: #f3e9f1;
+      font-size: 18px;
+    }
+
+    .squad {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin: 0 auto 28px;
+    }
+
+    .role {
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .role strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+
+    .role span {
+      color: #decfe0;
+      font-size: 14px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin: 0 auto 28px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 18px;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--teal);
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin-bottom: 6px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .stack li,
+    .customer {
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--mint);
+      color: var(--teal);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .who {
+      background: var(--paper);
+    }
+
+    .who .copy {
+      max-width: 76ch;
+      margin: 0 auto;
+      font-size: 17px;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .proof {
+      background: #f7fbf9;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .proof-copy {
+      padding: 20px;
+    }
+
+    .proof-copy a {
+      color: var(--plum);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      color: #fff;
+      background: var(--ink);
+      text-align: center;
+      padding-bottom: 64px;
+    }
+
+    .cta h2 {
+      color: #fff;
+    }
+
+    .cta p {
+      margin-bottom: 24px;
+      color: #d7dee9;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: var(--orange);
+      color: #1b120a;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      .section {
+        padding: 72px 32px;
+      }
+
+      .hero {
+        padding: 86px 32px 76px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .squad {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .hero {
+        min-height: 520px;
+        display: grid;
+        align-items: center;
+      }
+
+      .section {
+        padding: 84px 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="inner">
+        <div class="tag">Prepared for Mark Vanautgaerden</div>
+        <h1>Scaling CWS safely while Mynexuzhealth demand keeps rising</h1>
+        <p class="why">We saw Nexuzhealth is hiring a Java Developer. That points to more delivery load around CWS/KWS, secure integrations, and the patient portal used across a growing Belgian healthcare network.</p>
+      </div>
+    </section>
+
+    <section class="section read">
+      <div class="inner">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The Java role says Nexuzhealth is adding delivery capacity, not just filling a seat. CWS is a centralised EHR for more than 40 healthcare institutions, so each change must protect care workflows, privacy, and uptime. Mynexuzhealth app reviews point to the same pressure: login handoffs, initial sync, and device trust checks create visible patient friction. When these flows fail, support load rises and trust in the record drops. The risk is a slow queue where security review, QA, and Java work compete for the same senior engineers.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section start">
+      <div class="inner">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <h3>Login and sync fail in public reviews</h3>
+            <p>Reviewers mention itsme login loops, browser handoff issues, and first sync stops. Start with an automated identity and sync pack before adding more feature work.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <h3>Make device trust easier to explain</h3>
+            <p>Some users hit Play Integrity, VPN, or privacy OS blocks. Map each block to a clear message and support path, not a crash or loop.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section work">
+      <div class="inner">
+        <h2>What we'd do</h2>
+        <p class="work-intro">A dedicated squad works under your product owner and security lead. The pilot runs six weeks, with weekly demos and a handover pack.</p>
+        <div class="squad" aria-label="Proposed squad">
+          <div class="role"><strong>Tech Lead</strong><span>Java and release owner</span></div>
+          <div class="role"><strong>2 Java Engineers</strong><span>CWS APIs and integrations</span></div>
+          <div class="role"><strong>QA Automation</strong><span>Identity and sync flows</span></div>
+          <div class="role"><strong>DevOps</strong><span>Evidence and pipeline checks</span></div>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="num">1</div>
+            <div>
+              <h3>Trace the risky flows</h3>
+              <p>Map CWS, Mynexuzhealth, itsme, and sync paths into one testable flow chart with clear owners.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">2</div>
+            <div>
+              <h3>Build the regression pack</h3>
+              <p>Automate login, retry, appointment, report, and blocked-device cases across Android, iOS, and web.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">3</div>
+            <div>
+              <h3>Reduce backend queue pressure</h3>
+              <p>Take a scoped Java backlog slice around APIs, errors, and integration checks tied to CWS.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">4</div>
+            <div>
+              <h3>Leave clean release evidence</h3>
+              <p>Package test results, security notes, and rollout checks so audits do not slow the next release.</p>
+            </div>
+          </article>
+        </div>
+        <ul class="stack" aria-label="Relevant stack">
+          <li>Java</li>
+          <li>Spring</li>
+          <li>PostgreSQL</li>
+          <li>JUnit</li>
+          <li>Jenkins</li>
+          <li>Docker</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section who">
+      <div class="inner">
+        <h2>Who is Elinext</h2>
+        <div class="copy">
+          <p>Elinext is a full-cycle software development provider since 1997. We have about 700 in-house specialists, with no freelancers or subcontractors. For Nexuzhealth, the useful parts are Java, QA, DevOps, AI/ML, and secure web delivery. We hold ISO 9001 and ISO 27001, and have served Siemens, Broadcom, Volkswagen, TRUMPF, TUI, Parrot, and TransPerfect. We can support backend work, test automation, release checks, and security evidence. That fits a dedicated squad working under your product and security leads.</p>
+          <div class="customers" aria-label="Named customers">
+            <strong class="customer">Siemens</strong>
+            <strong class="customer">Broadcom</strong>
+            <strong class="customer">Volkswagen</strong>
+            <strong class="customer">TRUMPF</strong>
+            <strong class="customer">TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proof">
+      <div class="inner">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-patient-portal.webp" alt="Patient portal case study cover">
+            <div class="proof-copy">
+              <h3>Patient Portal for a Healthcare Company</h3>
+              <p>Elinext built a patient portal with PHI needs, data residency concerns, and secure medical exam access.</p>
+              <a href="https://www.elinext.com/case-study/patient-portal-for-healthcare-company/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-fertility-lab.jpg" alt="Fertility lab monitoring case study cover">
+            <div class="proof-copy">
+              <h3>Real-time Fertility Lab Monitoring</h3>
+              <p>A Java, Spring, Azure, QA, and DevOps team moved lab data from manual work to live monitoring.</p>
+              <a href="https://www.elinext.com/case-study/real-time-fertility-lab-monitoring-project/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="inner">
+        <h2>Start a focused conversation</h2>
+        <p>Review the Java squad shape and first QA slice.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
