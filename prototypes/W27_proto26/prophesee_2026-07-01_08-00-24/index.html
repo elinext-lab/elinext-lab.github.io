@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prophesee scale brief for Mantara and Hearth</title>
+  <meta name="description" content="A short engineering brief for Prophesee's Mantara and Hearth scale-up moment.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/prophesee_2026-07-01_08-00-24/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/prophesee_2026-07-01_08-00-24/">
+  <meta property="og:title" content="Prophesee scale brief for Mantara and Hearth">
+  <meta property="og:description" content="A focused read on Prophesee's platform transition after the Mantara and Hearth launch.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/prophesee_2026-07-01_08-00-24/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Prophesee scale brief for Mantara and Hearth - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Prophesee scale brief for Mantara and Hearth">
+  <meta name="twitter:description" content="A focused read on Prophesee's platform transition after the Mantara and Hearth launch.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/prophesee_2026-07-01_08-00-24/og-image.jpg">
+  <style>
+    :root {
+      --ink: #111827;
+      --muted: #596579;
+      --line: #d7dde8;
+      --panel: #ffffff;
+      --soft: #f3f7fb;
+      --deep: #07111f;
+      --blue: #0d5c88;
+      --teal: #08766c;
+      --orange: #e56f27;
+      --warm: #fff4ed;
+      --green-soft: #e9f6f3;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: #f8fafc;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+      background: #f8fafc;
+    }
+
+    .section {
+      width: 100%;
+      padding: 48px 18px;
+      background: #f8fafc;
+    }
+
+    .section.white {
+      background: #ffffff;
+    }
+
+    .section.deep {
+      background: var(--deep);
+      color: #f9fbff;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      padding: 58px 18px 44px;
+      background: var(--deep);
+      color: #f9fbff;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 8px;
+      background: linear-gradient(90deg, var(--orange), var(--teal), var(--blue));
+      z-index: -1;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #a5d9d5;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: clamp(2.1rem, 8vw, 4.4rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(1.65rem, 5vw, 2.5rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+
+    .why {
+      max-width: 720px;
+      margin-bottom: 26px;
+      color: #d8e2f0;
+      font-size: 1.05rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 14px;
+      max-width: 920px;
+    }
+
+    .signal {
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-left: 4px solid var(--orange);
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      color: #e8eef7;
+      font-size: 0.95rem;
+    }
+
+    .read-card {
+      max-width: 74ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #bcd8dc;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: var(--green-soft);
+      box-shadow: var(--shadow);
+    }
+
+    .read-card p,
+    .start-card p,
+    .who p,
+    .cta p {
+      margin-bottom: 0;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card {
+      padding: 20px;
+      border: 1px solid #efd0bd;
+      border-radius: 8px;
+      background: var(--warm);
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 10px;
+      color: #8a3c10;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .plan {
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: #0c1a2e;
+      box-shadow: var(--shadow);
+    }
+
+    .plan-top {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .roles,
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .roles li,
+    .stack li,
+    .customers span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #eaf2ff;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+      counter-reset: step;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .num {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #101828;
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #ffffff;
+      font-size: 1rem;
+    }
+
+    .step span {
+      display: block;
+      color: #c6d3e5;
+      font-size: 0.94rem;
+    }
+
+    .who {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .customers span {
+      background: #eef4f8;
+      color: var(--blue);
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .case img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #d9e2ec;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case p {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .case a {
+      font-weight: 700;
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .cta {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 260px;
+      min-height: 48px;
+      margin-top: 22px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #111827;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      .section {
+        padding: 64px 28px;
+      }
+
+      .hero {
+        padding: 82px 28px 56px;
+      }
+
+      .hero-grid,
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .plan {
+        padding: 32px;
+      }
+
+      .plan-top {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .hero-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Prepared for Daniel Matolin</p>
+        <h1>Prophesee's next scale step needs sensor software capacity</h1>
+        <p class="why">You launched Mantara and Hearth with a EUR 20M raise. That makes the platform move from Metavision SDK and OpenEB to Hearth a near-term delivery risk.</p>
+        <div class="hero-grid" aria-label="Why this brief exists">
+          <div class="signal">Mantara is moving into field-ready drone detection.</div>
+          <div class="signal">Hearth now becomes the platform path for builders.</div>
+          <div class="signal">Sensor verification hiring shows delivery load.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p>The new raise and Mantara launch show Prophesee moving from deep R&amp;D to production systems. That puts pressure on the same sensor, firmware, AI, and SDK paths Daniel's team owns. Hearth also changes the developer path, because Metavision SDK and OpenEB users now need a safe migration. Public support threads show install, Python DLL, camera detection, and edge device issues across Windows, Raspberry Pi, and Jetson. If those paths stay heavy, pilots can slow just when defense and industrial buyers need field-ready systems.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">Noticed</span>
+            <p>Make the Hearth migration map public-facing before more SDK users hit old OpenEB paths. A short matrix of OS, EVK, plugin, and Python routes would reduce support load.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Next step</span>
+            <p>Turn repeated camera-detection and DLL issues into automated diagnostics. A metavision doctor command could check drivers, plugins, USB, Python, and logs before tickets.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section deep">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="plan">
+          <div class="plan-top">
+            <div>
+              <h3>Dedicated squad under your Product Owner or PM.</h3>
+              <p>Six-week pilot, weekly demos, focused on Hearth migration, diagnostics, regression checks, and developer support automation.</p>
+              <ul class="roles" aria-label="Team shape">
+                <li>Tech Lead</li>
+                <li>2 C++ / Python engineers</li>
+                <li>QA automation</li>
+                <li>DevOps / CI</li>
+                <li>AI/ML support</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Relevant stack</h3>
+              <ul class="stack" aria-label="Relevant stack">
+                <li>C/C++</li>
+                <li>Python</li>
+                <li>React</li>
+                <li>Node.js</li>
+                <li>DevOps</li>
+                <li>QA</li>
+              </ul>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="num">1</div>
+              <div><strong>Map the paths</strong><span>Map current Metavision, OpenEB, and Hearth flows, then rank install and camera-detection failures by customer impact.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div><strong>Automate smoke tests</strong><span>Build SDK checks for Windows, Ubuntu, Raspberry Pi, and Jetson using shared Python and C++ tests.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div><strong>Ship diagnostics</strong><span>Harden support tools with clearer logs, plugin checks, and one command that packages diagnostics for Daniel's team.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div><strong>Prove the pilot</strong><span>Ship Mantara and Hearth docs, migration notes, and release checks with weekly demos and clear handover.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="who">
+          <p>Elinext is a full-cycle software development company, working since 1997 with about 700 in-house specialists and no freelancers. For Prophesee, the fit is practical: Elinext can add C/C++, Python, QA, AI/ML, and DevOps capacity without forcing a new process. Our teams have worked for industrial and technology clients including Siemens, Broadcom, Volkswagen, TRUMPF, and Parrot. ISO 9001 and ISO 27001 matter when work touches production systems, test evidence, and customer data. The squad above would work like remote in-house engineers.</p>
+          <div class="customers" aria-label="Named customers">
+            <span>Siemens</span>
+            <span>Broadcom</span>
+            <span>Volkswagen</span>
+            <span>TRUMPF</span>
+            <span>Parrot</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case">
+            <img src="assets/case-manufacturing-mes.jpg" alt="Manufacturing execution system case study">
+            <div class="case-body">
+              <h3>Manufacturing Execution System</h3>
+              <p>Five Elinext teams helped modernize and support an industrial MES used across complex production environments.</p>
+              <a href="https://www.elinext.com/case-study/manufacturing-execution-system/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case">
+            <img src="assets/case-sensor-qa.jpg" alt="QA and data analytics case study">
+            <div class="case-body">
+              <h3>QA and Data Analytics in Pharma</h3>
+              <p>Elinext validated raw sensor inputs with MATLAB and Python before machine-learning model processing.</p>
+              <a href="https://www.elinext.com/case-study/qa-and-data-analytics-in-pharma-industry/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <div class="cta">
+          <h2>Talk through the bottleneck</h2>
+          <p>A short call can turn this into a focused pilot.</p>
+          <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
