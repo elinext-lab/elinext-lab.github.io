@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eye Security scaling brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/eye-security_2026-07-01_08-50-06/">
+  <meta name="description" content="A focused proposal for scaling Cyber Guard, Eye Portal, Eye Log, and integrations after Eye Security's funding round.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/eye-security_2026-07-01_08-50-06/">
+  <meta property="og:title" content="Eye Security: scaling Cyber Guard after Series C">
+  <meta property="og:description" content="A focused product engineering brief for Eye Portal, Eye Log, integrations, and AI-supported response.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/eye-security_2026-07-01_08-50-06/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Eye Security: scaling Cyber Guard after Series C — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Eye Security: scaling Cyber Guard after Series C">
+  <meta name="twitter:description" content="A focused product engineering brief for Eye Portal, Eye Log, integrations, and AI-supported response.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/eye-security_2026-07-01_08-50-06/og-image.jpg">
+  <style>
+    :root {
+      --ink: #111827;
+      --muted: #5b6472;
+      --paper: #fbfaf7;
+      --panel: #ffffff;
+      --navy: #0f172a;
+      --teal: #0f766e;
+      --green: #d9f99d;
+      --orange: #f97316;
+      --line: #d8dee8;
+      --soft: #eef7f4;
+      --warm: #fff4e8;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body { min-width: 0; }
+
+    a { color: inherit; }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+
+    section {
+      padding: 52px 0;
+      background: var(--paper);
+    }
+
+    .hero {
+      padding: 56px 0 46px;
+      background:
+        linear-gradient(145deg, rgba(15, 118, 110, .2), rgba(249, 115, 22, .15) 45%, rgba(217, 249, 157, .18)),
+        var(--navy);
+      color: #f8fafc;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 18px;
+      font-size: clamp(2.25rem, 7vw, 5.2rem);
+      line-height: .98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 24px;
+      text-align: center;
+      font-size: clamp(1.55rem, 4vw, 2.5rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      color: #dbeafe;
+      font-size: 1.05rem;
+    }
+
+    .why {
+      max-width: 700px;
+      margin: 18px 0 0;
+      padding-left: 18px;
+      border-left: 4px solid var(--orange);
+      color: #fff7ed;
+    }
+
+    .hero-card {
+      width: 100%;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .hero-card strong {
+      display: block;
+      color: #fff;
+      font-size: 1.5rem;
+      line-height: 1.1;
+    }
+
+    .hero-card span {
+      color: #cbd5e1;
+      font-size: .95rem;
+    }
+
+    .read-panel {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 28px;
+      border: 1px solid #b7d7d0;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: var(--soft);
+      font-size: 1.04rem;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card {
+      padding: 22px;
+      border: 1px solid #f4c28e;
+      border-radius: 8px;
+      background: var(--warm);
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 10px;
+      color: #9a3412;
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      background: #edf5f2;
+    }
+
+    .proposal-box {
+      display: grid;
+      gap: 18px;
+      padding: 20px;
+      border: 1px solid #afd0c8;
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 18px 50px rgba(15, 23, 42, .08);
+    }
+
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #e6fffb;
+      color: #115e59;
+      font-size: .86rem;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .num {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .about {
+      background: #fff;
+    }
+
+    .about-panel {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fafafa;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .customer {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #111827;
+      color: #fff;
+      font-size: .84rem;
+      font-weight: 800;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body p {
+      color: var(--muted);
+    }
+
+    .case-body a {
+      color: var(--teal);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .talk {
+      padding-bottom: 64px;
+      text-align: center;
+      background: var(--navy);
+      color: #f8fafc;
+    }
+
+    .talk p {
+      margin: 0 auto 24px;
+      max-width: 420px;
+      color: #cbd5e1;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      width: min(100%, 280px);
+      min-height: 48px;
+      padding: 13px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #111827;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr) 280px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-box {
+        grid-template-columns: 300px minmax(0, 1fr);
+        padding: 28px;
+      }
+    }
+
+    @media (min-width: 1060px) {
+      section { padding: 66px 0; }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Prepared for Vaisha Bernard</p>
+          <h1>Helping Eye Security scale Cyber Guard without slowing the SOC</h1>
+          <p class="hero-copy">Eye Security is moving from strong European traction to broader platform scale. The customer-facing product must keep making complex cyber work clear.</p>
+          <p class="why">We saw the fresh Series C funding and the plan to grow engineering, threat intelligence, and customer teams. This brief shows where extra product engineering could help first.</p>
+        </div>
+        <aside class="hero-card" aria-label="Focus">
+          <strong>Cyber Guard</strong>
+          <span>Eye Portal, Eye Log, integrations, and AI-supported response.</span>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-panel">
+          <p>Fresh funding says Eye Security is moving from strong proof to faster European scale. Cyber Guard now pairs AI-powered detection with human response, cyber insurance, and open integrations. The hard part is keeping Eye Portal simple while more logs, tools, and recommendations flow through it. If that layer gets noisy, customers ask support for what the product should explain. Your team then spends expert time on product gaps, not threat work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">Noticed</span>
+            <p>Eye Log promises syslog and Azure Event Hubs support, plus portal usage views. Map the top log sources, then ship one reusable onboarding checklist.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Next step</span>
+            <p>The product-tour path depends on heavy JavaScript, while public product proof is still thin. Add a fast proof page for technical buyers first.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-box">
+          <div>
+            <h3>Six-week pilot squad</h3>
+            <p>Dedicated squad under your Product Owner, with weekly demos and clear handover.</p>
+            <div class="team" aria-label="Team shape">
+              <span class="pill">Tech Lead</span>
+              <span class="pill">2 full-stack engineers</span>
+              <span class="pill">Data/AI engineer</span>
+              <span class="pill">QA automation</span>
+              <span class="pill">DevOps support</span>
+            </div>
+            <p><strong>Stack fit:</strong> React, Node.js, Python, Java/.NET, Azure or AWS.</p>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <h3>Integration map</h3>
+                <p>Turn Eye Log sources, EDR links, and partner workflows into a backlog ranked by customer pain and delivery risk.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <h3>Portal clarity</h3>
+                <p>Refine recommendation copy, report download paths, and status states so non-expert customers know what to fix next.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <h3>AI assist guardrails</h3>
+                <p>Prototype analyst-support flows that cite evidence, keep EU data boundaries clear, and stay reviewable by humans.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <h3>Release hardening</h3>
+                <p>Add regression tests, staging checks, and telemetry around onboarding, log ingestion, and portal reporting.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="about-panel">
+          <p>Elinext is a full-cycle software development company, active since 1997. We have about 700 in-house specialists, with no freelancers or subcontractors. For a security-sensitive platform, our ISO 27001 and ISO 9001 work matters. Teams have delivered for Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. For Eye Security, we would act as a product squad under your PO. That keeps ownership with you while we remove delivery load.</p>
+          <div class="customers" aria-label="Named customers">
+            <span class="customer">Siemens</span>
+            <span class="customer">Broadcom</span>
+            <span class="customer">Volkswagen</span>
+            <span class="customer">TRUMPF</span>
+            <span class="customer">TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-insurance-ui.jpg" alt="Insurance UI case study preview">
+            <div class="case-body">
+              <h3>Insurance fulfillment UI</h3>
+              <p>Elinext modernized insurance workflow screens for accessibility and security standards.</p>
+              <a href="https://www.elinext.com/case-study/ui-development-for-insurance-fulfillment-solutions/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-network-monitoring.jpg" alt="Network monitoring case study preview">
+            <div class="case-body">
+              <h3>Infrastructure monitoring software</h3>
+              <p>A dedicated team built monitoring software used by thousands of end customers.</p>
+              <a href="https://www.elinext.com/case-study/network-monitoring-software/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk">
+      <div class="wrap">
+        <h2>Start a focused conversation</h2>
+        <p>Bring one integration or portal bottleneck. We will map options.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
