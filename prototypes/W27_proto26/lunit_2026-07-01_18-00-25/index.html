@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lunit data platform scale brief</title>
+  <meta name="description" content="A short proposal for Lunit's medical AI data platform scale moment.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/lunit_2026-07-01_18-00-25/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/lunit_2026-07-01_18-00-25/">
+  <meta property="og:title" content="Lunit data platform scale brief">
+  <meta property="og:description" content="A practical first step for Lunit's medical AI data workflows.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/lunit_2026-07-01_18-00-25/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lunit data platform scale brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lunit data platform scale brief">
+  <meta name="twitter:description" content="A practical first step for Lunit's medical AI data workflows.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/lunit_2026-07-01_18-00-25/og-image.jpg">
+  <style>
+    :root {
+      --ink: #14212b;
+      --muted: #516170;
+      --soft: #f5f8fb;
+      --panel: #ffffff;
+      --line: #dbe5ee;
+      --blue: #0f5b8c;
+      --teal: #118c87;
+      --mint: #d9f2ec;
+      --amber: #e99a2f;
+      --navy: #10263b;
+      --shadow: 0 18px 42px rgba(15, 38, 59, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--soft);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      font-size: 16px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+    }
+
+    .wrap {
+      width: min(100% - 32px, 1080px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: var(--navy);
+      color: #ffffff;
+      padding: 34px 0 38px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 22px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #99dcd7;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 16ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.2rem, 7vw, 4.4rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 58ch;
+      margin-bottom: 0;
+      color: #d9e9f5;
+      font-size: 1rem;
+    }
+
+    .signal-card {
+      width: 100%;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-left: 6px solid var(--amber);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .signal-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #ffffff;
+      font-size: 1.05rem;
+    }
+
+    .signal-card span {
+      color: #cfe8ef;
+      font-size: 0.92rem;
+    }
+
+    section {
+      padding: 34px 0;
+      background: var(--soft);
+    }
+
+    section h2 {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: clamp(1.45rem, 5vw, 2.2rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: 100%;
+      padding: 22px;
+      border: 1px solid #b7d7d4;
+      border-left: 7px solid var(--teal);
+      border-radius: 8px;
+      background: #e9f7f4;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p,
+    .start-card p,
+    .intro p,
+    .case-card p,
+    .cta p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card,
+    .case-card,
+    .intro,
+    .cta-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 10px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--mint);
+      color: #0b635e;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .proposal {
+      background: #ffffff;
+    }
+
+    .proposal-shell {
+      display: grid;
+      gap: 18px;
+      padding: 18px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .team {
+      display: grid;
+      gap: 10px;
+    }
+
+    .role {
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      font-weight: 700;
+    }
+
+    .role span {
+      display: block;
+      margin-top: 4px;
+      color: #b9d4e9;
+      font-size: 0.86rem;
+      font-weight: 400;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--ink);
+    }
+
+    .num {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--amber);
+      color: #1d1407;
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .stack span,
+    .customers strong {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #e9f1f7;
+      color: #1d4f77;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .intro {
+      padding: 22px;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      line-height: 1.25;
+    }
+
+    .case-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .cta {
+      padding-bottom: 46px;
+    }
+
+    .cta-panel {
+      padding: 24px;
+      text-align: center;
+    }
+
+    .cta-panel h2 {
+      margin-bottom: 10px;
+    }
+
+    .button {
+      display: inline-flex;
+      width: 100%;
+      max-width: 280px;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+      border-radius: 8px;
+      background: var(--teal);
+      color: #ffffff;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero {
+        padding: 56px 0 64px;
+      }
+
+      .proposal-shell {
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 0.62fr);
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-shell {
+        padding: 28px;
+      }
+
+      .team {
+        align-content: start;
+      }
+
+      .button {
+        width: auto;
+        padding: 0 24px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      section {
+        padding: 48px 0;
+      }
+
+      .team {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 0.48fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Prepared for Craig Hadfield</p>
+          <h1>Lunit's data platform role points to the next scale step</h1>
+          <p class="why">Saw Lunit hiring a Senior Data Platform Engineer for AI Platform in Seoul. The role names medical data pipelines, governance, lineage, and global SaaS delivery, so this brief focuses there.</p>
+        </div>
+        <div class="signal-card">
+          <strong>Why we are here</strong>
+          <span>Lunit INSIGHT and Volpara now sit inside one cancer screening story. The hiring signal says the data backbone is becoming a product priority.</span>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The data platform role says Lunit is scaling the base that feeds AI research, MLOps, and clinical products. That is hard because Lunit INSIGHT, Volpara risk tools, and hospital integrations need trusted medical data, not just more storage. The job names lineage, metadata, quality, and governance for very large medical image flows. If this layer moves slowly, model work and product rollout can wait on the same bottleneck. Craig also spoke about bringing products together with no extra clicks or repeated work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">Data flow</span>
+            <p>Your role asks for lineage, metadata, quality, and governance. Start with one DICOM or PHI path, then map validation, access, and dataset version steps before adding more engineers.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Buyer path</span>
+            <p>The radiology page loads key content late and shifts on mobile. A quick first step is compressing hero media, reserving image space, and deferring non-core scripts.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-shell">
+          <div>
+            <p>Use a dedicated squad under Lunit's PO or PM for a six-week pilot. The squad owns one governed data slice from ingest to model-ready delivery.</p>
+            <div class="steps">
+              <div class="step">
+                <span class="num">1</span>
+                <div><strong>Map one critical flow</strong><p>Choose a live Lunit INSIGHT data path and document ingest, validation, access, lineage, and dataset version steps.</p></div>
+              </div>
+              <div class="step">
+                <span class="num">2</span>
+                <div><strong>Add trust gates</strong><p>Build automated checks for quality, access rules, audit trails, and metadata before data reaches training workflows.</p></div>
+              </div>
+              <div class="step">
+                <span class="num">3</span>
+                <div><strong>Ship the platform slice</strong><p>Deliver a tested pipeline and review tool path that research, product, and MLOps teams can reuse.</p></div>
+              </div>
+              <div class="step">
+                <span class="num">4</span>
+                <div><strong>Clean the buyer page</strong><p>Fix the public radiology page load path so hospital teams see content faster on mobile devices.</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="team">
+            <div class="role">Tech Lead<span>Owns design and delivery cadence.</span></div>
+            <div class="role">2 Data Engineers<span>Build pipelines and metadata services.</span></div>
+            <div class="role">MLOps Engineer<span>Connects data flow to model work.</span></div>
+            <div class="role">QA Automation<span>Tests quality gates and audit paths.</span></div>
+            <div class="role">Relevant stack<span>Python, Java, Node.js, React, Angular.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="intro">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For a medical AI platform, the useful facts are ISO 27001 and ISO 9001, healthcare delivery experience, and teams that can work under your PO or PM.</p>
+          <div class="customers" aria-label="Named Elinext customers">
+            <strong>Siemens</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+          </div>
+          <p>We can place data, backend, QA, and DevOps engineers into one accountable squad. That maps to the pilot above: tighten the data backbone first, then help Lunit ship product-grade workflows faster.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-healthcare-data-anonymization-platform.jpg" alt="Healthcare data platform case study image">
+            <div class="case-body">
+              <h3>Healthcare Data Anonymization Platform</h3>
+              <p>Elinext built a healthcare data pipeline control system for de-identified PHI, with SaaS control and better processing visibility.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/healthcare-data-anonymization-platform/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-pneumonia-diagnosis-tool.jpg" alt="Pneumonia diagnosis AI case study image">
+            <div class="case-body">
+              <h3>Pneumonia Diagnosis Tool</h3>
+              <p>Elinext built a medical image AI tool using Python, TensorFlow, OpenCV, and Docker for a healthcare platform.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/pneumonia-diagnosis-tool/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="cta-panel">
+          <h2>Start with a short call</h2>
+          <p>We can review one platform slice before you hire.</p>
+          <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
