@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Optym backend scale brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/optym_2026-07-01_22-30-27/">
+  <meta name="description" content="A short brief on hardening LoadOps backend, document, payment, and integration flows while Optym scales engineering capacity.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/optym_2026-07-01_22-30-27/">
+  <meta property="og:title" content="Optym backend scale brief">
+  <meta property="og:description" content="A practical read on scaling LoadOps backend work without slowing driver-critical flows.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/optym_2026-07-01_22-30-27/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Optym backend scale brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Optym backend scale brief">
+  <meta name="twitter:description" content="A practical read on scaling LoadOps backend work without slowing driver-critical flows.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/optym_2026-07-01_22-30-27/og-image.jpg">
+  <style>
+    :root {
+      --ink: #132027;
+      --muted: #59686f;
+      --line: #d8e4df;
+      --paper: #f7faf8;
+      --white: #ffffff;
+      --soft: #eaf4ef;
+      --teal: #0f766e;
+      --teal-dark: #0d4f4b;
+      --mint: #9ed9c2;
+      --orange: #e8782a;
+      --blue: #284b63;
+      --shadow: 0 18px 48px rgba(18, 43, 46, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+      background:
+        linear-gradient(180deg, rgba(15, 118, 110, 0.08), rgba(255, 255, 255, 0) 460px),
+        var(--paper);
+    }
+
+    .section {
+      width: 100%;
+      padding: 54px 18px;
+      background: var(--paper);
+    }
+
+    .section.white {
+      background: var(--white);
+    }
+
+    .inner {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      padding: 52px 18px 34px;
+      background:
+        linear-gradient(135deg, rgba(8, 47, 73, 0.92), rgba(15, 118, 110, 0.9)),
+        linear-gradient(90deg, #12313a, #0f766e);
+      color: var(--white);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--mint);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 820px;
+      margin-bottom: 18px;
+      font-size: clamp(2.35rem, 8vw, 4.7rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: clamp(1.7rem, 4.8vw, 2.6rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.02rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin-bottom: 0;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: clamp(1rem, 2.6vw, 1.15rem);
+    }
+
+    .hero-panel {
+      width: 100%;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-panel strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--white);
+      font-size: 0.96rem;
+    }
+
+    .signal-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.92rem;
+    }
+
+    .signal-list li {
+      display: grid;
+      grid-template-columns: 10px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .signal-list li::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      margin-top: 8px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+
+    .read-box {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: #e4f1eb;
+      box-shadow: 0 12px 32px rgba(22, 68, 61, 0.08);
+    }
+
+    .read-box p {
+      max-width: 74ch;
+      margin: 0;
+      color: #223238;
+      font-size: 1.02rem;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .start-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 10px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--teal-dark);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .start-card p,
+    .proof-card p,
+    .who p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .plan-shell {
+      display: grid;
+      gap: 18px;
+      padding: 20px;
+      border-radius: 8px;
+      background: #112d34;
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .team-strip {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .role {
+      min-height: 74px;
+      padding: 13px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .role b {
+      display: block;
+      font-size: 0.92rem;
+    }
+
+    .role span {
+      display: block;
+      margin-top: 3px;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.8rem;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      gap: 8px;
+      padding: 16px;
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--ink);
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .stack span,
+    .customer {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(158, 217, 194, 0.18);
+      color: var(--white);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .who {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 0;
+    }
+
+    .customer {
+      background: #153f46;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 10px 28px rgba(31, 53, 57, 0.08);
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 2.3 / 1;
+      object-fit: cover;
+      background: var(--soft);
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-body a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--teal-dark);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      background: #10252b;
+      color: var(--white);
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+    }
+
+    .cta p {
+      max-width: 520px;
+      margin: 0 auto 22px;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: min(100%, 270px);
+      min-height: 50px;
+      padding: 13px 20px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section {
+        padding: 76px 28px;
+      }
+
+      .hero {
+        min-height: 88vh;
+        padding: 70px 28px 42px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1.35fr 0.65fr;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .plan-shell {
+        grid-template-columns: 0.82fr 1.18fr;
+        padding: 28px;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .team-strip {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="inner hero-grid">
+        <div>
+          <p class="eyebrow">Prepared for Vipin Agrawal at Optym</p>
+          <h1>Scaling LoadOps without slowing driver-critical dispatch and payment workflows</h1>
+          <p>Saw Optym is hiring a Senior Backend Engineer for Node.js. That points to more backend load around LoadOps, integrations, and the data flows drivers and dispatchers need daily.</p>
+        </div>
+        <aside class="hero-panel" aria-label="Why this matters">
+          <strong>Why this matters now</strong>
+          <ul class="signal-list">
+            <li>LoadOps ties mobile, web, loadboards, documents, GPS, and payments.</li>
+            <li>Public feedback points to login, upload, and settlement regressions.</li>
+            <li>A small backend squad can raise delivery speed without adding product drag.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The hiring signal says Optym is adding backend depth, not just shipping more screens. LoadOps connects loadboards, trip status, documents, payment data, GPS tracking, and dispatchers in one flow. That is a lot of state to keep correct when releases move fast. Public reviews point to login failures, document upload issues, missing loads, and wrong driver settlements after changes. If those flows stay brittle, support volume rises and carrier trust drops. The risk is release speed without enough regression cover around core logistics events.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="inner">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">Driver pay path</span>
+            <p>Map the LoadOps driver flows that block payment: login, bill-of-lading upload, trip completion, and settlement sync. Add replay data and contract tests for each.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Integration gate</span>
+            <p>Treat loadboard and ELD integrations as a release gate. Public feedback mentions disappearing loads, so an integration health view should catch that earlier.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner">
+        <h2>What we'd do</h2>
+        <div class="plan-shell">
+          <div>
+            <p class="eyebrow">Dedicated squad under your PO/PM</p>
+            <h3>Six-week backend hardening pilot</h3>
+            <p>Team shape: one backend lead, two senior Node.js/.NET engineers, one QA automation engineer, and one DevOps/data engineer.</p>
+            <div class="team-strip" aria-label="Team roles">
+              <div class="role"><b>Lead</b><span>Backend scope</span></div>
+              <div class="role"><b>2 Engineers</b><span>Node.js, .NET</span></div>
+              <div class="role"><b>QA</b><span>Automation</span></div>
+              <div class="role"><b>DevOps</b><span>Release checks</span></div>
+              <div class="role"><b>Data</b><span>Event flow</span></div>
+            </div>
+            <div class="stack" aria-label="Relevant stack">
+              <span>Node.js</span><span>.NET/C#</span><span>React</span><span>Azure</span><span>Docker</span><span>SQL</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <h3>Flow audit</h3>
+              <p>Trace LoadOps login, document upload, trip status, payment, and loadboard events from mobile app to backend services.</p>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <h3>Regression harness</h3>
+              <p>Build automated checks with replayed carrier data so critical driver and dispatcher paths fail before release.</p>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <h3>Integration hardening</h3>
+              <p>Add lightweight monitoring and contract tests around ELD, loadboard, factoring, and web-to-mobile handoffs before each deploy.</p>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <h3>Scale support</h3>
+              <p>Pair with Optym engineers on Node.js, Azure-ready deploy habits, and release notes tied to carrier impact.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="inner">
+        <h2>Who is Elinext</h2>
+        <div class="who">
+          <p>Elinext is a full-cycle software development company, founded in 1997, with about 700 in-house specialists and no freelancers. We build web, mobile, backend, QA, DevOps, AI/ML, and data work for long-term product teams. We hold ISO 9001 and ISO 27001, which matters when driver, location, and payment data move through the same platform. For Optym, this means a focused remote squad can add backend and QA capacity without changing your product ownership model.</p>
+          <div class="customer-list" aria-label="Named customers">
+            <strong class="customer">Siemens</strong>
+            <strong class="customer">Broadcom</strong>
+            <strong class="customer">Volkswagen</strong>
+            <strong class="customer">TRUMPF</strong>
+            <strong class="customer">TUI</strong>
+            <strong class="customer">TransPerfect</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-fleet.jpg" alt="Fleet management app case study preview">
+            <div class="proof-body">
+              <span class="label">Logistics mobile and web</span>
+              <h3>Fleet Management App for a Logistics Solution Provider</h3>
+              <p>Elinext built mobile driver workflows with task updates and live location streams for fleet tracking.</p>
+              <a href="https://www.elinext.com/case-study/fleet-management-app-for-logistics-solution-provider-in-the-usa/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-analytics.jpg" alt="Sales analytics platform case study preview">
+            <div class="proof-body">
+              <span class="label">Data engineering</span>
+              <h3>Sales Analytics Platform for a Manufacturer</h3>
+              <p>Elinext delivered a data-heavy platform that processes large daily records for market and dealer insight.</p>
+              <a href="https://www.elinext.com/case-study/sales-analytics-application-for-chainsaw-manufacturer/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="inner">
+        <h2>Talk through the pilot</h2>
+        <p>Bring one LoadOps flow. We can scope the first week.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
