@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Expereo quote-engine scaling brief</title>
+  <meta name="description" content="A focused backend and API brief for Expereo's expereoOne platform moment.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/expereo_2026-07-01_03-30-25/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/expereo_2026-07-01_03-30-25/">
+  <meta property="og:title" content="Expereo: scaling expereoOne quote logic">
+  <meta property="og:description" content="A focused backend and API brief for the quote-engine hiring signal.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/expereo_2026-07-01_03-30-25/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Expereo: scaling expereoOne quote logic - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Expereo: scaling expereoOne quote logic">
+  <meta name="twitter:description" content="A focused backend and API brief for the quote-engine hiring signal.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/expereo_2026-07-01_03-30-25/og-image.jpg">
+  <style>
+    :root {
+      --ink: #102321;
+      --muted: #5d6a68;
+      --deep: #003d3c;
+      --deep-2: #0d5754;
+      --lime: #d2ff00;
+      --amber: #ffb24a;
+      --sky: #dff3f0;
+      --paper: #fbfdf9;
+      --line: #cbd8d4;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.48;
+      letter-spacing: 0;
+    }
+
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    section { width: 100%; padding: 3rem 1rem; background: var(--paper); }
+    .wrap { width: 100%; max-width: 70rem; margin: 0 auto; }
+    .narrow { max-width: 64ch; }
+    .center { text-align: center; margin-inline: auto; }
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      padding: .35rem .7rem;
+      border: 1px solid rgba(210,255,0,.5);
+      color: var(--lime);
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      margin: .9rem 0 1rem;
+      font-size: clamp(2rem, 6vw, 4rem);
+      line-height: 1;
+      letter-spacing: 0;
+      max-width: 14em;
+    }
+    h2 {
+      font-size: clamp(1.55rem, 4vw, 2.35rem);
+      line-height: 1.08;
+      text-align: center;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0;
+    }
+    h3 { font-size: 1rem; line-height: 1.25; margin-bottom: .45rem; }
+    p { color: var(--muted); font-size: 1rem; }
+
+    .hero {
+      color: var(--white);
+      background: var(--deep);
+      padding-top: 3.4rem;
+      padding-bottom: 3.2rem;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 2rem;
+      align-items: end;
+    }
+    .hero p { color: #e9f5f2; max-width: 38rem; }
+    .signal-panel {
+      background: #f5ffbf;
+      color: var(--ink);
+      border: 1px solid rgba(210,255,0,.55);
+      border-radius: .5rem;
+      padding: 1rem;
+    }
+    .signal-panel p { color: #2d403d; margin-bottom: 0; font-size: .95rem; }
+
+    .read {
+      background: #eaf4ef;
+    }
+    .read-box {
+      max-width: 72ch;
+      margin: 0 auto;
+      border-left: .32rem solid var(--deep-2);
+      background: var(--white);
+      padding: 1.25rem;
+      border-radius: .45rem;
+      box-shadow: 0 .7rem 2rem rgba(16,35,33,.08);
+    }
+    .read-box p { margin-bottom: 0; color: #344744; }
+
+    .start {
+      background: var(--white);
+    }
+    .start-grid {
+      display: grid;
+      gap: 1rem;
+    }
+    .start-card {
+      border: 1px solid var(--line);
+      border-top: .25rem solid var(--amber);
+      border-radius: .45rem;
+      padding: 1rem;
+      background: #fffdf7;
+    }
+    .start-card span {
+      display: block;
+      color: var(--deep);
+      font-weight: 800;
+      margin-bottom: .35rem;
+    }
+    .start-card p { margin-bottom: 0; }
+
+    .work {
+      background: #0f2f2d;
+      color: var(--white);
+    }
+    .work p { color: #dbe8e5; }
+    .work-shell {
+      display: grid;
+      gap: 1rem;
+      align-items: stretch;
+    }
+    .team, .timeline {
+      background: #ffffff;
+      color: var(--ink);
+      border-radius: .5rem;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,.2);
+    }
+    .team p, .timeline p { color: var(--muted); }
+    .roles, .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-top: .8rem;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2rem;
+      padding: .35rem .65rem;
+      border-radius: 999px;
+      background: var(--sky);
+      color: var(--deep);
+      font-size: .85rem;
+      font-weight: 750;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: .75rem;
+      padding: .9rem 0;
+      border-top: 1px solid #dce6e3;
+    }
+    .step:first-child { border-top: 0; padding-top: 0; }
+    .num {
+      width: 2rem;
+      height: 2rem;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--deep);
+      color: var(--lime);
+      font-weight: 800;
+      flex: none;
+    }
+    .step p { margin-bottom: 0; }
+
+    .elinext {
+      background: #f6fbfa;
+    }
+    .cred {
+      max-width: 70ch;
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      padding: 1.25rem;
+    }
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+      margin: .9rem 0 0;
+    }
+    .customers strong {
+      display: inline-flex;
+      padding: .3rem .55rem;
+      border-radius: 999px;
+      background: #eef7db;
+      color: var(--deep);
+      font-size: .86rem;
+    }
+
+    .proof {
+      background: var(--white);
+    }
+    .cases {
+      display: grid;
+      gap: 1rem;
+    }
+    .case {
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      overflow: hidden;
+      background: var(--paper);
+    }
+    .case img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #d9e6e2;
+    }
+    .case-body { padding: 1rem; }
+    .case a {
+      display: inline-block;
+      margin-top: .7rem;
+      color: var(--deep);
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: .18rem;
+    }
+
+    .talk {
+      background: var(--deep);
+      color: var(--white);
+      text-align: center;
+    }
+    .talk p { color: #e8f4f1; }
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 3rem;
+      width: min(100%, 18rem);
+      padding: .75rem 1rem;
+      border-radius: 999px;
+      background: var(--lime);
+      color: #0c2523;
+      font-weight: 850;
+      text-decoration: none;
+      margin-top: 1rem;
+    }
+
+    @media (min-width: 48rem) {
+      section { padding: 4rem 2rem; }
+      .hero-grid { grid-template-columns: minmax(0, 1.2fr) minmax(18rem, .8fr); }
+      .start-grid, .cases { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .work-shell { grid-template-columns: minmax(16rem, .8fr) minmax(0, 1.2fr); }
+      .team, .timeline, .cred, .read-box, .start-card, .case { border-radius: .5rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow">Prepared for Expereo</span>
+          <h1>Scaling expereoOne quote logic as delivery pressure grows</h1>
+          <p>Saw Expereo is hiring a senior Python backend developer for Supplier Onboarding, Quote Management, and the computational core of expereoOne. That looks like a platform-scaling moment, not routine hiring.</p>
+        </div>
+        <div class="signal-panel" aria-label="Why we're here">
+          <h3>Why we're here</h3>
+          <p>The role names Python, C#, partner integrations, auditable quote logic, API contracts, and tests. Those are exactly the areas where a focused senior squad can remove delivery risk.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="read">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The hiring signal says Expereo is scaling the engine behind supplier onboarding and quote generation. That work is close to revenue, because expereoOne turns supplier data, routing rules, and service bundles into clear quotes. The job post names a Python/C# backend and clean REST contracts, so API drift is a real risk. If that layer slows down, commercial teams wait longer and partners see more exceptions. The best help is not extra hands everywhere. It is a senior backend squad focused on quote logic, contracts, and tests.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="start">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span>Quote rules</span>
+            <p>Map supplier selection, routing rules, and product validation into versioned examples. Then add regression tests before more quote logic moves into production.</p>
+          </div>
+          <div class="start-card">
+            <span>Support flow</span>
+            <p>expereoOne release notes show Service ID changes and case workflow fixes. Use that trail to test API contracts across support, orders, and billing.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="work">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="work-shell">
+          <div class="team">
+            <h3>Engagement model</h3>
+            <p>A dedicated squad under Expereo's product or platform owner, with weekly demos and shared review rules.</p>
+            <div class="roles" aria-label="Team shape">
+              <span class="pill">Backend lead</span>
+              <span class="pill">2 Python/.NET engineers</span>
+              <span class="pill">API QA engineer</span>
+              <span class="pill">DevOps support</span>
+            </div>
+            <h3 style="margin-top:1.2rem">Stack focus</h3>
+            <div class="stack" aria-label="Relevant stack">
+              <span class="pill">Python</span>
+              <span class="pill">.NET / C#</span>
+              <span class="pill">REST APIs</span>
+              <span class="pill">QA automation</span>
+              <span class="pill">DevOps</span>
+            </div>
+          </div>
+          <div class="timeline">
+            <div class="step">
+              <div class="num">1</div>
+              <div>
+                <h3>Rule baseline</h3>
+                <p>Map quote rules against real supplier cases, so commercial logic has named owners and clear test examples.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div>
+                <h3>Contract hardening</h3>
+                <p>Add contract checks for quote, order, billing, and support APIs before downstream consumers are affected.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div>
+                <h3>Integration harness</h3>
+                <p>Create partner-data fixtures that catch routing, bundle, and validation edge cases during normal CI runs.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div>
+                <h3>Six-week pilot</h3>
+                <p>Ship small backend improvements weekly, with explainable outputs that commercial teams can review and trust.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build backend, frontend, mobile, QA, AI/ML, and DevOps teams for long-running product work. For Expereo, the fit is telecom software, backend quality, and secure delivery under ISO 9001 and ISO 27001. Our customers include Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. That mix fits a controlled squad for expereoOne, where API reliability and tested commercial logic matter.</p>
+          <div class="customers" aria-label="Named customers">
+            <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="cases">
+          <article class="case">
+            <img src="assets/case-network-planning.jpg" alt="Telecom network planning case study image">
+            <div class="case-body">
+              <h3>Network Planning Software</h3>
+              <p>Telecom planning software built in sprints for a German energy and telecom supplier.</p>
+              <a href="https://www.elinext.com/case-study/software-for-telecom-network-planning/">Read case study</a>
+            </div>
+          </article>
+          <article class="case">
+            <img src="assets/case-router-management.jpg" alt="Remote network and router management case study image">
+            <div class="case-body">
+              <h3>Remote Network Management</h3>
+              <p>A telecom platform using Python, React, cloud services, and DevOps for router operations.</p>
+              <a href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk">
+      <div class="wrap narrow center">
+        <h2>Talk through the pilot</h2>
+        <p>Bring one quote-engine flow. We will map a practical first sprint.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
