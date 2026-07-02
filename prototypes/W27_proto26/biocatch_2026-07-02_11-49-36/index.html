@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BioCatch Backend Scale Brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/biocatch_2026-07-02_11-49-36/">
+  <meta name="description" content="A focused plan for backend, CloudOps, and SDK delivery around BioCatch Connect.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/biocatch_2026-07-02_11-49-36/">
+  <meta property="og:title" content="BioCatch backend scale brief">
+  <meta property="og:description" content="A focused plan for backend, CloudOps, and SDK delivery around BioCatch Connect.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/biocatch_2026-07-02_11-49-36/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="BioCatch backend scale brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BioCatch backend scale brief">
+  <meta name="twitter:description" content="A focused plan for backend, CloudOps, and SDK delivery around BioCatch Connect.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/biocatch_2026-07-02_11-49-36/og-image.jpg">
+  <style>
+    :root {
+      --ink: #10202f;
+      --muted: #52606f;
+      --line: #d9e1e8;
+      --paper: #fbfcfd;
+      --soft: #eef6f5;
+      --deep: #0b2d36;
+      --teal: #0d8b82;
+      --blue: #2357a0;
+      --orange: #d7662b;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      background: var(--paper);
+    }
+
+    .inner {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      background: var(--deep);
+      color: var(--white);
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 10px;
+      background: var(--orange);
+      z-index: -1;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 26px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #9ee1d7;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.6rem, 12vw, 5.9rem);
+      line-height: 0.94;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(1.75rem, 5.8vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+
+    .hero-copy {
+      max-width: 620px;
+      font-size: 1.05rem;
+      color: #dce9ec;
+    }
+
+    .hero-copy p {
+      margin-bottom: 14px;
+    }
+
+    .hero-panel {
+      width: 100%;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .signal-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .signal-list li {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: #e6f1f3;
+    }
+
+    .signal-list span {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      background: #123f4b;
+      color: #9ee1d7;
+      font-weight: 800;
+    }
+
+    .read {
+      background: #e8f3f1;
+    }
+
+    .read-card {
+      width: 100%;
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 24px;
+      border-left: 6px solid var(--teal);
+      background: var(--white);
+      box-shadow: 0 16px 40px rgba(31, 55, 72, 0.08);
+    }
+
+    .lead-text {
+      margin: 0;
+      color: #253646;
+      font-size: 1.04rem;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .proof-card {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--white);
+    }
+
+    .start-card {
+      padding: 20px;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 12px;
+      padding: 5px 9px;
+      background: #f9e3d7;
+      color: #8f3f17;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      background: #f7faf9;
+    }
+
+    .work-panel {
+      width: 100%;
+      padding: 20px;
+      background: var(--deep);
+      color: var(--white);
+    }
+
+    .work-intro {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      max-width: 100%;
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #eaf5f6;
+      font-size: 0.86rem;
+      white-space: normal;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 900;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .step p,
+    .work-intro p,
+    .stack-line {
+      color: #d7e7ea;
+    }
+
+    .stack-line {
+      margin: 0;
+    }
+
+    .elinext {
+      background: var(--white);
+    }
+
+    .cred {
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: #f6f9fb;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .customers li {
+      padding: 6px 10px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      font-weight: 800;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-body p {
+      color: var(--muted);
+    }
+
+    .proof-body a {
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .talk {
+      background: var(--deep);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .talk h2 {
+      color: var(--white);
+    }
+
+    .talk p {
+      max-width: 48ch;
+      margin: 0 auto 22px;
+      color: #dbe9ec;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      width: 100%;
+      max-width: 280px;
+      padding: 12px 18px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 78px 28px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.75fr);
+      }
+
+      .hero-copy {
+        font-size: 1.12rem;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .work-panel,
+      .read-card,
+      .cred {
+        padding: 34px;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .button {
+        width: auto;
+      }
+    }
+
+    @media (min-width: 1180px) {
+      .hero {
+        min-height: 88vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section hero">
+      <div class="inner hero-grid">
+        <div>
+          <p class="eyebrow">Prepared for Samor Isa</p>
+          <h1>Support the backend scale behind BioCatch Connect</h1>
+          <div class="hero-copy">
+            <p>BioCatch is growing its fraud platform while banks ask for faster, safer signals. The next hard part is delivery capacity around backend, cloud, and SDK work.</p>
+            <p>Saw BioCatch hiring a Back-End Team Leader for low-latency, high-availability server work. Samor owns CloudOps resilience, so this brief focuses on useful extra engineering capacity.</p>
+          </div>
+        </div>
+        <aside class="hero-panel" aria-label="Signal summary">
+          <ul class="signal-list">
+            <li><span>1</span><strong>Backend team leadership for high-concurrency services.</strong></li>
+            <li><span>2</span><strong>Cloud roles point to Kubernetes, Terraform, and observability.</strong></li>
+            <li><span>3</span><strong>Web SDK work adds bank integration pressure.</strong></li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section read">
+      <div class="inner">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p class="lead-text">BioCatch is scaling the server side of BioCatch Connect, not just adding seats. The Back-End Team Leader role asks for low-latency, high-concurrency systems and ownership of performance, scale, and cloud cost. Connect 2.0 adds Align SDK, BioCatch Link, and more shared fraud telemetry. That means each integration path must stay fast and clear. If the backend team stays overloaded, bank pilots can slow and fraud teams may wait longer for trusted signals.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section start">
+      <div class="inner">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Turn the backend role into a two-week risk map: hot paths, AKS scaling limits, Kafka and Redis queues, plus runbook gaps. Samor's team gets a ranked list before another sprint starts.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Review Web SDK notes with partner handoffs. Public bank-user threads show confusion about device signals, remote access checks, and what happens after a risk flag.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="inner">
+        <h2>What we'd do</h2>
+        <div class="work-panel">
+          <div class="work-intro">
+            <p>Use a dedicated squad under BioCatch's Product Owner or Platform Lead. Start with a six-week pilot and weekly demos.</p>
+            <div class="team" aria-label="Team shape">
+              <span class="pill">1 backend tech lead</span>
+              <span class="pill">2 senior backend engineers</span>
+              <span class="pill">1 DevOps/SRE engineer</span>
+              <span class="pill">1 QA automation engineer</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="num">01</div>
+              <div>
+                <strong>Map critical paths</strong>
+                <p>Trace session intake, scoring, queues, SDK updates, and bank-facing APIs. Mark the parts that slow under peak load.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">02</div>
+              <div>
+                <strong>Harden CloudOps</strong>
+                <p>Review AKS runbooks, Terraform checks, alert quality, and rollback paths. Add incident drills and cloud cost checks.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">03</div>
+              <div>
+                <strong>Ship backend backlog</strong>
+                <p>Move selected backend tickets through pair review and automated tests. Demo the work to BioCatch leads each week.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">04</div>
+              <div>
+                <strong>Clarify SDK handoffs</strong>
+                <p>Document expected data flows, error states, WebView notes, and support paths. Make bank integrations easier to debug.</p>
+              </div>
+            </article>
+          </div>
+          <p class="stack-line">Relevant stack: Kubernetes, Terraform, Docker, Python, Node.js, and QA automation.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section elinext">
+      <div class="inner">
+        <h2>Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company founded in 1997, with no freelancers. Your team gets about 700 in-house specialists across backend, DevOps, QA, cloud work, and delivery management. For fraud work, ISO 27001 and ISO 9001 support security and delivery control. Named customers include Siemens, Broadcom, Volkswagen, TRUMPF, and TUI across enterprise software programs. We can work as a dedicated team under your Product Owner, with weekly demos. For BioCatch, senior engineers can join Samor's CloudOps flow while product ownership stays inside BioCatch.</p>
+          <ul class="customers" aria-label="Named customers">
+            <li>Siemens</li>
+            <li>Broadcom</li>
+            <li>Volkswagen</li>
+            <li>TRUMPF</li>
+            <li>TUI</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proof">
+      <div class="inner">
+        <h2>Proof from similar work</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-banking.jpg" alt="Backend banking case study preview">
+            <div class="proof-body">
+              <h3>Backend App Development for Banking</h3>
+              <p>Elinext built banking backend search with Kubernetes, Docker, Helm, Elasticsearch, Java, and Quarkus.</p>
+              <a href="https://www.elinext.com/case-study/backend-app-development-for-banking/">Read the case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-liquidity.jpg" alt="Cash and liquidity banking case study preview">
+            <div class="proof-body">
+              <h3>Cash and Liquidity Management App</h3>
+              <p>Elinext supported a banking platform using Azure Kubernetes, Prometheus, Java, Spring, and PostgreSQL.</p>
+              <a href="https://www.elinext.com/case-study/cash-and-liquidity-management-app/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="inner">
+        <h2>Talk through the pilot</h2>
+        <p>Bring one backlog slice, and we will map the first sprint.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
