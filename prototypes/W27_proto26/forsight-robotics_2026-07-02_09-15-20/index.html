@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ForSight Robotics JASPER validation brief</title>
+  <meta name="description" content="A focused engineering brief for ForSight Robotics as JASPER moves toward validation.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/forsight-robotics_2026-07-02_09-15-20/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/forsight-robotics_2026-07-02_09-15-20/">
+  <meta property="og:title" content="ForSight Robotics JASPER validation brief">
+  <meta property="og:description" content="A practical engineering first step for JASPER's validation moment.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/forsight-robotics_2026-07-02_09-15-20/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="ForSight Robotics JASPER validation brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ForSight Robotics JASPER validation brief">
+  <meta name="twitter:description" content="A practical engineering first step for JASPER's validation moment.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/forsight-robotics_2026-07-02_09-15-20/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172229;
+      --muted: #586872;
+      --paper: #f4f7f7;
+      --panel: #ffffff;
+      --line: #d8e2e3;
+      --deep: #12343d;
+      --blue: #145f8f;
+      --teal: #16867b;
+      --mint: #dff2ec;
+      --amber: #dd8a24;
+      --rose: #f4ded8;
+      --shadow: 0 18px 42px rgba(18, 52, 61, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      font-size: 16px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      width: min(100% - 32px, 1088px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 38px 0 44px;
+      background: var(--deep);
+      color: #ffffff;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 24px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #9be0d8;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 24ch;
+      margin-bottom: 18px;
+      font-size: clamp(2rem, 6.5vw, 3.25rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 62ch;
+      margin-bottom: 0;
+      color: #d7e8ea;
+      font-size: 1rem;
+    }
+
+    .signal {
+      width: 100%;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-left: 6px solid var(--amber);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .signal strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #ffffff;
+      font-size: 1.02rem;
+    }
+
+    .signal span {
+      color: #cae2e6;
+      font-size: 0.92rem;
+    }
+
+    section {
+      padding: 36px 0;
+      background: var(--paper);
+    }
+
+    section h2 {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: clamp(1.45rem, 5vw, 2.18rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: 100%;
+      padding: 22px;
+      border: 1px solid #b5d7d2;
+      border-left: 7px solid var(--teal);
+      border-radius: 8px;
+      background: #e7f5f2;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p,
+    .start-card p,
+    .who p,
+    .case-card p,
+    .cta-panel p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .start-grid,
+    .case-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card,
+    .case-card,
+    .who,
+    .cta-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .tag {
+      display: inline-flex;
+      margin-bottom: 10px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--mint);
+      color: #0f655d;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .proposal {
+      background: #ffffff;
+    }
+
+    .proposal-shell {
+      display: grid;
+      gap: 18px;
+      padding: 20px;
+      border: 1px solid #bfd0d3;
+      border-radius: 8px;
+      background: #f8fbfb;
+      box-shadow: var(--shadow);
+    }
+
+    .team {
+      display: grid;
+      gap: 10px;
+    }
+
+    .role {
+      padding: 12px;
+      border-left: 5px solid var(--blue);
+      border-radius: 8px;
+      background: #ffffff;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .num {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--deep);
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .step span,
+    .stack span {
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 4px;
+    }
+
+    .stack span,
+    .customer-list strong {
+      display: inline-flex;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: var(--rose);
+      color: #7b3f31;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .who {
+      padding: 22px;
+    }
+
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #e6eeee;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+      line-height: 1.22;
+    }
+
+    .case-body a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .cta {
+      background: var(--deep);
+      color: #ffffff;
+    }
+
+    .cta-panel {
+      padding: 24px;
+      background: #ffffff;
+      text-align: center;
+    }
+
+    .cta-panel h2 {
+      margin-bottom: 10px;
+      color: var(--ink);
+    }
+
+    .cta-panel a {
+      display: inline-flex;
+      width: 100%;
+      max-width: 260px;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+      border-radius: 8px;
+      background: var(--amber);
+      color: #ffffff;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .hero {
+        padding: 54px 0 58px;
+      }
+
+      .start-grid,
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-shell {
+        grid-template-columns: minmax(220px, 0.78fr) minmax(0, 1.35fr);
+        padding: 24px;
+      }
+
+      .steps {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.65fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Engineering brief for Chen Zach</p>
+          <h1>JASPER validation support for ForSight's growing software team</h1>
+          <p class="why">Why we're here: ForSight is hiring a Senior Software Engineer for Modern C++ on Linux, plus embedded leadership for safety-critical robotic software. That points to more delivery load around JASPER.</p>
+        </div>
+        <div class="signal">
+          <strong>The signal</strong>
+          <span>JASPER is now past a public surgical milestone. The next work is slower, deeper, and harder to staff.</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>ForSight is not just adding another software seat. You are scaling the software system behind JASPER while the platform moves toward clinical validation and regulatory submissions. The open roles point to C++ on Linux, multithreading, real-time control, and safety-critical delivery. The likely bottleneck is not ideas; it is senior hands who can turn system intent into tested code. If that gap stays open, validation work can slow down and your core engineers carry too much context alone.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="tag">Code path</span>
+            <p>The software role asks for C++ architecture, object design, and multithreading. Start with a short review of thread ownership, device state, and test gaps.</p>
+          </div>
+          <div class="start-card">
+            <span class="tag">Demo path</span>
+            <p>The JASPER page tells the story well, but mobile image delivery is heavy. Compress first-screen media before surgeon and candidate campaigns.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-shell">
+          <div>
+            <p><strong>Engagement model:</strong> a dedicated squad working under your product and system engineering leads.</p>
+            <div class="team" aria-label="Proposed team shape">
+              <div class="role">1 embedded tech lead</div>
+              <div class="role">2 senior C++ / Linux engineers</div>
+              <div class="role">1 automation QA engineer</div>
+              <div class="role">1 AI and data engineer</div>
+            </div>
+            <div class="stack" aria-label="Relevant stack">
+              <span>C/C++</span>
+              <span>Python</span>
+              <span>Node.js</span>
+              <span>React</span>
+              <span>QA</span>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="num">1</div>
+              <div><strong>Map control paths</strong><span>Trace JASPER software flows and mark thread, state, and fault boundaries with your system engineers.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div><strong>Build test cover</strong><span>Add automated tests for multithreaded control logic, simulated device states, and medical-device evidence.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div><strong>Check data flows</strong><span>Add data checks for image guidance and procedure analytics before model changes reach clinical runs.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div><strong>Improve public paths</strong><span>Tune JASPER and careers pages so surgeons and candidates reach demo and role details faster.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="who">
+          <p>Elinext is a full-cycle software development provider, active since 1997, with about 700 in-house specialists and no freelancers. For a medical robotics team, the useful parts are C/C++, Python, QA, AI/ML, DevOps, and dedicated teams that work under your Product Owner. Elinext is ISO 9001 and ISO 27001 certified. ForSight keeps system ownership while Elinext fills the parts that are hard to hire fast.</p>
+          <div class="customer-list" aria-label="Named customers">
+            <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong><strong>Parrot</strong>
+          </div>
+          <p>That mix fits a JASPER support squad: senior engineers, clean tests, and steady delivery without adding hiring load. We can start small, prove fit, and scale only where your roadmap needs help.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof from similar work</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-qa-and-data-analytics-in-pharma-industry.jpg" alt="QA and data analytics healthcare case study">
+            <div class="case-body">
+              <h3>QA and Data Analytics in Pharma Industry</h3>
+              <p>Elinext built MATLAB and Python checks for health data, sensor inputs, and ML model updates.</p>
+              <a href="https://www.elinext.com/case-study/qa-and-data-analytics-in-pharma-industry/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-clinical-trials-management.jpg" alt="Clinical trials management case study">
+            <div class="case-body">
+              <h3>Document Management for Clinical Trials</h3>
+              <p>Elinext helped build an FDA-compliant platform for clinical documents and long-term healthcare work.</p>
+              <a href="https://www.elinext.com/case-study/clinical-trials-management/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="cta-panel">
+          <h2>Talk through the pilot</h2>
+          <p>A short technical call is enough to test fit.</p>
+          <a href="https://www.elinext.com/contacts/">Contact Elinext</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
