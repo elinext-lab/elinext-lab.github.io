@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WorkJam release reliability brief</title>
+  <meta name="description" content="A concise proposal for stabilizing WorkJam worker-critical flows while Java capacity scales.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/workjam_2026-07-02_08-30-19/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/workjam_2026-07-02_08-30-19/">
+  <meta property="og:title" content="WorkJam release reliability brief">
+  <meta property="og:description" content="A focused read on Java capacity, mobile release quality, and worker-critical flows.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/workjam_2026-07-02_08-30-19/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="WorkJam release reliability brief — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="WorkJam release reliability brief">
+  <meta name="twitter:description" content="A focused read on Java capacity, mobile release quality, and worker-critical flows.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/workjam_2026-07-02_08-30-19/og-image.jpg">
+  <style>
+    :root {
+      --ink: #101828;
+      --muted: #596579;
+      --navy: #16243d;
+      --blue: #2364aa;
+      --teal: #1c7c74;
+      --amber: #f6b73c;
+      --paper: #fbfbf7;
+      --soft: #eef4f3;
+      --line: #d8e0df;
+      --white: #ffffff;
+      --shadow: 0 18px 45px rgba(22, 36, 61, 0.11);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: inherit; }
+    .wrap {
+      width: calc(100% - 32px);
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 56px 0 44px;
+      border-bottom: 8px solid var(--amber);
+    }
+    .eyebrow {
+      color: #b5d9d5;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 14px;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 830px;
+      font-size: clamp(2rem, 5vw, 4.75rem);
+      line-height: 1.03;
+      margin-bottom: 18px;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 720px;
+      color: #dbe6eb;
+      font-size: 1.05rem;
+      margin-bottom: 0;
+    }
+    section { padding: 46px 0; }
+    h2 {
+      text-align: center;
+      color: var(--navy);
+      font-size: clamp(1.55rem, 3vw, 2.25rem);
+      line-height: 1.14;
+      margin-bottom: 22px;
+      letter-spacing: 0;
+    }
+    .read-card {
+      background: #e7f1ef;
+      border: 1px solid #c6dad6;
+      border-left: 7px solid var(--teal);
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 76ch;
+      margin: 0 auto;
+      box-shadow: var(--shadow);
+    }
+    .start-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    .start-card, .proof-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 12px 30px rgba(16, 24, 40, 0.07);
+    }
+    .label {
+      display: inline-block;
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .proposal {
+      background: var(--white);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .proposal-grid {
+      display: grid;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .team-box {
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    .team-box p { color: #dbe6eb; margin-bottom: 12px; }
+    .team-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .team-tags span, .customer-tags strong {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #fff3d0;
+      color: #5d3c00;
+      font-weight: 800;
+      font-size: 0.85rem;
+      white-space: normal;
+    }
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f7faf9;
+    }
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: var(--white);
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+    .step h3 {
+      font-size: 1rem;
+      line-height: 1.2;
+      margin-bottom: 5px;
+      color: var(--navy);
+    }
+    .step p, .start-card p, .read-card p, .proof-card p, .who p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+    .who {
+      background: var(--soft);
+    }
+    .who-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 82ch;
+      margin: 0 auto;
+    }
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0;
+    }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    .proof-card {
+      overflow: hidden;
+      padding: 0;
+    }
+    .proof-body { padding: 18px; }
+    .proof-body h3 {
+      color: var(--navy);
+      font-size: 1.08rem;
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+    .proof-body a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    .talk {
+      text-align: center;
+      background: var(--navy);
+      color: var(--white);
+      padding: 44px 0 52px;
+    }
+    .talk h2 { color: var(--white); margin-bottom: 10px; }
+    .talk p { color: #dbe6eb; margin-bottom: 22px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      background: var(--amber);
+      color: #2d2100;
+      font-weight: 900;
+      text-decoration: none;
+      max-width: 100%;
+    }
+    @media (min-width: 760px) {
+      .hero { padding: 78px 0 62px; }
+      section { padding: 64px 0; }
+      .start-grid, .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proposal-grid { grid-template-columns: minmax(260px, 0.72fr) 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Prepared for Mark Williams</p>
+      <h1>Keep WorkJam releases steady while Java capacity scales</h1>
+      <p>Saw WorkJam is hiring an ELIITE Java Developer while recent app reviews mention login, loading, timecard, and notification friction. This brief shows where a focused squad could help first.</p>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2>Our read</h2>
+      <div class="read-card">
+        <p>The Java hiring signal says WorkJam is adding backend capacity, not just filling a generic seat. WorkJam brings schedules, flexible shift management, tasks, learning, audits, and employee communications into one app for frontline teams. That makes each release high risk: one service change can touch sign-in, shifts, timecards, notifications, and manager messages. Recent public reviews point to the same stress, with workers reporting trouble opening schedules, staying signed in, and finding timecard data after updates. If those flows slip during EMEA growth, customer rollouts can lose trust before new features get credit.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Where we'd start</h2>
+      <div class="start-grid">
+        <div class="start-card">
+          <span class="label">Worker-critical flows</span>
+          <p>Recent reviews cluster around sign-in, loading, schedules, and timecards. Map those flows by tenant, app version, and identity provider so support can separate SSO setup from product defects.</p>
+        </div>
+        <div class="start-card">
+          <span class="label">Notification trust</span>
+          <p>Notification complaints mention duplicates and missed direct messages. Add dedupe keys and a release test for roster updates, direct messages, and language variants before the next mobile build.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="proposal">
+    <div class="wrap">
+      <h2>What we'd do</h2>
+      <div class="proposal-grid">
+        <div class="team-box">
+          <p><strong>Engagement model:</strong> a dedicated squad working under WorkJam's Product Owner or PM.</p>
+          <p><strong>Team shape:</strong> 1 Java/Spring Tech Lead, 2 Java engineers, 1 mobile QA automation engineer, and 1 DevOps engineer.</p>
+          <p><strong>Pilot:</strong> six weeks, weekly demo cadence, focused on worker-critical reliability.</p>
+          <div class="team-tags" aria-label="Relevant stack">
+            <span>Java</span>
+            <span>Spring</span>
+            <span>Kotlin</span>
+            <span>Android</span>
+            <span>React</span>
+            <span>PostgreSQL</span>
+          </div>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="num">1</div>
+            <div>
+              <h3>Trace the worker journey</h3>
+              <p>Connect login, schedule, shift, timecard, kiosk, and notification events into one release-risk map.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">2</div>
+            <div>
+              <h3>Harden Java service contracts</h3>
+              <p>Add contract tests for schedule and timecard APIs, including tenant flags and integration edge cases.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">3</div>
+            <div>
+              <h3>Automate mobile release checks</h3>
+              <p>Run iOS and Android smoke tests for auth, loading, deep links, and push notifications.</p>
+            </div>
+          </article>
+          <article class="step">
+            <div class="num">4</div>
+            <div>
+              <h3>Close the loop</h3>
+              <p>Ship fixes with dashboards that show failures by app version, device OS, region, and tenant.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="who">
+    <div class="wrap">
+      <h2>Who is Elinext</h2>
+      <div class="who-card">
+        <p>Elinext is a full-cycle software development company founded in 1997, with about 700 in-house specialists and no freelancers. We build mobile, backend, frontend, QA, DevOps, and AI/ML work for enterprise clients. For WorkJam, the fit is Java, mobile QA, DevOps, and secure delivery practices backed by ISO 9001 and ISO 27001.</p>
+        <div class="customer-tags" aria-label="Named customers">
+          <strong>Siemens</strong>
+          <strong>Broadcom</strong>
+          <strong>Volkswagen</strong>
+          <strong>TRUMPF</strong>
+          <strong>TUI</strong>
+        </div>
+        <p>The same dedicated-team model above lets WorkJam keep control while adding senior delivery capacity.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Proof</h2>
+      <div class="proof-grid">
+        <article class="proof-card">
+          <img src="assets/case-employee.jpg" alt="ESG Software for Employees case study preview">
+          <div class="proof-body">
+            <h3>ESG Software for Employees</h3>
+            <p>Java, Spring, and Angular product that helps large employers hear staff feedback and improve staff management.</p>
+            <a href="https://www.elinext.com/case-study/esg-software-for-emloyees/">Read case study</a>
+          </div>
+        </article>
+        <article class="proof-card">
+          <img src="assets/case-notification.jpg" alt="Notification Management case study preview">
+          <div class="proof-body">
+            <h3>Notification Management</h3>
+            <p>Kotlin, Spring, Angular, and PostgreSQL system that reduced newsletter noise and delivered timely employee information.</p>
+            <a href="https://www.elinext.com/case-study/elinext-notification-management/">Read case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="talk">
+    <div class="wrap">
+      <h2>Start the conversation</h2>
+      <p>Share the flows you want stabilized first.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
