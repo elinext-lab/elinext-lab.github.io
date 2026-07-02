@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RealSense embedded vision delivery brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/realsense_2026-07-02_11-00-21/">
+  <meta name="description" content="A short brief for RealSense on embedded delivery, SDK reliability, and secure perception product scale.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/realsense_2026-07-02_11-00-21/">
+  <meta property="og:title" content="RealSense embedded vision delivery brief">
+  <meta property="og:description" content="A practical read on scaling D585, Perception Studio, and RealSense ID software.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/realsense_2026-07-02_11-00-21/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="RealSense embedded vision delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RealSense embedded vision delivery brief">
+  <meta name="twitter:description" content="A practical read on scaling D585, Perception Studio, and RealSense ID software.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/realsense_2026-07-02_11-00-21/og-image.jpg">
+  <style>
+    :root {
+      --ink: #12212d;
+      --muted: #5d6f7b;
+      --line: #d7e1e6;
+      --soft: #f5f8f8;
+      --panel: #ffffff;
+      --blue: #0e5a78;
+      --teal: #0d7d79;
+      --orange: #e9782b;
+      --dark: #10232e;
+      --dark-2: #163242;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--soft);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .hero {
+      min-height: 92vh;
+      color: #f8fbfb;
+      background-color: var(--dark);
+      background-image:
+        linear-gradient(90deg, rgba(16, 35, 46, 1) 0%, rgba(16, 35, 46, .92) 45%, rgba(16, 35, 46, .55) 100%),
+        url("assets/d585.png");
+      background-repeat: no-repeat;
+      background-position: center bottom 46px;
+      background-size: 92% auto;
+      padding: 28px 18px 170px;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .hero-inner,
+    .wrap {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 52px;
+      color: #d6e8e8;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 720px;
+      margin-bottom: 18px;
+      font-size: 40px;
+      line-height: 1.05;
+      font-weight: 800;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin-bottom: 0;
+      color: #e3eeee;
+      font-size: 18px;
+    }
+
+    section {
+      padding: 54px 18px;
+      background: var(--panel);
+    }
+
+    section:nth-of-type(even) {
+      background: var(--soft);
+    }
+
+    h2 {
+      margin-bottom: 24px;
+      text-align: center;
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    .read-box {
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 24px;
+      background: #eaf3f1;
+      border: 1px solid #c8dcda;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      font-size: 18px;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .start-card p,
+    .case-card p,
+    .cred p,
+    .cta p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .plan {
+      background: #10232e;
+      color: #f7fbfb;
+    }
+
+    .plan h2,
+    .plan .section-note {
+      color: #f7fbfb;
+    }
+
+    .section-note {
+      max-width: 720px;
+      margin: -10px auto 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .team-strip {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 0 0 18px;
+    }
+
+    .role {
+      min-height: 58px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      background: rgba(255,255,255,.08);
+      color: #e7f3f3;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .step {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 44px minmax(0, 1fr);
+      padding: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 8px;
+      background: rgba(255,255,255,.07);
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--orange);
+      color: #10232e;
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 17px;
+    }
+
+    .step p {
+      margin: 0;
+      color: #c9d8dc;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .stack li,
+    .customer {
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: #e8f1f0;
+      color: #17313a;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .plan .stack li {
+      background: rgba(255,255,255,.14);
+      color: #f2fbfb;
+    }
+
+    .cred {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #dfe7ea;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 19px;
+      line-height: 1.2;
+    }
+
+    .case-body a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      background: #eaf3f1;
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      margin-top: 20px;
+      padding: 0 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #10232e;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      .hero {
+        min-height: 680px;
+        padding: 36px 32px 210px;
+        background-position: right 56px bottom 52px;
+        background-size: 560px auto;
+      }
+
+      h1 { font-size: 58px; }
+      .hero p { font-size: 20px; }
+      section { padding: 68px 32px; }
+      .start-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .team-strip { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 1100px) {
+      .hero {
+        background-size: 650px auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Prepared for Erez Epstein, Director of IT and Security</p>
+      <h1>RealSense is scaling the perception stack after the spinout</h1>
+      <p>Saw RealSense hiring embedded software talent while launching D585 Pro and Perception Studio. That points to a software load around SDK, firmware, device-host reliability, and security reviews.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="read">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <p class="read-box">The Embedded Software Engineer signal says RealSense is scaling product software, not only hardware. D585 Pro and Perception Studio make that clear. The roadmap adds VIO, people detection, close depth, and SDK updates. Public GitHub and support threads show frame timeouts, Jetson setup, and ID runtime checks. If those gaps stay slow, robotics pilots can stall during customer validation.</p>
+      </div>
+    </section>
+
+    <section class="start">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>D455, D555, Jetson, Docker, and Raspberry Pi threads repeat timeout and rediscovery issues.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Turn those cases into a small hardware-in-the-loop smoke pack before the next SDK release.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Perception Studio names VIO, close-range depth, and people detection as early feature lanes.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Publish one matrix for device, firmware, host, OS, and recovery steps so pilots self-check faster.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <p class="section-note">Use a dedicated squad under your product owner for a six-week pilot, with weekly demos and clear handoff.</p>
+        <div class="team-strip" aria-label="Proposed team shape">
+          <div class="role">Embedded C/C++ lead</div>
+          <div class="role">C++ / Python engineer</div>
+          <div class="role">C++ / Python engineer</div>
+          <div class="role">DevOps / QA engineer</div>
+          <div class="role">Security test engineer</div>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <span class="num">1</span>
+            <div>
+              <strong>Map the risk</strong>
+              <p>Map D585, RealSense ID, and SDK support paths against customer pilot risks and Erez's security gates.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="num">2</span>
+            <div>
+              <strong>Test the edge hosts</strong>
+              <p>Build hardware-in-the-loop tests for Jetson, Linux, Docker, and Viewer flows that catch timeout and lock cases.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="num">3</span>
+            <div>
+              <strong>Harden SDK checks</strong>
+              <p>Run C++ and Python smoke tests, firmware matrix checks, and repeatable logs for support.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="num">4</span>
+            <div>
+              <strong>Add a security lane</strong>
+              <p>Review device-host communication, encryption handling, support data, and third-party update paths.</p>
+            </div>
+          </div>
+        </div>
+        <ul class="stack" aria-label="Relevant stack">
+          <li>C/C++</li>
+          <li>Python</li>
+          <li>DevOps</li>
+          <li>QA automation</li>
+          <li>AI/ML</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="about">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development provider since 1997, with about 700 in-house specialists and no freelancers. We fit this brief because we cover C/C++, Python, DevOps, QA, AI/ML, and secure delivery under ISO 27001 and ISO 9001.</p>
+          <div class="customers" aria-label="Named customers">
+            <strong class="customer">Siemens</strong>
+            <strong class="customer">Broadcom</strong>
+            <strong class="customer">Volkswagen</strong>
+            <strong class="customer">TRUMPF</strong>
+          </div>
+          <p>For RealSense, we would work as a dedicated team under your product owner, not as a black-box vendor. That keeps ownership close while adding tested engineering capacity.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-machine-insights.jpg" alt="Industrial machine performance case study">
+            <div class="case-body">
+              <h3>Real-time Data Insights of Machines Performance</h3>
+              <p>Manufacturing platform using C++, Python, DevOps, and machine data to improve factory operations.</p>
+              <a href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">View case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-cicd.jpg" alt="CI/CD optimization case study">
+            <div class="case-body">
+              <h3>CI/CD Optimization for Infrastructure Software</h3>
+              <p>Jenkins, QA, and release automation for an industrial infrastructure provider with security measures.</p>
+              <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>Share the riskiest lane; we will map support.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
