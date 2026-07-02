@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>payabl. backend migration brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/payabl_2026-07-02_16-10-35/">
+  <meta name="description" content="A short backend migration brief for payabl.'s Core Gateway and file-processing push.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/payabl_2026-07-02_16-10-35/">
+  <meta property="og:title" content="payabl. backend migration brief">
+  <meta property="og:description" content="A focused read on Core Gateway, file processing, and safer Python migration.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/payabl_2026-07-02_16-10-35/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="payabl. backend migration brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="payabl. backend migration brief">
+  <meta name="twitter:description" content="A focused read on Core Gateway, file processing, and safer Python migration.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/payabl_2026-07-02_16-10-35/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172018;
+      --muted: #607067;
+      --soft: #f6f3ec;
+      --panel: #ffffff;
+      --line: #dcd6c8;
+      --dark: #10231a;
+      --accent: #ff7a00;
+      --teal: #0d7469;
+      --mint: #dff2e8;
+      --amber: #fff0d8;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--soft);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+    body { min-width: 0; }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+
+    .hero {
+      background: var(--dark);
+      color: #f9fbf7;
+      padding: clamp(48px, 9vw, 96px) 20px clamp(44px, 7vw, 80px);
+    }
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+    .eyebrow {
+      color: #ffbd7a;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      margin: 0 0 12px;
+    }
+    h1 {
+      font-size: clamp(2.15rem, 8vw, 5.25rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+      max-width: 12ch;
+      margin: 0;
+    }
+    .why {
+      max-width: 64ch;
+      margin: 0;
+      color: #d8e5dc;
+      font-size: clamp(1rem, 2vw, 1.22rem);
+    }
+    .hero-note {
+      width: min(100%, 360px);
+      border: 1px solid rgba(255,255,255,.2);
+      border-left: 6px solid var(--accent);
+      padding: 18px;
+      background: rgba(255,255,255,.06);
+      border-radius: 8px;
+      color: #edf5ee;
+      font-weight: 700;
+    }
+
+    section {
+      padding: clamp(44px, 7vw, 72px) 20px;
+      background: var(--soft);
+    }
+    section:nth-of-type(even) { background: #fffdf8; }
+    h2 {
+      text-align: center;
+      margin: 0 auto 24px;
+      font-size: clamp(1.55rem, 4.5vw, 2.55rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+    .read-card {
+      max-width: 76ch;
+      margin: 0 auto;
+      background: var(--mint);
+      border: 1px solid #b7d8cc;
+      border-left: 7px solid var(--teal);
+      padding: clamp(20px, 4vw, 30px);
+      border-radius: 8px;
+      font-size: 1.04rem;
+    }
+    .start-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 22px;
+    }
+    .start-card, .case-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .label {
+      display: inline-block;
+      font-size: .76rem;
+      font-weight: 800;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 0;
+      margin-bottom: 8px;
+    }
+    .start-card p, .case-card p { margin: 0; color: var(--muted); }
+
+    .plan {
+      background: var(--dark);
+      color: #fbfff9;
+    }
+    .plan h2 { color: #fbfff9; }
+    .plan-shell {
+      display: grid;
+      gap: 18px;
+    }
+    .team-card {
+      border: 1px solid rgba(255,255,255,.2);
+      background: rgba(255,255,255,.06);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .team-card p { margin: 0 0 16px; color: #d9e6dd; }
+    .roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .roles span, .customer-tags span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: .88rem;
+      font-weight: 750;
+      background: var(--amber);
+      color: #463019;
+    }
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      background: #f9fbf7;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid #d8e2d9;
+    }
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #1c1208;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+    .step strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 3px;
+    }
+    .step p { margin: 0; color: var(--muted); }
+    .stack {
+      margin: 16px 0 0;
+      color: #d9e6dd;
+      font-weight: 700;
+    }
+
+    .who {
+      background: #fffdf8;
+    }
+    .who-box {
+      max-width: 82ch;
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: clamp(20px, 4vw, 30px);
+    }
+    .who-box p { margin: 0 0 16px; }
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .case-card {
+      overflow: hidden;
+      padding: 0;
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #e7e1d2;
+    }
+    .case-body { padding: 18px; }
+    .case-body h3 {
+      font-size: 1.1rem;
+      line-height: 1.2;
+      margin: 0 0 8px;
+    }
+    .case-body a {
+      display: inline-block;
+      margin-top: 12px;
+      font-weight: 800;
+      color: var(--teal);
+      text-decoration-thickness: 2px;
+    }
+    section.cta {
+      background: var(--dark);
+      color: #fbfff9;
+      text-align: center;
+    }
+    section.cta p {
+      color: #d8e5dc;
+      margin: 0 auto 22px;
+      max-width: 42ch;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #1c1208;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .hero-grid {
+        grid-template-columns: 1fr auto;
+      }
+      .start-grid, .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .plan-shell {
+        grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr);
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">payabl. backend brief</p>
+        <h1>Backend support for payabl.'s next money flow push</h1>
+        <p class="why">Saw your Core Gateway and File Processing hiring push. The work points to a live payment backbone moving from legacy Perl and batch jobs toward Python services, safer reruns, and better observability.</p>
+      </div>
+      <div class="hero-note">A short plan for the systems behind payabl.one, not a product mockup.</div>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2>Our read</h2>
+      <div class="read-card">
+        The signal says payabl. is scaling the systems behind payabl.one, not only adding product pages. Core Gateway roles mention a live Perl gateway and next-generation Python microservices. File Processing roles point to legacy batch jobs, scheme files, and safer orchestration with Airflow or Prefect. That mix can slow releases because every change touches payments, compliance, and merchant trust. If the migration drags, senior engineers guard old flows instead of shipping the next money flow features.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Where we'd start</h2>
+      <div class="start-grid">
+        <div class="start-card">
+          <span class="label">What we noticed</span>
+          <p>Your docs expose many callback and retry paths. First next step: map old Perl gateway behavior into contract tests before each Python service goes live.</p>
+        </div>
+        <div class="start-card">
+          <span class="label">Useful next step</span>
+          <p>payabl.one promises clear settlement visibility. For scheme-file work, define rerun rules, validation reports, and dashboard signals before moving more batch jobs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="plan">
+    <div class="wrap">
+      <h2>What we'd do</h2>
+      <div class="plan-shell">
+        <div class="team-card">
+          <p>Engagement model: a dedicated squad under payabl.'s technical lead for a six-week backend reliability pilot.</p>
+          <div class="roles">
+            <span>Backend lead</span>
+            <span>2 Python engineers</span>
+            <span>QA automation</span>
+            <span>DevOps pipeline</span>
+          </div>
+          <p class="stack">Relevant stack: Python, FastAPI, AWS, Docker, PostgreSQL, Airflow.</p>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <span class="num">1</span>
+            <div><strong>Gateway safety map</strong><p>Document payment flows, callback behavior, retry rules, and release gates for the Perl-to-Python Core Gateway path.</p></div>
+          </div>
+          <div class="step">
+            <span class="num">2</span>
+            <div><strong>File pipeline pilot</strong><p>Prepare one scheme-file pipeline with immutable inputs, safe reruns, validation reports, and structured job logs.</p></div>
+          </div>
+          <div class="step">
+            <span class="num">3</span>
+            <div><strong>Test and observe</strong><p>Add API contract tests, callback replay checks, Grafana-ready metrics, and a support-facing state view.</p></div>
+          </div>
+          <div class="step">
+            <span class="num">4</span>
+            <div><strong>Release without drama</strong><p>Ship behind flags, demo weekly, and leave payabl. with a migration checklist for the next services.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="who">
+    <div class="wrap">
+      <h2>Who is Elinext</h2>
+      <div class="who-box">
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For payabl., the relevant parts are Python backend work, QA automation, DevOps, and regulated delivery. We hold ISO 9001 and ISO 27001 certifications, and have delivered for global clients including <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, and <strong>TUI</strong>. This fits the pilot above because the work is narrow, high-trust, and needs engineers who can support live systems.</p>
+        <div class="customer-tags"><span>Siemens</span><span>Broadcom</span><span>Volkswagen</span><span>TUI</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Proof</h2>
+      <div class="proof-grid">
+        <article class="case-card">
+          <img src="assets/case-cash-liquidity.jpg" alt="Cash and liquidity management case study image">
+          <div class="case-body">
+            <h3>Cash and Liquidity Management App</h3>
+            <p>Elinext helped build a banking platform with Java, Spring, Azure Kubernetes, Prometheus, Angular, MongoDB, and PostgreSQL. The system processes daily financial items for banks.</p>
+            <a href="https://www.elinext.com/case-study/cash-and-liquidity-management-app/">Read case study</a>
+          </div>
+        </article>
+        <article class="case-card">
+          <img src="assets/case-payment-processing.jpg" alt="Payment processing case study image">
+          <div class="case-body">
+            <h3>ERP and Payment Processing Solution</h3>
+            <p>Elinext took over an old payment-processing system, modernized the stack, and improved speed and performance for accounting and payment workflows.</p>
+            <a href="https://www.elinext.com/case-study/erp-and-payment-processing-solution/">Read case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <h2>Start the conversation</h2>
+      <p>Share one migration slice. We will suggest the safest pilot shape.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
