@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Duo Health backend platform brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/duo-health_2026-07-02_01-11-38/">
+  <meta name="description" content="A short backend platform brief for Duo Health as it hires senior Python talent.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/duo-health_2026-07-02_01-11-38/">
+  <meta property="og:title" content="Duo Health backend platform brief">
+  <meta property="og:description" content="A practical read on scaling Python services, APIs, and care workflows.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/duo-health_2026-07-02_01-11-38/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Duo Health backend platform brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Duo Health backend platform brief">
+  <meta name="twitter:description" content="A practical read on scaling Python services, APIs, and care workflows.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/duo-health_2026-07-02_01-11-38/og-image.jpg">
+  <style>
+    :root {
+      --ink: #123038;
+      --muted: #52656b;
+      --deep: #0c3f49;
+      --green: #2c7a68;
+      --mint: #e7f4ef;
+      --paper: #fbfaf6;
+      --white: #ffffff;
+      --line: #d8e2df;
+      --accent: #dc6b2a;
+      --gold: #f3c65e;
+      --shadow: 0 18px 40px rgba(18, 48, 56, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--deep), #174f45);
+      color: var(--white);
+      padding: 48px 18px 42px;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 7px;
+      background: linear-gradient(90deg, var(--accent), var(--gold), var(--green));
+      z-index: -1;
+    }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 26px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #bce3d8;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 16px;
+      font-size: 2.35rem;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 690px;
+      margin-bottom: 14px;
+      color: #e7f4ef;
+      font-size: 1.05rem;
+    }
+
+    .why {
+      max-width: 720px;
+      margin-bottom: 0;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .hero-note {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-note strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #fff2d0;
+    }
+
+    section {
+      padding: 44px 18px;
+      background: var(--paper);
+    }
+
+    section:nth-of-type(even) {
+      background: var(--white);
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: 1.65rem;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .read-card {
+      max-width: 80ch;
+      margin: 0 auto;
+      border: 1px solid #b8d8cf;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      padding: 22px;
+      background: var(--mint);
+      box-shadow: var(--shadow);
+    }
+
+    .read-card p {
+      margin-bottom: 0;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .proof-card,
+    .role,
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 12px 30px rgba(18, 48, 56, 0.08);
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-flex;
+      width: fit-content;
+      margin-bottom: 9px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      background: #fff3df;
+      color: #8b421c;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .proposal {
+      background: #eff7f3;
+    }
+
+    .proposal-panel {
+      border: 1px solid #bad8d1;
+      border-radius: 8px;
+      padding: 20px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .model-line {
+      max-width: 78ch;
+      margin: 0 auto 22px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .roles {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .role {
+      padding: 12px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      padding: 15px;
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--deep);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .step p,
+    .start-card p,
+    .proof-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+      justify-content: center;
+    }
+
+    .stack span,
+    .customer {
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #e9f0ed;
+      color: #244e46;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .elinext p,
+    .cta p {
+      max-width: 78ch;
+      margin-right: auto;
+      margin-left: auto;
+      text-align: center;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 16px 0 0;
+    }
+
+    .proof-card {
+      overflow: hidden;
+    }
+
+    .proof-body {
+      padding: 17px;
+    }
+
+    .proof-card h3 {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
+
+    .proof-card a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--deep);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    section.cta {
+      background: var(--deep);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .cta p {
+      color: #d8eee9;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      max-width: 100%;
+      border-radius: 8px;
+      padding: 13px 18px;
+      background: var(--accent);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      h1 {
+        font-size: 3.15rem;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr 300px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .roles {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Prepared for Raj Shrestha</p>
+        <h1>Scale Duo Health's backend without slowing care delivery</h1>
+        <p class="lead">Duo is expanding a kidney care model where patients, care teams, nephrologists, and health plans must stay connected in near real time.</p>
+        <p class="why">Saw you are hiring a Sr. Backend Platform Engineer for Python, Django, APIs, PostgreSQL, AKS, Celery, and DataDog. That points to platform load.</p>
+      </div>
+      <aside class="hero-note" aria-label="Brief focus">
+        <strong>Brief focus</strong>
+        Backend capacity, integration quality, and release discipline for Health Mobilization.
+      </aside>
+    </div>
+  </header>
+
+  <main>
+    <section class="read">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p>The job signal says Duo is scaling the system behind Health Mobilization, not just backfilling one role. Your model asks many parties to move together: patients, Complete Care Teams, nephrologists, plans, and community resources. That creates a hard backend problem around APIs, data quality, and clear service ownership. Duo also says it uses advanced AI and machine learning insight for kidney care. If platform work lags, new markets and provider groups can wait on integrations instead of care.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="start">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Your patient page promises "Call Us First", team access, and no phone trees. Map each call, message, and handoff to one owned API event.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>A mobile audit flags small tap targets and heavy images. Fix the public site checklist, then reuse it for patient and partner flows.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <p class="model-line">Use a dedicated backend squad under Duo's Product Owner or PM, with weekly demos and a six-week pilot.</p>
+        <div class="proposal-panel">
+          <div class="roles" aria-label="Recommended team shape">
+            <div class="role">Tech Lead</div>
+            <div class="role">Python Backend</div>
+            <div class="role">API Integration</div>
+            <div class="role">DevOps</div>
+            <div class="role">QA Automation</div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div><strong>Map care workflow APIs</strong><p>Trace patient, plan, nephrologist, and care-team data paths, then rank the riskiest handoffs.</p></div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div><strong>Harden platform operations</strong><p>Add observability, runbooks, and release gates for AKS, Celery, PostgreSQL, and DataDog.</p></div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div><strong>Ship integration backlog</strong><p>Build two priority REST integrations with contract tests and clear failure handling for clinical operations.</p></div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div><strong>Improve product surfaces</strong><p>Fix public mobile friction first, then apply the same rules to patient and partner portals.</p></div>
+            </article>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span>Python</span><span>Django</span><span>REST APIs</span><span>PostgreSQL</span><span>Azure AKS</span><span>Celery</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Duo, the useful part is our healthcare delivery experience, secure cloud work, and dedicated team model. We hold ISO 9001 and ISO 27001, and our client list includes <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. Our teams cover Python, DevOps, QA, data engineering, and web platforms. That fits the squad above: senior engineers who can own backend services and improve release quality.</p>
+        <div class="customers" aria-label="Named customers">
+          <span class="customer">Siemens</span><span class="customer">Broadcom</span><span class="customer">Volkswagen</span><span class="customer">TRUMPF</span><span class="customer">TUI</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-patient-portal.webp" alt="Healthcare patient portal case study preview">
+            <div class="proof-body">
+              <h3>Patient portal for healthcare</h3>
+              <p>Elinext built a secure portal for medical exams, with AWS work shaped by PHI and HIPAA needs.</p>
+              <a href="https://www.elinext.com/case-study/patient-portal-for-healthcare-company/">View case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-healthcare-analytics.jpg" alt="Healthcare analytics case study preview">
+            <div class="proof-body">
+              <h3>Healthcare analytics for US clinics</h3>
+              <p>Elinext took over an older platform and built scheduled reporting for patient performance data.</p>
+              <a href="https://www.elinext.com/case-study/measure-management-administration-system/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Talk through the backend path</h2>
+        <p>We can review the pilot scope with your product lead.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
