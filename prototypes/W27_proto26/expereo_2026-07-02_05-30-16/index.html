@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Expereo platform squad brief</title>
+  <meta name="description" content="A short proposal for scaling quote, supplier, and expereoOne workflow delivery.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/expereo_2026-07-02_05-30-16/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/expereo_2026-07-02_05-30-16/">
+  <meta property="og:title" content="Expereo: scaling quote and supplier workflows">
+  <meta property="og:description" content="A focused backend squad brief for expereoOne, quote management, and supplier integrations.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/expereo_2026-07-02_05-30-16/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Expereo: scaling quote and supplier workflows - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Expereo: scaling quote and supplier workflows">
+  <meta name="twitter:description" content="A focused backend squad brief for expereoOne, quote management, and supplier integrations.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/expereo_2026-07-02_05-30-16/og-image.jpg">
+  <style>
+    :root {
+      --ink: #14201f;
+      --muted: #60716d;
+      --paper: #fbfaf5;
+      --white: #ffffff;
+      --green: #0e3b35;
+      --green-2: #15584c;
+      --aqua: #d9f2ed;
+      --peach: #fff0e2;
+      --orange: #f47b20;
+      --line: #d6ded9;
+      --shadow: 0 18px 50px rgba(18, 32, 31, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    body {
+      font-size: 16px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 3rem 1.1rem;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 72rem;
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: var(--green);
+      color: var(--white);
+      padding-top: 3.5rem;
+      padding-bottom: 3.2rem;
+      border-bottom: 0.35rem solid var(--orange);
+    }
+
+    .eyebrow {
+      color: #9be2d3;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      margin: 0 0 0.7rem;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 13ch;
+      font-size: clamp(2.25rem, 7vw, 4.9rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+      margin-bottom: 1.2rem;
+    }
+
+    .why {
+      max-width: 48rem;
+      color: #e5f3ef;
+      font-size: clamp(1.02rem, 2.5vw, 1.2rem);
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-note {
+      display: inline-flex;
+      max-width: 100%;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      padding: 0.7rem 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 0.45rem;
+      background: rgba(255, 255, 255, 0.08);
+      color: #f7fbfa;
+      font-size: 0.94rem;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: clamp(1.55rem, 5vw, 2.45rem);
+      line-height: 1.08;
+      margin-bottom: 1.25rem;
+    }
+
+    .read {
+      background: #eef6f1;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 68rem;
+      margin: 0 auto;
+      padding: 1.4rem;
+      border-left: 0.35rem solid var(--orange);
+      border-radius: 0.5rem;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p {
+      max-width: 72ch;
+      margin: 0 auto;
+      color: #263b38;
+      font-size: 1.05rem;
+    }
+
+    .start {
+      background: var(--paper);
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .start-card {
+      width: 100%;
+      padding: 1.1rem;
+      border: 1px solid var(--line);
+      border-radius: 0.5rem;
+      background: var(--white);
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 0.45rem;
+      color: var(--green-2);
+      font-weight: 800;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .start-card p,
+    .proof-card p,
+    .who p,
+    .cta p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .plan {
+      background: #102f36;
+      color: var(--white);
+    }
+
+    .plan h2 {
+      color: var(--white);
+    }
+
+    .plan-shell {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 0.55rem;
+      background: #f7fbf8;
+      color: var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .team {
+      padding: 1.1rem;
+      border-radius: 0.5rem;
+      background: var(--peach);
+    }
+
+    .team h3,
+    .timeline h3 {
+      margin-bottom: 0.65rem;
+      font-size: 1.1rem;
+    }
+
+    .team p {
+      color: #5b5045;
+      margin-bottom: 0.9rem;
+    }
+
+    .roles,
+    .stack,
+    .logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .roles li,
+    .stack li,
+    .logos li {
+      border-radius: 999rem;
+      padding: 0.45rem 0.65rem;
+      background: var(--white);
+      color: #263b38;
+      font-size: 0.86rem;
+      font-weight: 700;
+      white-space: normal;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.8rem;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 0.5rem;
+      background: var(--white);
+    }
+
+    .num {
+      display: inline-grid;
+      place-items: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--white);
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: 1rem;
+    }
+
+    .step span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .who {
+      background: var(--white);
+    }
+
+    .who-box {
+      width: 100%;
+      max-width: 68rem;
+      margin: 0 auto;
+      padding: 1.4rem;
+      border-radius: 0.55rem;
+      border: 1px solid var(--line);
+      background: #f7fbf8;
+    }
+
+    .logos {
+      margin-top: 1rem;
+    }
+
+    .logos li {
+      background: var(--green);
+      color: var(--white);
+    }
+
+    .proof {
+      background: #edf4f2;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      border-radius: 0.5rem;
+      border: 1px solid var(--line);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #d8e5df;
+    }
+
+    .proof-body {
+      padding: 1rem;
+    }
+
+    .proof-body h3 {
+      font-size: 1.02rem;
+      line-height: 1.25;
+      margin-bottom: 0.5rem;
+    }
+
+    .proof-body a {
+      display: inline-block;
+      margin-top: 0.8rem;
+      color: var(--green-2);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      background: var(--green);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .cta h2 {
+      margin-bottom: 0.5rem;
+    }
+
+    .cta p {
+      color: #dff3ed;
+      margin-bottom: 1.1rem;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 3rem;
+      width: 100%;
+      max-width: 18rem;
+      padding: 0.85rem 1.1rem;
+      border-radius: 0.45rem;
+      background: var(--orange);
+      color: var(--ink);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 48rem) {
+      .section {
+        padding: 4rem 1.6rem;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .plan-shell {
+        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+        padding: 1.2rem;
+      }
+
+      .button {
+        width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero section">
+      <div class="wrap">
+        <p class="eyebrow">Prepared for Raed Rached</p>
+        <h1>Scale expereoOne quote work without slowing MEA delivery</h1>
+        <p class="why">We saw Expereo hiring for a Senior Backend Developer in Python, tied to supplier onboarding, quote management, partner integrations, and existing Python/C# services. That points to platform work under real delivery pressure.</p>
+        <p class="hero-note">Focus: quote logic, supplier data, API contracts, and expereoOne workflow handoffs.</p>
+      </div>
+    </section>
+
+    <section class="read section">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>This signal says Expereo is scaling the software core behind quotes and supplier onboarding, not just filling a seat. The role names a quote optimization engine, API contracts, partner data sources, and production Python/C# code. That mix can become a bottleneck when MEA growth needs fast site pricing and clean handoffs. expereoOne now carries digital case management, invoices, service status, and API access in one place. If quote logic and service workflows grow faster than tests and contracts, delivery teams get more manual checks, slower changes, and more support load.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="start section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>The backend role asks for versioned APIs and no silent breaks. Start with contract tests for quote and supplier services, then publish a small OpenAPI change log for downstream teams.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Digital Case Management moved case updates, watchers, and alerts into expereoOne. Map that flow against quote status data, so support and commercial teams share one handoff path.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan section">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="plan-shell">
+          <aside class="team">
+            <h3>Dedicated squad under your PO</h3>
+            <p>Six-week pilot, weekly demos, and one release slice tied to quote and supplier workflows.</p>
+            <ul class="roles">
+              <li>Tech Lead</li>
+              <li>2 Python Engineers</li>
+              <li>QA Automation</li>
+              <li>DevOps</li>
+            </ul>
+            <h3 style="margin-top:1.2rem;">Relevant stack</h3>
+            <ul class="stack">
+              <li>Python</li>
+              <li>C#/.NET</li>
+              <li>PostgreSQL</li>
+              <li>Docker</li>
+              <li>AWS</li>
+              <li>OpenAPI</li>
+            </ul>
+          </aside>
+          <div class="timeline">
+            <div class="step">
+              <span class="num">1</span>
+              <p><strong>Map quote and supplier flows</strong><span>Trace supplier onboarding, quote rules, partner inputs, and expereoOne handoffs into one tested service map.</span></p>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <p><strong>Harden API contracts</strong><span>Add OpenAPI rules, version gates, and contract tests so downstream teams are never broken silently.</span></p>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <p><strong>Build the Python squad path</strong><span>Ship selected quote-engine changes in Python/C# with unit, integration, and performance checks around commercial logic.</span></p>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <p><strong>Close delivery risk</strong><span>Add CI checks, review cadence, and support playbooks for MEA rollout, partner changes, and global handover.</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="who section">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="who-box">
+          <p>Elinext is a full-cycle software development company since 1997, with around 700 in-house specialists. There are no freelancers or subcontractors in delivery. For Expereo, the fit is backend, DevOps, QA, and telecom-grade data work. We hold ISO 9001 and ISO 27001, important for network service work. We can work under your product owner, with weekly demos and clear artifacts. This gives Raed a scalable team without adding local hiring load, while improving QA depth and release discipline.</p>
+          <ul class="logos">
+            <li>Broadcom</li>
+            <li>Siemens</li>
+            <li>Volkswagen</li>
+            <li>TRUMPF</li>
+            <li>TUI</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-router.jpg" alt="Network and router management case study image">
+            <div class="proof-body">
+              <h3>Remote network and router management platform</h3>
+              <p>Elinext built a telecom platform that reduced support effort and kept improving after launch.</p>
+              <a href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-virtualization.jpg" alt="Telecom infrastructure case study image">
+            <div class="proof-body">
+              <h3>Virtualization manager for telecom infrastructure</h3>
+              <p>A Python team helped simplify internal infrastructure work and improve developer productivity.</p>
+              <a href="https://www.elinext.com/case-study/virtualization-manager-of-internal-infrastructure-for-telecom-company-in-usa/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta section">
+      <div class="wrap">
+        <h2>Talk through the pilot</h2>
+        <p>One short call to test fit and team shape.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
