@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Imprint backend reliability brief</title>
+  <meta name="description" content="A short proposal for Imprint on backend reliability, payment flows, and support handoff during card-program growth.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/imprint_2026-07-02_21-21-23/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/imprint_2026-07-02_21-21-23/">
+  <meta property="og:title" content="Imprint backend reliability brief">
+  <meta property="og:description" content="Hiring backend help while card programs scale?">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/imprint_2026-07-02_21-21-23/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Imprint backend reliability brief — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Imprint backend reliability brief">
+  <meta name="twitter:description" content="Hiring backend help while card programs scale?">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/imprint_2026-07-02_21-21-23/og-image.jpg">
+  <style>
+    :root {
+      --ink: #14221f;
+      --muted: #53625e;
+      --paper: #fbfaf6;
+      --panel: #ffffff;
+      --line: #d8dfd8;
+      --green: #12483d;
+      --mint: #e8f4ee;
+      --orange: #e36c2f;
+      --blue: #dce9f6;
+      --shadow: 0 18px 48px rgba(20, 34, 31, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page {
+      width: 100%;
+    }
+
+    section {
+      position: relative;
+      padding: 54px 18px;
+      background: var(--paper);
+    }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      background:
+        linear-gradient(145deg, rgba(18, 72, 61, 0.96), rgba(20, 34, 31, 0.9)),
+        radial-gradient(circle at 15% 10%, rgba(227, 108, 47, 0.24), transparent 28%);
+      color: #fffaf2;
+      padding-top: 72px;
+      padding-bottom: 40px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #f6cbb6;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.5rem, 13vw, 5.6rem);
+      line-height: 0.96;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: clamp(1.8rem, 7vw, 3.2rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.02rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .lede,
+    .why {
+      max-width: 56ch;
+      font-size: 1.04rem;
+    }
+
+    .why {
+      margin-bottom: 0;
+      padding-left: 16px;
+      border-left: 4px solid var(--orange);
+      color: #fff3e9;
+    }
+
+    .hero-panel {
+      display: grid;
+      gap: 14px;
+      align-self: end;
+      padding: 22px;
+      border: 1px solid rgba(255, 250, 242, 0.24);
+      background: rgba(255, 250, 242, 0.08);
+    }
+
+    .hero-panel strong {
+      color: #fff;
+    }
+
+    .read {
+      background: #edf4ef;
+    }
+
+    .read-box {
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 24px;
+      border-left: 6px solid var(--green);
+      background: #fffdf8;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      font-size: 1.05rem;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .proof-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(20, 34, 31, 0.07);
+    }
+
+    .start-card {
+      padding: 20px;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 10px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--blue);
+      color: #193149;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      background: #fff7ed;
+    }
+
+    .proposal-panel {
+      display: grid;
+      gap: 18px;
+      padding: 22px;
+      background: var(--green);
+      color: #fffaf2;
+      box-shadow: var(--shadow);
+    }
+
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 4px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .team li,
+    .customer-tags span,
+    .stack span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .team li {
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      counter-reset: step;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 850;
+    }
+
+    .step p,
+    .proposal-panel p {
+      margin-bottom: 0;
+    }
+
+    .step p {
+      color: #dce8df;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .stack span {
+      background: #fffaf2;
+      color: var(--green);
+    }
+
+    .elinext {
+      background: #f4f7f3;
+    }
+
+    .elinext-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .customer-tags span {
+      background: var(--mint);
+      color: var(--green);
+    }
+
+    .proof-card {
+      display: grid;
+      background: #fff;
+    }
+
+    .proof-card img {
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #e8ece7;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-body p {
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+
+    .case-link {
+      font-weight: 800;
+      color: var(--green);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .talk {
+      background: var(--green);
+      color: #fffaf2;
+      text-align: center;
+    }
+
+    .talk h2 {
+      margin-bottom: 10px;
+    }
+
+    .talk p {
+      margin-bottom: 24px;
+      color: #dce8df;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 6px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      section {
+        padding: 76px 28px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        align-items: end;
+      }
+
+      h1 {
+        max-width: 100%;
+        font-size: 4.2rem;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-panel {
+        grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+        padding: 32px;
+      }
+    }
+
+    @media (min-width: 960px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.55fr);
+      }
+
+      h1 {
+        max-width: 900px;
+        font-size: 3.1rem;
+      }
+    }
+
+    @media (min-width: 1120px) {
+      .hero {
+        min-height: 88vh;
+      }
+
+      h1 {
+        font-size: 3.6rem;
+      }
+
+      .proof-grid {
+        gap: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Prepared for Shawna Martell</p>
+          <h1>Help Imprint scale card programs without account service noise</h1>
+          <p class="lede">Imprint's promise is simple: give brands fast, modern co-branded finance. The hard part is keeping every payment, card, reward, and support handoff calm as programs grow.</p>
+          <p class="why"><strong>Why we're here:</strong> Saw Imprint hiring for backend engineering while recent Shell and H-E-B users report account, payment, and support loops. Here is where we would add outside capacity first.</p>
+        </div>
+        <aside class="hero-panel" aria-label="Brief focus">
+          <p><strong>Product focus</strong><br>Imprint App, account.imprint.co, and Imprint Core services.</p>
+          <p><strong>Best fit</strong><br>A backend reliability squad under your PM and engineering leads.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="read">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The backend hire tells us Imprint is adding load behind the cardholder experience, not just polishing screens. Imprint Core now spans sign-up, swipes, rewards, payments, and partner data. Public reviews around the Shell transition show users stuck between app login, payment setup, and support queues. That can pull senior engineers into urgent fixes while partner programs still need new features. If the core flows stay noisy, brands feel the pain as support volume, trust loss, and slower launches.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">Payment path</span>
+            <p>Recent users mention forgotten payment info, bank-link concern, and unclear posting. First step: trace payment setup through app, web, reminders, and support scripts, then close the top backend failure states.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Support path</span>
+            <p>Shell users describe phone and chat loops. First step: map account-lookup errors to support rules so people can reach a human before late-fee risk.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-panel">
+          <div>
+            <h3>Six-week backend reliability pilot</h3>
+            <p>Dedicated squad under Imprint's PM and engineering leads, focused on payment, account, and support handoff risk.</p>
+            <ul class="team">
+              <li>Tech lead</li>
+              <li>2 backend engineers</li>
+              <li>QA automation</li>
+              <li>DevOps</li>
+            </ul>
+            <div class="stack" aria-label="Relevant stack">
+              <span>Java</span>
+              <span>Node.js</span>
+              <span>Python</span>
+              <span>React</span>
+              <span>iOS / Android</span>
+              <span>DevOps</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div><h3>Trace the real flow</h3><p>Trace account and payment events across app, web, card migration, and support tools so every failure has an owner.</p></div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div><h3>Harden payment states</h3><p>Harden payment setup, posting status, and statement access with contract tests around bank-link, reminders, and ledger updates.</p></div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div><h3>Watch migrations early</h3><p>Add observability for Shell-style migrations: clear alerts, replayable jobs, and dashboards for unresolved account-match errors.</p></div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div><h3>Leave runbooks behind</h3><p>Ship weekly fixes with Shawna's team, then hand over runbooks, tests, and a backlog for partner launches.</p></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="elinext-box">
+          <p>Elinext is a full-cycle software development provider, active since 1997, with about 700 in-house specialists and no freelancers. For a fintech team, the relevant proof is disciplined delivery, secure process, and people who can work inside your existing squad. We hold ISO 9001 and ISO 27001, and have delivered work for <strong>Broadcom</strong>, <strong>Siemens</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. Our teams cover backend, mobile, frontend, QA, DevOps, and business analysis. That fits the squad above: outside capacity that can take production work without creating a new management burden.</p>
+          <div class="customer-tags" aria-label="Named customers">
+            <span>Broadcom</span><span>Siemens</span><span>Volkswagen</span><span>TRUMPF</span><span>TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-payment-platform.jpg" alt="Online payment platform case study image">
+            <div class="proof-body">
+              <h3>B2B Online Payment Platform</h3>
+              <p>Outstaffed team for a highly loaded payment platform.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/online-payment-system-for-car-manufacturer/">Read the case</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-banking-qa.png" alt="Banking QA case study image">
+            <div class="proof-body">
+              <h3>Banking QA and DevOps</h3>
+              <p>Fewer release surprises in regulated banking work.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/qa-services-for-banking-app/">Read the case</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk">
+      <div class="wrap">
+        <h2>Talk through the first sprint</h2>
+        <p>We can review the risk map with your team.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
