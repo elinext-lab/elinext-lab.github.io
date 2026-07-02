@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>delaPlex backend integration capacity brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/delaplex_2026-07-02_04-00-14/">
+  <meta name="description" content="A short proposal for delaPlex on senior backend capacity, AMP integration risk, and a focused Elinext pilot squad.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/delaplex_2026-07-02_04-00-14/">
+  <meta property="og:title" content="delaPlex backend integration capacity brief">
+  <meta property="og:description" content="A focused read on delaPlex backend hiring, AMP integration pressure, and where a pilot squad can help.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/delaplex_2026-07-02_04-00-14/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="delaPlex backend integration capacity brief — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="delaPlex backend integration capacity brief">
+  <meta name="twitter:description" content="A focused read on delaPlex backend hiring, AMP integration pressure, and where a pilot squad can help.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/delaplex_2026-07-02_04-00-14/og-image.jpg">
+  <style>
+    :root {
+      --ink: #14252d;
+      --muted: #5d6d75;
+      --paper: #fbfcfb;
+      --panel: #ffffff;
+      --line: #dce6e2;
+      --blue: #1d4354;
+      --green: #67b447;
+      --orange: #f47c20;
+      --soft: #eef6f2;
+      --cream: #fff8ef;
+      --shadow: 0 18px 46px rgba(17, 47, 58, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body { min-width: 0; }
+
+    a { color: inherit; }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page {
+      width: 100%;
+      min-width: 0;
+      background: var(--paper);
+    }
+
+    .section {
+      width: 100%;
+      padding: 52px 18px;
+      background: var(--paper);
+    }
+
+    .section.alt { background: #f3f7f5; }
+    .section.dark { background: var(--blue); color: #fff; }
+
+    .wrap {
+      width: min(100%, 1100px);
+      margin: 0 auto;
+      min-width: 0;
+    }
+
+    .hero {
+      padding: 64px 18px 54px;
+      background: #173a49;
+      color: #fff;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 9px;
+      background: linear-gradient(90deg, var(--green), var(--orange));
+      z-index: -1;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .kicker {
+      margin: 0 0 16px;
+      color: #b9e2c6;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { overflow-wrap: anywhere; }
+
+    h1 {
+      max-width: 12ch;
+      margin: 0;
+      font-size: clamp(2.45rem, 7vw, 5.25rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+      overflow-wrap: normal;
+    }
+
+    h2 {
+      margin: 0 0 22px;
+      text-align: center;
+      font-size: clamp(1.75rem, 4vw, 2.7rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    p { margin: 0; }
+
+    .hero-copy {
+      display: grid;
+      gap: 14px;
+      max-width: 64ch;
+      color: #dbe8e6;
+      font-size: 1rem;
+    }
+
+    .hero-copy strong { color: #fff; }
+
+    .read-card {
+      width: min(100%, 880px);
+      margin: 0 auto;
+      padding: 26px;
+      background: var(--soft);
+      border: 1px solid #cbded5;
+      border-left: 7px solid var(--green);
+      box-shadow: var(--shadow);
+      border-radius: 8px;
+      font-size: 1.04rem;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 10px 26px rgba(20, 37, 45, 0.07);
+    }
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      margin: 0 0 10px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--cream);
+      color: #8d4c12;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .proposal {
+      padding: 26px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid #c6d9d3;
+      box-shadow: var(--shadow);
+    }
+
+    .team-strip {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .role {
+      min-height: 72px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+      padding: 14px;
+      border-radius: 8px;
+      background: #f4faf7;
+      border: 1px solid #d5e6df;
+    }
+
+    .role b {
+      color: var(--blue);
+      font-size: 0.95rem;
+    }
+
+    .role span {
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      padding: 16px;
+      border: 1px solid #d9e5e0;
+      border-radius: 8px;
+      background: #fbfdfc;
+    }
+
+    .num {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 900;
+      font-size: 0.9rem;
+    }
+
+    .step p {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #edf5f1;
+      border: 1px solid #d5e6df;
+      color: var(--blue);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .elinext {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      padding: 24px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid #cbded5;
+      box-shadow: var(--shadow);
+    }
+
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .customer-list strong {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 0.82rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid #d8e5e0;
+      background: #fff;
+      box-shadow: 0 10px 30px rgba(20, 37, 45, 0.08);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #edf2ef;
+    }
+
+    .case-body {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+    }
+
+    .case-body p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .case-body a {
+      color: var(--blue);
+      font-weight: 900;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .cta-box {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+      text-align: center;
+    }
+
+    .cta-box p { color: #dbe8e6; }
+
+    .button {
+      justify-self: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    @media (min-width: 720px) {
+      .section { padding: 72px 28px; }
+      .hero { padding: 88px 28px 72px; }
+      .hero-grid { grid-template-columns: 0.9fr 1.1fr; }
+      .start-grid,
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .team-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .proposal { padding: 32px; }
+    }
+
+    @media (min-width: 1040px) {
+      .hero-copy { font-size: 1.08rem; }
+      .step { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="kicker">Prepared for Pravin Verma</p>
+          <h1>Your backend hiring signals real API delivery load</h1>
+        </div>
+        <div class="hero-copy">
+          <p>delaPlex is moving fast across software development, supply chain, and AMP. The public story is clear: more products, more integrations, and more client delivery at once.</p>
+          <p><strong>Why we are here:</strong> you are hiring a Backend Service Engineer for senior Java, Spring Boot, microservices, REST, CI/CD, and cloud work. That looks like a capacity and integration push, not a simple backfill.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p>The Backend Service Engineer signal says delaPlex is scaling senior backend delivery for client and product work. The Java posting we found names Spring Boot, REST, GraphQL, Camunda, Oracle, Docker, Kubernetes, and production support. That mix usually means integration work is growing faster than the core team can absorb. AMP adds the same pattern, with REST API, SAML/LDAP, JAMF, Kandji, Slack, AWS, and IoT items on the public page. If this is handled only by hiring one senior engineer at a time, releases and support can slow down.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Where we would start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <p class="label">Demo path</p>
+            <p>The AMP demo path points to amp.delaone.com, but the route returns forbidden and the www host does not resolve. Route it to a live demo request or clear product proof page before more outbound traffic lands there.</p>
+          </div>
+          <div class="start-card">
+            <p class="label">Backend runway</p>
+            <p>Treat the backend role as an integration runway. Freeze API contracts, add Testcontainers, and add release checks before new people touch client systems.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>What we would do</h2>
+        <div class="proposal">
+          <p>Use a dedicated Elinext squad under your PM or Product Owner, with weekly demos and a narrow backend-integration backlog.</p>
+          <div class="team-strip" aria-label="Proposed team shape">
+            <div class="role"><b>Tech Lead</b><span>Scope, reviews, handoff</span></div>
+            <div class="role"><b>2 Java Engineers</b><span>Services and APIs</span></div>
+            <div class="role"><b>DevOps QA</b><span>CI gates and tests</span></div>
+            <div class="role"><b>6-week pilot</b><span>Then extend or stop</span></div>
+          </div>
+          <div class="timeline">
+            <div class="step"><div class="num">1</div><div><h3>Map the load</h3><p>Map AMP, supply-chain, and client service integrations into one backlog, then sort work by revenue risk and release urgency.</p></div></div>
+            <div class="step"><div class="num">2</div><div><h3>Ship backend work</h3><p>Pair with Pravin's team on Java/Spring services, REST and GraphQL APIs, and Camunda or Oracle flows that block delivery.</p></div></div>
+            <div class="step"><div class="num">3</div><div><h3>Raise release confidence</h3><p>Add contract tests, Testcontainers, CI gates, and deployment notes so global teams can change services without hidden regressions.</p></div></div>
+            <div class="step"><div class="num">4</div><div><h3>Decide the model</h3><p>Run weekly demos and production support reviews, then decide which roles should stay as long-term dedicated capacity.</p></div></div>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span class="chip">Java 17</span>
+            <span class="chip">Spring Boot</span>
+            <span class="chip">REST / GraphQL</span>
+            <span class="chip">Docker / Kubernetes</span>
+            <span class="chip">AWS</span>
+            <span class="chip">Oracle</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="elinext">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For delaPlex, the fit is senior backend and delivery support under your Product Owner or PM. We bring Java, Node.js, Python, .NET, QA, DevOps, and cloud skills in one team. Elinext is ISO 9001 and ISO 27001 certified. Our named customers include Siemens, Broadcom, Volkswagen, TRUMPF, TUI, TransPerfect, and Parrot. That depth supports the dedicated squad above: stable delivery, clear process, and engineers who can work inside client-facing teams.</p>
+          <div class="customer-list" aria-label="Named Elinext customers">
+            <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-integration-server.jpg" alt="Integration server case study preview">
+            <div class="case-body">
+              <h3>Integration Server App Development</h3>
+              <p>Elinext built a Java/Spring server app that transformed order files and moved them between partner FTP systems.</p>
+              <a href="https://www.elinext.com/case-study/integration-server-app-development-for-german-ecommerce-company/">View case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-app-builder.webp" alt="Application builder case study preview">
+            <div class="case-body">
+              <h3>App Builder for a Microsoft Services Provider</h3>
+              <p>Elinext created a reusable builder with Java, React, TypeScript, MongoDB, and Azure Kubernetes support.</p>
+              <a href="https://www.elinext.com/case-study/web-application-builder/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark">
+      <div class="wrap">
+        <div class="cta-box">
+          <h2>Talk through the pilot</h2>
+          <p>Bring one backlog. We will map the first six weeks.</p>
+          <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
