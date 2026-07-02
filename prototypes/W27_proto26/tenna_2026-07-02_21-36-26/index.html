@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tenna field reliability scale brief</title>
+  <meta name="description" content="A short engineering brief for Tenna as it scales backend, data, and field app reliability.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/tenna_2026-07-02_21-36-26/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/tenna_2026-07-02_21-36-26/">
+  <meta property="og:title" content="Tenna field reliability scale brief">
+  <meta property="og:description" content="A short engineering brief for Tenna as it scales backend, data, and field app reliability.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/tenna_2026-07-02_21-36-26/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Tenna field reliability scale brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Tenna field reliability scale brief">
+  <meta name="twitter:description" content="A short engineering brief for Tenna as it scales backend, data, and field app reliability.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/tenna_2026-07-02_21-36-26/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #607080;
+      --line: #dce3e7;
+      --soft: #f4f7f5;
+      --paper: #ffffff;
+      --orange: #f47a20;
+      --green: #2f765b;
+      --blue: #2b5b7f;
+      --navy: #101821;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.5;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .wrap { width: min(100% - 32px, 1120px); margin: 0 auto; }
+    .section { padding: 56px 0; background: var(--paper); border-top: 1px solid var(--line); }
+    .section.alt { background: var(--soft); }
+    .kicker { color: var(--green); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0; margin: 0 0 10px; text-align: center; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-size: clamp(34px, 7vw, 68px); line-height: 1.02; margin-bottom: 18px; max-width: 880px; }
+    h2 { font-size: clamp(25px, 4vw, 40px); line-height: 1.12; margin-bottom: 18px; text-align: center; }
+    h3 { font-size: 18px; line-height: 1.25; margin-bottom: 8px; }
+    p { font-size: 17px; }
+    .hero {
+      background: var(--navy);
+      color: #f7fafc;
+      padding: 28px 0 48px;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding-bottom: 38px;
+      font-size: 14px;
+      color: #b9c4cd;
+    }
+    .mark { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; color: #fff; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--orange); display: inline-block; }
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+    .hero-copy p { max-width: 720px; color: #d4dde3; }
+    .why { border-left: 4px solid var(--orange); padding-left: 16px; }
+    .visual {
+      background: #fff;
+      color: var(--ink);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .visual img { width: 100%; }
+    .caption { padding: 12px 14px; font-size: 13px; color: var(--muted); }
+    .read-card {
+      max-width: 82ch;
+      margin: 0 auto;
+      border-left: 5px solid var(--orange);
+      background: #fff8f2;
+      border-radius: 8px;
+      padding: 22px;
+      border-top: 1px solid #f0d6c4;
+      border-right: 1px solid #f0d6c4;
+      border-bottom: 1px solid #f0d6c4;
+    }
+    .start-grid, .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .start-card, .case-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .label {
+      display: inline-block;
+      margin-bottom: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    .plan {
+      background: #10202c;
+      color: #f6fbff;
+      border-radius: 8px;
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+    }
+    .team {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .role, .step {
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.07);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .role strong, .step strong { display: block; }
+    .role span, .step p { color: #cfdae2; font-size: 14px; margin: 3px 0 0; }
+    .steps { display: grid; gap: 12px; }
+    .step-num {
+      display: inline-flex;
+      width: 28px;
+      height: 28px;
+      align-items: center;
+      justify-content: center;
+      background: var(--orange);
+      color: #111;
+      font-weight: 800;
+      border-radius: 50%;
+      margin-bottom: 9px;
+    }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pill {
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      color: #e7eef4;
+    }
+    .elinext {
+      max-width: 82ch;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+    }
+    .customers { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .customers strong {
+      background: #edf4f2;
+      color: var(--green);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 13px;
+    }
+    .case-card { padding: 0; overflow: hidden; }
+    .case-body { padding: 18px; }
+    .case-body p { font-size: 15px; color: var(--muted); }
+    .case-link { font-weight: 700; color: var(--blue); font-size: 15px; }
+    .talk {
+      background: var(--navy);
+      color: #f7fafc;
+      text-align: center;
+      padding: 58px 0;
+    }
+    .talk p { color: #cfdae2; max-width: 560px; margin: 0 auto 24px; }
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 48px;
+      padding: 12px 20px;
+      background: var(--orange);
+      color: #111;
+      border-radius: 8px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    @media (min-width: 760px) {
+      .hero-grid { grid-template-columns: 1.1fr .9fr; }
+      .start-grid, .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .plan { grid-template-columns: .8fr 1.2fr; }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 520px) {
+      .wrap { width: min(100% - 28px, 1120px); }
+      .section { padding: 44px 0; }
+      .team { grid-template-columns: 1fr; }
+      .nav { align-items: flex-start; flex-direction: column; padding-bottom: 28px; }
+      p { font-size: 16px; }
+      .visual { margin-top: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="nav">
+        <div class="mark"><span class="dot"></span><span>Tenna brief</span></div>
+        <div>Prepared by Elinext</div>
+      </div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1>Tenna can scale field reliability without slowing product delivery</h1>
+          <p>Tenna is adding senior engineers while the platform handles more field, shop, device, and data work across one mixed-fleet system customers trust daily in the field and office.</p>
+          <p class="why">Why we are here: we saw the Senior Back-End Software Engineer signal, plus public data and front-end roles. That points to platform scale, not simple hiring backfill.</p>
+        </div>
+        <figure class="visual">
+          <img src="assets/tenna-app.webp" alt="Tenna mobile app product image">
+          <figcaption class="caption">A field app sits between equipment, workers, device data, and the office.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section alt">
+      <div class="wrap">
+        <p class="kicker">Our read</p>
+        <h2>The work is moving from feature growth to platform scale</h2>
+        <div class="read-card">
+          <p>Tenna is scaling a connected equipment platform, not a small app. The backend role names API design, database tuning, performance, and microservices. The Principal Data Engineer role adds IoT ingestion, real-time data, and AI-ready data flows. Android reviews also point to field risk, like inspections not loading and crashes. If these paths stay fragile, field teams lose trust and senior engineers get pulled into support.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <p class="kicker">Where we'd start</p>
+        <h2>Two useful checks before adding more headcount</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">Field app paths</span>
+            <p>Start with inspections, scan, offline sync, login recovery, and dispatch updates. Add regression tests around these paths before new roadmap work lands.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Data freshness</span>
+            <p>Review stale asset locations, device offline states, and retry rules. Define clear user states for field crews when cellular data is weak.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <p class="kicker">What we'd do</p>
+        <h2>A focused squad for backend, data, and field QA</h2>
+        <div class="plan">
+          <div>
+            <h3>Engagement model</h3>
+            <p>A dedicated squad works under Tenna's Product Owner or PM for a six-week pilot.</p>
+            <div class="team">
+              <div class="role"><strong>Tech Lead</strong><span>Owns scope and reviews architecture.</span></div>
+              <div class="role"><strong>2 Backend Engineers</strong><span>Node.js APIs, services, and tests.</span></div>
+              <div class="role"><strong>React Engineer</strong><span>Complex workflows and performance.</span></div>
+              <div class="role"><strong>QA + Data Engineer</strong><span>Field tests and data checks.</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="steps">
+              <div class="step"><span class="step-num">1</span><strong>Trace the field paths</strong><p>Map inspections, scanning, offline maintenance, dispatch, and login recovery from mobile action to backend state.</p></div>
+              <div class="step"><span class="step-num">2</span><strong>Harden APIs and services</strong><p>Add tests around asset state, stale locations, retry rules, and service contracts for field workflows.</p></div>
+              <div class="step"><span class="step-num">3</span><strong>Build data safety checks</strong><p>Validate IoT ingestion, replay behavior, data freshness, and real-time distribution before wider AI work starts.</p></div>
+              <div class="step"><span class="step-num">4</span><strong>Demo every week</strong><p>Show working fixes, test results, and risks to Tenna product and engineering leaders each week.</p></div>
+            </div>
+            <div class="stack" aria-label="Relevant stack">
+              <span class="pill">Node.js</span><span class="pill">React</span><span class="pill">Python</span><span class="pill">Java</span><span class="pill">QA automation</span><span class="pill">DevOps</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <p class="kicker">Who is Elinext</p>
+        <h2>Engineering help that can plug into your team</h2>
+        <div class="elinext">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build web, mobile, backend, QA, data, AI/ML, and DevOps teams for clients in the US, Europe, Asia, and Australia. We hold ISO 9001 and ISO 27001, which matters for field data and customer trust. Our named customers include Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. For Tenna, we would bring a small squad that supports your leaders and keeps ownership inside your team.</p>
+          <div class="customers"><strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <p class="kicker">Proof</p>
+        <h2>Similar work, not generic claims</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-fleet.jpg" alt="Fleet management app case study image">
+            <div class="case-body">
+              <h3>Fleet management app for a US logistics provider</h3>
+              <p>Elinext built mobile workflows for driver tasks and live location streams with React Native and TypeScript.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/fleet-management-app-for-logistics-solution-provider-in-the-usa/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-warehouse.jpg" alt="Warehouse management case study image">
+            <div class="case-body">
+              <h3>Continuous microservices work for warehouse management</h3>
+              <p>Elinext improved barcode workflows, Android scanning, ERP integration, service logic, logging, and monitoring.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/warehouse-management-solutions/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="talk">
+    <div class="wrap">
+      <h2>Start with a short call</h2>
+      <p>We can review field reliability gaps before adding headcount.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+    </div>
+  </footer>
+</body>
+</html>
