@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Divergent DAPS Software Scale Brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/divergent_2026-07-02_00-42-14/">
+  <meta name="description" content="A short brief on helping Divergent scale secure DAPS software delivery.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/divergent_2026-07-02_00-42-14/">
+  <meta property="og:title" content="Divergent DAPS software scale brief">
+  <meta property="og:description" content="A focused look at full-stack delivery, data flow, and secure factory software scale.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/divergent_2026-07-02_00-42-14/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Divergent DAPS software scale brief — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Divergent DAPS software scale brief">
+  <meta name="twitter:description" content="A focused look at full-stack delivery, data flow, and secure factory software scale.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/divergent_2026-07-02_00-42-14/og-image.jpg">
+  <style>
+    :root {
+      --ink: #24231f;
+      --muted: #69675f;
+      --paper: #f7f4ec;
+      --panel: #ffffff;
+      --line: #ded8c8;
+      --accent: #f4c321;
+      --accent-2: #2d6a67;
+      --steel: #303842;
+      --soft: #eee8d9;
+      --dark: #161611;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .page {
+      width: 100%;
+      background: var(--paper);
+    }
+
+    .hero {
+      background: var(--dark);
+      color: #fffdf5;
+      min-height: 92vh;
+      display: grid;
+      align-items: end;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(10,10,8,.28), rgba(10,10,8,.82)), url("assets/daps.png") center/cover no-repeat;
+      z-index: -2;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 12px;
+      background: var(--accent);
+      z-index: -1;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero-inner {
+      padding: 92px 0 72px;
+      max-width: 780px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      margin: 0 0 14px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      font-size: clamp(2.25rem, 9vw, 5rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+      margin-bottom: 22px;
+      max-width: 12ch;
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2.4vw, 1.18rem);
+      max-width: 62ch;
+      margin-bottom: 14px;
+    }
+
+    .section {
+      padding: 56px 0;
+      background: var(--paper);
+    }
+
+    .section h2 {
+      text-align: center;
+      font-size: clamp(1.65rem, 4vw, 2.4rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+      margin-bottom: 24px;
+    }
+
+    .read-box {
+      background: #fff8df;
+      border: 1px solid #e6dcae;
+      border-left: 8px solid var(--accent);
+      padding: 24px;
+      max-width: 78ch;
+      margin: 0 auto;
+    }
+
+    .start-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .start-card,
+    .proof-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .start-card {
+      padding: 18px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .label {
+      color: var(--accent-2);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .work {
+      background: #24231f;
+      color: #fffdf5;
+      padding: 58px 0;
+    }
+
+    .work h2 { color: #fffdf5; }
+
+    .work-panel {
+      width: 100%;
+      background: #f9f6ec;
+      color: var(--ink);
+      border: 1px solid #4a4639;
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: 0 28px 80px rgba(0,0,0,.24);
+    }
+
+    .team {
+      display: grid;
+      gap: 10px;
+      margin: 18px 0 20px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      width: 100%;
+      border: 1px solid #d5cda9;
+      border-radius: 999px;
+      padding: 8px 13px;
+      background: #fff;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 14px;
+      background: #fff;
+      border: 1px solid #ddd4b8;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .num {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--accent);
+      color: #211f18;
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .step p,
+    .proof-card p,
+    .start-card p,
+    .cred p,
+    .cta p,
+    .read-box p,
+    .work-panel p {
+      color: var(--muted);
+      margin-bottom: 0;
+    }
+
+    .work-panel .stack {
+      color: #4d4b42;
+      margin-top: 16px;
+      font-weight: 700;
+    }
+
+    .cred {
+      background: var(--soft);
+    }
+
+    .cred-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      background: #24231f;
+      color: #fffdf5;
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #ddd;
+    }
+
+    .proof-card div {
+      padding: 18px;
+    }
+
+    .proof-card a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--accent-2);
+      font-weight: 700;
+    }
+
+    .cta {
+      text-align: center;
+      background: var(--steel);
+      color: #fffdf5;
+      padding: 58px 0 64px;
+    }
+
+    .cta h2 { color: #fffdf5; }
+
+    .cta p {
+      color: #e7e4d9;
+      margin-bottom: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 48px;
+      max-width: 100%;
+      padding: 0 22px;
+      background: var(--accent);
+      color: #171711;
+      border-radius: 6px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      .section { padding: 72px 0; }
+      .start-grid,
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .team { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .work-panel { padding: 30px; }
+    }
+
+    @media (min-width: 1100px) {
+      .hero { min-height: 88vh; }
+      .hero-inner { padding-bottom: 92px; }
+      .work-panel { padding: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap hero-inner">
+        <p class="eyebrow">Prepared for Eric Read</p>
+        <h1>Scaling DAPS software without adding delivery risk</h1>
+        <p>A short brief on where a focused software squad could help Divergent move faster across secure web, data, and factory workflows.</p>
+        <p>Saw Divergent hiring a Senior Full Stack Software Engineer for DAPS. Here is how we would support that moment without slowing your core team.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Divergent is not just adding web capacity. The Senior Full Stack role says DAPS needs more software depth across engineering, manufacturing, robotics, and factory operations. That is a hard place to scale because each screen and API touches real machines, PLM, MES, ERP, and export-controlled work. Your site also frames DAPS around Design, Manufacture, and Assemble, so data must stay trusted across all three steps. If that layer grows slower than the factory, teams wait on manual fixes and release risk rises.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Map the new full-stack role against DAPS flows: machine data, factory dashboards, and ERP or MES links.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Run a two-week security and data-model review before adding more feature work. Also test lighter mobile DAPS images before the next news push.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="work">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="work-panel">
+          <p>Use a dedicated squad under Divergent's product or engineering lead, with weekly demos and a six-week pilot.</p>
+          <div class="team">
+            <span class="pill">1 tech lead</span>
+            <span class="pill">2 senior full-stack engineers</span>
+            <span class="pill">1 QA automation engineer</span>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <span class="num">1</span>
+              <div><strong>Trace the flow</strong><p>Trace DAPS user flows from design input to factory output, then mark security, audit, and data handoff points.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <div><strong>Build one slice</strong><p>Build the first secure TypeScript and Node service that joins machine data with the web workflow.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <div><strong>Prove quality</strong><p>Add test coverage, CI checks, and release notes that Eric's security team can review early.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <div><strong>Leave control</strong><p>Demo a working slice each week, then leave a backlog your team can own or extend.</p></div>
+            </div>
+          </div>
+          <p class="stack">Relevant stack: TypeScript, React, Node.js, Python, .NET, Docker.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cred">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="cred-box">
+          <p>Elinext is a full-cycle software development company, founded in 1997, with about 700 in-house specialists and no freelancers. For Divergent, the fit is factory software, secure web work, and long-running product support. Elinext holds ISO 9001 and ISO 27001, and has delivered work for Siemens, Broadcom, Volkswagen, TRUMPF, TUI, and TransPerfect. Our teams cover React, Angular, Node.js, Java, .NET, Python, QA, DevOps, and AI/ML. That means the squad above can help your engineers ship faster without lowering security or process control.</p>
+          <div class="logos" aria-label="Selected Elinext customers">
+            <strong class="tag">Siemens</strong>
+            <strong class="tag">Broadcom</strong>
+            <strong class="tag">Volkswagen</strong>
+            <strong class="tag">TRUMPF</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-mes.webp" alt="Manufacturing execution system case study image">
+            <div>
+              <h3>Manufacturing Execution System</h3>
+              <p>Elinext helped modernize MES software and support integrations with five long-running delivery teams.</p>
+              <a href="https://www.elinext.com/case-study/manufacturing-execution-system/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-machine-data.jpg" alt="Machine performance data case study image">
+            <div>
+              <h3>Real-time Machine Data</h3>
+              <p>A factory data platform pulls machine data and gives operations teams clearer performance insight.</p>
+              <a href="https://www.elinext.com/case-study/industrial-solution-offering-operational-data-and-insights/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Talk through the first slice</h2>
+        <p>Bring one DAPS workflow, and we will map the squad.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
