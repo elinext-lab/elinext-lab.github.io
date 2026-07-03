@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Action1 agent reliability brief by Elinext</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/action1_2026-07-03_09-22-35/">
+  <meta name="description" content="A short proposal for scaling Action1's cross-platform endpoint agent work with C++ systems engineering and QA automation.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/action1_2026-07-03_09-22-35/">
+  <meta property="og:title" content="Action1 agent reliability brief">
+  <meta property="og:description" content="A practical plan for scaling the cross-OS endpoint agent behind Action1 patching.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/action1_2026-07-03_09-22-35/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Action1 agent reliability brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Action1 agent reliability brief">
+  <meta name="twitter:description" content="A practical plan for scaling the cross-OS endpoint agent behind Action1 patching.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/action1_2026-07-03_09-22-35/og-image.jpg">
+  <style>
+    :root {
+      --ink: #101725;
+      --muted: #5d6678;
+      --line: #dce3ef;
+      --soft: #f5f8fc;
+      --panel: #ffffff;
+      --navy: #0f1629;
+      --orange: #f58220;
+      --green: #1f8a70;
+      --blue: #2463eb;
+      --shadow: 0 18px 48px rgba(16, 23, 37, .10);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--soft);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    body { min-width: 320px; }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .page {
+      width: 100%;
+      background: var(--soft);
+    }
+
+    .section {
+      width: 100%;
+      padding: 48px 18px;
+      background: var(--soft);
+    }
+
+    .section.white { background: var(--panel); }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      color: #f8fafc;
+      background:
+        linear-gradient(135deg, rgba(15, 22, 41, .96), rgba(19, 44, 71, .95)),
+        radial-gradient(circle at 90% 20%, rgba(245, 130, 32, .28), transparent 28%);
+      padding: 64px 18px 54px;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      max-width: 100%;
+      margin: 0 0 18px;
+      padding: 7px 11px;
+      border: 1px solid rgba(255, 255, 255, .24);
+      border-radius: 999px;
+      color: #c9d7ee;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 820px;
+      margin-bottom: 18px;
+      font-size: 42px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 760px;
+      color: #d8e2f2;
+      font-size: 18px;
+    }
+
+    .why {
+      margin-bottom: 0;
+      padding-left: 16px;
+      border-left: 4px solid var(--orange);
+    }
+
+    .section-title {
+      max-width: 720px;
+      margin: 0 auto 22px;
+      text-align: center;
+      font-size: 28px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 26px;
+      border: 1px solid #c9d7e9;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      background: #eaf4f0;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p { margin: 0; }
+
+    .start-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+
+    .start-card,
+    .case-card {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .start-card {
+      padding: 22px;
+      border-top: 4px solid var(--orange);
+    }
+
+    .label {
+      margin-bottom: 8px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      border-radius: 8px;
+      background: var(--navy);
+      color: #f8fafc;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .proposal-head {
+      display: grid;
+      gap: 18px;
+      padding: 26px;
+      border-bottom: 1px solid rgba(255, 255, 255, .14);
+    }
+
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .10);
+      color: #e7edf7;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: normal;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .step {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 42px minmax(0, 1fr);
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .num {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #111827;
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin-bottom: 4px;
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .step p {
+      margin: 0;
+      color: #cbd5e1;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 18px 22px;
+    }
+
+    .stack span {
+      padding: 7px 10px;
+      border-radius: 6px;
+      background: #1d2b47;
+      color: #dbeafe;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .elinext {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .logos strong {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #eef4ff;
+      color: #174ea6;
+      font-size: 13px;
+    }
+
+    .case-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #e6edf5;
+    }
+
+    .case-body { padding: 20px; }
+
+    .case-body h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .case-body p {
+      color: var(--muted);
+    }
+
+    .case-body a {
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      color: #f8fafc;
+      background: #13233a;
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+      font-size: 30px;
+    }
+
+    .cta p {
+      max-width: 520px;
+      margin: 0 auto 22px;
+      color: #cbd5e1;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 280px;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #111827;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      .section { padding: 64px 28px; }
+      .hero { padding: 84px 28px 72px; }
+      h1 { font-size: 58px; }
+      .start-grid,
+      .case-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proposal-head {
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+        align-items: start;
+      }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .button { width: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow">Prepared for Alexander Alexeev</div>
+        <h1>Scaling the agent behind Action1's cross-OS patching platform</h1>
+        <p>Action1's product promise depends on fast, safe endpoint work across Windows, macOS, and Linux. The agent team has to ship more platform depth without making patching risky.</p>
+        <p class="why">We saw Action1 hiring a Senior C++ Developer to lead work on the cross-platform endpoint agent. That role points to a clear scaling moment: agent reliability, OS APIs, secure cloud communication, and CI need more hands.</p>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2 class="section-title">Our read</h2>
+        <div class="read-box">
+          <p>Action1 is moving from strong Windows patching into broader cross-OS endpoint control. The Senior C++ role says the agent must run patch workflows, collect system data, and talk safely to the cloud backend. That means the hard work is inside the agent, not only in the web console. Reddit users praise Action1 patching, but they also ask about Linux maturity, per-user app installs, and remote-control depth. If these edge cases stay manual, releases slow down and senior engineers carry too much support load.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <div class="label">User-context apps</div>
+            <p>Teams, Slack, Zoom, and Discord can live in a user profile while agents often run as LocalSystem. Map those cases into native smoke tests, with rollback checks before expanding patch rules.</p>
+          </article>
+          <article class="start-card">
+            <div class="label">Linux rollout proof</div>
+            <p>Buyers now ask whether Linux patching is ready for larger server fleets. Publish distro coverage notes and automate kernel, reboot, and network-segment cases in CI.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2 class="section-title">What we'd do</h2>
+        <div class="proposal">
+          <div class="proposal-head">
+            <div>
+              <h3>Six-week dedicated squad under your engineering lead</h3>
+              <p>One C++ tech lead, two senior systems engineers, one QA automation engineer, and one DevOps/build engineer. Weekly demos keep the pilot close to Alexander's agent roadmap.</p>
+            </div>
+            <div class="team">
+              <span class="pill">C++ tech lead</span>
+              <span class="pill">2 systems engineers</span>
+              <span class="pill">QA automation</span>
+              <span class="pill">Build and CI</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="num">1</div>
+              <div>
+                <h3>Map agent risk</h3>
+                <p>Trace patch workflows from OS APIs to cloud messages, then mark fragile paths for Windows, macOS, and Linux.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div>
+                <h3>Build test harness</h3>
+                <p>Build CMake smoke tests and virtual endpoint runs for installs, rollback, reboot, and user-context app cases.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div>
+                <h3>Check secure comms</h3>
+                <p>Review HTTPS, certificate, and OpenSSL paths, then add regression checks for failed network and trust states.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div>
+                <h3>Tighten release loop</h3>
+                <p>Wire CI results into weekly demos, so your team sees risk before each agent build ships.</p>
+              </div>
+            </article>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span>C/C++</span>
+            <span>C#</span>
+            <span>.NET</span>
+            <span>Python</span>
+            <span>JavaScript</span>
+            <span>CMake</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="section-title">Who is Elinext</h2>
+        <div class="elinext">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Action1, the fit is systems engineering, QA automation, and secure product delivery under ISO 9001 and ISO 27001 practices. Our teams have delivered for large software and industrial clients, including Broadcom, Siemens, Volkswagen, TRUMPF, and TUI. We can work as a dedicated squad under your product owner or engineering lead. That keeps ownership with Action1 while adding the C++ and QA capacity behind the agent plan above.</p>
+          <div class="logos" aria-label="Selected customers">
+            <strong>Broadcom</strong>
+            <strong>Siemens</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+            <strong>TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2 class="section-title">Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-it-infrastructure-management-software-qa.jpg" alt="IT infrastructure management QA case study">
+            <div class="case-body">
+              <h3>QA for IT infrastructure management</h3>
+              <p>Elinext scaled QA for a complex infrastructure product and helped raise product quality and test coverage.</p>
+              <a href="https://www.elinext.com/case-study/it-infrastructure-management-software-qa/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-saas-platform-design.jpg" alt="M365 security monitoring SaaS case study">
+            <div class="case-body">
+              <h3>M365 security monitoring SaaS</h3>
+              <p>Elinext helped launch a security SaaS with .NET, Angular, PowerShell, Azure, and beta validation.</p>
+              <a href="https://www.elinext.com/case-study/saas-platform-design/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Let's talk</h2>
+        <p>Share the agent edge cases you want off your plate.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
