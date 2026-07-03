@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phocas Software engineering brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/phocas-software_2026-07-03_01-30-26/">
+  <meta name="description" content="A short engineering brief for Phocas Software, focused on AI, data freshness, connector quality, and delivery capacity.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/phocas-software_2026-07-03_01-30-26/">
+  <meta property="og:title" content="Phocas Software: scaling AI and data delivery">
+  <meta property="og:description" content="A practical brief on connector quality, AI answer trust, and engineering capacity for Phocas.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/phocas-software_2026-07-03_01-30-26/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Phocas Software: scaling AI and data delivery - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Phocas Software: scaling AI and data delivery">
+  <meta name="twitter:description" content="A practical brief on connector quality, AI answer trust, and engineering capacity for Phocas.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/phocas-software_2026-07-03_01-30-26/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172126;
+      --muted: #5f6f73;
+      --paper: #fbf8f1;
+      --white: #ffffff;
+      --teal: #0b6e69;
+      --teal-dark: #084c49;
+      --mint: #dcefe8;
+      --amber: #f0a23a;
+      --coral: #e96f4d;
+      --line: #d8dedb;
+      --soft: #f2f7f2;
+      --shadow: 0 18px 50px rgba(23, 33, 38, .10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    body {
+      font-size: 16px;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      position: relative;
+      background: var(--paper);
+    }
+
+    .inner {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 82vh;
+      display: grid;
+      align-items: center;
+      background:
+        linear-gradient(135deg, rgba(11, 110, 105, .94), rgba(8, 76, 73, .90)),
+        linear-gradient(90deg, rgba(240, 162, 58, .24), rgba(233, 111, 77, .20));
+      color: var(--white);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .kicker {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, .34);
+      border-radius: 999px;
+      color: rgba(255, 255, 255, .90);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-top: 18px;
+      font-size: clamp(44px, 11vw, 92px);
+      line-height: .94;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 64ch;
+      color: rgba(255, 255, 255, .88);
+      font-size: clamp(18px, 4.3vw, 22px);
+    }
+
+    .hero-note {
+      display: grid;
+      gap: 12px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, .28);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .10);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-note strong {
+      color: #ffe3a9;
+    }
+
+    .label {
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin-top: 8px;
+      text-align: center;
+      font-size: clamp(30px, 8vw, 48px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .our-read {
+      background: var(--mint);
+    }
+
+    .read-card {
+      max-width: 82ch;
+      margin: 28px auto 0;
+      padding: 24px;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .82);
+      box-shadow: var(--shadow);
+      color: #243135;
+      font-size: 18px;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .start-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 10px 30px rgba(23, 33, 38, .06);
+    }
+
+    .start-card h3 {
+      margin-bottom: 8px;
+      color: var(--teal-dark);
+      font-size: 17px;
+    }
+
+    .proposal {
+      background: var(--teal-dark);
+      color: var(--white);
+    }
+
+    .proposal .label {
+      color: #f7c979;
+    }
+
+    .proposal-wrap {
+      display: grid;
+      gap: 22px;
+      margin-top: 28px;
+    }
+
+    .team-card,
+    .steps {
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .16);
+    }
+
+    .team-card {
+      padding: 22px;
+    }
+
+    .team-card p {
+      color: rgba(255, 255, 255, .82);
+    }
+
+    .roles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .role {
+      padding: 12px;
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .steps {
+      display: grid;
+      gap: 1px;
+      overflow: hidden;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 14px;
+      padding: 18px;
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: var(--amber);
+      color: #221706;
+      font-weight: 900;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 17px;
+    }
+
+    .step span {
+      display: block;
+      color: rgba(255, 255, 255, .78);
+    }
+
+    .cred {
+      background: var(--soft);
+    }
+
+    .cred-card {
+      max-width: 86ch;
+      margin: 28px auto 0;
+      padding: 24px;
+      border-radius: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .tag {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #fff3dd;
+      color: #6f3d00;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .case {
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 34px rgba(23, 33, 38, .08);
+    }
+
+    .case img {
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #dfe7e4;
+    }
+
+    .case-body {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+    }
+
+    .case h3 {
+      color: var(--teal-dark);
+      font-size: 19px;
+      line-height: 1.2;
+    }
+
+    .case p {
+      color: var(--muted);
+    }
+
+    .case a {
+      color: var(--teal-dark);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .talk {
+      background: var(--ink);
+      color: var(--white);
+      text-align: center;
+    }
+
+    .talk p {
+      margin: 12px auto 0;
+      max-width: 52ch;
+      color: rgba(255, 255, 255, .78);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: min(100%, 260px);
+      min-height: 52px;
+      margin-top: 24px;
+      border-radius: 8px;
+      background: var(--amber);
+      color: #221706;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section {
+        padding: 78px 32px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-wrap {
+        grid-template-columns: minmax(260px, .8fr) minmax(0, 1.2fr);
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .section {
+        padding: 92px 44px;
+      }
+
+      .roles {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section hero" aria-labelledby="hero-title">
+      <div class="inner hero-grid">
+        <div>
+          <span class="kicker">Phocas Software brief</span>
+          <h1 id="hero-title">Scale AI data work without slowing delivery</h1>
+          <p class="why">Why we're here: Phocas is hiring senior engineering and enablement roles while pushing Phocas AI, integrations, and connected BI and FP&A after new investment.</p>
+        </div>
+        <aside class="hero-note" aria-label="Brief focus">
+          <p><strong>Focus:</strong> data freshness, connector quality, AI answer trust, and release confidence.</p>
+          <p><strong>Reader:</strong> Daniel Ren, Senior Database Administrator, Christchurch.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section our-read" aria-labelledby="read-title">
+      <div class="inner">
+        <p class="label">Our read</p>
+        <h2 id="read-title">The hard part is trusted data at speed</h2>
+        <p class="read-card">The hiring signal says Phocas is adding engineering capacity, not just replacing hands. Phocas AI, 200+ integrations, and BI plus FP&A all depend on clean source data. Public G2 and Capterra feedback praises ease of use, but also points to data freshness, export limits, and setup friction. If those issues grow with more AI use, teams may lose trust in answers and fall back to Excel or ERP screens. The business risk is slower adoption after a big product push.</p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="start-title">
+      <div class="inner">
+        <p class="label">Where we'd start</p>
+        <h2 id="start-title">Two checks worth doing first</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <h3>Data freshness in every answer</h3>
+            <p>G2 review themes mention real-time data limits. Add last-sync, source health, and permission scope beside key dashboards and AI answers.</p>
+          </article>
+          <article class="start-card">
+            <h3>Connector setup smoke tests</h3>
+            <p>A Reddit user praised NetSuite setup but saw Sage access delays. Make ERP access, sample data, and upload checks visible before build starts.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal" aria-labelledby="proposal-title">
+      <div class="inner">
+        <p class="label">What we'd do</p>
+        <h2 id="proposal-title">A six-week data-platform pilot</h2>
+        <div class="proposal-wrap">
+          <aside class="team-card">
+            <h3>Dedicated squad under your PO/PM</h3>
+            <p>Small enough to onboard fast. Senior enough to own data-heavy work without creating extra load.</p>
+            <div class="roles" aria-label="Team roles">
+              <span class="role">Tech lead</span>
+              <span class="role">Data engineer</span>
+              <span class="role">Backend engineer</span>
+              <span class="role">QA automation</span>
+              <span class="role">DevOps support</span>
+              <span class="role">BA support</span>
+            </div>
+          </aside>
+          <div class="steps">
+            <div class="step">
+              <span class="num">1</span>
+              <p><strong>Map the hot paths</strong><span>Pick two ERP connectors, one AI query flow, and one high-use reporting path for the pilot.</span></p>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <p><strong>Build trust checks</strong><span>Add data freshness checks, permission tests, and golden datasets for Phocas AI answer validation.</span></p>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <p><strong>Automate connector QA</strong><span>Create smoke tests for source access, schema drift, upload files, and customer data edge cases.</span></p>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <p><strong>Show weekly progress</strong><span>Demo fixes each week and leave Phocas with test assets your team can keep using.</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cred" aria-labelledby="elinext-title">
+      <div class="inner">
+        <p class="label">Who is Elinext</p>
+        <h2 id="elinext-title">Senior product engineering capacity</h2>
+        <div class="cred-card">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For this work, the relevant facts are data engineering, backend, QA, DevOps, AI/ML, and dedicated teams that work under your product owner. Elinext is certified to ISO 9001 and ISO 27001. Named customers include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. That mix fits a bounded pilot where Phocas needs extra delivery power without losing control.</p>
+          <div class="tags" aria-label="Credibility tags">
+            <span class="tag">ISO 9001</span>
+            <span class="tag">ISO 27001</span>
+            <span class="tag">Dedicated team</span>
+            <span class="tag">No subcontractors</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="proof-title">
+      <div class="inner">
+        <p class="label">Proof</p>
+        <h2 id="proof-title">Similar work from Elinext</h2>
+        <div class="proof-grid">
+          <article class="case">
+            <img src="assets/case-sales-analytics.jpg" alt="Sales analytics case study cover">
+            <div class="case-body">
+              <h3>Sales analytics for a manufacturer</h3>
+              <p>Elinext built a web analytics system that processes daily dealer, customer, and sales records for regional insight.</p>
+              <a href="https://www.elinext.com/case-study/sales-analytics-application-for-chainsaw-manufacturer/">Read case study</a>
+            </div>
+          </article>
+          <article class="case">
+            <img src="assets/case-data-analytics.jpg" alt="Data analytics case study cover">
+            <div class="case-body">
+              <h3>Data analytics platform for finance</h3>
+              <p>A dedicated team built dashboards and machine-learning insight tools for financial-market data and risk analysis.</p>
+              <a href="https://www.elinext.com/case-study/data-analytics-platform-for-companies-operating-on-nigerian-financial-market/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk" aria-labelledby="talk-title">
+      <div class="inner">
+        <p class="label">Start the conversation</p>
+        <h2 id="talk-title">Worth a short technical call?</h2>
+        <p>We can bring a concrete pilot plan for Phocas data and AI work.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
