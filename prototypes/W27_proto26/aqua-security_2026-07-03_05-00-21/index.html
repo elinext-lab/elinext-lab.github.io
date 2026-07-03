@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aqua Security platform scaling brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/aqua-security_2026-07-03_05-00-21/">
+  <meta name="description" content="A short engineering brief for Aqua Security's platform scaling moment.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/aqua-security_2026-07-03_05-00-21/">
+  <meta property="og:title" content="Aqua Security platform scaling brief">
+  <meta property="og:description" content="A practical read on Aqua CNAPP scale, alerts, APIs, and delivery support.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/aqua-security_2026-07-03_05-00-21/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Aqua Security platform scaling brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Aqua Security platform scaling brief">
+  <meta name="twitter:description" content="A practical read on Aqua CNAPP scale, alerts, APIs, and delivery support.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/aqua-security_2026-07-03_05-00-21/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17212f;
+      --muted: #657489;
+      --paper: #ffffff;
+      --soft: #f5f8f8;
+      --aqua: #008a98;
+      --deep: #063843;
+      --line: #d9e4e6;
+      --warm: #fff4e8;
+      --orange: #e76f1d;
+      --green: #2e7d62;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .section {
+      width: 100%;
+      padding: 48px 18px;
+      background: var(--paper);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 56px 18px 52px;
+      color: #f7fbfb;
+      background: var(--deep);
+      border-bottom: 6px solid var(--orange);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #9ad9df;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      max-width: 900px;
+      margin-bottom: 16px;
+      font-size: 34px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: 25px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 17px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin-bottom: 0;
+      color: #d7e9eb;
+      font-size: 17px;
+    }
+
+    .read-box {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+      border-left: 5px solid var(--aqua);
+      border-radius: 8px;
+      background: #eaf4f5;
+      box-shadow: 0 10px 28px rgba(6, 56, 67, 0.08);
+    }
+
+    .read-box p { margin-bottom: 0; }
+
+    .start-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .start-card,
+    .proof-card {
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+    }
+
+    .start-card {
+      padding: 20px;
+      border-top: 4px solid var(--green);
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 10px;
+      color: var(--aqua);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      background: var(--soft);
+    }
+
+    .proposal-panel {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      width: 100%;
+      padding: 20px;
+      border: 1px solid #c7d9dc;
+      border-radius: 8px;
+      background: #fdfefe;
+      box-shadow: 0 16px 42px rgba(6, 56, 67, 0.12);
+    }
+
+    .team {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      align-content: start;
+    }
+
+    .role {
+      min-height: 72px;
+      padding: 14px;
+      border-radius: 8px;
+      color: #f7fbfb;
+      background: var(--deep);
+      font-weight: 700;
+    }
+
+    .role span {
+      display: block;
+      margin-top: 4px;
+      color: #b6dfe3;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .num {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: 50%;
+      color: #ffffff;
+      background: var(--orange);
+      font-weight: 800;
+    }
+
+    .step p,
+    .start-card p,
+    .proof-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: var(--deep);
+      background: #eaf4f5;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .elinext {
+      background: var(--warm);
+    }
+
+    .cred {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #f2d5b7;
+      border-radius: 8px;
+      background: #fffaf4;
+    }
+
+    .cred strong,
+    .proof-card strong { color: var(--deep); }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #e9eef0;
+    }
+
+    .proof-body { padding: 18px; }
+
+    .proof-card a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--aqua);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .contact {
+      color: #f7fbfb;
+      background: var(--deep);
+      text-align: center;
+    }
+
+    .contact p {
+      margin-bottom: 20px;
+      color: #cce7ea;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      color: #ffffff;
+      background: var(--orange);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .section { padding: 64px 28px; }
+      .hero { padding: 72px 28px 68px; }
+      h1 { font-size: 48px; }
+      h2 { font-size: 30px; }
+      .start-grid,
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proposal-panel {
+        grid-template-columns: 300px 1fr;
+        padding: 28px;
+      }
+      .team { grid-template-columns: 1fr; }
+    }
+
+    @media (min-width: 1040px) {
+      h1 { font-size: 56px; }
+      .proposal-panel { grid-template-columns: 340px 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Prepared for Naveen Kumar</p>
+        <h1>Helping Aqua scale platform work behind Aqua CNAPP</h1>
+        <p>Saw Aqua hiring a Senior Software Engineer for the platform group. That points to real backend scale work behind Aqua CNAPP, not just more feature polish.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Aqua is scaling the systems that power Aqua CNAPP. The platform role names multi-tenant services, event-driven systems, and performance. That fits Naveen's cloud, security, DevOps, and QA focus. Public users praise runtime depth and scanning, but mention alert tuning, API gaps, and hard navigation. If those gaps stay open, a strong security platform can still feel slow to adopt.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <h3>Alert-to-evidence paths need tests</h3>
+            <p>G2 users mention difficult navigation. Start with one alert path and add UI, API, and evidence checks around it.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <h3>Policy tuning needs examples</h3>
+            <p>AWS review text calls out alert noise and tuning. Pick one policy path and ship clearer examples with smoke tests.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-panel">
+          <div>
+            <h3>Dedicated squad under Aqua PM</h3>
+            <p>Six-week pilot with weekly demos, built to support the platform team without changing ownership.</p>
+            <div class="team" aria-label="Suggested team shape">
+              <div class="role">Tech lead <span>backend and delivery</span></div>
+              <div class="role">2 engineers <span>platform services</span></div>
+              <div class="role">QA / DevOps <span>test and release</span></div>
+              <div class="role">UX / docs <span>flows and examples</span></div>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="num">1</div>
+              <div>
+                <h3>Pick the first platform target</h3>
+                <p>Select one Aqua CNAPP workflow around alert evidence, integration setup, or scanner coverage, then freeze acceptance tests.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div>
+                <h3>Build with contract checks</h3>
+                <p>Add backend, API, or UI changes with fixtures that protect multi-tenant behavior and cloud-native edge cases.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div>
+                <h3>Harden the release path</h3>
+                <p>Cover Kubernetes, Docker, AWS, and docs examples with regression checks before changes reach support queues.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div>
+                <h3>Leave a clean handoff</h3>
+                <p>Deliver code, tests, run notes, and backlog detail so Aqua engineers can review and extend the work.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <div class="stack" aria-label="Relevant stack">
+          <span class="pill">Python</span>
+          <span class="pill">Java</span>
+          <span class="pill">Node.js</span>
+          <span class="pill">React</span>
+          <span class="pill">AWS</span>
+          <span class="pill">QA automation</span>
+          <span class="pill">DevOps</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section elinext">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build web, backend, QA, DevOps, data, and AI teams for product companies. For a security platform, our ISO 27001 and ISO 9001 practices matter. Named customers include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, and <strong>TRUMPF</strong>. The fit here is a focused squad that works inside Aqua's plan and raises delivery capacity without adding management load.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-ci-cd.jpg" alt="CI/CD optimization case study">
+            <div class="proof-body">
+              <h3>CI/CD optimization for infrastructure software</h3>
+              <p><strong>Outcome:</strong> development time was reduced from start to finish, with a more flexible release pipeline.</p>
+              <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-security-saas.jpg" alt="Security monitoring SaaS case study">
+            <div class="proof-body">
+              <h3>SaaS platform for M365 security monitoring</h3>
+              <p><strong>Outcome:</strong> security assessments moved from manual work to faster automated audit preparation.</p>
+              <a href="https://www.elinext.com/case-study/saas-platform-design/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact">
+      <div class="wrap">
+        <h2>Start the conversation</h2>
+        <p>Share one platform backlog item. We will map the pilot.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
