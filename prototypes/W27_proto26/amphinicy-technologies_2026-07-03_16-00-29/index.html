@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amphinicy Technologies SATCOM software brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/amphinicy-technologies_2026-07-03_16-00-29/">
+  <meta name="description" content="A focused software delivery brief for Amphinicy's SATCOM OSS, Blink, Monica, and ViSAGE work.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/amphinicy-technologies_2026-07-03_16-00-29/">
+  <meta property="og:title" content="Amphinicy Technologies SATCOM software delivery brief">
+  <meta property="og:description" content="Where extra Python, QA, and DevOps capacity can help Amphinicy first.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/amphinicy-technologies_2026-07-03_16-00-29/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Amphinicy Technologies SATCOM software delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Amphinicy Technologies SATCOM software delivery brief">
+  <meta name="twitter:description" content="Where extra Python, QA, and DevOps capacity can help Amphinicy first.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/amphinicy-technologies_2026-07-03_16-00-29/og-image.jpg">
+  <style>
+    :root {
+      --ink: #132033;
+      --muted: #5a687a;
+      --line: #d7e0e7;
+      --paper: #f7fafb;
+      --white: #ffffff;
+      --navy: #10233d;
+      --blue: #186c9c;
+      --teal: #12867c;
+      --orange: #f26f21;
+      --green: #6f9d52;
+      --soft: #eaf4f4;
+      --warm: #fff4eb;
+      --shadow: 0 18px 50px rgba(17, 35, 61, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    body { min-width: 0; }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      background: var(--paper);
+    }
+
+    .section.white { background: var(--white); }
+    .section.soft { background: var(--soft); }
+    .section.dark { background: var(--navy); color: var(--white); }
+
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+
+    .narrow {
+      width: min(100%, 840px);
+      margin: 0 auto;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      max-width: 820px;
+      margin-bottom: 18px;
+      font-size: clamp(2.15rem, 6vw, 4.6rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 26px;
+      text-align: center;
+      font-size: clamp(1.65rem, 3.8vw, 2.5rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      line-height: 1.25;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .dark p,
+    .hero p { color: #d9e5ee; }
+
+    .hero {
+      position: relative;
+      padding: 74px 18px 58px;
+      background:
+        linear-gradient(135deg, rgba(16,35,61,0.98), rgba(24,108,156,0.9)),
+        #10233d;
+      color: var(--white);
+    }
+
+    .hero .wrap {
+      display: grid;
+      gap: 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      margin-bottom: 18px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 999px;
+      color: #eef8fb;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      font-size: 1.1rem;
+    }
+
+    .hero-panel {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.08);
+      padding: 18px;
+    }
+
+    .hero-panel strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+
+    .read-box {
+      max-width: 76ch;
+      margin: 0 auto;
+      border-left: 5px solid var(--teal);
+      border-radius: 8px;
+      background: #eef8f6;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      font-size: 1.03rem;
+      color: #27394d;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      padding: 20px;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--orange);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .plan {
+      display: grid;
+      gap: 18px;
+    }
+
+    .team-card,
+    .step-card,
+    .stack-card {
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.08);
+      padding: 20px;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .role {
+      min-height: 66px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.11);
+      padding: 12px;
+      font-weight: 700;
+    }
+
+    .role small {
+      display: block;
+      margin-top: 4px;
+      color: #b8c9d8;
+      font-weight: 400;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .num {
+      display: inline-grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .step-card h3 { color: #fff; }
+    .step-card p { margin-bottom: 0; }
+
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 12px 0 0;
+      list-style: none;
+    }
+
+    .stack-list li,
+    .pill {
+      border-radius: 999px;
+      background: rgba(255,255,255,0.13);
+      padding: 8px 11px;
+      color: #f3fbff;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .cred {
+      max-width: 78ch;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      padding: 24px;
+    }
+
+    .cred p { color: #27394d; }
+
+    .logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .logos strong {
+      border-radius: 999px;
+      background: var(--warm);
+      padding: 8px 12px;
+      color: #7b3a10;
+      font-size: 0.9rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #dce6ed;
+    }
+
+    .case-body { padding: 18px; }
+
+    .case-body p { margin-bottom: 14px; }
+
+    .case-body a {
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .talk {
+      text-align: center;
+    }
+
+    .talk p {
+      max-width: 520px;
+      margin: 0 auto 22px;
+      color: #d9e5ee;
+    }
+
+    .button {
+      display: inline-flex;
+      max-width: 100%;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--orange);
+      padding: 13px 20px;
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 12px 26px rgba(242,111,33,0.26);
+    }
+
+    @media (min-width: 760px) {
+      .hero .wrap {
+        grid-template-columns: minmax(0, 1.7fr) minmax(260px, 0.8fr);
+        align-items: end;
+      }
+
+      .hero-panel {
+        align-self: stretch;
+        display: grid;
+        align-content: center;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .plan {
+        grid-template-columns: minmax(250px, 0.8fr) minmax(0, 1.2fr);
+      }
+
+      .stack-card {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .section { padding: 44px 16px; }
+      .hero { padding-top: 56px; }
+      .team-grid { grid-template-columns: 1fr; }
+      .step-card { grid-template-columns: 1fr; }
+      .num { margin-bottom: 2px; }
+      .eyebrow { font-size: 0.72rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Prepared for Amphinicy Technologies</span>
+        <h1>A focused delivery plan for Amphinicy's SATCOM software work</h1>
+        <p class="hero-copy">Saw Amphinicy is hiring a Fullstack Python Developer for a multi-orbit, multi-frequency SATCOM OSS while your teams push Blink, Monica, and ViSAGE. This brief maps where extra delivery capacity can help first.</p>
+      </div>
+      <aside class="hero-panel" aria-label="Why this brief exists">
+        <strong>Why we're here</strong>
+        <p>Blink, Monica, and ViSAGE all join deep satellite know-how with cloud and operator software. The next load looks like Python services, release flow, and product UI.</p>
+      </aside>
+    </div>
+  </header>
+
+  <main>
+    <section class="section white" aria-labelledby="our-read">
+      <div class="wrap">
+        <h2 id="our-read">Our read</h2>
+        <div class="read-box">
+          <p>That role points to a delivery push around SATCOM OSS, not a simple web hire. Amphinicy is building across Blink, Monica, and ViSAGE, where DSP, cloud deployment, and operator UI meet. Blink already covers payload reception, uplink, and TT&C, while ViSAGE brings 5G-NTN and cloud operations into the same story. The likely bottleneck is turning modem work into stable Python services, APIs, tests, and release paths without pulling senior DSP architects away from signal work. If that gap stays, demos and customer pilots can slow down even when the modem science is ready.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" aria-labelledby="where-start">
+      <div class="wrap narrow">
+        <h2 id="where-start">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Blink and Monica pages both carry render-blocking CSS and heavy image work. Split critical CSS first, then ship responsive hero images before the next demo push.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Monica's optional modules and support paths should map to API states, tests, and operator flows before more Python feature code lands.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark" aria-labelledby="what-do">
+      <div class="wrap">
+        <h2 id="what-do">What we'd do</h2>
+        <div class="plan">
+          <article class="team-card">
+            <h3>Engagement model</h3>
+            <p>A dedicated squad works under Amphinicy's Product Owner and Ehsan's architecture guardrails.</p>
+            <div class="team-grid" aria-label="Team shape">
+              <div class="role">Python backend<small>services, APIs, tests</small></div>
+              <div class="role">Full-stack engineer<small>React UI and API joins</small></div>
+              <div class="role">DevOps and QA<small>CI, smoke checks, release flow</small></div>
+              <div class="role">C/C++ or Java help<small>integration edge cases</small></div>
+            </div>
+          </article>
+          <div class="steps">
+            <article class="step-card">
+              <span class="num">1</span>
+              <div>
+                <h3>Map the delivery slice</h3>
+                <p>Map Blink, Monica, and OSS data paths, then mark which endpoints need Python ownership first.</p>
+              </div>
+            </article>
+            <article class="step-card">
+              <span class="num">2</span>
+              <div>
+                <h3>Build tested backend slices</h3>
+                <p>Build backend pieces with tests around constellation simulation, job scheduling, and operator-facing API contracts.</p>
+              </div>
+            </article>
+            <article class="step-card">
+              <span class="num">3</span>
+              <div>
+                <h3>Harden the release path</h3>
+                <p>Add cloud smoke checks, improve CI feedback, and remove obvious public-page front-end load waste.</p>
+              </div>
+            </article>
+            <article class="step-card">
+              <span class="num">4</span>
+              <div>
+                <h3>Demo and decide</h3>
+                <p>Demo a working slice, hand over docs, and decide whether to scale into a longer squad.</p>
+              </div>
+            </article>
+          </div>
+          <article class="stack-card">
+            <h3>Relevant stack</h3>
+            <ul class="stack-list">
+              <li>Python</li>
+              <li>React</li>
+              <li>Java</li>
+              <li>C/C++</li>
+              <li>DevOps</li>
+              <li>QA automation</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white" aria-labelledby="who">
+      <div class="wrap">
+        <h2 id="who">Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Amphinicy, the fit is a senior team that can cover Python, React, Java, C/C++, QA, and DevOps. We hold ISO 9001 and ISO 27001, useful for work around critical infrastructure and telecom systems. Named customers include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, and <strong>TRUMPF</strong>. That base supports the dedicated squad above: focused delivery help while your architects keep product control.</p>
+          <div class="logos" aria-label="Selected customers">
+            <strong>Siemens</strong>
+            <strong>Broadcom</strong>
+            <strong>Volkswagen</strong>
+            <strong>TRUMPF</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" aria-labelledby="proof">
+      <div class="wrap">
+        <h2 id="proof">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-network-monitoring.jpg" alt="Network monitoring case study cover">
+            <div class="case-body">
+              <h3>Telecom network monitoring software</h3>
+              <p>Elinext helped build a system for complex telecom infrastructure, with real-time data, control, and reporting.</p>
+              <a href="https://www.elinext.com/case-study/network-monitoring-software/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-ci-cd.jpg" alt="CI/CD optimization case study cover">
+            <div class="case-body">
+              <h3>CI/CD for infrastructure software</h3>
+              <p>A small Elinext team improved release flow for an infrastructure provider and reduced development time.</p>
+              <a href="https://www.elinext.com/case-study/ci-cd-optimization-automatization-for-infrastructure-management-solutions-provider/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark talk" aria-labelledby="talk">
+      <div class="wrap narrow">
+        <h2 id="talk">Talk through the pilot</h2>
+        <p>Bring one hard delivery slice. We can shape the first squad around it.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
