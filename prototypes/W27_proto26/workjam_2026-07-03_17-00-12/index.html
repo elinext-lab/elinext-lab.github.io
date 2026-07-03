@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WorkJam Java Support Brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/workjam_2026-07-03_17-00-12/">
+  <meta name="description" content="A short delivery brief for WorkJam's Java support and frontline app reliability moment.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/workjam_2026-07-03_17-00-12/">
+  <meta property="og:title" content="WorkJam Java support brief">
+  <meta property="og:description" content="A practical brief for WorkJam's Java support and mobile reliability moment.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/workjam_2026-07-03_17-00-12/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="WorkJam Java support brief — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="WorkJam Java support brief">
+  <meta name="twitter:description" content="A practical brief for WorkJam's Java support and mobile reliability moment.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/workjam_2026-07-03_17-00-12/og-image.jpg">
+  <style>
+    :root {
+      --ink: #16202a;
+      --muted: #596575;
+      --line: #dbe2e8;
+      --paper: #fffdf8;
+      --white: #ffffff;
+      --yellow: #ffd43d;
+      --gold: #ffb800;
+      --teal: #18a99a;
+      --coral: #f2634a;
+      --blue: #263b73;
+      --soft-blue: #ecf3ff;
+      --soft-teal: #e8fbf7;
+      --soft-yellow: #fff6cf;
+      --shadow: 0 18px 50px rgba(28, 44, 65, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: 100%;
+      background:
+        linear-gradient(135deg, rgba(255, 212, 61, 0.22), transparent 36rem),
+        linear-gradient(315deg, rgba(24, 169, 154, 0.16), transparent 32rem),
+        var(--paper);
+    }
+
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+
+    section {
+      position: relative;
+      padding: 54px 0;
+      background: transparent;
+    }
+
+    .hero {
+      padding: 46px 0 58px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid rgba(38, 59, 115, 0.2);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--blue);
+      font-size: 0.79rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 4px rgba(255, 184, 0, 0.18);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 13ch;
+      margin: 22px 0 18px;
+      font-size: clamp(2.35rem, 8vw, 5.7rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+      color: var(--ink);
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: clamp(1.55rem, 5vw, 2.5rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.02rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 66ch;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.14rem);
+    }
+
+    .why {
+      max-width: 68ch;
+      margin: 0;
+      padding: 16px 18px;
+      border-left: 5px solid var(--coral);
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: var(--shadow);
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .read-card {
+      width: 100%;
+      max-width: 84ch;
+      margin: 0 auto;
+      padding: clamp(22px, 4vw, 34px);
+      border: 1px solid rgba(38, 59, 115, 0.18);
+      border-left: 7px solid var(--teal);
+      border-radius: 8px;
+      background: var(--soft-blue);
+      box-shadow: var(--shadow);
+    }
+
+    .read-card p {
+      margin: 0;
+      color: #273548;
+      font-size: 1.05rem;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+      width: 100%;
+    }
+
+    .start-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .note-card {
+      min-width: 0;
+      padding: 22px;
+      border: 1px solid rgba(38, 59, 115, 0.14);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 12px 34px rgba(28, 44, 65, 0.09);
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--coral);
+      font-size: 0.78rem;
+      font-weight: 850;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .note-card p,
+    .who p,
+    .cta p,
+    .proof-card p {
+      color: var(--muted);
+    }
+
+    .plan {
+      padding: clamp(24px, 4vw, 38px);
+      border-radius: 8px;
+      background: #172236;
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .plan h2 {
+      color: var(--white);
+    }
+
+    .plan-intro {
+      max-width: 70ch;
+      margin: 0 auto 24px;
+      text-align: center;
+      color: #d9e4ef;
+    }
+
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 0 24px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .team li,
+    .customer-pill {
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .team li {
+      padding: 9px 12px;
+      background: rgba(255, 212, 61, 0.14);
+      color: var(--yellow);
+      border: 1px solid rgba(255, 212, 61, 0.38);
+      font-size: 0.9rem;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      min-width: 0;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--yellow);
+      color: #172236;
+      font-weight: 900;
+    }
+
+    .step-title {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--white);
+      font-weight: 850;
+    }
+
+    .step p {
+      margin: 0;
+      color: #cbd8e6;
+    }
+
+    .stack {
+      margin: 22px auto 0;
+      color: #d9e4ef;
+      text-align: center;
+      font-size: 0.96rem;
+    }
+
+    .who {
+      padding: clamp(24px, 4vw, 32px);
+      border: 1px solid rgba(38, 59, 115, 0.14);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 12px 34px rgba(28, 44, 65, 0.08);
+    }
+
+    .customer-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .customer-pill {
+      padding: 8px 11px;
+      background: var(--soft-yellow);
+      color: #5a4300;
+      font-size: 0.85rem;
+    }
+
+    .proof-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      border: 1px solid rgba(38, 59, 115, 0.14);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 12px 34px rgba(28, 44, 65, 0.09);
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 8;
+      object-fit: cover;
+      background: var(--soft-teal);
+    }
+
+    .proof-body {
+      padding: 20px;
+    }
+
+    .proof-card a {
+      display: inline-block;
+      margin-top: 8px;
+      color: var(--blue);
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      padding-bottom: 72px;
+    }
+
+    .cta-box {
+      padding: clamp(28px, 5vw, 42px);
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--soft-yellow), var(--soft-teal));
+      border: 1px solid rgba(38, 59, 115, 0.12);
+      box-shadow: var(--shadow);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: min(100%, 250px);
+      min-height: 48px;
+      margin-top: 12px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--blue);
+      color: var(--white);
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .hero {
+        padding-top: 70px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .hero-layout {
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 46px;
+        align-items: center;
+      }
+
+      h1 {
+        max-width: 15ch;
+        font-size: clamp(3.6rem, 5.1vw, 4.6rem);
+        line-height: 1.02;
+      }
+
+      .hero-copy {
+        padding-bottom: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap hero-layout">
+        <div>
+          <span class="eyebrow">WorkJam delivery brief</span>
+          <h1>Help WorkJam steady backend delivery while mobile trust is under pressure</h1>
+        </div>
+        <div>
+          <p class="hero-copy">WorkJam touches schedules, messages, tasks, training, and earned wage access. When daily work sits in one app, every release needs strong backend support and tight mobile QA.</p>
+          <p class="why">Why we're here: saw WorkJam is hiring an ELIITE Java Developer. That points to support load around Java services, web architecture, and customer-facing mobile issues.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p>The Java role points to a clear delivery moment. WorkJam is growing support for a distributed web architecture across iOS, Android, tablet, and web. Recent store reviews name login loops, missing timecards, noisy notifications, and a harder schedule view after the June UI update. That is not just app polish. It can turn into support load and buyer risk. If support keeps absorbing these issues alone, roadmap work and customer fixes can slow together.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="note-card">
+            <span class="label">What we noticed</span>
+            <h3>Login paths need a failure map</h3>
+            <p>Map login and session paths by tenant, device, and release version. Build a small matrix for SSO, kiosk links, Face ID, and password resets.</p>
+          </article>
+          <article class="note-card">
+            <span class="label">Useful next step</span>
+            <h3>Use old task time as baseline</h3>
+            <p>Review the schedule, timecard, and notification journeys changed in the latest UI. Keep old task time as the baseline before more changes ship.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="plan">
+          <h2>What we'd do</h2>
+          <p class="plan-intro">We'd start with a dedicated squad under WorkJam's product and support leads. The pilot runs six weeks, with a weekly demo and one high-noise flow fixed each sprint.</p>
+          <ul class="team" aria-label="Team shape">
+            <li>Java Tech Lead</li>
+            <li>2 Java Engineers</li>
+            <li>QA Automation</li>
+            <li>DevOps</li>
+          </ul>
+          <div class="steps">
+            <article class="step">
+              <span class="num">1</span>
+              <div>
+                <span class="step-title">Trace failure paths</span>
+                <p>Trace login, schedule, timecard, and notification failures from mobile event to Java service response.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">2</span>
+              <div>
+                <span class="step-title">Add regression cover</span>
+                <p>Add focused regression tests around tenant settings, session expiry, shift changes, and push-notification routing paths.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">3</span>
+              <div>
+                <span class="step-title">Stabilize loud flows</span>
+                <p>Stabilize one high-noise flow each sprint, with demos tied to support tickets and store-review themes.</p>
+              </div>
+            </article>
+            <article class="step">
+              <span class="num">4</span>
+              <div>
+                <span class="step-title">Leave the team stronger</span>
+                <p>Hand over runbooks, dashboards, and test packs so ELIITE can reduce repeat customer issues faster.</p>
+              </div>
+            </article>
+          </div>
+          <p class="stack"><strong>Relevant stack:</strong> Java, Spring, React, PostgreSQL, REST APIs, Jenkins.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="who">
+          <p>Elinext is a full-cycle software development company, active since 1997. We have about 700 in-house specialists, with no freelancers or subcontractors. Our teams cover Java, React, mobile, QA automation, DevOps, and AI-assisted delivery. We are ISO 9001 and ISO 27001 certified, with work for Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. That fits a support-heavy Java pilot where release quality and security both matter. You keep ownership with your PO, and we add the hands needed to move faster.</p>
+          <div class="customer-row" aria-label="Named customers">
+            <strong class="customer-pill">Siemens</strong>
+            <strong class="customer-pill">Broadcom</strong>
+            <strong class="customer-pill">Volkswagen</strong>
+            <strong class="customer-pill">TRUMPF</strong>
+            <strong class="customer-pill">TUI</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-employees.jpg" alt="ESG employee software case study visual">
+            <div class="proof-body">
+              <h3>ESG Software for Employees</h3>
+              <p>Elinext built employee software with Java, Spring, and Angular. The client improved staff management by helping people be heard.</p>
+              <a href="https://www.elinext.com/case-study/esg-software-for-emloyees/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-testing.jpg" alt="Automated testing case study visual">
+            <div class="proof-body">
+              <h3>Automated Testing Platform</h3>
+              <p>Elinext ran QA automation for a cloud localization platform. The team helped protect browser coverage for global clients.</p>
+              <a href="https://www.elinext.com/case-study/automated-testing-website-translation/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="cta-box">
+          <h2>Start with one flow</h2>
+          <p>We can scope a pilot around ELIITE support.</p>
+          <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
