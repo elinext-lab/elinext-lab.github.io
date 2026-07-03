@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delaplex backend and AI delivery brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/delaplex_2026-07-03_17-12-01/">
+  <meta name="description" content="A short engineering brief for Delaplex, focused on backend services, AI quality, search, and delivery capacity.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/delaplex_2026-07-03_17-12-01/">
+  <meta property="og:title" content="Delaplex: clearing a backend AI bottleneck">
+  <meta property="og:description" content="A practical brief on backend delivery, AI quality, search, and cloud reliability for Delaplex.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/delaplex_2026-07-03_17-12-01/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Delaplex: clearing a backend AI bottleneck - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Delaplex: clearing a backend AI bottleneck">
+  <meta name="twitter:description" content="A practical brief on backend delivery, AI quality, search, and cloud reliability for Delaplex.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/delaplex_2026-07-03_17-12-01/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172126;
+      --muted: #647178;
+      --paper: #fbfaf6;
+      --white: #ffffff;
+      --navy: #101b2f;
+      --blue: #164b7a;
+      --teal: #126a63;
+      --green-soft: #e5f2ec;
+      --amber: #f4a742;
+      --coral: #e56d55;
+      --line: #dde4e2;
+      --soft: #f2f6f4;
+      --shadow: 0 18px 52px rgba(23, 33, 38, .10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    body {
+      font-size: 16px;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .section {
+      width: 100%;
+      padding: 54px 18px;
+      background: var(--paper);
+    }
+
+    .inner {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 84vh;
+      display: grid;
+      align-items: center;
+      color: var(--white);
+      background:
+        linear-gradient(135deg, rgba(16, 27, 47, .96), rgba(18, 106, 99, .88)),
+        radial-gradient(circle at 20% 20%, rgba(244, 167, 66, .22), transparent 38%),
+        var(--navy);
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .kicker,
+    .pill,
+    .tag {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      align-items: center;
+      border-radius: 999px;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .kicker {
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, .32);
+      color: rgba(255, 255, 255, .88);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 13ch;
+      margin-top: 18px;
+      font-size: clamp(43px, 10vw, 84px);
+      line-height: .96;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 66ch;
+      color: rgba(255, 255, 255, .88);
+      font-size: clamp(18px, 4vw, 22px);
+    }
+
+    .hero-card {
+      display: grid;
+      gap: 14px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, .22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .10);
+      box-shadow: 0 22px 50px rgba(0, 0, 0, .18);
+    }
+
+    .hero-card strong {
+      color: #ffd28a;
+    }
+
+    .label {
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 850;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-top: 8px;
+      text-align: center;
+      font-size: clamp(30px, 7vw, 48px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .our-read {
+      background: var(--green-soft);
+    }
+
+    .read-card {
+      max-width: 86ch;
+      margin: 28px auto 0;
+      padding: 24px;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .88);
+      box-shadow: var(--shadow);
+      color: #243036;
+      font-size: 18px;
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .start-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 10px 30px rgba(23, 33, 38, .06);
+    }
+
+    .start-card h3 {
+      margin-bottom: 8px;
+      color: var(--blue);
+      font-size: 17px;
+    }
+
+    .proposal {
+      background: #132f37;
+      color: var(--white);
+    }
+
+    .proposal .label {
+      color: #f7c979;
+    }
+
+    .proposal-wrap {
+      display: grid;
+      gap: 22px;
+      margin-top: 28px;
+    }
+
+    .team-card,
+    .steps {
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .16);
+    }
+
+    .team-card {
+      padding: 22px;
+    }
+
+    .team-card p {
+      color: rgba(255, 255, 255, .84);
+    }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .pill {
+      padding: 7px 10px;
+      background: rgba(244, 167, 66, .16);
+      color: #ffdfaa;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .steps {
+      display: grid;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 14px;
+      padding: 18px;
+      border-top: 1px solid rgba(255, 255, 255, .14);
+    }
+
+    .step:first-child {
+      border-top: 0;
+    }
+
+    .num {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--amber);
+      color: #1b2634;
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin-bottom: 4px;
+      font-size: 18px;
+    }
+
+    .step p {
+      color: rgba(255, 255, 255, .78);
+    }
+
+    .who {
+      background: var(--white);
+    }
+
+    .who-box {
+      max-width: 86ch;
+      margin: 28px auto 0;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      box-shadow: var(--shadow);
+    }
+
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      padding: 6px 10px;
+      background: var(--white);
+      color: var(--blue);
+      border: 1px solid #cfdcdd;
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 12px 36px rgba(23, 33, 38, .08);
+    }
+
+    .case-card img {
+      aspect-ratio: 2.3 / 1;
+      object-fit: cover;
+      background: var(--soft);
+    }
+
+    .case-body {
+      display: grid;
+      gap: 10px;
+      padding: 20px;
+    }
+
+    .case-body a {
+      color: var(--teal);
+      font-weight: 850;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .cta {
+      text-align: center;
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    .cta p {
+      margin-top: 10px;
+      color: rgba(255, 255, 255, .78);
+    }
+
+    .button {
+      display: inline-flex;
+      max-width: 100%;
+      justify-content: center;
+      margin-top: 22px;
+      padding: 13px 18px;
+      border-radius: 999px;
+      background: var(--amber);
+      color: #172126;
+      font-weight: 900;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 72px 28px;
+      }
+
+      .proposal-wrap,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .start-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(320px, .72fr);
+      }
+
+      .hero-card {
+        align-self: end;
+      }
+    }
+
+    @media (min-width: 1120px) {
+      .section {
+        padding-top: 86px;
+        padding-bottom: 86px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="section hero">
+      <div class="inner hero-grid">
+        <div>
+          <span class="kicker">Backend and AI delivery brief</span>
+          <h1>Delaplex can clear its next backend AI bottleneck</h1>
+          <p class="why">Saw the Backend Service Engineer hiring push. The role blends Python, FastAPI, AWS serverless, search, GenAI, RAG, testing, and monitoring. That reads like a complex delivery lane, not a single-ticket gap.</p>
+        </div>
+        <div class="hero-card">
+          <p><strong>Prepared for Nitin Sachdeva</strong>, President at Delaplex.</p>
+          <p>Focus: backend services, AI quality, search freshness, and cloud release confidence.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section our-read">
+      <div class="inner">
+        <div class="label">Our read</div>
+        <h2>The signal points to senior delivery load</h2>
+        <p class="read-card">The hiring signal says Delaplex is scaling backend and AI delivery around a complex application. The public role asks for Python, FastAPI, AWS Lambda, SQS, Kubernetes, Elasticsearch, GenAI, and RAG in one senior engineer. That mix points to service boundaries, data consistency, search freshness, and test confidence. If the team waits for one hard hire, platform work can slow client delivery. The safer move is a small senior pod that clears one backend or AI reliability bottleneck while Delaplex keeps product control.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner">
+        <div class="label">Where we'd start</div>
+        <h2>Two useful first checks</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <h3>Role shape is too broad</h3>
+            <p>The backend role spans APIs, queues, search, databases, AWS, GenAI, and observability. Split the work into one owned service boundary before adding more people.</p>
+          </div>
+          <div class="start-card">
+            <h3>Buyer page can prove the craft</h3>
+            <p>The Digital Engineering page shows server, script, image, and third-party load work. A short performance pass would support the AI-accelerated engineering message.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="inner">
+        <div class="label">What we'd do</div>
+        <h2>A focused pod under your product lead</h2>
+        <div class="proposal-wrap">
+          <div class="team-card">
+            <p>Engagement model: a dedicated squad under Delaplex's PO, platform lead, or delivery manager for a 6-week pilot.</p>
+            <div class="pills">
+              <span class="pill">1 backend architect</span>
+              <span class="pill">2 senior backend engineers</span>
+              <span class="pill">1 AI QA engineer</span>
+              <span class="pill">0.5 DevOps engineer</span>
+            </div>
+            <div class="pills">
+              <span class="pill">Python</span>
+              <span class="pill">FastAPI</span>
+              <span class="pill">AWS</span>
+              <span class="pill">Docker</span>
+              <span class="pill">Kubernetes</span>
+              <span class="pill">OpenSearch</span>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="num">1</div>
+              <div><h3>Pick one service boundary</h3><p>Map APIs, queues, data stores, search indexes, owner teams, and release risks for the target Delaplex application.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div><h3>Harden backend flow</h3><p>Improve FastAPI contracts, SQS retry behavior, search freshness, and data consistency tests around the chosen workflow.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div><h3>Add AI quality checks</h3><p>Create RAG test sets, blocked-data checks, prompt regression runs, and Playwright coverage for key user paths.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div><h3>Leave a repeatable path</h3><p>Ship runbooks, dashboards, and CI checks Delaplex teams can reuse across the next backend and AI workstream.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section who">
+      <div class="inner">
+        <div class="label">Who is Elinext</div>
+        <h2>Built for this kind of work</h2>
+        <div class="who-box">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Delaplex, the fit is backend, AI/ML, QA automation, DevOps, and dedicated-team work under your PM. Elinext holds ISO 9001 and ISO 27001, which matters when teams touch client systems and data. Our named customers include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. That gives the proposed pod a practical base for secure backend and AI delivery.</p>
+          <div class="customer-list">
+            <span class="tag">ISO 9001</span>
+            <span class="tag">ISO 27001</span>
+            <span class="tag">Siemens</span>
+            <span class="tag">Broadcom</span>
+            <span class="tag">Volkswagen</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner">
+        <div class="label">Proof</div>
+        <h2>Relevant delivered work</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-backend.jpg" alt="Backend application development case study image">
+            <div class="case-body">
+              <h3>Backend App Development for Banking</h3>
+              <p>Elinext used Elasticsearch, Kafka Connect, Docker, and Kubernetes to improve backend search and data sync.</p>
+              <a href="https://www.elinext.com/case-study/backend-app-development-for-banking/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-qa-data.jpg" alt="Automation QA and data platform case study image">
+            <div class="case-body">
+              <h3>Automation QA for Data Privacy</h3>
+              <p>Elinext added automated QA across data sources, AWS, Python, Spark, Airflow, Angular, and MongoDB.</p>
+              <a href="https://www.elinext.com/case-study/automation-qa-for-healthcare-data-privacy/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="inner">
+        <div class="label">Start</div>
+        <h2>Clear one blocker</h2>
+        <p>Pick one backend or AI workflow for a focused review.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
