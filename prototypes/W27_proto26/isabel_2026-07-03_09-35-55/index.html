@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Isabel multibanking engineering brief</title>
+  <meta name="description" content="A short engineering brief for Isabel's Multibanking delivery, prepared by Elinext.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/isabel_2026-07-03_09-35-55/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/isabel_2026-07-03_09-35-55/">
+  <meta property="og:title" content="Isabel Multibanking delivery brief">
+  <meta property="og:description" content="A practical squad plan for Isabel 6 domain refactoring, tests, and release telemetry.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/isabel_2026-07-03_09-35-55/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Isabel Multibanking delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Isabel Multibanking delivery brief">
+  <meta name="twitter:description" content="A practical squad plan for Isabel 6 domain refactoring, tests, and release telemetry.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/isabel_2026-07-03_09-35-55/og-image.jpg">
+  <style>
+    :root {
+      --ink: #132033;
+      --muted: #5f6f7f;
+      --paper: #ffffff;
+      --mist: #edf4f5;
+      --line: #d8e3e5;
+      --navy: #11294a;
+      --teal: #0f766e;
+      --orange: #f27a1a;
+      --green: #dceee8;
+      --cream: #fbf7ef;
+      --shadow: 0 18px 48px rgba(17, 41, 74, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .section { width: 100%; padding: 56px 18px; background: var(--paper); }
+    .section:nth-of-type(odd) { background: #f7faf9; }
+    .wrap { width: min(100%, 1100px); margin: 0 auto; }
+    .narrow { width: min(100%, 820px); margin: 0 auto; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 0.84rem;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 3px;
+      background: var(--orange);
+      border-radius: 3px;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      font-size: clamp(2.1rem, 6vw, 4.7rem);
+      line-height: 1.02;
+      max-width: 980px;
+      margin-bottom: 22px;
+    }
+    h2 {
+      text-align: center;
+      font-size: clamp(1.75rem, 4vw, 2.8rem);
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    h3 {
+      font-size: 1.05rem;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    p { color: var(--muted); }
+    .section.hero {
+      min-height: 88vh;
+      display: grid;
+      align-items: center;
+      background: var(--navy);
+      color: white;
+      padding: 70px 18px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("assets/case-cash-liquidity.jpg") center/cover;
+      opacity: 0.16;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 10px;
+      background: var(--orange);
+    }
+    .hero .wrap { position: relative; z-index: 1; }
+    .hero p {
+      color: #e9f3f2;
+      max-width: 760px;
+      font-size: clamp(1rem, 2.2vw, 1.22rem);
+    }
+    .hero .tagline {
+      color: #bfe4df;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+    .read-card {
+      max-width: 74ch;
+      margin: 0 auto;
+      background: var(--cream);
+      border: 1px solid #eadcc7;
+      border-left: 7px solid var(--orange);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    .read-card p { margin-bottom: 0; color: #344454; }
+    .start-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .start-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 10px 28px rgba(19, 32, 51, 0.06);
+    }
+    .label {
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .section.proposal {
+      background: var(--navy);
+      color: white;
+    }
+    .section.proposal h2,
+    .section.proposal p { color: white; }
+    .proposal p.sub { color: #d5e4e8; text-align: center; max-width: 760px; margin: 0 auto 28px; }
+    .squad {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom: 26px;
+    }
+    .role {
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 14px;
+      min-height: 72px;
+      display: grid;
+      align-content: center;
+    }
+    .role strong { display: block; color: white; font-size: 0.98rem; }
+    .role span { color: #b9cad2; font-size: 0.88rem; }
+    .steps {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .step {
+      background: white;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+    .num {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+    }
+    .section.proposal .step p { margin-bottom: 0; color: var(--muted); }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+    .stack span, .pill {
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      color: var(--ink);
+    }
+    .about {
+      background: var(--green);
+    }
+    .about-card {
+      max-width: 860px;
+      margin: 0 auto;
+      background: white;
+      border: 1px solid #c6ddd4;
+      border-radius: 8px;
+      padding: 26px;
+    }
+    .customer-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 24px;
+    }
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 12px 32px rgba(17, 41, 74, 0.08);
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+    .case-body { padding: 20px; }
+    .case-body a {
+      display: inline-block;
+      color: var(--teal);
+      font-weight: 700;
+      margin-top: 10px;
+      text-decoration: none;
+    }
+    .talk {
+      text-align: center;
+      background: var(--navy);
+      color: white;
+    }
+    .talk h2, .talk p { color: white; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    @media (min-width: 720px) {
+      .section { padding: 76px 28px; }
+      .start-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .squad { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero { min-height: 82vh; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero section">
+    <div class="wrap">
+      <p class="tagline">Prepared for Joeri Maes and the Data & AI team</p>
+      <h1>Helping Isabel scale multibanking delivery without slowing core teams</h1>
+      <p>Saw the Software Development Engineer role focused on improving Isabel's Multibanking solution, breaking monoliths into clear domains, and lifting CI/CD, observability, and automated testing. This brief starts there.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p>The role says Isabel is moving the Multibanking solution from tight coupling toward clear domains and hexagonal architecture. That is not only code clean-up. It is a delivery pressure signal. Isabel 6 and Isabel Connect sit between banks, ERP tools, software partners, and users who expect reliable payment and bank-data flows. When one team must protect live workflows while refactoring Java, Oracle, CI/CD, and observability, small delays become release risk. Joeri's Data & AI remit adds one more need: cleaner operational data from the same work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <div class="label">Observed</div>
+            <p>Your job detail names domain boundaries and hexagonal architecture. Start with one Multibanking domain map, then mark every bank, file, token, and ERP touchpoint that blocks a safe refactor.</p>
+          </div>
+          <div class="start-card">
+            <div class="label">Observed</div>
+            <p>App reviews ask for search by amount or name, fresher bank data, and richer mobile detail. Add those themes to telemetry before more mobile work is scoped.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <p class="sub">Engagement model: a dedicated squad under Isabel's PO or PM, built for one bounded Multibanking slice and weekly demo cadence.</p>
+        <div class="squad" aria-label="Suggested squad">
+          <div class="role"><strong>Tech Lead</strong><span>Java/API</span></div>
+          <div class="role"><strong>2 Engineers</strong><span>Backend domains</span></div>
+          <div class="role"><strong>QA Engineer</strong><span>Automation</span></div>
+          <div class="role"><strong>DevOps</strong><span>CI/CD telemetry</span></div>
+          <div class="role"><strong>Data Lens</strong><span>Events and quality</span></div>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="num">1</div><div><h3>Map the domain</h3><p>Pick one Isabel 6 flow and document its banks, files, mandates, services, tests, data events, and release risks.</p></div></div>
+          <div class="step"><div class="num">2</div><div><h3>Protect the flow</h3><p>Add regression, contract, and smoke tests around the selected path before changing code or CI behavior.</p></div></div>
+          <div class="step"><div class="num">3</div><div><h3>Refactor safely</h3><p>Move one coupled module toward clearer ports and adapters, with rollback points and weekly demos.</p></div></div>
+          <div class="step"><div class="num">4</div><div><h3>Expose signals</h3><p>Ship dashboards for deployment health, partner errors, refresh delay, and domain events useful to Data & AI.</p></div></div>
+        </div>
+        <div class="stack" aria-label="Relevant stack">
+          <span>Java</span><span>.NET</span><span>Python</span><span>Angular</span><span>QA automation</span><span>DevOps</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section about">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="about-card">
+          <p>Elinext is a full-cycle software development provider founded in 1997, with about 700 in-house specialists and no freelancers or subcontractors. For a regulated finance product like Isabel 6, the useful proof is delivery discipline: ISO 27001, ISO 9001, QA, DevOps, backend, data, and AI/ML teams under one roof. Teams have served Siemens, Broadcom, Volkswagen, TRUMPF, and TUI. That fits the squad above: steady refactoring, tests, and releases without pulling Joeri's core team away from roadmap work.</p>
+          <div class="customer-pills" aria-label="Named customers">
+            <span class="pill"><strong>Siemens</strong></span>
+            <span class="pill"><strong>Broadcom</strong></span>
+            <span class="pill"><strong>Volkswagen</strong></span>
+            <span class="pill"><strong>TRUMPF</strong></span>
+            <span class="pill"><strong>TUI</strong></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-cash-liquidity.jpg" alt="Cash and liquidity management case study preview">
+            <div class="case-body">
+              <h3>Cash and Liquidity Management App</h3>
+              <p>Financial platform work with Java, Azure Kubernetes, Angular, DevOps, and high-volume bank processing.</p>
+              <a href="https://www.elinext.com/case-study/cash-and-liquidity-management-app/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-banking-backend.jpg" alt="Banking backend case study preview">
+            <div class="case-body">
+              <h3>Backend App Development for Banking</h3>
+              <p>Banking backend work for faster financial-data access, stronger search, and better scaling.</p>
+              <a href="https://www.elinext.com/case-study/backend-app-development-for-banking/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section talk">
+      <div class="narrow">
+        <h2>Start the conversation</h2>
+        <p>One bounded pilot can prove value fast.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
