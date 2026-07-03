@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Akura Medical software brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/akura-medical_2026-07-03_17-30-35/">
+  <meta name="description" content="A short software delivery brief for Akura Medical's NavIQ and Katana work.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/akura-medical_2026-07-03_17-30-35/">
+  <meta property="og:title" content="Akura Medical: scaling NavIQ and Katana software">
+  <meta property="og:description" content="A short brief on medical imaging delivery, validation, and trial-ready software support.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/akura-medical_2026-07-03_17-30-35/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Akura Medical: scaling NavIQ and Katana software - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Akura Medical: scaling NavIQ and Katana software">
+  <meta name="twitter:description" content="A short brief on medical imaging delivery, validation, and trial-ready software support.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/akura-medical_2026-07-03_17-30-35/og-image.jpg">
+  <style>
+    :root {
+      --ink: #152421;
+      --muted: #5e706b;
+      --paper: #fbfcf9;
+      --section: #ffffff;
+      --tint: #edf6f3;
+      --teal: #0f6d68;
+      --green: #1d7b46;
+      --red: #b7392d;
+      --orange: #e98128;
+      --line: #d8e4df;
+      --dark: #12312e;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a { color: inherit; }
+
+    .page {
+      width: 100%;
+      background: var(--paper);
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    section {
+      width: 100%;
+      padding: 54px 0;
+      background: var(--section);
+      position: relative;
+      z-index: 1;
+    }
+
+    section:nth-of-type(odd) { background: var(--paper); }
+
+    section.hero {
+      min-height: 78vh;
+      padding: 38px 0 58px;
+      color: #f8fffc;
+      background:
+        linear-gradient(135deg, rgba(18,49,46,.95), rgba(15,109,104,.88)),
+        radial-gradient(circle at 78% 10%, rgba(233,129,40,.28), transparent 38%);
+      display: grid;
+      align-items: center;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: #f2c088;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.55rem, 11vw, 6.8rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .why {
+      max-width: 64ch;
+      margin: 0;
+      color: #eaf7f3;
+      font-size: clamp(1.02rem, 2vw, 1.25rem);
+    }
+
+    .signal-board {
+      width: 100%;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,.24);
+      background: rgba(255,255,255,.09);
+      border-radius: 8px;
+    }
+
+    .signal-board strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #ffffff;
+      font-size: 1rem;
+    }
+
+    .signal-board span {
+      display: block;
+      color: #d9ede8;
+      font-size: .94rem;
+    }
+
+    h2 {
+      margin: 0 auto 22px;
+      text-align: center;
+      font-size: clamp(1.7rem, 4vw, 2.7rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .read-card {
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 24px;
+      border-left: 6px solid var(--orange);
+      border-radius: 8px;
+      background: #f0f7f4;
+      box-shadow: 0 1px 0 var(--line);
+    }
+
+    .read-card p { margin: 0; }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-item,
+    .step,
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .start-item {
+      padding: 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .label {
+      color: var(--red);
+      font-size: .78rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      background: #f8fbf9;
+    }
+
+    .proposal-panel {
+      display: grid;
+      gap: 20px;
+      padding: 20px;
+      border: 1px solid #cbded8;
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 18px 60px rgba(18,49,46,.08);
+    }
+
+    .team {
+      display: grid;
+      gap: 12px;
+      padding: 20px;
+      border-radius: 8px;
+      background: var(--dark);
+      color: #f4fffb;
+    }
+
+    .team p,
+    .team strong { margin: 0; }
+
+    .roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .role {
+      padding: 7px 10px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 999px;
+      color: #e6faf4;
+      font-size: .88rem;
+      white-space: normal;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      padding: 18px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 850;
+    }
+
+    .step-title {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 850;
+    }
+
+    .step p,
+    .start-item p,
+    .case-card p,
+    .cred p { margin-bottom: 0; }
+
+    .muted { color: var(--muted); }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 4px;
+    }
+
+    .stack span,
+    .customer {
+      border-radius: 999px;
+      background: #e8f3ef;
+      color: #184e48;
+      padding: 7px 10px;
+      font-size: .86rem;
+      font-weight: 750;
+    }
+
+    .cred {
+      max-width: 82ch;
+      margin: 0 auto;
+      padding: 24px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #e7efec;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-card h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      line-height: 1.25;
+    }
+
+    .case-card a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--teal);
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    section.talk {
+      text-align: center;
+      color: #f8fffc;
+      background: var(--dark);
+    }
+
+    .talk h2 { color: #ffffff; }
+
+    .talk p {
+      max-width: 42ch;
+      margin: 0 auto 22px;
+      color: #d8ebe6;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      max-width: 100%;
+      padding: 13px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #1f160b;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .wrap { width: min(1120px, calc(100% - 56px)); }
+      section { padding: 76px 0; }
+      .hero-grid { grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); }
+      .start-grid,
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proposal-panel { grid-template-columns: minmax(260px, .8fr) minmax(0, 1.2fr); padding: 26px; }
+      .steps { gap: 14px; }
+    }
+
+    @media (min-width: 1120px) {
+      .hero { min-height: 82vh; }
+      .step { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Prepared for Raymond Ha</p>
+          <h1>Help NavIQ and Katana imaging work move faster</h1>
+          <p class="why">Saw Akura hiring senior and principal medical imaging engineers. NavIQ and Katana are also moving through trial and funding work. Here is where a small outside squad could reduce delivery load.</p>
+        </div>
+        <aside class="signal-board" aria-label="Why this brief exists">
+          <strong>Why we're here</strong>
+          <span>Akura is adding software depth around CT angiograms, 3D vascular models, and procedural feedback.</span>
+        </aside>
+      </div>
+    </section>
+
+    <section aria-labelledby="our-read">
+      <div class="wrap">
+        <h2 id="our-read">Our read</h2>
+        <div class="read-card">
+          <p>Akura is scaling software around a device, not only adding web pages. The Staff and Principal imaging roles point to 3D CT angiogram work for NavIQ. That likely means DICOM ingest, vessel modeling, review tools, and validation all meet at once. If that load sits on a small core team, trial support and regulatory evidence can slow. The public product page also asks clinicians to trust live procedural feedback from Sentinel, so software quality has to feel exact.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="start">
+      <div class="wrap">
+        <h2 id="start">Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-item">
+            <span class="label">Noticed</span>
+            <p>NavIQ is described as turning CT angiograms into 3D pulmonary vascular models.</p>
+            <p class="muted">Map DICOM import, clot notes, and review outputs before adding more features.</p>
+          </div>
+          <div class="start-item">
+            <span class="label">Next step</span>
+            <p>The Katana product page is image-heavy and slow to show main content.</p>
+            <p class="muted">Compress media and defer scripts so physician research feels faster on mobile.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal" aria-labelledby="work">
+      <div class="wrap">
+        <h2 id="work">What we'd do</h2>
+        <div class="proposal-panel">
+          <div class="team">
+            <strong>Dedicated squad under Akura's product and software leads.</strong>
+            <p>Team shape: 1 imaging tech lead, 2 C++/Python engineers, 1 QA automation engineer, 1 DevOps engineer.</p>
+            <div class="roles" aria-label="Suggested roles">
+              <span class="role">Imaging lead</span>
+              <span class="role">C++ / Python</span>
+              <span class="role">QA automation</span>
+              <span class="role">DevOps</span>
+            </div>
+            <div class="stack" aria-label="Relevant stack">
+              <span>C/C++</span><span>Python</span><span>.NET</span><span>React</span><span>Angular</span>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <span class="num">1</span>
+              <div><span class="step-title">Trace NavIQ flow</span><p class="muted">Trace CT inputs, model output, and clinician review needs for NavIQ before adding more features.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <div><span class="step-title">Test imaging edges</span><p class="muted">Build automated checks for DICOM edge cases, segmentation outputs, and clot notes regulators can review later.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <div><span class="step-title">Check console data</span><p class="muted">Create a repeatable test pack for Sentinel console data, pressure signals, and blood loss estimates.</p></div>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <div><span class="step-title">Tune public research pages</span><p class="muted">Clean the product page media path so trial-site buyers reach Katana details faster on mobile.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="elinext">
+      <div class="wrap">
+        <h2 id="elinext">Who is Elinext</h2>
+        <div class="cred">
+          <p>Elinext is a full-cycle software development company, founded in 1997, with about 700 in-house specialists. We do not use freelancers or subcontractors. For regulated work, ISO 9001 and ISO 27001 matter for process and security. Teams have served <strong>Broadcom</strong>, <strong>Siemens</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, <strong>TUI</strong>, <strong>Parrot</strong>, and <strong>TransPerfect</strong>. For Akura, we would bring a senior medical software squad into your existing roadmap, with Raymond's team still owning product choices.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="proof">
+      <div class="wrap">
+        <h2 id="proof">Proof from similar work</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-pneumonia.jpg" alt="Pneumonia diagnosis tool case study image">
+            <div class="case-body">
+              <h3>Pneumonia Diagnosis Tool</h3>
+              <p class="muted">Elinext built a lung-image analysis tool with Python, TensorFlow, OpenCV, and Docker.</p>
+              <a href="https://www.elinext.com/case-study/pneumonia-diagnosis-tool/">View case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-clinical-trials-qa.jpg" alt="Clinical trials software QA case study image">
+            <div class="case-body">
+              <h3>Quality Assurance for Clinical Trials Software</h3>
+              <p class="muted">Elinext helped build and test live clinical-trials software with C#, .NET, and Angular.</p>
+              <a href="https://www.elinext.com/case-study/qa-for-clinical-trials-software/">View case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk" aria-labelledby="talk">
+      <div class="wrap">
+        <h2 id="talk">Talk through the pilot</h2>
+        <p>Share one imaging bottleneck. We will map the first pilot scope.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
