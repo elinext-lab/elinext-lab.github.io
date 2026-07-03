@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stanford Black jobs board brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/stanford-black_2026-07-03_21-30-31/">
+  <meta name="description" content="A short proposal for Stanford Black's 2026 jobs board refresh, prepared by Elinext.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/stanford-black_2026-07-03_21-30-31/">
+  <meta property="og:title" content="Stanford Black jobs board refresh brief">
+  <meta property="og:description" content="A focused web squad for candidate search, apply flow, and recruiter handoff.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/stanford-black_2026-07-03_21-30-31/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Stanford Black jobs board refresh brief — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Stanford Black jobs board refresh brief">
+  <meta name="twitter:description" content="A focused web squad for candidate search, apply flow, and recruiter handoff.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/stanford-black_2026-07-03_21-30-31/og-image.jpg">
+  <style>
+    :root {
+      --ink: #121827;
+      --muted: #596476;
+      --line: #d9dee8;
+      --paper: #fbfaf7;
+      --white: #ffffff;
+      --navy: #10182b;
+      --navy-2: #17233d;
+      --orange: #f47b20;
+      --teal: #0f766e;
+      --green: #417b45;
+      --blue: #2e5eaa;
+      --soft: #eef3f0;
+      --warm: #fff4e9;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+    a { color: inherit; }
+    img { max-width: 100%; height: auto; display: block; }
+    .wrap {
+      width: min(100% - 32px, 1080px);
+      margin: 0 auto;
+    }
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 54px 0 42px;
+    }
+    .eyebrow {
+      color: #ffd0a5;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin: 0 0 18px;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      font-size: clamp(2rem, 7vw, 4.45rem);
+      line-height: 1.02;
+      max-width: 12ch;
+      margin-bottom: 20px;
+    }
+    .hero p {
+      color: #dbe3f4;
+      font-size: clamp(1rem, 2.4vw, 1.18rem);
+      max-width: 62ch;
+      margin-bottom: 0;
+    }
+    section {
+      padding: 42px 0;
+      background: var(--paper);
+    }
+    section h2 {
+      text-align: center;
+      font-size: clamp(1.45rem, 4vw, 2.1rem);
+      margin-bottom: 20px;
+    }
+    .read-box {
+      background: #f0f5f1;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 12px 35px rgba(18, 24, 39, 0.08);
+    }
+    .read-box p {
+      max-width: 76ch;
+      margin: 0;
+      font-size: 1.02rem;
+    }
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .start-card,
+    .proof-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .label {
+      color: var(--teal);
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .start-card p,
+    .proof-card p { margin-bottom: 0; color: var(--muted); }
+    .work {
+      background: var(--navy-2);
+      color: var(--white);
+    }
+    .work h2 { color: var(--white); }
+    .work-lead {
+      color: #dbe3f4;
+      max-width: 72ch;
+      margin: 0 auto 22px;
+      text-align: center;
+    }
+    .squad {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .pill {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      color: #ffffff;
+      font-size: 0.92rem;
+      padding: 8px 12px;
+      white-space: nowrap;
+    }
+    .steps {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+    .step {
+      background: #ffffff;
+      border-radius: 8px;
+      color: var(--ink);
+      padding: 18px;
+      min-width: 0;
+    }
+    .num {
+      align-items: center;
+      background: var(--orange);
+      border-radius: 999px;
+      color: #111827;
+      display: inline-flex;
+      font-weight: 800;
+      height: 30px;
+      justify-content: center;
+      margin-bottom: 10px;
+      width: 30px;
+    }
+    .step strong {
+      display: block;
+      font-size: 1.03rem;
+      margin-bottom: 6px;
+    }
+    .step p {
+      color: var(--muted);
+      margin: 0;
+    }
+    .stack {
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      color: #dbe3f4;
+      margin-top: 24px;
+      padding-top: 18px;
+      text-align: center;
+    }
+    .elinext {
+      background: var(--warm);
+    }
+    .cred {
+      background: var(--white);
+      border: 1px solid #efd3bb;
+      border-radius: 8px;
+      padding: 24px;
+    }
+    .cred p {
+      max-width: 78ch;
+      margin: 0 auto;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .tag {
+      background: #fff7ef;
+      border: 1px solid #f0c9a4;
+      border-radius: 999px;
+      color: #6b3511;
+      font-weight: 700;
+      padding: 7px 10px;
+    }
+    .proof-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+    .proof-card a {
+      color: var(--blue);
+      display: inline-block;
+      font-weight: 700;
+      margin-top: 12px;
+      text-decoration: none;
+    }
+    .talk {
+      background: var(--navy);
+      color: var(--white);
+      text-align: center;
+    }
+    .talk p {
+      color: #dbe3f4;
+      margin-bottom: 22px;
+    }
+    .button {
+      background: var(--orange);
+      border-radius: 8px;
+      color: #111827;
+      display: inline-flex;
+      font-weight: 800;
+      padding: 13px 18px;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero { padding: 78px 0 64px; }
+      section { padding: 58px 0; }
+      .start-grid,
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 1080px) {
+      .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Prepared for Mario Miltiades</p>
+      <h1>Keep Stanford Black’s jobs board ready for 2026 hiring</h1>
+      <p>Saw the Full Stack Engineer signal and the public 2026 site refresh. This brief shows where the jobs board can help candidates move faster, while your recruiters keep quality high.</p>
+    </div>
+  </header>
+
+  <section class="read">
+    <div class="wrap">
+      <h2>Our read</h2>
+      <div class="read-box">
+        <p>The Full Stack Engineer signal says Stanford Black is scaling its own web capacity. The public jobs board already looks like a product, with technology search, Apply Now paths, and many trading roles. The risk is that a high-touch recruiter brand feels slower online than in person. If that gap stays, good candidates may drop before a consultant can engage. The 2026 refresh is the right moment to fix search, speed, and follow-up together.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="start">
+    <div class="wrap">
+      <h2>Where we’d start</h2>
+      <div class="start-grid">
+        <div class="start-card">
+          <span class="label">What we noticed</span>
+          <p>The jobs page says a new website is coming in 2026. Use that window to map every role into clean fields before visual redesign starts.</p>
+        </div>
+        <div class="start-card">
+          <span class="label">Useful next step</span>
+          <p>The Job Technology filter is the key path. Test it on mobile, then connect each Apply Now click to clear candidate status updates.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="work">
+    <div class="wrap">
+      <h2>What we’d do</h2>
+      <p class="work-lead">Start with a dedicated squad under your product owner. The first pilot would focus on the jobs board, apply flow, and recruiter handoff.</p>
+      <div class="squad" aria-label="Proposed team">
+        <span class="pill">Tech Lead</span>
+        <span class="pill">Full-stack Engineer</span>
+        <span class="pill">Frontend Engineer</span>
+        <span class="pill">QA Engineer</span>
+        <span class="pill">UX Designer</span>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="num">1</span>
+          <strong>Audit the board</strong>
+          <p>Review job data, search paths, Apply Now clicks, and mobile load issues across live Stanford Black pages.</p>
+        </div>
+        <div class="step">
+          <span class="num">2</span>
+          <strong>Shape the data</strong>
+          <p>Define clean fields for technology, market, location, work mode, salary, owner, and candidate status.</p>
+        </div>
+        <div class="step">
+          <span class="num">3</span>
+          <strong>Build the pilot</strong>
+          <p>Ship a fast search and apply layer that can sit beside Wix during the 2026 rebuild.</p>
+        </div>
+        <div class="step">
+          <span class="num">4</span>
+          <strong>Close the loop</strong>
+          <p>Add confirmation, rejection, and warm-list updates, so consultants keep trust without more manual work.</p>
+        </div>
+      </div>
+      <p class="stack">Relevant stack: React, Node.js, Python, PostgreSQL, QA automation, and DevOps support.</p>
+    </div>
+  </section>
+
+  <section class="elinext">
+    <div class="wrap">
+      <h2>Who is Elinext</h2>
+      <div class="cred">
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build web, mobile, QA, AI/ML, and DevOps teams for clients across Europe, North America, Asia, and Australia/NZ. For Stanford Black, the fit is a focused web squad, backed by ISO 9001 and ISO 27001 practices. Our client work includes Broadcom, Siemens, Volkswagen, TRUMPF, TUI, and TransPerfect. That gives the proposed pilot a stable delivery base, not just extra hands.</p>
+        <div class="tags" aria-label="Named customers">
+          <span class="tag">Broadcom</span>
+          <span class="tag">Siemens</span>
+          <span class="tag">Volkswagen</span>
+          <span class="tag">TRUMPF</span>
+          <span class="tag">TUI</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="proof">
+    <div class="wrap">
+      <h2>Proof</h2>
+      <div class="proof-grid">
+        <article class="proof-card">
+          <h3>Job Search Service for a German Startup</h3>
+          <p>Elinext built a modern job portal with rich search and applicant features for an HR and recruiting client.</p>
+          <a href="https://www.elinext.com/case-study/job-and-applicants-search-service/">View case study</a>
+        </article>
+        <article class="proof-card">
+          <h3>Elinext Applicant Tracking</h3>
+          <p>A six-person team planned, designed, built, and released the first version of an applicant tracking system.</p>
+          <a href="https://www.elinext.com/case-study/elinext-applicant-tracking/">View case study</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="talk">
+    <div class="wrap">
+      <h2>Start the conversation</h2>
+      <p>Share the 2026 board goals. We can map a pilot.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
