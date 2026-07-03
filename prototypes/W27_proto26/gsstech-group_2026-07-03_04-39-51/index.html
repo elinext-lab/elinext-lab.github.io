@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W27_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GSS Tech Group payment platform engineering brief</title>
+  <meta name="description" content="A short engineering brief for GSS Tech Group on Payment Hub, data platforms, and bank-grade delivery capacity.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W27_proto26/gsstech-group_2026-07-03_04-39-51/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W27_proto26/gsstech-group_2026-07-03_04-39-51/">
+  <meta property="og:title" content="GSS Tech Group payment platform engineering brief">
+  <meta property="og:description" content="A short brief on scaling Python microservices and data flows for Payment Hub.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/gsstech-group_2026-07-03_04-39-51/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="GSS Tech Group payment platform engineering brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GSS Tech Group payment platform engineering brief">
+  <meta name="twitter:description" content="A short brief on scaling Python microservices and data flows for Payment Hub.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W27_proto26/gsstech-group_2026-07-03_04-39-51/og-image.jpg">
+  <style>
+    :root {
+      --ink: #18272b;
+      --muted: #657278;
+      --brand: #184654;
+      --gold: #ca9e2c;
+      --soft: #f6f8f7;
+      --line: #dce4e1;
+      --white: #ffffff;
+      --deep: #102f3a;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--soft);
+      line-height: 1.55;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .section { width: 100%; padding: 54px 18px; background: var(--soft); }
+    .section.white { background: var(--white); }
+    .wrap { width: 100%; max-width: 1120px; margin: 0 auto; }
+    .narrow { max-width: 820px; margin: 0 auto; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid rgba(202, 158, 44, .38);
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(202, 158, 44, .09);
+      font-weight: 700;
+      font-size: 13px;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 760px;
+      margin: 18px 0 16px;
+      font-size: clamp(34px, 7vw, 62px);
+      line-height: 1.03;
+      letter-spacing: 0;
+      color: var(--white);
+    }
+    h2 {
+      text-align: center;
+      font-size: clamp(26px, 4vw, 38px);
+      line-height: 1.1;
+      margin-bottom: 20px;
+      color: var(--brand);
+      letter-spacing: 0;
+    }
+    h3 {
+      font-size: 18px;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      color: var(--brand);
+    }
+    p { color: var(--muted); font-size: 17px; }
+    .hero {
+      min-height: 76vh;
+      display: flex;
+      align-items: center;
+      padding: 84px 18px 48px;
+      background:
+        linear-gradient(135deg, rgba(16, 47, 58, .96), rgba(24, 70, 84, .9)),
+        url("assets/case-cash-liquidity.jpg") center / cover no-repeat;
+      position: relative;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 96px;
+      background: linear-gradient(to bottom, rgba(246, 248, 247, 0), var(--soft));
+      pointer-events: none;
+    }
+    .hero .wrap { position: relative; z-index: 1; }
+    .hero p {
+      max-width: 680px;
+      color: rgba(255,255,255,.84);
+      font-size: 18px;
+    }
+    .why {
+      margin-bottom: 0;
+      padding-left: 14px;
+      border-left: 3px solid var(--gold);
+    }
+    .read-card {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 26px;
+      background: #eef3f1;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--gold);
+      border-radius: 8px;
+    }
+    .read-card p { margin-bottom: 0; color: #39484d; }
+    .start-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .start-card {
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--white);
+    }
+    .label {
+      display: block;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 6px;
+    }
+    .plan {
+      background: var(--deep);
+      color: var(--white);
+    }
+      .plan h2, .plan h3 { color: var(--white); }
+    .plan p { color: rgba(255,255,255,.76); }
+    .plan-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 28px;
+    }
+    .squad, .steps {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      padding: 22px;
+    }
+    .roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .roles li, .stack span, .customer {
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(202,158,44,.16);
+      color: #ffe2a1;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 14px;
+      padding: 16px 0;
+      border-top: 1px solid rgba(255,255,255,.14);
+    }
+    .step:first-child { border-top: 0; padding-top: 0; }
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--gold);
+      color: #201705;
+      font-weight: 900;
+    }
+    .step b { display: block; color: var(--white); margin-bottom: 4px; }
+    .step p { margin: 0; font-size: 15px; }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 18px;
+    }
+    .proof-card {
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--white);
+    }
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 2.25 / 1;
+      object-fit: cover;
+      background: #edf1f0;
+    }
+    .proof-body { padding: 20px; }
+    .proof-body a {
+      color: var(--brand);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+    .elinext {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 26px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--white);
+    }
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .customers .customer {
+      color: var(--brand);
+      background: #edf5f3;
+    }
+    .cta {
+      text-align: center;
+      background: var(--brand);
+      color: var(--white);
+    }
+    .cta h2 { color: var(--white); }
+    .cta p { color: rgba(255,255,255,.78); }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 13px 20px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #211706;
+      text-decoration: none;
+      font-weight: 900;
+      margin-top: 8px;
+    }
+    @media (min-width: 720px) {
+      .section { padding: 72px 28px; }
+      .hero { padding: 104px 28px 72px; }
+      .start-grid, .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .plan-grid { grid-template-columns: .82fr 1.18fr; align-items: start; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <span class="eyebrow">Payment Hub engineering brief</span>
+        <h1>Scaling Payment Hub microservices for bank grade delivery</h1>
+        <p>GSS already has strong payment products. The next risk is delivery speed when more banks, rails, and data flows hit the same platform teams.</p>
+        <p class="why">Saw GSS hiring for Python microservices, data platforms, API gateways, CI/CD, Docker, Kubernetes, and Kafka-aware engineers. That points to real pressure around secure backend delivery.</p>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-card">
+          <p>GSS is not filling one simple role. The signal says you are scaling the data and API layer behind banking platforms. Payment Hub already spans acquisition, orchestration, execution, ISO 20022, Aani, SWIFT, Kafka, and Kubernetes. That breadth creates a bottleneck around schemas, security, and release checks. If this layer slows down, bank pilots and partner delivery can wait on the same few senior engineers.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Payment Hub describes three flows: acquisition, orchestration, and execution. Start by mapping one live rail across all three, then freeze API contracts and failure states before adding more code.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Useful next step</span>
+            <p>The public Payment Hub page ships heavy images and unused JavaScript. Convert key images, defer non-critical scripts, and set a mobile budget for every product route.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section plan">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="plan-grid">
+          <div class="squad">
+            <h3>Dedicated squad under your PO</h3>
+            <p>A six-week pilot with one tech lead, two senior Python engineers, one data engineer, one QA automation engineer, and one DevOps engineer.</p>
+            <ul class="roles">
+              <li>Tech Lead</li>
+              <li>Python/FastAPI</li>
+              <li>Data Engineer</li>
+              <li>QA Automation</li>
+              <li>DevOps</li>
+            </ul>
+            <div class="stack">
+              <span>Python</span><span>FastAPI</span><span>Kafka</span><span>Kubernetes</span><span>PostgreSQL</span><span>OAuth/JWT</span>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step"><span class="num">1</span><div><b>Map the flow</b><p>Map Payment Hub event paths from acquisition to execution, then define API contracts, schemas, and failure states for each rail.</p></div></div>
+            <div class="step"><span class="num">2</span><div><b>Build the slice</b><p>Build one FastAPI service with async workers, Kafka events, and test data for reconciliation and reporting flows.</p></div></div>
+            <div class="step"><span class="num">3</span><div><b>Gate each build</b><p>Add CI gates for contract tests, security checks, and performance smoke tests before each demo build.</p></div></div>
+            <div class="step"><span class="num">4</span><div><b>Hand it over</b><p>Package the pilot for Kubernetes with logs, dashboards, and rollback steps your team can own.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section white">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="elinext">
+          <p>Elinext is a full-cycle software development company, working since 1997 with about 700 in-house specialists and no freelancers. We build web, mobile, data, DevOps, QA, and AI systems for regulated teams. For GSS, the fit is bank-grade delivery, ISO 9001 and ISO 27001 process control, and dedicated squads that work under your PO. Our customer history includes <strong>Broadcom</strong>, <strong>Siemens</strong>, <strong>Volkswagen</strong>, and <strong>TUI</strong>. That gives the pilot above a ready team model, not a generic outsourcing pitch.</p>
+          <div class="customers">
+            <span class="customer">Broadcom</span><span class="customer">Siemens</span><span class="customer">Volkswagen</span><span class="customer">TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-cash-liquidity.jpg" alt="Cash and liquidity management case study">
+            <div class="proof-body">
+              <h3>Cash and liquidity management for banks</h3>
+              <p>Elinext built a banking web app with Java, Spring, Azure Kubernetes, Prometheus, Angular, MongoDB, and PostgreSQL. It processes about five million items daily for banks and financial groups.</p>
+              <a href="https://www.elinext.com/case-study/cash-and-liquidity-management-app/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-backend-banking.jpg" alt="Backend app development for banking case study">
+            <div class="proof-body">
+              <h3>Backend app development for banking</h3>
+              <p>Elinext supported a banking software provider with Java 21, Quarkus, Kubernetes, Docker, Elasticsearch, Helm, and Kafka Connect for faster financial data access.</p>
+              <a href="https://www.elinext.com/case-study/backend-app-development-for-banking/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="narrow">
+        <h2>Start the conversation</h2>
+        <p>Bring one Payment Hub flow. We can scope the pilot.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
