@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W28_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Isabel 6 delivery support brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W28_proto26/isabel_2026-07-06_07-41-29/">
+  <meta name="description" content="A focused brief on Isabel 6 delivery, transaction search, token flows, and safer banking integrations.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W28_proto26/isabel_2026-07-06_07-41-29/">
+  <meta property="og:title" content="Isabel 6 delivery support brief">
+  <meta property="og:description" content="A focused read on Isabel 6 delivery, transaction search, token flows, and safer banking integrations.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/isabel_2026-07-06_07-41-29/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Isabel 6 delivery support brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Isabel 6 delivery support brief">
+  <meta name="twitter:description" content="A focused read on Isabel 6 delivery, transaction search, token flows, and safer banking integrations.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/isabel_2026-07-06_07-41-29/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17212b;
+      --muted: #5d6a78;
+      --paper: #f5f7f4;
+      --panel: #ffffff;
+      --dark: #0f1e2e;
+      --line: #d8dfdc;
+      --green: #0f766e;
+      --blue: #245a85;
+      --orange: #ff7a00;
+      --soft-green: #e4f2ee;
+      --soft-blue: #e8f0f7;
+      --soft-orange: #fff1df;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+    body { min-width: 0; }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: inherit; }
+    .wrap {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+    }
+    .hero {
+      background:
+        linear-gradient(140deg, rgba(15, 118, 110, .24), transparent 42%),
+        var(--dark);
+      color: #f7fbff;
+      padding: clamp(54px, 9vw, 96px) 20px clamp(48px, 7vw, 84px);
+    }
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #ffbf7d;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 12ch;
+      margin: 0 0 20px;
+      font-size: clamp(2.35rem, 9vw, 5.45rem);
+      line-height: .96;
+      letter-spacing: 0;
+    }
+    .why {
+      max-width: 66ch;
+      margin: 0;
+      color: #dce8ed;
+      font-size: clamp(1rem, 2vw, 1.24rem);
+    }
+    .hero-mark {
+      display: grid;
+      gap: 10px;
+      width: min(100%, 460px);
+      margin-top: 30px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-left: 6px solid var(--orange);
+      border-radius: 8px;
+      background: rgba(255,255,255,.07);
+      color: #edf5f4;
+      font-weight: 750;
+    }
+    section {
+      padding: clamp(44px, 7vw, 76px) 20px;
+      background: var(--paper);
+    }
+    section:nth-of-type(even) { background: #fffefa; }
+    h2 {
+      margin: 0 auto 24px;
+      text-align: center;
+      font-size: clamp(1.55rem, 4.6vw, 2.55rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+    p { margin: 0; }
+    .read-card {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: clamp(20px, 4vw, 30px);
+      border: 1px solid #b7d7d1;
+      border-left: 7px solid var(--green);
+      border-radius: 8px;
+      background: var(--soft-green);
+      font-size: 1.04rem;
+    }
+    .start-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+    .start-card, .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+    .start-card {
+      display: grid;
+      gap: 8px;
+      padding: 18px;
+    }
+    .label {
+      display: inline-block;
+      color: var(--green);
+      font-size: .76rem;
+      font-weight: 850;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .start-card p, .case-card p { color: var(--muted); }
+    .plan {
+      background: var(--dark);
+      color: #f8fbff;
+    }
+    .plan h2 { color: #f8fbff; }
+    .plan-layout {
+      display: grid;
+      gap: 18px;
+    }
+    .team {
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 8px;
+      background: rgba(255,255,255,.07);
+    }
+    .team p { color: #dbe8ee; }
+    .roles, .stack, .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .roles span, .stack span, .customers strong {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--soft-orange);
+      color: #513018;
+      font-size: .88rem;
+      font-weight: 800;
+    }
+    .stack span {
+      background: var(--soft-blue);
+      color: #173b5d;
+    }
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid #d8e2df;
+      border-radius: 8px;
+      background: #fbfdfb;
+      color: var(--ink);
+    }
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #231306;
+      font-weight: 900;
+    }
+    .step strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 1rem;
+    }
+    .step p { color: var(--muted); }
+    .elinext {
+      max-width: 80ch;
+      margin: 0 auto;
+      padding: clamp(20px, 4vw, 30px);
+      border: 1px solid #c9d6e1;
+      border-radius: 8px;
+      background: var(--soft-blue);
+    }
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      border-bottom: 1px solid var(--line);
+      background: #eef3f2;
+    }
+    .case-body { padding: 18px; }
+    .case-body h3 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+    .case-body a {
+      display: inline-flex;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    section.talk {
+      text-align: center;
+      background: var(--dark);
+      color: #f8fbff;
+    }
+    section.talk p {
+      max-width: 48ch;
+      margin: 0 auto 22px;
+      color: #dbe8ee;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      max-width: 100%;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #241304;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .hero .wrap {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+        gap: 36px;
+        align-items: end;
+      }
+      .hero-mark { margin-top: 0; }
+      .start-grid, .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .plan-layout {
+        grid-template-columns: minmax(280px, .78fr) minmax(0, 1.22fr);
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Prepared for Isabel</p>
+        <h1>Keeping Isabel 6 fast while the platform grows</h1>
+        <p class="why">We saw Isabel hiring for software development on a multibanking product. The role points to Rails, APIs, AWS, CI/CD, and safer delivery.</p>
+      </div>
+      <div class="hero-mark">
+        <span>Why this matters</span>
+        <span>Isabel 6 joins bank data, payments, tokens, and ERP flows. Small defects can touch many teams.</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="wrap">
+        <h2>Our Read</h2>
+        <div class="read-card">
+          <p>Isabel is not just adding another engineer. The signal says the Multibanking solution is growing and needs safer delivery. Isabel 6 already connects bank data, payments, user roles, and signing tokens. Your job post names Rails, REST APIs, AWS, CI/CD, and incident work. Public app feedback also asks for better transaction search by amount or name. If the delivery path stays heavy, small product fixes can wait behind integration risk.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where We'd Start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">Product signal</span>
+            <p>Reviewers ask for search by amount or name. Start with one shared transaction-search contract for web, mobile, and API tests.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Support signal</span>
+            <p>Your help center shows SmartCard, IsaKey, and itsme edge cases. Turn the top token errors into a QA matrix first.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <h2>What We'd Do</h2>
+        <div class="plan-layout">
+          <div class="team">
+            <p>A dedicated squad works under Isabel's PO or PM for a six-week pilot, with weekly demos and a clear handover.</p>
+            <div class="roles">
+              <span>Rails lead</span>
+              <span>API engineer</span>
+              <span>Data engineer</span>
+              <span>QA automation</span>
+              <span>DevOps support</span>
+            </div>
+            <div class="stack">
+              <span>Ruby on Rails</span>
+              <span>REST APIs</span>
+              <span>SQL</span>
+              <span>AWS</span>
+              <span>Docker</span>
+              <span>Sentry</span>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="num">1</div>
+              <div><strong>Map the risky flow</strong><p>Pick transaction search or payment-file status, then map data fields, token steps, owners, and failure states.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div><strong>Build the test spine</strong><p>Add API, search, and token-flow checks that cover Rails services, bank data, and user roles.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div><strong>Improve observability</strong><p>Use CloudWatch, Sentry, and release data to show stale feeds, failed signatures, and slow paths.</p></div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div><strong>Ship one visible win</strong><p>Release a scoped improvement with rollback notes, support notes, and a short team handover.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Who Is Elinext</h2>
+        <div class="elinext">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build web, mobile, backend, QA, DevOps, and data systems for regulated clients. Our ISO 9001 and ISO 27001 practices fit finance work where quality and security matter. Teams behind <span class="customers"><strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TUI</strong></span> and TRUMPF have trusted our delivery. For Isabel, that means a small senior squad that can support your team without taking product control away.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-backend-banking.jpg" alt="Backend banking case study preview">
+            <div class="case-body">
+              <h3>Backend App Development for Banking</h3>
+              <p>Elinext helped a banking app improve full-text search, data sync, and containerized backend delivery.</p>
+              <a href="https://www.elinext.com/case-study/backend-app-development-for-banking/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-cash-liquidity.jpg" alt="Cash and liquidity banking case study preview">
+            <div class="case-body">
+              <h3>Cash and Liquidity Management App</h3>
+              <p>Our team supported a bank-facing cash platform used across high-volume financial workflows.</p>
+              <a href="https://www.elinext.com/case-study/cash-and-liquidity-management-app/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk">
+      <div class="wrap">
+        <h2>Talk Through The Pilot</h2>
+        <p>Bring one backlog, one integration, and one metric.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
