@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W28_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>iyzico payment reliability brief</title>
+  <meta name="description" content="A focused brief for iyzico on secure Java payment flow delivery, merchant verification, and trust friction.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W28_proto26/iyzico_2026-07-06_15-41-19/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W28_proto26/iyzico_2026-07-06_15-41-19/">
+  <meta property="og:title" content="iyzico: scaling secure Java payment flows">
+  <meta property="og:description" content="A short brief on merchant verification, saved-card trust, and backend delivery support.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/iyzico_2026-07-06_15-41-19/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="iyzico: scaling secure Java payment flows - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="iyzico: scaling secure Java payment flows">
+  <meta name="twitter:description" content="A short brief on merchant verification, saved-card trust, and backend delivery support.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/iyzico_2026-07-06_15-41-19/og-image.jpg">
+  <style>
+    :root {
+      --ink: #102136;
+      --muted: #5b6c7c;
+      --paper: #ffffff;
+      --soft: #f6f8f5;
+      --line: #dbe4df;
+      --navy: #13243b;
+      --orange: #ff7a00;
+      --teal: #1f9a8a;
+      --green: #e8f5ee;
+      --gold: #ffe6bf;
+      --shadow: 0 20px 54px rgba(16, 33, 54, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      min-width: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: clamp(3rem, 7vw, 5.5rem) 1rem;
+      background: var(--paper);
+    }
+
+    .section:nth-of-type(odd) {
+      background: var(--soft);
+    }
+
+    .wrap {
+      width: min(100%, 68rem);
+      margin: 0 auto;
+    }
+
+    .narrow {
+      width: min(100%, 54rem);
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      align-items: center;
+      color: #f8fbff;
+      background:
+        linear-gradient(135deg, rgba(19, 36, 59, 0.94), rgba(16, 33, 54, 0.9)),
+        linear-gradient(90deg, #13243b, #1f9a8a);
+      padding: 2rem 1rem 4rem;
+    }
+
+    .eyebrow {
+      margin: 0 0 1rem;
+      color: #ffd6a6;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      overflow-wrap: anywhere;
+    }
+
+    h1 {
+      max-width: 13ch;
+      margin: 0;
+      font-size: clamp(2.6rem, 9vw, 5.8rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 42rem;
+      margin: 1.25rem 0 0;
+      color: #d7e4ee;
+      font-size: clamp(1rem, 2.7vw, 1.25rem);
+    }
+
+    .why {
+      border-left: 0.35rem solid var(--orange);
+      padding-left: 1rem;
+    }
+
+    h2 {
+      margin: 0 0 1.4rem;
+      text-align: center;
+      font-size: clamp(1.75rem, 5vw, 2.75rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      width: min(100%, 64ch);
+      margin: 0 auto;
+      padding: clamp(1.2rem, 4vw, 2rem);
+      background: #fff7ec;
+      border: 1px solid #ffd7a3;
+      border-left: 0.4rem solid var(--orange);
+      border-radius: 0.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p,
+    .intro p,
+    .start-card p,
+    .who p,
+    .case-card p,
+    .cta p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .start-grid,
+    .case-grid,
+    .team-grid,
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+      gap: 1rem;
+    }
+
+    .start-card,
+    .case-card,
+    .team-card {
+      border: 1px solid var(--line);
+      border-radius: 0.5rem;
+      background: var(--paper);
+      box-shadow: 0 10px 30px rgba(16, 33, 54, 0.08);
+    }
+
+    .start-card {
+      padding: 1.2rem;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 0.65rem;
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      color: #f7fbff;
+      background: var(--navy);
+    }
+
+    .proposal h2 {
+      color: #ffffff;
+    }
+
+    .proposal .intro {
+      width: min(100%, 54rem);
+      margin: 0 auto 1.5rem;
+      text-align: center;
+    }
+
+    .proposal .intro p {
+      color: #dbe6ef;
+    }
+
+    .team-grid {
+      margin: 1.4rem 0;
+    }
+
+    .team-card {
+      padding: 1rem;
+      color: var(--ink);
+      background: #f8fbff;
+    }
+
+    .team-card strong {
+      display: block;
+      color: var(--navy);
+    }
+
+    .steps {
+      counter-reset: step;
+      margin-top: 1.5rem;
+    }
+
+    .step {
+      position: relative;
+      min-width: 0;
+      padding: 1.1rem;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      display: grid;
+      place-items: center;
+      width: 2rem;
+      height: 2rem;
+      margin-bottom: 0.75rem;
+      border-radius: 999px;
+      color: var(--navy);
+      background: var(--orange);
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: #ffffff;
+      font-size: 1rem;
+    }
+
+    .step p {
+      margin: 0;
+      color: #d9e5ef;
+      font-size: 0.95rem;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background: var(--green);
+      color: #0d665e;
+      font-weight: 800;
+      font-size: 0.82rem;
+    }
+
+    .who {
+      width: min(100%, 60rem);
+      margin: 0 auto;
+      padding: clamp(1.2rem, 4vw, 2rem);
+      border: 1px solid var(--line);
+      border-radius: 0.5rem;
+      background: var(--paper);
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .customers strong {
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #6a3a00;
+      font-size: 0.85rem;
+    }
+
+    .case-card {
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .case-body {
+      padding: 1rem;
+    }
+
+    .case-body h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.05rem;
+      line-height: 1.25;
+    }
+
+    .case-body a {
+      display: inline-flex;
+      margin-top: 0.8rem;
+      color: #0d665e;
+      font-weight: 800;
+      text-decoration-thickness: 0.12rem;
+      text-underline-offset: 0.18rem;
+    }
+
+    .section.cta {
+      text-align: center;
+      background: #102136;
+      color: #ffffff;
+    }
+
+    .cta p {
+      color: #d5e1eb;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: min(100%, 18rem);
+      min-height: 3.25rem;
+      margin-top: 1.4rem;
+      padding: 0.85rem 1.2rem;
+      border-radius: 0.35rem;
+      background: var(--orange);
+      color: #1a1a1a;
+      font-weight: 900;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Prepared for iyzico</p>
+        <h1>Secure Java payment flows while the team scales</h1>
+        <p>iyzico is growing a payment platform where trust, uptime, and clean user flows matter every day.</p>
+        <p class="why">Why we're here: we saw the Senior Software Engineer role for Java, Spring Boot, PostgreSQL, Redis, REST APIs, and high-volume 24x7 systems. That points to real backend pressure, not light feature work.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Your hiring signal says iyzico is adding senior backend capacity, not just filling a seat. The role asks for Java11, Spring Boot, PostgreSQL, Redis, REST APIs, ElasticSearch, and ownership of risky modules. That points to platform work around 24x7 payments, not a simple feature queue. The product surfaces add the same pressure: merchant app reviews mention verification loops and login failures. If those flows stay fragile, security and support teams absorb noise while engineers scale payments and open banking.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Merchant reviews mention SMS loops, biometric checks, and app closes during approval.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Map each failure to backend auth, device permission, and support ticket data before adding features.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Buyer reviews raise saved-card removal and account deletion trust concerns.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Run a privacy-first audit of deletion, card storage, and support handoff behavior.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="intro">
+          <p>Use a dedicated security-aware backend squad under iyzico's PO or PM. Shape: one tech lead, two senior Java engineers, one QA automation engineer, and one DevOps engineer for a six-week pilot.</p>
+        </div>
+        <div class="team-grid">
+          <div class="team-card"><strong>Tech lead</strong>Payment-flow design, risk review, demos.</div>
+          <div class="team-card"><strong>Java engineers</strong>Spring Boot services, APIs, tests.</div>
+          <div class="team-card"><strong>QA + DevOps</strong>Automation, CI gates, release checks.</div>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <strong>Trace the flows</strong>
+            <p>Trace merchant login, verification, and saved-card events from mobile UI to Java services, support logs, and risk rules.</p>
+          </article>
+          <article class="step">
+            <strong>Harden risky modules</strong>
+            <p>Harden high-risk Java modules with contract tests, failure replay, and clearer error states for account and payment flows.</p>
+          </article>
+          <article class="step">
+            <strong>Add release gates</strong>
+            <p>Build a release gate for authentication, refund, and card-storage changes, with QA automation in the CI pipeline.</p>
+          </article>
+          <article class="step">
+            <strong>Ship one pilot fix</strong>
+            <p>Ship one small pilot fix, then review support noise and failed-payment signals with your security team.</p>
+          </article>
+        </div>
+        <div class="stack">
+          <span class="pill">Java</span>
+          <span class="pill">Spring Boot</span>
+          <span class="pill">PostgreSQL</span>
+          <span class="pill">Redis</span>
+          <span class="pill">REST APIs</span>
+          <span class="pill">Docker</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="who">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For iyzico, the relevant part is secure fintech delivery: Java backend, QA automation, DevOps, and teams that work under your product owner. Elinext holds ISO 9001 and ISO 27001, which matters when payment and personal data flows are in scope. The same delivery model has served <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. That is the base for the six-week pilot above.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-financial-integration.jpg" alt="Financial integration case study preview">
+            <div class="case-body">
+              <h3>Application for Integration with Financial Organizations</h3>
+              <p>Java and Spring work for a financial product that connects lenders through APIs and shortens market entry.</p>
+              <a href="https://www.elinext.com/case-study/app-for-integration-with-financial-organizations/">Read case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-banking-qa.jpg" alt="Banking QA case study preview">
+            <div class="case-body">
+              <h3>QA Services for Banking Web App</h3>
+              <p>Testing and automation for a banking transaction platform where reliability, compliance, and release speed mattered.</p>
+              <a href="https://www.elinext.com/case-study/qa-services-for-banking-app/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="narrow">
+        <h2>Talk through the pilot</h2>
+        <p>Bring one risky flow and we will scope it.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
