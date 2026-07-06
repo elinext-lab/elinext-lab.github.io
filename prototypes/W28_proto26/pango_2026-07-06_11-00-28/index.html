@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W28_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pango Parking Domain backend brief | Elinext</title>
+  <meta name="description" content="A short engineering brief for Pango's Parking Domain scaling moment, prepared by Elinext.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W28_proto26/pango_2026-07-06_11-00-28/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W28_proto26/pango_2026-07-06_11-00-28/">
+  <meta property="og:title" content="Pango Parking Domain backend brief">
+  <meta property="og:description" content="A short engineering brief for Pango's Parking Domain scaling moment, prepared by Elinext.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/pango_2026-07-06_11-00-28/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Pango Parking Domain backend brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pango Parking Domain backend brief">
+  <meta name="twitter:description" content="A short engineering brief for Pango's Parking Domain scaling moment, prepared by Elinext.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/pango_2026-07-06_11-00-28/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17243b;
+      --muted: #5f6f86;
+      --line: #dce5f1;
+      --soft: #f4f8fc;
+      --blue: #1d6fbf;
+      --orange: #ff8b1f;
+      --green: #1b8f6b;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #fbfdff;
+      line-height: 1.5;
+    }
+
+    a { color: inherit; }
+    img { max-width: 100%; height: auto; display: block; }
+    .wrap { width: min(100% - 32px, 1080px); margin: 0 auto; }
+    section { padding: 56px 0; background: #fbfdff; }
+    .eyebrow {
+      color: var(--blue);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      margin: 0 0 12px;
+      text-align: center;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 760px;
+      font-size: clamp(2.1rem, 7vw, 4.3rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+      margin-bottom: 22px;
+    }
+    h2 {
+      text-align: center;
+      font-size: clamp(1.55rem, 4vw, 2.4rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+      margin-bottom: 18px;
+    }
+    h3 { font-size: 1rem; margin-bottom: 8px; }
+    p { color: var(--muted); font-size: 1rem; }
+
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      align-items: center;
+      background:
+        linear-gradient(110deg, rgba(23,36,59,0.94), rgba(23,36,59,0.78)),
+        url("assets/case-parking-kiosk.jpg") center / cover;
+      color: var(--white);
+      padding: 72px 0 52px;
+    }
+    .hero p { color: rgba(255,255,255,0.83); max-width: 680px; }
+    .hero .eyebrow { color: #ffd199; text-align: left; }
+    .why {
+      border-left: 4px solid var(--orange);
+      padding-left: 16px;
+      margin-top: 10px;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+      grid-template-columns: 1fr;
+    }
+    .signal-card {
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      padding: 22px;
+      max-width: 420px;
+      box-shadow: 0 22px 60px rgba(0,0,0,0.18);
+    }
+    .signal-card p { color: var(--muted); margin: 0; }
+    .signal-card strong { color: var(--ink); display: block; margin-bottom: 8px; }
+
+    .read-card {
+      max-width: 78ch;
+      margin: 0 auto;
+      background: #edf6ff;
+      border: 1px solid #c9dff5;
+      border-left: 6px solid var(--blue);
+      border-radius: 8px;
+      padding: 26px;
+    }
+    .read-card p { margin: 0; color: #38516f; }
+
+    .start-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .start-card, .proof-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: 0 12px 34px rgba(29,111,191,0.07);
+    }
+    .start-card span {
+      color: var(--green);
+      display: block;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .plan {
+      background: #eef5f7;
+    }
+    .plan-box {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 26px;
+      box-shadow: 0 20px 50px rgba(23,36,59,0.08);
+    }
+    .squad {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px 0 24px;
+    }
+    .pill {
+      border: 1px solid #cfe0ef;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: #f7fbff;
+      color: #36506f;
+      font-weight: 700;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdff;
+    }
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #301800;
+      font-weight: 900;
+    }
+    .step strong { display: block; margin-bottom: 4px; }
+    .step p { margin: 0; }
+
+    .identity {
+      background: #17243b;
+      color: var(--white);
+    }
+    .identity p { color: rgba(255,255,255,0.82); max-width: 76ch; margin-left: auto; margin-right: auto; }
+    .logos {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 18px;
+    }
+    .logos strong {
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-top: 24px;
+    }
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      background: #edf2f7;
+    }
+    .proof-card a { color: var(--blue); font-weight: 800; }
+
+    .talk {
+      text-align: center;
+      background: #fff7ed;
+    }
+    .button {
+      display: inline-block;
+      background: var(--blue);
+      color: var(--white);
+      padding: 14px 22px;
+      border-radius: 8px;
+      font-weight: 800;
+      text-decoration: none;
+      margin-top: 12px;
+    }
+
+    @media (min-width: 760px) {
+      section { padding: 72px 0; }
+      .hero-grid { grid-template-columns: 1.35fr 0.65fr; }
+      .start-grid, .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Engineering brief for Oren Bilgoray</p>
+          <h1>Pango's Parking Domain needs backend capacity without slowing releases</h1>
+          <p>This brief focuses on the systems behind parking sessions, payment state, location choice, and support load. It is not a fake redesign of the Pango app.</p>
+          <p class="why">Saw Pango hiring a Senior Backend Developer for the Parking Team. The role names AWS microservices, Python, .NET Core, DynamoDB, SQL Server, and production support.</p>
+        </div>
+        <div class="signal-card">
+          <strong>Why now</strong>
+          <p>That hire points to a core platform moment: parking flow demand is rising, while backend ownership must stay tight.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <p class="eyebrow">Our read</p>
+        <h2>The bottleneck sits behind the parking tap</h2>
+        <div class="read-card">
+          <p>The Parking Team hire says Pango is scaling a core payment domain. This is not only a staffing gap. It likely means more work on session state, location logic, billing checks, and support tools. Recent reviews name Pango activate parking, Pango Smart, and station exit flows. Users mention zone confusion, paid-service prompts, and hard account changes. If those paths stay fragile, engineers spend time on support instead of new mobility services.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <p class="eyebrow">Where we'd start</p>
+        <h2>Two checks before adding more features</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span>Zone confidence</span>
+            <p>Reviewers say GPS can know the place but still asks for manual zone choice. Log GPS, zone, and user override gaps before payment starts.</p>
+          </div>
+          <div class="start-card">
+            <span>Paid-service guardrails</span>
+            <p>Users say paid prompts can appear while starting parking. Move offers away from the final tap, then audit cancellation state.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <p class="eyebrow">What we'd do</p>
+        <h2>A focused squad for Parking Domain reliability</h2>
+        <div class="plan-box">
+          <p>Engagement model: a dedicated Elinext squad under Pango's Product Owner or PM. Team shape: one tech lead, three senior backend engineers, one QA automation engineer, and part-time DevOps/SRE.</p>
+          <div class="squad" aria-label="Relevant stack">
+            <span class="pill">Python</span>
+            <span class="pill">.NET Core</span>
+            <span class="pill">AWS</span>
+            <span class="pill">DynamoDB</span>
+            <span class="pill">SQL Server</span>
+            <span class="pill">CI/CD</span>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <span class="num">1</span>
+              <div>
+                <strong>Week one: map risk paths</strong>
+                <p>Trace parking activation, zone selection, billing state, and support handoff across app, API, and data stores.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">2</span>
+              <div>
+                <strong>Weeks two-three: harden flows</strong>
+                <p>Fix high-risk state gaps around foreign numbers, vehicle changes, paid services, and payment history export.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">3</span>
+              <div>
+                <strong>Weeks four-five: automate checks</strong>
+                <p>Add tests for parking starts, station exits, card removal, subscription changes, and billing mismatch cases.</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="num">4</span>
+              <div>
+                <strong>Week six: hand over cleanly</strong>
+                <p>Ship a measured pilot, demo weekly, and leave dashboards your team can use after us.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="identity">
+      <div class="wrap">
+        <p class="eyebrow">Who is Elinext</p>
+        <h2>Engineering help without hiring drag</h2>
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For Pango, the fit is backend, mobile, QA, DevOps, and payment-platform work under one delivery model. We hold ISO 9001 and ISO 27001, which matter for stored payment and account data. Named customers include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. The squad above would work like remote in-house engineers, with Pango keeping product control.</p>
+        <div class="logos">
+          <strong>Siemens</strong><strong>Broadcom</strong><strong>Volkswagen</strong><strong>TRUMPF</strong><strong>TUI</strong>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <p class="eyebrow">Proof</p>
+        <h2>Similar work from Elinext</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-parking-kiosk.jpg" alt="Parking payment kiosk case study cover">
+            <h3>Payment Kiosk for a Global Parking Provider</h3>
+            <p>Elinext built a new architecture for secure parking payment hardware and supports new features over time.</p>
+            <a href="https://www.elinext.com/case-study/next-generation-parking-payment-kiosk/">Read case study</a>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-automotive-payments.jpg" alt="Automotive payment platform case study cover">
+            <h3>B2B Online Payment Platform for an Automotive Business</h3>
+            <p>Elinext used an outstaffing model for a high-load payment platform on AWS, React Native, and DynamoDB.</p>
+            <a href="https://www.elinext.com/case-study/online-payment-system-for-car-manufacturer/">Read case study</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk">
+      <div class="wrap">
+        <p class="eyebrow">Start the conversation</p>
+        <h2>Pressure-test the pilot</h2>
+        <p>We can review one Parking Domain flow together.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
