@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W28_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delaplex backend platform brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W28_proto26/delaplex_2026-07-06_11-30-20/">
+  <meta name="description" content="A short backend platform brief for Delaplex AMP and the current Backend Service Engineer hiring signal.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W28_proto26/delaplex_2026-07-06_11-30-20/">
+  <meta property="og:title" content="Delaplex backend platform brief">
+  <meta property="og:description" content="Backend capacity notes for Delaplex AMP, integrations, AWS, and release confidence.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/delaplex_2026-07-06_11-30-20/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Delaplex backend platform brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Delaplex backend platform brief">
+  <meta name="twitter:description" content="Backend capacity notes for Delaplex AMP, integrations, AWS, and release confidence.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/delaplex_2026-07-06_11-30-20/og-image.jpg">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: #f6f8fb;
+      color: #1a2433;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: #0f1d2c;
+      color: #ffffff;
+      padding: 56px 0 48px;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: 0.34;
+      z-index: -1;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #7dd9c1;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 18px;
+      font-size: clamp(2.35rem, 8vw, 4.9rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .hero-text {
+      max-width: 66ch;
+      margin-bottom: 14px;
+      color: #d8e4ee;
+      font-size: 1.02rem;
+    }
+
+    .why {
+      max-width: 68ch;
+      margin-bottom: 0;
+      padding: 16px;
+      border-left: 4px solid #ff9d4d;
+      background: rgba(255, 255, 255, 0.08);
+      color: #f6fbff;
+    }
+
+    section {
+      padding: 48px 0;
+      background: #f6f8fb;
+    }
+
+    section h2 {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: clamp(1.45rem, 4vw, 2.25rem);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      max-width: 76ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #bdd8d2;
+      border-left: 6px solid #1c9c89;
+      border-radius: 8px;
+      background: #eaf6f3;
+      color: #213144;
+    }
+
+    .start-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .start-card,
+    .proof-card {
+      border: 1px solid #d8e0ea;
+      border-radius: 8px;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(21, 34, 53, 0.08);
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 8px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #fff2e5;
+      color: #9b4c10;
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .start-card p,
+    .read-box p,
+    .proof-copy p,
+    .who p,
+    .cta p {
+      margin-bottom: 0;
+    }
+
+    .do {
+      background: #152334;
+      color: #ffffff;
+    }
+
+    .do h2 {
+      color: #ffffff;
+    }
+
+    .do-intro {
+      max-width: 76ch;
+      margin: 0 auto 24px;
+      text-align: center;
+      color: #d8e4ee;
+    }
+
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 22px;
+    }
+
+    .team span,
+    .customer-tags span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #eef7ff;
+      color: #14324b;
+      font-weight: 750;
+      font-size: 0.88rem;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #ff9d4d;
+      color: #111827;
+      font-weight: 900;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1.02rem;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: #dce7ef;
+      font-size: 0.94rem;
+    }
+
+    .stack {
+      margin-top: 20px;
+      color: #b9c9d8;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .who {
+      max-width: 82ch;
+      margin: 0 auto;
+      padding: 24px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid #d9e2ed;
+    }
+
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 0;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+    }
+
+    .proof-copy {
+      padding: 18px;
+    }
+
+    .proof-copy h3 {
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+      line-height: 1.25;
+    }
+
+    .proof-copy a {
+      display: inline-block;
+      margin-top: 12px;
+      color: #0c766d;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      background: #fff7ee;
+      text-align: center;
+    }
+
+    .cta h2 {
+      margin-bottom: 10px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      margin-top: 18px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: #0f1d2c;
+      color: #ffffff;
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero {
+        padding: 76px 0 64px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .hero .wrap {
+        display: grid;
+        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+        gap: 44px;
+        align-items: end;
+      }
+
+      .hero-copy {
+        padding-bottom: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <div class="wrap">
+        <div>
+          <p class="eyebrow">Prepared for Joy Peerwala</p>
+          <h1>Backend scale for Delaplex AMP and AI delivery</h1>
+        </div>
+        <div class="hero-copy">
+          <p class="hero-text">Delaplex is moving from consulting strength into productized AI platforms. AMP now needs fast, reliable backend services that support assets, integrations, analytics, and mobile-friendly access.</p>
+          <p class="why">We saw Delaplex hiring a Backend Service Engineer for Python, Java, AWS, microservices, search, and event-driven work. That looks like a need to add senior backend capacity without slowing Joy's delivery teams.</p>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The Backend Service Engineer signal says Delaplex is scaling complex server-side work, not just filling a seat. AMP is a real product surface: Delaplex says it is web-based, mobile friendly, AWS powered, and built around integrations plus a REST API. That mix creates pressure on API design, search, events, and release quality. If the same team supports client work, KaptizeAI, and AMP, senior backend gaps can slow demos and fixes. Joy needs capacity that can join global teams and improve the platform while the roadmap keeps moving.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">Product page</span>
+            <p>The AMP page audit showed redirect hops and slow first document response before users see the product story. First step: remove redirect hops, cache the page shell, and preload the main hero image.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Integration risk</span>
+            <p>AMP promises SAML, LDAP, Slack, JAMF, Kandji, and REST API integrations. Next step: build a small contract-test pack around the highest-value integrations before adding more backend features.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="do">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <p class="do-intro">Use a dedicated squad under Delaplex's PO or PM for a six-week backend pilot. The goal is safer AMP delivery, not a broad rewrite.</p>
+        <div class="team" aria-label="Suggested team shape">
+          <span>Backend tech lead</span>
+          <span>2 senior Python engineers</span>
+          <span>DevOps engineer</span>
+          <span>QA automation engineer</span>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <span class="num">1</span>
+            <div>
+              <strong>Map the backend</strong>
+              <p>Map AMP services, data paths, and integration contracts, then flag the backend work that blocks demos or customer onboarding.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="num">2</span>
+            <div>
+              <strong>Harden the services</strong>
+              <p>Harden FastAPI services, event flows, and search jobs with load tests, tracing, and clear retry rules.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="num">3</span>
+            <div>
+              <strong>Raise release confidence</strong>
+              <p>Build CI/CD checks for API contracts, security basics, and regression tests across AWS, Docker, and Kubernetes.</p>
+            </div>
+          </article>
+          <article class="step">
+            <span class="num">4</span>
+            <div>
+              <strong>Hand over cleanly</strong>
+              <p>Ship weekly demos with Joy's team, then hand over runbooks for support, release, and scaling decisions.</p>
+            </div>
+          </article>
+        </div>
+        <p class="stack">Relevant stack: Python, Java, Node.js, React, AWS, Docker.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="who">
+          <p>Elinext is a full-cycle software development partner since 1997. We have about 700 in-house specialists and no freelancers. For Delaplex, the fit is backend, QA, DevOps, and secure delivery. Our teams work with Java, .NET, Python, Node.js, React, AWS, and mobile stacks. We hold ISO 9001 and ISO 27001 certifications. Clients include <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>, which shows our work fits large enterprise delivery. That is the base for the squad above. Senior engineers can support product code, tests, and release flow.</p>
+          <div class="customer-tags" aria-label="Named customers">
+            <span>Siemens</span>
+            <span>Broadcom</span>
+            <span>Volkswagen</span>
+            <span>TRUMPF</span>
+            <span>TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-warehouse-management.jpg" alt="Warehouse management case study image">
+            <div class="proof-copy">
+              <h3>Continuous microservices for warehouse management</h3>
+              <p>Elinext built backend services, Web API work, QA, and operational fixes for a German logistics platform. The work reduced manual label effort, errors, and overhead.</p>
+              <a href="https://www.elinext.com/case-study/warehouse-management-solutions/">Read the case</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-inventory-management.png" alt="Inventory management case study image">
+            <div class="proof-copy">
+              <h3>Inventory management web platform</h3>
+              <p>Elinext built a role-based web client-server app with Java, Spring, PostgreSQL, Angular, and Docker. The platform simplified asset management in one place.</p>
+              <a href="https://www.elinext.com/case-study/elinext-inventory-management/">Read the case</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Start the backend pilot</h2>
+        <p>A short call can scope the first sprint.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
