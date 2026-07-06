@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W28_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NAM Info backend and data quality delivery brief</title>
+  <meta name="description" content="A short proposal for NAM Info as it scales Java backend work around Inferyx and data quality delivery.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W28_proto26/nam-info_2026-07-06_05-00-28/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W28_proto26/nam-info_2026-07-06_05-00-28/">
+  <meta property="og:title" content="NAM Info backend and data quality delivery brief">
+  <meta property="og:description" content="A focused plan for Java, API, and data quality work around Inferyx.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/nam-info_2026-07-06_05-00-28/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="NAM Info backend and data quality delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="NAM Info backend and data quality delivery brief">
+  <meta name="twitter:description" content="A focused plan for Java, API, and data quality work around Inferyx.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/nam-info_2026-07-06_05-00-28/og-image.jpg">
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #596577;
+      --paper: #fbfcfb;
+      --white: #ffffff;
+      --line: #dfe7e6;
+      --navy: #14233a;
+      --green: #0f766e;
+      --green-soft: #e8f5f2;
+      --orange: #d97706;
+      --orange-soft: #fff4e5;
+      --blue-soft: #edf5ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    body { line-height: 1.55; }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a { color: inherit; }
+
+    .shell {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 56px 0 44px;
+    }
+
+    .eyebrow {
+      color: #9ed7d1;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0 0 14px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 780px;
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      line-height: 1.02;
+      margin-bottom: 18px;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 720px;
+      color: #d9e3ee;
+      font-size: 1rem;
+      margin-bottom: 0;
+    }
+
+    section {
+      padding: 42px 0;
+      background: var(--paper);
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.65rem, 4vw, 2.35rem);
+      margin-bottom: 22px;
+      letter-spacing: 0;
+    }
+
+    .read-card {
+      background: var(--green-soft);
+      border: 1px solid #bfded9;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 82ch;
+      margin: 0 auto;
+      box-shadow: 0 14px 34px rgba(20, 35, 58, 0.08);
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-block;
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .proposal {
+      background: #f1f6f5;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .proposal-panel {
+      background: var(--white);
+      border: 1px solid #cddbd8;
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: 0 18px 42px rgba(20, 35, 58, 0.1);
+    }
+
+    .team {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 18px 0 20px;
+    }
+
+    .role {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 76px;
+      background: #fcfffe;
+    }
+
+    .role strong {
+      display: block;
+      font-size: 0.95rem;
+    }
+
+    .role span {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      background: var(--blue-soft);
+      border: 1px solid #d3e4f8;
+      border-radius: 8px;
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--white);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    .step strong { display: block; margin-bottom: 4px; }
+    .step p { color: var(--muted); margin-bottom: 0; }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      border: 1px solid #cfdad8;
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: #f7fbfa;
+      color: #284056;
+      font-size: 0.88rem;
+      font-weight: 650;
+    }
+
+    .elinext-card {
+      max-width: 82ch;
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .customer {
+      background: var(--orange-soft);
+      color: #7c3f00;
+      border: 1px solid #ffd59d;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 800;
+      font-size: 0.84rem;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .case-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .case-body { padding: 18px; }
+    .case-body p { color: var(--muted); }
+
+    .case-link {
+      color: var(--green);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .closing {
+      background: var(--navy);
+      color: var(--white);
+      text-align: center;
+      padding: 44px 0;
+    }
+
+    .closing h2 {
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      margin-bottom: 10px;
+    }
+
+    .closing p {
+      color: #d8e2ec;
+      margin-bottom: 20px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero { padding: 78px 0 62px; }
+      section { padding: 58px 0; }
+      .start-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proposal-panel { padding: 30px; }
+      .team { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <div class="shell">
+        <p class="eyebrow">Prepared for NAM Info Inc</p>
+        <h1>Stabilize data quality delivery while NAM scales backend work</h1>
+        <p>Saw NAM hiring for Java, Spring Boot, microservices, APIs, Docker, Kubernetes, and cloud work. Here is how we would support Inferyx delivery without adding process noise.</p>
+      </div>
+    </header>
+
+    <section aria-labelledby="our-read">
+      <div class="shell">
+        <h2 id="our-read" class="section-title">Our read</h2>
+        <div class="read-card">
+          <p>NAM looks to be adding backend strength around Java, Spring Boot, microservices, REST/SOAP, Oracle or MongoDB, Docker, Kubernetes, TeamCity, JIRA, and Git. That points to platform load, not a one-off feature. Inferyx raises the bar because it promises data integration, lineage, governance, quality, and audit-ready financial workflows. If the backend team grows without shared release gates, more code can create more data risk. Chittiappa's background in BCBS 239, SOX, GCP, and data quality makes this the right moment to tighten delivery.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="start">
+      <div class="shell">
+        <h2 id="start" class="section-title">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">Observed</span>
+            <p>Inferyx bundles integration, lineage, metadata, governance, data quality, and analytics. Start by mapping one financial workflow from source API to release gate.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Observed</span>
+            <p>aaonri loaded on mobile, but logged failed fetches and an Angular null-state error. Set one shared API error contract before scaling backend work.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="proposal" aria-labelledby="do">
+      <div class="shell">
+        <h2 id="do" class="section-title">What we'd do</h2>
+        <div class="proposal-panel">
+          <p><strong>Engagement model:</strong> a dedicated squad under NAM's product or data platform lead, with weekly demos and clear handoff into your backlog.</p>
+          <div class="team" aria-label="Recommended team">
+            <div class="role"><strong>1 Tech Lead</strong><span>Java and data platform scope</span></div>
+            <div class="role"><strong>2 Backend Engineers</strong><span>Spring Boot APIs and services</span></div>
+            <div class="role"><strong>1 Data QA Engineer</strong><span>rules, lineage, and checks</span></div>
+            <div class="role"><strong>1 DevOps Engineer</strong><span>CI, Docker, Kubernetes</span></div>
+          </div>
+          <ul class="steps">
+            <li class="step"><span class="num">1</span><div><strong>Trace one workflow</strong><p>Pick one Inferyx financial data flow and map API calls, schemas, lineage, and failure states end to end.</p></div></li>
+            <li class="step"><span class="num">2</span><div><strong>Harden service contracts</strong><p>Add Spring Boot contract tests for REST/SOAP edges, Oracle or MongoDB paths, and common null-state responses.</p></div></li>
+            <li class="step"><span class="num">3</span><div><strong>Automate quality gates</strong><p>Build data checks for schema drift, missing lineage, failed enrichments, and release blockers inside CI.</p></div></li>
+            <li class="step"><span class="num">4</span><div><strong>Ship a pilot</strong><p>Run a six-week pilot with weekly demos, defect burn-down, and a playbook NAM can reuse.</p></div></li>
+          </ul>
+          <div class="stack" aria-label="Relevant stack">
+            <span class="pill">Java</span><span class="pill">Spring Boot</span><span class="pill">REST/SOAP</span><span class="pill">MongoDB</span><span class="pill">Docker/Kubernetes</span><span class="pill">GCP</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="who">
+      <div class="shell">
+        <h2 id="who" class="section-title">Who is Elinext</h2>
+        <div class="elinext-card">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build dedicated teams for backend, web, mobile, QA, DevOps, AI/ML, and data work. For NAM, the fit is regulated delivery: ISO 27001 supports security needs, and ISO 9001 supports quality process. We have worked with enterprise clients such as <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TUI</strong>, and <strong>TRUMPF</strong>. That is the kind of delivery base we would bring to the Java and data-quality pilot above.</p>
+          <div class="customers"><span class="customer">Siemens</span><span class="customer">Broadcom</span><span class="customer">Volkswagen</span><span class="customer">TUI</span><span class="customer">TRUMPF</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="proof">
+      <div class="shell">
+        <h2 id="proof" class="section-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="case-card">
+            <img src="assets/case-document-collaboration-platform.jpg" alt="Document collaboration platform case study image">
+            <div class="case-body">
+              <h3>Document Collaboration Platform Development</h3>
+              <p>For regulated financial markets, Elinext helped build a scalable platform and improved QA efficiency with automation.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/document-collaboration-platform/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-data-visualization-tool.jpg" alt="Data visualization tool case study image">
+            <div class="case-body">
+              <h3>Data Visualization Tool Development</h3>
+              <p>A Java, Spring, Angular, MongoDB, and Docker system gave one source for reporting and faster data access.</p>
+              <a class="case-link" href="https://www.elinext.com/case-study/elinext-data-vizualization-tool-development/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing" aria-labelledby="talk">
+      <div class="shell">
+        <h2 id="talk">Talk through the pilot</h2>
+        <p>Review one workflow, one squad, and one delivery gate.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
