@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W28_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bright Data backend scale brief</title>
+  <meta name="description" content="A short Bright Data brief on backend capacity, API reliability, onboarding clarity, and where Elinext would start.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W28_proto26/bright-data_2026-07-07_07-22-54/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W28_proto26/bright-data_2026-07-07_07-22-54/">
+  <meta property="og:title" content="Bright Data backend scale brief">
+  <meta property="og:description" content="Hiring backend JavaScript engineers? Here is where a focused squad could help.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/bright-data_2026-07-07_07-22-54/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Bright Data backend scale brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bright Data backend scale brief">
+  <meta name="twitter:description" content="Hiring backend JavaScript engineers? Here is where a focused squad could help.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/bright-data_2026-07-07_07-22-54/og-image.jpg">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #122033;
+      --muted: #5b6877;
+      --soft: #f5f8fc;
+      --line: #dce5ef;
+      --blue: #2c6df2;
+      --cyan: #13b9d4;
+      --green: #25a56a;
+      --orange: #ff7a00;
+      --navy: #101a2e;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--soft);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 44px 18px 36px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: #b7d7ff;
+      font-size: 0.84rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      font-size: clamp(2.3rem, 7vw, 4.9rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .lead,
+    .why {
+      max-width: 720px;
+      margin-top: 18px;
+      color: #d8e6f5;
+      font-size: clamp(1.03rem, 2.8vw, 1.2rem);
+    }
+
+    .signal-panel {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 8px;
+      padding: 18px;
+      background: #17243b;
+    }
+
+    .signal-title {
+      color: #cce6ff;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .lane {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 0;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      color: #eef6ff;
+      font-size: 0.92rem;
+    }
+
+    .lane:first-of-type {
+      border-top: 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: rgba(19,185,212,0.15);
+      color: #90f0ff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    section {
+      padding: 44px 18px;
+      background: var(--white);
+    }
+
+    section:nth-of-type(odd) {
+      background: #f8fbff;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 22px;
+      font-size: clamp(1.55rem, 4vw, 2.3rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      max-width: 84ch;
+      margin: 0 auto;
+      border-left: 5px solid var(--blue);
+      border-radius: 8px;
+      padding: 20px;
+      background: #eef5ff;
+      box-shadow: 0 16px 40px rgba(18,32,51,0.08);
+      color: #26384b;
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      overflow: hidden;
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 10px;
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    section.proposal {
+      background: #0f2238;
+      color: var(--white);
+    }
+
+    .proposal .section-title {
+      color: var(--white);
+    }
+
+    .work-grid {
+      display: grid;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .team-card,
+    .step {
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 8px;
+      background: #162f4b;
+      padding: 18px;
+    }
+
+    .team-row {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .role {
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255,255,255,0.08);
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+      background: var(--orange);
+      color: #101a2e;
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+
+    .step p,
+    .team-card p {
+      color: #d4e3ef;
+    }
+
+    .elinext-copy {
+      max-width: 84ch;
+      margin: 0 auto;
+      text-align: center;
+      color: #2c3b4b;
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .customers strong {
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: #eaf1ff;
+      color: #204fbd;
+      font-size: 0.86rem;
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #e8eef5;
+    }
+
+    .case-body {
+      padding: 16px;
+    }
+
+    .case-body h3 {
+      font-size: 1.04rem;
+      margin-bottom: 8px;
+    }
+
+    .case-body p {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .case-body a {
+      display: inline-flex;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .talk {
+      text-align: center;
+      background: #f7faf4;
+    }
+
+    .talk h2 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      margin-bottom: 10px;
+    }
+
+    .talk p {
+      margin-bottom: 22px;
+      color: var(--muted);
+    }
+
+    .button {
+      display: inline-flex;
+      width: 100%;
+      max-width: 280px;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #111827;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .hero {
+        padding: 68px 28px 58px;
+      }
+
+      .hero-grid,
+      .work-grid,
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      section {
+        padding: 64px 28px;
+      }
+
+      .team-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> Prepared for Or Lenchner</div>
+        <h1>Backend capacity for Bright Data's next platform push</h1>
+        <p class="lead">Bright Data already owns a wide web data platform. The next gain is not more pages. It is faster backend delivery around APIs, data flows, and blocked-site edge cases.</p>
+        <p class="why">Saw Bright Data is hiring experienced backend JavaScript developers for Node.js, MongoDB, Kubernetes, RabbitMQ, Cassandra, and Snowflake. This brief shows where an outside squad could help without slowing your core team.</p>
+      </div>
+      <div class="signal-panel" aria-label="Bright Data platform signals">
+        <div class="signal-title">Where the pressure shows</div>
+        <div class="lane"><span>Web Access APIs</span><span class="tag">Reliability</span></div>
+        <div class="lane"><span>Scraper APIs</span><span class="tag">Delivery</span></div>
+        <div class="lane"><span>AI and MCP paths</span><span class="tag">Scale</span></div>
+        <div class="lane"><span>Proxy edge cases</span><span class="tag">Support</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Our read</h2>
+      <p class="read-box">The hiring signal says Bright Data is adding backend capacity, not replacing one engineer. Your platform spans APIs, Scraper APIs, datasets, AI connectors, MCP, and proxies. That breadth is powerful, but reliability and setup clarity now matter everywhere. Public reviews praise scale. They also mention tool-choice confusion, docs gaps, proxy edge cases, and cost visibility. If those gaps stay with the core team, product work can slow while support load grows.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Where we'd start</h2>
+      <div class="start-grid">
+        <div class="start-card">
+          <span class="label">What we noticed</span>
+          <p>Your careers page repeats the same backend stack across several roles. We would pick one API path and clean up retries, failure labels, and delivery status first.</p>
+        </div>
+        <div class="start-card">
+          <span class="label">Useful next step</span>
+          <p>Reviews point to tool-choice friction. A short decision guide inside onboarding could route users by target site, data volume, and delivery need.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="proposal">
+    <div class="wrap">
+      <h2 class="section-title">What we'd do</h2>
+      <div class="work-grid">
+        <div class="team-card">
+          <p>Engagement model: a dedicated backend squad under your Product Owner or Engineering Manager.</p>
+          <div class="team-row" aria-label="Suggested team shape">
+            <div class="role">1 backend tech lead</div>
+            <div class="role">3 senior Node.js engineers</div>
+            <div class="role">1 QA automation engineer</div>
+            <div class="role">Optional DevOps support</div>
+          </div>
+          <p style="margin-top:16px;">Stack fit: Node.js, React, Python, Kubernetes, data pipelines, and API testing.</p>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <span class="num">1</span>
+            <h3>Trace one flow</h3>
+            <p>Map one high-value API flow from request to delivery, including queue state, retries, errors, and customer messages.</p>
+          </article>
+          <article class="step">
+            <span class="num">2</span>
+            <h3>Fix known friction</h3>
+            <p>Ship fixes for failure labels, session handling, and retry rules where blocked targets create support tickets.</p>
+          </article>
+          <article class="step">
+            <span class="num">3</span>
+            <h3>Protect releases</h3>
+            <p>Add regression tests around Web Unlocker, Browser API, and scraper delivery edge cases before each release.</p>
+          </article>
+          <article class="step">
+            <span class="num">4</span>
+            <h3>Clarify onboarding</h3>
+            <p>Turn support findings into short docs and onboarding choices for developers using Node.js, Playwright, and Snowflake.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Who is Elinext</h2>
+      <div class="elinext-copy">
+        <p>Elinext is a full-cycle software development company, active since 1997. We have about 700 in-house specialists and no freelancers. We build web, backend, QA, DevOps, and AI/ML teams across global delivery. For Bright Data, the fit is backend scale, data engineering, and API work. That work is backed by ISO 27001 and ISO 9001. The same dedicated-team model lets your managers keep control while adding senior delivery capacity.</p>
+        <div class="customers" aria-label="Selected Elinext customers">
+          <strong>Siemens</strong>
+          <strong>Broadcom</strong>
+          <strong>Volkswagen</strong>
+          <strong>TRUMPF</strong>
+          <strong>TUI</strong>
+          <strong>TransPerfect</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Proof</h2>
+      <div class="proof-grid">
+        <article class="case-card">
+          <img src="assets/case-data-analytics.jpg" alt="Elinext data analytics case study cover">
+          <div class="case-body">
+            <h3>Data analytics platform</h3>
+            <p>Elinext built a financial data platform from scratch, then expanded it beyond MVP as needs changed.</p>
+            <a href="https://www.elinext.com/case-study/data-analytics-platform-for-companies-operating-on-nigerian-financial-market/">Read case study</a>
+          </div>
+        </article>
+        <article class="case-card">
+          <img src="assets/case-network-platform.jpg" alt="Elinext network management case study cover">
+          <div class="case-body">
+            <h3>Network management platform</h3>
+            <p>Elinext delivered a high-throughput platform with backend, DevOps, and ongoing product improvement.</p>
+            <a href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">Read case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="talk">
+    <div class="wrap">
+      <h2>Talk through the first slice</h2>
+      <p>We can scope a pilot around one backend flow.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Start a conversation</a>
+    </div>
+  </section>
+</body>
+</html>
