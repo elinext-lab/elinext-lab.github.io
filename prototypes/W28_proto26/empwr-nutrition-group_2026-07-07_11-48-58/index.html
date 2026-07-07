@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W28_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EMPWR Nutrition Group engineering brief</title>
+  <meta name="description" content="A short proposal for EMPWR Nutrition Group's post-acquisition data, reporting, and product-flow work.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W28_proto26/empwr-nutrition-group_2026-07-07_11-48-58/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W28_proto26/empwr-nutrition-group_2026-07-07_11-48-58/">
+  <meta property="og:title" content="EMPWR Nutrition Group post-acquisition engineering brief">
+  <meta property="og:description" content="A focused plan for data, reporting, and buyer-flow work after the Vitamin Well deal.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/empwr-nutrition-group_2026-07-07_11-48-58/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="EMPWR Nutrition Group post-acquisition engineering brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="EMPWR Nutrition Group post-acquisition engineering brief">
+  <meta name="twitter:description" content="A focused plan for data, reporting, and buyer-flow work after the Vitamin Well deal.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/empwr-nutrition-group_2026-07-07_11-48-58/og-image.jpg">
+  <style>
+    :root {
+      --ink: #17322d;
+      --muted: #60756f;
+      --paper: #fffdf7;
+      --cream: #f4efe2;
+      --mint: #d9eadf;
+      --leaf: #356f42;
+      --orange: #df7a27;
+      --line: rgba(23, 50, 45, 0.16);
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    section { padding: 56px 18px; background: var(--paper); }
+    .wrap { width: 100%; max-width: 1120px; margin: 0 auto; }
+    .section-title {
+      text-align: center;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--leaf);
+      margin: 0 0 18px;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-size: 2.15rem; line-height: 1.08; max-width: 12ch; }
+    h2 { font-size: 1.55rem; line-height: 1.15; }
+    h3 { font-size: 1rem; margin-bottom: 8px; }
+    p { color: var(--muted); }
+
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      align-items: end;
+      padding: 22px 18px 44px;
+      background: linear-gradient(0deg, rgba(23,50,45,.78), rgba(23,50,45,.18)), url("assets/empwr-hero.png") center / cover no-repeat;
+      color: var(--white);
+    }
+    .hero p { color: rgba(255,255,255,.9); max-width: 41rem; font-size: 1.05rem; }
+    .eyebrow { color: #f5c589; font-weight: 800; text-transform: uppercase; font-size: .76rem; }
+    .hero-card {
+      width: 100%;
+      max-width: 720px;
+      padding: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .read-box {
+      background: var(--mint);
+      border: 1px solid rgba(53,111,66,.2);
+      border-left: 7px solid var(--leaf);
+      padding: 24px;
+      border-radius: 8px;
+      max-width: 82ch;
+      margin: 0 auto;
+    }
+    .read-box p { color: #29443d; margin-bottom: 0; }
+
+    .start-grid, .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .start-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .label {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 8px;
+    }
+    .start-card p { margin: 0; }
+
+    .plan {
+      background: #17322d;
+      color: var(--white);
+    }
+    .plan .section-title { color: #f5c589; }
+    .plan p { color: rgba(255,255,255,.78); }
+    .plan-shell {
+      display: grid;
+      gap: 18px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .team {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+    .team span {
+      display: block;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      padding: 9px 12px;
+      color: rgba(255,255,255,.86);
+      font-size: .92rem;
+    }
+    .steps { display: grid; gap: 12px; }
+    .step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      background: var(--white);
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 800;
+    }
+    .step h3 { color: var(--ink); margin: 0 0 5px; }
+    .step p { margin: 0; color: var(--muted); }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .stack span, .customer-tags span {
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: .82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .stack span { background: rgba(245,197,137,.18); color: #f5c589; }
+
+    .elinext {
+      background: var(--cream);
+    }
+    .elinext-box {
+      max-width: 84ch;
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+    }
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 0;
+    }
+    .customer-tags span {
+      background: #edf5ef;
+      color: var(--leaf);
+    }
+
+    .proof-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+    .proof-body { padding: 18px; }
+    .proof-body a { color: var(--leaf); font-weight: 800; }
+
+    .cta {
+      background: #f6d7ad;
+      text-align: center;
+    }
+    .cta h2 { font-size: 1.75rem; margin-bottom: 8px; }
+    .cta p { max-width: 42rem; margin: 0 auto 18px; color: #5e4128; }
+    .button {
+      display: inline-block;
+      background: var(--ink);
+      color: var(--white);
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 13px 18px;
+      font-weight: 800;
+    }
+
+    @media (min-width: 768px) {
+      section { padding: 72px 28px; }
+      h1 { font-size: 4rem; }
+      .hero { min-height: 82vh; padding: 32px 28px 64px; }
+      .start-grid, .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .plan-shell { grid-template-columns: .7fr 1.3fr; padding: 28px; }
+    }
+
+    @media (min-width: 1100px) {
+      h1 { font-size: 4.7rem; }
+      .hero p { font-size: 1.13rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-card">
+        <p class="eyebrow">Prepared for Jason Grzela</p>
+        <h1>Scaling data after the Vitamin Well deal</h1>
+        <p>Saw EMPWR join forces with Vitamin Well on July 2, 2026. This brief shows where we would help your engineering team protect data, reporting, and buyer flow while production grows.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <p class="section-title">Our read</p>
+        <div class="read-box">
+          <p>The signal says EMPWR is moving from fast growth to tighter integration. Vitamin Well wants more Barebells capacity, new products, and steady service for existing customers. That puts pressure on plant data, SAP flows, and shared reports. Your open Power BI Developer role names operations, finance, sales, and R&amp;D as users. If the same KPI means different things by site, decisions slow down and teams recheck reports by hand.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <p class="section-title">Where we'd start</p>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">Data check</span>
+            <p>Your public lakehouse project says acquisitions strained the old DWH. Start with a data-lineage review for the reports tied to production, stock, and finance.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Buyer flow</span>
+            <p>Custom-made and standard-range pages both use brochure forms. Add product type, region, and source tracking before more campaign traffic arrives.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="wrap">
+        <p class="section-title">What we'd do</p>
+        <div class="plan-shell">
+          <div>
+            <h2>Six-week dedicated squad under your PM</h2>
+            <p>One data tech lead, two data or full-stack engineers, one QA automation engineer, and one DevOps engineer.</p>
+            <div class="team">
+              <span>Tech Lead</span>
+              <span>2 Data / Full-stack Engineers</span>
+              <span>QA Automation</span>
+              <span>DevOps Support</span>
+            </div>
+            <div class="stack">
+              <span>Python</span><span>.NET</span><span>Node.js</span><span>React</span><span>SQL</span><span>Power BI handoff</span>
+            </div>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="num">1</div>
+              <div><h3>Map core reports</h3><p>Trace the first operations and finance dashboards back to source tables, owners, and update rules.</p></div>
+            </article>
+            <article class="step">
+              <div class="num">2</div>
+              <div><h3>Harden intake</h3><p>Clean brochure form tracking so sales sees product interest, region, and source in one place.</p></div>
+            </article>
+            <article class="step">
+              <div class="num">3</div>
+              <div><h3>Automate checks</h3><p>Add tests for report logic, form events, and release steps before changes reach live pages.</p></div>
+            </article>
+            <article class="step">
+              <div class="num">4</div>
+              <div><h3>Ship weekly</h3><p>Run weekly demos with Jason's team, then leave clear support docs for internal owners after pilot handoff.</p></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="elinext">
+      <div class="wrap">
+        <p class="section-title">Who is Elinext</p>
+        <div class="elinext-box">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. We build web, mobile, data, QA, DevOps, and AI systems for global clients. Our work is backed by ISO 9001 and ISO 27001 practices. Teams have served <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. For EMPWR, that means a stable outside squad that can join your delivery rhythm without adding hiring load.</p>
+          <div class="customer-tags"><span>Siemens</span><span>Broadcom</span><span>Volkswagen</span><span>TRUMPF</span><span>TUI</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <p class="section-title">Proof</p>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-esg.jpg" alt="">
+            <div class="proof-body">
+              <h3>ESG Software Automation</h3>
+              <p>Manufacturing workflow automation moved paper forms into one digital process and improved review and contract work.</p>
+              <a href="https://www.elinext.com/case-study/esg-operation-automation/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-data.webp" alt="">
+            <div class="proof-body">
+              <h3>QA and Data Analytics in Pharma</h3>
+              <p>Python-backed validation helped a data-heavy client test inputs and improve trusted analytics workflows.</p>
+              <a href="https://www.elinext.com/case-study/qa-and-data-analytics-in-pharma-industry/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>Start the conversation</h2>
+        <p>We can review one dashboard and one buyer flow first.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
