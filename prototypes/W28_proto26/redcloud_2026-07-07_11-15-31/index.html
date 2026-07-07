@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W28_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RedCloud production AI brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W28_proto26/redcloud_2026-07-07_11-15-31/">
+  <meta name="description" content="A short RedCloud brief on production AI, RedAI rollout, and Red101 reliability paths.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W28_proto26/redcloud_2026-07-07_11-15-31/">
+  <meta property="og:title" content="RedCloud production AI brief">
+  <meta property="og:description" content="A focused read on RedAI rollout pressure and Red101 reliability paths.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/redcloud_2026-07-07_11-15-31/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="RedCloud production AI brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RedCloud production AI brief">
+  <meta name="twitter:description" content="A focused read on RedAI rollout pressure and Red101 reliability paths.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/redcloud_2026-07-07_11-15-31/og-image.jpg">
+  <style>
+    :root {
+      --ink: #121821;
+      --muted: #5d6876;
+      --paper: #f7f5ef;
+      --panel: #ffffff;
+      --line: #ded8cc;
+      --red: #c6272f;
+      --green: #0f7b67;
+      --navy: #172136;
+      --amber: #e6a342;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; overflow-x: hidden; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.5;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; }
+    .section {
+      width: 100%;
+      padding: 44px 18px;
+      background: var(--paper);
+    }
+    .section.alt { background: #ece8df; }
+    .inner {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: center;
+      background: var(--navy);
+      color: #fff;
+      padding: 44px 18px 34px;
+      position: relative;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 10px;
+      background: linear-gradient(90deg, var(--red), var(--amber), var(--green));
+    }
+    .hero-grid {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      gap: 28px;
+    }
+    .eyebrow {
+      color: #f0b25b;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      margin: 0 0 14px;
+    }
+    h1 {
+      margin: 0;
+      max-width: 12ch;
+      font-size: clamp(2.35rem, 9vw, 5.25rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 62ch;
+      margin: 18px 0 0;
+      color: #dbe2ec;
+      font-size: 1.02rem;
+    }
+    .asset-strip {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .asset-strip img {
+      width: min(100%, 320px);
+      background: #111b2f;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      padding: 12px;
+    }
+    .asset-strip p {
+      margin: 0;
+      font-size: 0.92rem;
+      color: #d9e0ea;
+    }
+    h2 {
+      margin: 0 0 20px;
+      text-align: center;
+      font-size: clamp(1.55rem, 5vw, 2.45rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+    .read-card {
+      max-width: 78ch;
+      margin: 0 auto;
+      background: #fff8ea;
+      border-left: 6px solid var(--red);
+      border-radius: 8px;
+      padding: 22px;
+      box-shadow: 0 16px 40px rgba(54, 40, 19, 0.08);
+    }
+    .read-card p,
+    .plain p {
+      margin: 0;
+      color: #303846;
+      font-size: 1rem;
+    }
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+    .start-card,
+    .step,
+    .proof-card,
+    .who-card,
+    .cta-box {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 16px 36px rgba(26, 25, 21, 0.06);
+    }
+    .start-card {
+      padding: 18px;
+      display: grid;
+      gap: 8px;
+    }
+    .label {
+      color: var(--green);
+      font-weight: 800;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    .start-card p,
+    .step p,
+    .who-card p,
+    .proof-card p,
+    .cta-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+    .plan {
+      background: #172136;
+      color: #fff;
+    }
+    .plan h2 { color: #fff; }
+    .plan-shell {
+      display: grid;
+      gap: 18px;
+    }
+    .team {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .role {
+      min-height: 54px;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      text-align: center;
+      font-weight: 750;
+      font-size: 0.88rem;
+    }
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+    .step {
+      padding: 18px;
+      color: var(--ink);
+      display: grid;
+      gap: 8px;
+    }
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--red);
+      color: #fff;
+      font-weight: 800;
+    }
+    .step strong { display: block; font-size: 1.02rem; }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .pill {
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.84rem;
+      background: rgba(255,255,255,0.08);
+    }
+    .who-card { padding: 22px; max-width: 78ch; margin: 0 auto; }
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .customers strong {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f0f4ef;
+      color: #275447;
+      font-size: 0.88rem;
+    }
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .proof-card { overflow: hidden; }
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #ddd;
+    }
+    .proof-body {
+      padding: 16px;
+      display: grid;
+      gap: 8px;
+    }
+    .proof-card h3 {
+      margin: 0;
+      font-size: 1.08rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+    .proof-card a {
+      color: var(--red);
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .cta-box {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 26px;
+      text-align: center;
+      background: #fff;
+    }
+    .cta-box h2 { margin-bottom: 10px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      margin-top: 18px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--red);
+      color: #fff;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    @media (min-width: 760px) {
+      .section { padding: 64px 28px; }
+      .hero { padding: 58px 28px 42px; }
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
+        align-items: center;
+      }
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .plan-shell {
+        grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.28fr);
+        align-items: start;
+      }
+      .team { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (min-width: 1100px) {
+      .team { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Prepared for Michael Sundalskliev</p>
+        <h1>Help RedAI move from launch to stable scale</h1>
+        <p>A short technical brief on RedCloud's AI rollout, Red101 trust paths, and where a senior squad could reduce delivery load.</p>
+        <p>Saw RedCloud hiring an AI Engineer while RedAI Strategy moves into live customer use. That usually means model work, data quality, and production release paths all need help at once.</p>
+      </div>
+      <div class="asset-strip" aria-label="RedCloud product context">
+        <img src="assets/redcloud-product-logos.png" alt="RedCloud product logos">
+        <p>RedAI, Red101, and TradeX now carry the same promise: better trade decisions from live market data.</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="section alt">
+    <div class="inner">
+      <h2>Our read</h2>
+      <div class="read-card">
+        <p>The AI Engineer signal says RedCloud is moving from platform promise to product delivery. RedAI Strategy is already live for enterprise FMCG customers in Nigeria, while RAID is still moving toward deeper use. That creates a tight loop between data feeds, model checks, release safety, and support. Red101 reviews point to trust paths like OTP, wallet, seller discovery, and account setup. If these paths stay noisy, RedAI recommendations can look wrong even when the model is sound.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="inner">
+      <h2>Where we'd start</h2>
+      <div class="start-grid">
+        <article class="start-card">
+          <span class="label">What we noticed</span>
+          <p>Fresh Red101 reviews mention OTP delay, account setup, seller visibility, wallet trust, and support gaps.</p>
+          <span class="label">Useful next step</span>
+          <p>Tag those events by market and release, then fix the highest-risk path before the next RedAI market rollout.</p>
+        </article>
+        <article class="start-card">
+          <span class="label">What we noticed</span>
+          <p>The Red101 product page is much heavier than RedAI Global on mobile.</p>
+          <span class="label">Useful next step</span>
+          <p>Remove render blockers and track each change against partner discovery and candidate traffic.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section plan">
+    <div class="inner">
+      <h2>What we'd do</h2>
+      <div class="plan-shell">
+        <div>
+          <p>Engagement model: a dedicated squad under RedCloud's PO or engineering lead for a six-week pilot.</p>
+          <div class="team" aria-label="Suggested team">
+            <div class="role">AI tech lead</div>
+            <div class="role">Two AI/ML engineers</div>
+            <div class="role">Data engineer</div>
+            <div class="role">Backend engineer</div>
+            <div class="role">QA/DevOps engineer</div>
+            <div class="role">Weekly demo cadence</div>
+          </div>
+          <div class="stack" aria-label="Relevant stack">
+            <span class="pill">Python</span>
+            <span class="pill">TensorFlow</span>
+            <span class="pill">PyTorch</span>
+            <span class="pill">C# / .NET</span>
+            <span class="pill">Node.js</span>
+            <span class="pill">AWS</span>
+          </div>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <span class="num">1</span>
+            <strong>Trace one recommendation</strong>
+            <p>Trace one RedAI Strategy recommendation from source tables to user action, including feature freshness, model version, and support handoff.</p>
+          </article>
+          <article class="step">
+            <span class="num">2</span>
+            <strong>Instrument trust paths</strong>
+            <p>Instrument OTP, wallet, seller discovery, and order events by market, app version, payment partner, and device class.</p>
+          </article>
+          <article class="step">
+            <span class="num">3</span>
+            <strong>Add release checks</strong>
+            <p>Build automated checks for stale inventory signals, failed partner responses, and risky releases before they reach Red101 retailers.</p>
+          </article>
+          <article class="step">
+            <span class="num">4</span>
+            <strong>Ship the pilot</strong>
+            <p>Ship a small production pilot with weekly demos, clear rollback rules, and a handover for your internal team.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="inner">
+      <h2>Who is Elinext</h2>
+      <div class="who-card">
+        <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For a RedAI pilot, the useful parts are AI/ML, data engineering, backend, QA, and DevOps under one delivery lead. Elinext holds ISO 9001 and ISO 27001, which matters when trade data, payments, and support logs are involved. Teams have served <strong>Siemens</strong>, <strong>Broadcom</strong>, and <strong>Volkswagen</strong>. That gives RedCloud a senior bench while your platform team keeps control.</p>
+        <div class="customers" aria-label="Named customers">
+          <strong>Siemens</strong>
+          <strong>Broadcom</strong>
+          <strong>Volkswagen</strong>
+          <strong>TUI</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="inner">
+      <h2>Proof</h2>
+      <div class="proof-grid">
+        <article class="proof-card">
+          <img src="assets/case-retail-demand.jpg" alt="Retail demand forecasting case study">
+          <div class="proof-body">
+            <h3>Predictive Analytics for Forecasting Demand in Retail</h3>
+            <p>Retail demand models using Python and LightGBM.</p>
+            <a href="https://www.elinext.com/case-study/predictive-analytics-for-forecasting-retail-demand/">Read the case study</a>
+          </div>
+        </article>
+        <article class="proof-card">
+          <img src="assets/case-nigeria-data.jpg" alt="Nigerian market analytics case study">
+          <div class="proof-body">
+            <h3>Data Analytics Platform for the Nigerian Financial Market</h3>
+            <p>Market data transformed into clear risk dashboards.</p>
+            <a href="https://www.elinext.com/case-study/data-analytics-platform-for-companies-operating-on-nigerian-financial-market/">Read the case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="inner">
+      <div class="cta-box">
+        <h2>Start with one workflow</h2>
+        <p>Pick one RedAI path and one Red101 trust path.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Talk to Elinext</a>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
