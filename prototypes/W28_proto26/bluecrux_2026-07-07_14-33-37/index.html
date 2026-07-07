@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W28_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bluecrux Axon scaling brief</title>
+  <meta name="description" content="A short proposal for helping Bluecrux scale Axon's analytics backbone while protecting product delivery quality.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W28_proto26/bluecrux_2026-07-07_14-33-37/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W28_proto26/bluecrux_2026-07-07_14-33-37/">
+  <meta property="og:title" content="Bluecrux Axon scaling brief">
+  <meta property="og:description" content="A focused read on scaling Axon's analytics backbone without slowing product delivery.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/bluecrux_2026-07-07_14-33-37/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Bluecrux Axon scaling brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bluecrux Axon scaling brief">
+  <meta name="twitter:description" content="A focused read on scaling Axon's analytics backbone without slowing product delivery.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/bluecrux_2026-07-07_14-33-37/og-image.jpg">
+  <style>
+    :root {
+      --ink: #122137;
+      --muted: #58667a;
+      --blue: #0b4a7a;
+      --blue-deep: #071b31;
+      --teal: #0b8a8f;
+      --orange: #ef6b2e;
+      --paper: #f7fafc;
+      --white: #ffffff;
+      --line: #d8e2ec;
+      --soft: #e9f4f7;
+      --warm: #fff3eb;
+      --shadow: 0 18px 50px rgba(12, 29, 48, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      letter-spacing: 0;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .hero {
+      background: var(--blue-deep);
+      color: var(--white);
+      padding: 34px 18px 28px;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(11, 138, 143, 0.22), transparent 38%),
+        linear-gradient(210deg, rgba(239, 107, 46, 0.18), transparent 48%);
+      z-index: -1;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      color: #9fd7dc;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin: 0 0 10px;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: 2.15rem;
+      line-height: 1.08;
+      margin-bottom: 18px;
+      max-width: 760px;
+    }
+
+    .hero p {
+      color: #dbe7f1;
+      font-size: 1rem;
+      max-width: 690px;
+      margin-bottom: 0;
+    }
+
+    .signal-card {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .signal-card strong {
+      display: block;
+      color: #ffffff;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .signal-card span {
+      display: inline-flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      color: #c8d8e6;
+      font-size: 0.92rem;
+      padding-top: 11px;
+    }
+
+    main {
+      background: var(--paper);
+    }
+
+    section {
+      padding: 34px 18px;
+      position: relative;
+      background: var(--paper);
+    }
+
+    .section-title {
+      text-align: center;
+      color: var(--blue-deep);
+      font-size: 1.55rem;
+      line-height: 1.18;
+      margin-bottom: 18px;
+    }
+
+    .read-box {
+      max-width: 74ch;
+      margin: 0 auto;
+      background: #ddeef3;
+      border-left: 5px solid var(--teal);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(7, 27, 49, 0.08);
+    }
+
+    .read-box p,
+    .start-card p,
+    .who p,
+    .proof-card p,
+    .cta p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .start-grid,
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .start-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 10px 28px rgba(12, 29, 48, 0.07);
+    }
+
+    .label {
+      color: var(--orange);
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 800;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+    }
+
+    .plan {
+      background: var(--blue-deep);
+      color: var(--white);
+      padding-top: 42px;
+      padding-bottom: 42px;
+    }
+
+    .plan .section-title {
+      color: var(--white);
+    }
+
+    .plan-intro {
+      max-width: 74ch;
+      margin: 0 auto 22px;
+      color: #d7e4ef;
+      text-align: center;
+    }
+
+    .team-row {
+      display: grid;
+      gap: 10px;
+      margin: 0 auto 20px;
+      max-width: 920px;
+    }
+
+    .role-pill {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      color: #f8fbff;
+      font-weight: 700;
+      padding: 11px 12px;
+      text-align: center;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+      margin: 0 auto;
+      max-width: 980px;
+    }
+
+    .step {
+      background: #ffffff;
+      border-radius: 8px;
+      color: var(--ink);
+      display: grid;
+      gap: 8px;
+      padding: 18px;
+      width: 100%;
+    }
+
+    .step-num {
+      align-items: center;
+      background: var(--orange);
+      border-radius: 999px;
+      color: #ffffff;
+      display: inline-flex;
+      font-size: 0.82rem;
+      font-weight: 800;
+      height: 30px;
+      justify-content: center;
+      width: 30px;
+    }
+
+    .step h3 {
+      font-size: 1.02rem;
+      margin: 0;
+    }
+
+    .step p {
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin: 22px auto 0;
+      max-width: 780px;
+    }
+
+    .stack span,
+    .customer-tags span {
+      border-radius: 999px;
+      display: inline-flex;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 7px 11px;
+    }
+
+    .stack span {
+      background: rgba(255, 255, 255, 0.12);
+      color: #e8f4ff;
+    }
+
+    .who {
+      background: var(--white);
+    }
+
+    .who-card {
+      background: var(--warm);
+      border: 1px solid #f6d2bd;
+      border-radius: 8px;
+      margin: 0 auto;
+      max-width: 860px;
+      padding: 20px;
+    }
+
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .customer-tags span {
+      background: #ffffff;
+      color: var(--blue);
+      border: 1px solid #eed7c9;
+    }
+
+    .proof-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(12, 29, 48, 0.08);
+    }
+
+    .proof-card img {
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-body h3 {
+      color: var(--blue-deep);
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .proof-body a {
+      color: var(--blue);
+      display: inline-block;
+      font-weight: 800;
+      margin-top: 12px;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .cta {
+      background: #e6f1f5;
+      text-align: center;
+    }
+
+    .cta-card {
+      background: var(--blue-deep);
+      border-radius: 8px;
+      color: var(--white);
+      margin: 0 auto;
+      max-width: 760px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .cta h2 {
+      color: #ffffff;
+      font-size: 1.55rem;
+      margin-bottom: 8px;
+    }
+
+    .cta p {
+      color: #d8e4ef;
+      margin-bottom: 18px;
+    }
+
+    .button {
+      background: var(--orange);
+      border-radius: 8px;
+      color: #ffffff;
+      display: inline-flex;
+      font-weight: 800;
+      max-width: 100%;
+      padding: 12px 18px;
+      text-decoration: none;
+    }
+
+    @media (min-width: 700px) {
+      .hero,
+      section {
+        padding-left: 28px;
+        padding-right: 28px;
+      }
+
+      h1 {
+        font-size: 3rem;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.7fr);
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .team-row {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 980px) {
+      .hero {
+        padding-top: 58px;
+        padding-bottom: 54px;
+      }
+
+      section {
+        padding-top: 54px;
+        padding-bottom: 54px;
+      }
+
+      .timeline {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="shell hero-grid">
+      <div>
+        <p class="eyebrow">Prepared for Bluecrux</p>
+        <h1>Scaling Axon's analytics backbone without slowing product delivery</h1>
+        <p>Saw Bluecrux is hiring a Software Engineer for Axon's backend Analytics team. That points to a real scale moment: more graph, data, and simulation work than one team should carry alone.</p>
+      </div>
+      <aside class="signal-card" aria-label="Why this brief exists">
+        <strong>Why we're here</strong>
+        <span><b>Signal</b> Axon backend analytics hiring</span>
+        <span><b>Product</b> Digital twin SaaS</span>
+        <span><b>Risk</b> Data-model bottlenecks</span>
+      </aside>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="shell">
+        <h2 class="section-title">Our read</h2>
+        <div class="read-box">
+          <p>That role says Axon is moving from proven platform to heavier product scale. The hard part is not another screen; it is the analytical backbone behind graph structures, simulations, and customer data models. Axon Data Products also promise ready insights inside existing ERP, planning, warehouse, and data tools. That raises the bar for integration quality, test depth, and clear handoff between Product Owners and engineers. If capacity stays tight, good roadmap ideas can wait behind data-model work that only a few people can safely touch.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <h2 class="section-title">Where we'd start</h2>
+        <div class="start-grid">
+          <article class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Start with one Axon Data Product, such as E2E cycle times, and map every source field to graph logic, query behavior, and acceptance tests.</p>
+          </article>
+          <article class="start-card">
+            <span class="label">Useful next step</span>
+            <p>Clean the demo path next. Lighthouse found contrast, unnamed links, console errors, and unused JavaScript on the Axon page before more demo traffic.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div class="shell">
+        <h2 class="section-title">What we'd do</h2>
+        <p class="plan-intro">Use a dedicated squad under your Product Owner or PM for an 8-week pilot. The goal is one production-ready analytics slice, not a side project.</p>
+        <div class="team-row" aria-label="Proposed team shape">
+          <div class="role-pill">Tech Lead</div>
+          <div class="role-pill">2 Backend/Data Engineers</div>
+          <div class="role-pill">QA Automation</div>
+          <div class="role-pill">DevOps Support</div>
+        </div>
+        <div class="timeline">
+          <article class="step">
+            <span class="step-num">1</span>
+            <h3>Scope one slice</h3>
+            <p>Pick one Axon data product and define source systems, graph entities, simulation rules, and demo outcomes with your Product Owner.</p>
+          </article>
+          <article class="step">
+            <span class="step-num">2</span>
+            <h3>Build the backend</h3>
+            <p>Build the backend slice in .NET, with data checks, query paths, and automated tests tied to real customer-like records.</p>
+          </article>
+          <article class="step">
+            <span class="step-num">3</span>
+            <h3>Harden edge cases</h3>
+            <p>Add QA automation around missing hierarchies, duplicate IDs, abnormal lead times, and calculation drift across releases.</p>
+          </article>
+          <article class="step">
+            <span class="step-num">4</span>
+            <h3>Transfer the pattern</h3>
+            <p>Demo weekly with product and engineering, then document the pattern so the next Axon data product starts faster.</p>
+          </article>
+        </div>
+        <div class="stack" aria-label="Relevant stack">
+          <span>.NET</span>
+          <span>C#</span>
+          <span>Python</span>
+          <span>Angular</span>
+          <span>React</span>
+          <span>QA automation</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="who">
+      <div class="shell">
+        <h2 class="section-title">Who is Elinext</h2>
+        <div class="who-card">
+          <p>Elinext is a full-cycle software development provider, active since 1997, with about 700 in-house specialists and no freelancers. For Axon, the fit is a dedicated team model: senior engineers work under your Product Owner and your quality bar. We bring backend, frontend, QA, DevOps, and AI/ML skills, plus ISO 9001 and ISO 27001 discipline. Our named customers include <strong>Broadcom</strong>, <strong>Siemens</strong>, <strong>Volkswagen</strong>, and <strong>TRUMPF</strong>. That mix is useful when the work is data-heavy, enterprise-facing, and hard to hand over casually.</p>
+          <div class="customer-tags" aria-label="Selected customers">
+            <span>Broadcom</span>
+            <span>Siemens</span>
+            <span>Volkswagen</span>
+            <span>TRUMPF</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <h2 class="section-title">Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-sales-analytics.webp" alt="Sales analytics platform case study cover">
+            <div class="proof-body">
+              <h3>Sales analytics platform for manufacturing</h3>
+              <p>Elinext built a data-heavy web platform that processes dealer, customer, and sales records at global scale.</p>
+              <a href="https://www.elinext.com/case-study/sales-analytics-application-for-chainsaw-manufacturer/">Read the case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-pharma-data.webp" alt="Pharma data analytics case study cover">
+            <div class="proof-body">
+              <h3>QA and data analytics in pharma</h3>
+              <p>Elinext supported validated analytics workflows with Python and MATLAB testing for machine-learning data quality.</p>
+              <a href="https://www.elinext.com/case-study/qa-and-data-analytics-in-pharma-industry/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="shell">
+        <div class="cta-card">
+          <h2>Talk through one Axon slice</h2>
+          <p>A short technical call can test fit before any commitment.</p>
+          <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
