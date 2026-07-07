@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W28_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>XYZ Reality backend scaling brief</title>
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W28_proto26/xyz-reality_2026-07-07_14-23-21/">
+  <meta name="description" content="A short proposal for scaling XYZ Platform field data, APIs, and sync reliability.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W28_proto26/xyz-reality_2026-07-07_14-23-21/">
+  <meta property="og:title" content="XYZ Reality backend scaling brief">
+  <meta property="og:description" content="A practical read on scaling XYZ Platform field data and API reliability.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/xyz-reality_2026-07-07_14-23-21/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="XYZ Reality backend scaling brief — prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="XYZ Reality backend scaling brief">
+  <meta name="twitter:description" content="A practical read on scaling XYZ Platform field data and API reliability.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/xyz-reality_2026-07-07_14-23-21/og-image.jpg">
+  <style>
+    :root {
+      --ink: #101820;
+      --muted: #52606b;
+      --paper: #fbfaf7;
+      --soft: #f0ede5;
+      --line: #ddd7cc;
+      --accent: #e8552f;
+      --accent-dark: #9b2f1e;
+      --deep: #14212b;
+      --blue: #244e73;
+      --white: #ffffff;
+      --shadow: 0 18px 48px rgba(16, 24, 32, .12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 56px 18px;
+      background: var(--paper);
+    }
+
+    .section.alt {
+      background: var(--soft);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: var(--deep);
+      color: var(--white);
+      padding: 44px 18px 34px;
+    }
+
+    .hero .wrap {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #ffb39f;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 14px;
+      font-size: 42px;
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: 28px;
+      line-height: 1.14;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 720px;
+      margin-bottom: 16px;
+      color: #dfe8ee;
+      font-size: 17px;
+    }
+
+    .hero-asset {
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 8px;
+      background: #0b141c;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-asset img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .caption {
+      margin: 0;
+      padding: 12px 14px;
+      color: #dfe8ee;
+      font-size: 13px;
+    }
+
+    .read-box {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+      border-left: 5px solid var(--accent);
+      border-radius: 8px;
+      background: #fff7ef;
+      box-shadow: 0 10px 28px rgba(16, 24, 32, .08);
+    }
+
+    .read-box p,
+    .start-card p,
+    .elinext p,
+    .case-card p {
+      color: var(--muted);
+    }
+
+    .start-grid,
+    .case-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .start-card,
+    .case-card,
+    .team-card,
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .start-card {
+      padding: 20px;
+    }
+
+    .label {
+      display: inline-flex;
+      margin-bottom: 10px;
+      color: var(--accent-dark);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      background: var(--deep);
+      color: var(--white);
+    }
+
+    .proposal h2 {
+      color: var(--white);
+    }
+
+    .proposal p {
+      color: #dce5eb;
+    }
+
+    .plan-grid {
+      display: grid;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .team-card {
+      padding: 22px;
+      background: #182b38;
+      border-color: rgba(255, 255, 255, .16);
+    }
+
+    .roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .08);
+      color: #f7fbff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+      background: #f9fbfc;
+    }
+
+    .num {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--accent);
+      color: var(--white);
+      font-weight: 900;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .step span {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .stack span,
+    .customer {
+      display: inline-flex;
+      padding: 6px 9px;
+      border-radius: 8px;
+      background: #edf4f7;
+      color: #163243;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .elinext {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .customers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(16, 24, 32, .07);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      background: #d8dee3;
+    }
+
+    .case-body {
+      padding: 18px;
+    }
+
+    .case-body a {
+      color: var(--accent-dark);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .cta {
+      text-align: center;
+      background: #10202b;
+      color: var(--white);
+    }
+
+    .cta p {
+      color: #dce5eb;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      margin-top: 10px;
+      padding: 0 18px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: var(--white);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 760px) {
+      .section {
+        padding: 72px 30px;
+      }
+
+      .hero {
+        padding: 64px 30px 48px;
+      }
+
+      .hero .wrap,
+      .plan-grid {
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+      }
+
+      h1 {
+        font-size: 50px;
+      }
+
+      h2 {
+        font-size: 34px;
+      }
+
+      .start-grid,
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1180px) {
+      .hero {
+        padding-top: 76px;
+      }
+
+      h1 {
+        font-size: 64px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <p class="eyebrow">Prepared for David Mitchell</p>
+          <h1>Scaling XYZ Platform without slowing field delivery teams</h1>
+          <p>We saw XYZ Reality hiring for a Senior Backend Engineer. That points to pressure around scalable Node.js APIs and PostgreSQL. It also touches field data, 360 capture, Atom, and the platform.</p>
+        </div>
+        <figure class="hero-asset">
+          <img src="assets/xyz-platform.jpg" alt="Workers reviewing XYZ Reality BIM data on site">
+          <figcaption class="caption">Public XYZ Platform image used as product context.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>Your site says XYZ Platform links schedules, models, resources, costs, and field data. It also connects 360 images and real-time site updates. The Backend role says the next limit is not demand. It is the live data path behind that product. Node.js APIs and PostgreSQL must stay fast as capture grows. If sync slows, field teams lose trust in the data.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">What we noticed</span>
+            <p>Your Project Controls page says the 4D model updates from field data. First, map each capture-to-model sync path. Then mark slow writes and risky joins before more backend code ships.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Useful next step</span>
+            <p>XYZ Mobile release notes mention overlapping capture points on floor plans. Treat that as a data-shape issue too. Add checks for duplicate points, room links, and offline retry conflicts.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="plan-grid">
+          <div class="team-card">
+            <h3>Dedicated backend reliability squad</h3>
+            <p>Elinext would work under your product or engineering lead. Six weeks, weekly demos, and one clear handover plan.</p>
+            <div class="roles" aria-label="Suggested team">
+              <span class="pill">Backend lead</span>
+              <span class="pill">2 Node.js engineers</span>
+              <span class="pill">QA automation</span>
+              <span class="pill">Part-time DevOps</span>
+            </div>
+            <div class="stack" aria-label="Relevant stack">
+              <span>Node.js</span>
+              <span>React Native</span>
+              <span>React</span>
+              <span>Python</span>
+              <span>.NET</span>
+              <span>Java</span>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="num">1</div>
+              <div><strong>Map the field flow</strong><span>Trace XYZ Mobile, Atom, 360 capture, and cloud API events from site upload to 4D model update.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div><strong>Stabilize API hotspots</strong><span>Refactor the busiest REST paths, add contract tests, and tune PostgreSQL queries for schedule and room data.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div><strong>Harden offline sync</strong><span>Build retry, conflict, and duplicate-capture tests around floor-plan points, room links, and weak site connectivity.</span></div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div><strong>Protect releases</strong><span>Add CI checks, release gates, and simple service dashboards before the next platform or mobile rollout.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="elinext">
+          <p>Elinext is a full-cycle software development company, active across global markets since 1997. We have about 700 in-house specialists, with no freelancers and no subcontractors. Our teams cover mobile, backend, frontend, QA, DevOps, AI/ML, business analysis, and delivery management. For complex, security-sensitive products, our work is backed by ISO 9001 and ISO 27001. Teams have delivered for <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, <strong>TUI</strong>, <strong>TransPerfect</strong>, and <strong>Parrot</strong>. Here, that means backend, QA, and DevOps capacity under your product team, without changing ownership.</p>
+          <div class="customers" aria-label="Named customers">
+            <span class="customer">Siemens</span>
+            <span class="customer">Broadcom</span>
+            <span class="customer">Volkswagen</span>
+            <span class="customer">TRUMPF</span>
+            <span class="customer">TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <img src="assets/case-roofing.jpg" alt="Elinext contractor SaaS case study preview">
+            <div class="case-body">
+              <h3>Software for Roofing and Solar Paneling Contractors</h3>
+              <p>Contractor SaaS, Node.js, React, TypeScript, Docker.</p>
+              <p>Elinext blended into the client's Agile team for continued features.</p>
+              <a href="https://www.elinext.com/case-study/software-for-roofing-and-solar-paneling-contractors/">Read the case study</a>
+            </div>
+          </article>
+          <article class="case-card">
+            <img src="assets/case-network.webp" alt="Elinext network monitoring case study preview">
+            <div class="case-body">
+              <h3>AI-Tool For Monitoring Telecom Networks Worldwide</h3>
+              <p>Real-time physical and virtual asset monitoring.</p>
+              <p>Built for global users, with PostgreSQL and React.</p>
+              <a href="https://www.elinext.com/case-study/network-monitoring-software/">Read the case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Open a practical backend talk</h2>
+        <p>Bring one hard sync path; we will map options.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
