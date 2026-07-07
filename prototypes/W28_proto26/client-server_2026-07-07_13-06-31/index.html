@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W28_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Client Server Data Hiring Pilot | Elinext</title>
+  <meta name="description" content="A focused Elinext proposal for Client Server's Data, Analytics & AI hiring workflow and job-search platform.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W28_proto26/client-server_2026-07-07_13-06-31/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Client Server Data Hiring Pilot">
+  <meta property="og:description" content="A focused pilot for AI, data, search quality, and recruitment-platform delivery.">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W28_proto26/client-server_2026-07-07_13-06-31/">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/client-server_2026-07-07_13-06-31/og-image.jpg">
+  <style>
+    :root {
+      --ink: #10223b;
+      --navy: #071f3d;
+      --blue: #124d7e;
+      --mint: #dff7eb;
+      --green: #17895a;
+      --orange: #f28b30;
+      --paper: #fbfcf8;
+      --soft: #eef5f1;
+      --line: #cbd8d1;
+      --muted: #526176;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body {
+      min-width: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      background: var(--paper);
+      padding: 56px 0;
+    }
+
+    .section.alt {
+      background: var(--soft);
+    }
+
+    .wrap {
+      width: min(100% - 32px, 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(7, 31, 61, 0.96), rgba(18, 77, 126, 0.9)),
+        radial-gradient(circle at 80% 18%, rgba(242, 139, 48, 0.28), transparent 32%);
+      color: var(--white);
+      padding: 56px 0 44px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--mint);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      overflow-wrap: anywhere;
+    }
+
+    h1 {
+      max-width: 920px;
+      margin: 0;
+      font-size: clamp(2.2rem, 8vw, 4.8rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: clamp(1.7rem, 5vw, 2.75rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .lead,
+    .why {
+      max-width: 760px;
+      margin: 18px 0 0;
+      font-size: clamp(1rem, 2.4vw, 1.2rem);
+    }
+
+    .why {
+      color: #e7fff3;
+    }
+
+    .hero-card {
+      width: 100%;
+      border: 1px solid rgba(223, 247, 235, 0.38);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 18px;
+      border-radius: 8px;
+    }
+
+    .hero-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--mint);
+    }
+
+    .hero-card p {
+      margin: 0;
+      color: #f4fbff;
+    }
+
+    .split {
+      display: grid;
+      gap: 22px;
+    }
+
+    .text-block {
+      max-width: 820px;
+    }
+
+    .text-block p {
+      margin: 0 0 14px;
+    }
+
+    .mini-grid,
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 16px;
+    }
+
+    .card,
+    .step,
+    .proof {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      overflow: hidden;
+    }
+
+    .card,
+    .step {
+      padding: 18px;
+    }
+
+    .card p,
+    .step p,
+    .proof p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .number {
+      display: inline-flex;
+      width: 28px;
+      height: 28px;
+      margin-bottom: 10px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--mint);
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      border: 1px solid #b8d2c4;
+      border-radius: 999px;
+      background: var(--mint);
+      color: #0b5638;
+      padding: 7px 11px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      white-space: normal;
+    }
+
+    .proof img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: var(--soft);
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .cta {
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    .cta-box {
+      display: grid;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .cta p {
+      max-width: 720px;
+      margin: 0;
+      color: #eaf4ff;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 48px;
+      width: fit-content;
+      max-width: 100%;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      background: var(--orange);
+      color: #15110a;
+      padding: 12px 18px;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 820px) {
+      .hero {
+        padding: 82px 0 64px;
+      }
+
+      .hero-grid,
+      .split,
+      .cta-box {
+        grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.7fr);
+      }
+
+      .section {
+        padding: 74px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Client Server x Elinext</p>
+          <h1>Help Client Server scale data hiring without slowing delivery</h1>
+          <p class="lead">A focused pilot for Mike Gilmour's Data, Analytics &amp; AI desk: cleaner role data, sharper search, stronger QA, and extra engineering capacity where the market is tight.</p>
+          <p class="why"><strong>Why we're here:</strong> Client Server is actively publishing Python, ML, AI, BI, and backend roles while Mike's team owns a specialist market. That creates a useful entry point for practical product and data engineering support.</p>
+        </div>
+        <aside class="hero-card" aria-label="Pilot summary">
+          <strong>Suggested first move</strong>
+          <p>Six weeks, one squad, weekly demos, focused on the job-search platform and Data, Analytics &amp; AI workflow.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap split">
+        <div>
+          <h2>Our Read</h2>
+        </div>
+        <div class="text-block">
+          <p>Client Server's public product is the job-search web platform, backed by specialist pages for candidates, clients, and technology verticals. The Data, Analytics &amp; BI page maps directly to Mike's desk, and current roles include AI enablement, data science, machine learning, Python, cloud, and backend engineering. That mix rewards clean taxonomy, fast search, reliable application paths, and useful reporting. The opportunity is not a rebuild; it is a small delivery loop that makes high-value roles easier to publish, find, match, and measure.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <h2>Where We'd Start</h2>
+        <div class="mini-grid">
+          <article class="card">
+            <span class="number">1</span>
+            <h3>Role taxonomy and matching</h3>
+            <p>Your job-search and category pages carry many live AI, data, Python, ML, and engineering roles. We would map skill tags, contract/permanent signals, seniority, and consultant ownership, then turn that into cleaner matching rules and QA checks.</p>
+          </article>
+          <article class="card">
+            <span class="number">2</span>
+            <h3>Mobile quality sprint</h3>
+            <p>A browser audit found practical fixes around scripts, image sizing, button labels, and indexing hygiene. We would start with job cards, filters, consultant pages, and application paths because those pages sit closest to candidate conversion.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap split">
+        <div>
+          <h2>What We'd Do</h2>
+          <p class="text-block">Engagement model: a dedicated squad working under your product or operations owner, with weekly demos and a tight backlog.</p>
+          <div class="tags" aria-label="Suggested stack">
+            <span class="tag">Python</span>
+            <span class="tag">FastAPI</span>
+            <span class="tag">Next.js</span>
+            <span class="tag">React</span>
+            <span class="tag">AWS</span>
+            <span class="tag">Cypress</span>
+          </div>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <h3>Team shape</h3>
+            <p>One tech lead, two full-stack engineers, one data/ML engineer, and one QA automation engineer.</p>
+          </article>
+          <article class="step">
+            <h3>Milestone 1</h3>
+            <p>Audit job-search data flow and categories; define skill tags for Data, Analytics and AI roles.</p>
+          </article>
+          <article class="step">
+            <h3>Milestone 2</h3>
+            <p>Build matching/search improvements and data quality rules for Python, ML, BI and contract/permanent briefs.</p>
+          </article>
+          <article class="step">
+            <h3>Milestone 3</h3>
+            <p>Add automated regression and accessibility checks across job cards, filters, consultant pages, and key application paths.</p>
+          </article>
+          <article class="step">
+            <h3>Milestone 4</h3>
+            <p>Ship performance fixes for images and scripts, then hand over a clear backlog and metrics.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap split">
+        <div>
+          <h2>Who Is Elinext</h2>
+        </div>
+        <div class="text-block">
+          <p>Elinext has delivered custom software since 1997 with about 700 in-house specialists. Delivery covers web, mobile, data engineering, AI/ML, QA automation, DevOps, and long-running dedicated teams. Work is backed by ISO 9001 and ISO 27001 processes, with no freelancer or subcontractor delivery model. Named customers include Broadcom, Siemens, Volkswagen, TRUMPF, and TUI. For Client Server, the fit is a small senior squad that can plug into an existing web or operations setup without forcing a platform reset.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof">
+            <img src="assets/case-esg.jpg" alt="ESG employee software case study preview">
+            <div class="proof-body">
+              <h3>ESG Software for Employees</h3>
+              <p>For a UK HR/recruiting-context startup, Elinext built a web and mobile ESG system and continued improving dashboards, graphs, and staff-management insight.</p>
+              <a href="https://www.elinext.com/case-study/esg-software-for-emloyees/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof">
+            <img src="assets/case-analytics.jpg" alt="Sales analytics platform case study preview">
+            <div class="proof-body">
+              <h3>Sales Analytics Platform</h3>
+              <p>Elinext delivered a data-heavy web platform that processes around 30 million dealer, customer, and sales records daily for market analysis.</p>
+              <a href="https://www.elinext.com/case-study/sales-analytics-application-for-chainsaw-manufacturer/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap cta-box">
+        <div>
+          <h2>Talk Through The Pilot</h2>
+          <p>We would use the first call to validate the Data, Analytics &amp; AI workflow, confirm where your current web partner stops, and pick one measurable job-search improvement to ship first.</p>
+        </div>
+        <a class="button" href="https://www.elinext.com/contacts/">Book a working session</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
