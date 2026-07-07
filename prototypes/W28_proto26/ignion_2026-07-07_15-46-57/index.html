@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W28_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v1'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ignion Oxion delivery brief</title>
+  <meta name="description" content="A short proposal for improving Oxion's first-run path while Ignion adds full-stack capacity.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W28_proto26/ignion_2026-07-07_15-46-57/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W28_proto26/ignion_2026-07-07_15-46-57/">
+  <meta property="og:title" content="Ignion Oxion delivery brief">
+  <meta property="og:description" content="A practical plan for Oxion first-run speed, QA, and full-stack delivery.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/ignion_2026-07-07_15-46-57/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Ignion Oxion delivery brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ignion Oxion delivery brief">
+  <meta name="twitter:description" content="A practical plan for Oxion first-run speed, QA, and full-stack delivery.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/ignion_2026-07-07_15-46-57/og-image.jpg">
+
+  <style>
+    :root {
+      --ink: #171717;
+      --muted: #5f666d;
+      --paper: #ffffff;
+      --soft: #f6f7f6;
+      --warm: #f1ece8;
+      --line: #dde1e3;
+      --red: #fc3344;
+      --red-dark: #c82432;
+      --blue: #183f68;
+      --teal: #0c766d;
+      --night: #101820;
+      --gold: #d99b2b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    body {
+      min-width: 320px;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    p,
+    h1,
+    h2,
+    h3 {
+      margin-top: 0;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(252, 51, 68, .22), rgba(252, 51, 68, 0) 42%),
+        linear-gradient(135deg, #101820 0%, #183f68 58%, #0c766d 100%);
+      padding: 44px 0 42px;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #b8f2ea;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 16px;
+      font-size: clamp(2.05rem, 8vw, 4.45rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .lede,
+    .why {
+      max-width: 770px;
+      font-size: clamp(1rem, 2.4vw, 1.18rem);
+    }
+
+    .lede {
+      margin-bottom: 14px;
+      color: #edf8f6;
+    }
+
+    .why {
+      margin-bottom: 0;
+      padding-left: 14px;
+      border-left: 4px solid var(--red);
+      color: #ffe9ec;
+    }
+
+    section {
+      padding: 42px 0;
+      background: var(--paper);
+    }
+
+    .section-title {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: clamp(1.55rem, 5vw, 2.25rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 23px;
+      border: 1px solid #e0b0b7;
+      border-left: 6px solid var(--red);
+      border-radius: 8px;
+      background: #fff4f5;
+      box-shadow: 0 14px 34px rgba(252, 51, 68, .08);
+    }
+
+    .read-box p {
+      margin-bottom: 0;
+      font-size: 1.03rem;
+    }
+
+    .start {
+      background: var(--soft);
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card,
+    .step,
+    .team-card,
+    .proof-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+    }
+
+    .start-card {
+      padding: 18px;
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--red-dark);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .start-card p {
+      margin-bottom: 0;
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .work {
+      color: #fff;
+      background: var(--night);
+    }
+
+    .work .section-title {
+      color: #fff;
+    }
+
+    .work-lede {
+      max-width: 76ch;
+      margin: 0 auto 18px;
+      text-align: center;
+      color: #d8e7ec;
+    }
+
+    .work-layout {
+      display: grid;
+      gap: 16px;
+    }
+
+    .team-card {
+      padding: 18px;
+      color: var(--ink);
+      background: #f9fbfb;
+    }
+
+    .team-title {
+      margin-bottom: 12px;
+      color: var(--blue);
+      font-size: 1.02rem;
+      font-weight: 850;
+    }
+
+    .roles {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .roles li {
+      display: flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 8px 10px;
+      border-radius: 7px;
+      background: #eef3f5;
+      color: #1f303d;
+      font-weight: 720;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      padding: 16px;
+      color: var(--ink);
+    }
+
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .num {
+      display: inline-grid;
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--red);
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .stack span,
+    .customer-list span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #eef3f5;
+      color: #183f68;
+      font-size: .86rem;
+      font-weight: 800;
+    }
+
+    .about {
+      background: var(--warm);
+    }
+
+    .about-copy {
+      max-width: 82ch;
+      margin: 0 auto;
+      font-size: 1.03rem;
+    }
+
+    .customer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 0;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 2.3 / 1;
+      object-fit: cover;
+    }
+
+    .proof-copy {
+      padding: 16px;
+    }
+
+    .proof-copy h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      line-height: 1.2;
+    }
+
+    .proof-copy p {
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+
+    .proof-copy a {
+      color: var(--red-dark);
+      font-weight: 820;
+      text-decoration: none;
+    }
+
+    .talk {
+      color: #fff;
+      background: var(--blue);
+      text-align: center;
+    }
+
+    .talk h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.65rem, 5vw, 2.25rem);
+    }
+
+    .talk p {
+      max-width: 52ch;
+      margin: 0 auto 18px;
+      color: #e7eff4;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 7px;
+      background: #fff;
+      color: var(--blue);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero {
+        padding: 66px 0 60px;
+      }
+
+      section {
+        padding: 58px 0;
+      }
+
+      .start-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .work-layout {
+        grid-template-columns: .8fr 1.2fr;
+        align-items: start;
+      }
+
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .wrap {
+        width: min(1120px, calc(100% - 64px));
+      }
+
+      .hero {
+        padding: 78px 0 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Prepared for Ignion</p>
+      <h1>Make Oxion faster to trust while the team scales</h1>
+      <p class="lede">A short engineering brief for Oxion's first-run path, platform QA, and full-stack delivery load.</p>
+      <p class="why">Saw Ignion is hiring a Full Stack Developer. That points to more product work around Oxion, not just more website tasks.</p>
+    </div>
+  </header>
+
+  <section aria-labelledby="read-title">
+    <div class="wrap">
+      <h2 class="section-title" id="read-title">Our read</h2>
+      <div class="read-box">
+        <p>Ignion is scaling a product that must make RF design feel simple. Oxion is now a free AI antenna integration platform, with PCB upload, design checks, and validation. A Full Stack Developer hire suggests the web product path needs more hands. The likely bottleneck is the first session: fast load, clear setup, and trusted output. If that path is slow or unclear, strong hardware leads can stall before they see value.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="start" aria-labelledby="start-title">
+    <div class="wrap">
+      <h2 class="section-title" id="start-title">Where we'd start</h2>
+      <div class="start-grid">
+        <article class="start-card">
+          <span class="label">What we noticed</span>
+          <p>Oxion is the main "try for free" path, but its public app shell is heavy. Start with route budgets for first load, upload, and result screens.</p>
+        </article>
+        <article class="start-card">
+          <span class="label">Next step</span>
+          <p>Map the homepage-to-Oxion journey to one useful RF output. Then add browser tests for PCB upload, frequency setup, and result display.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="work" aria-labelledby="work-title">
+    <div class="wrap">
+      <h2 class="section-title" id="work-title">What we'd do</h2>
+      <p class="work-lede">Use a dedicated squad under Ignion's product lead for a six-week pilot. The goal is faster first value, safer releases, and less load on the core team.</p>
+      <div class="work-layout">
+        <aside class="team-card" aria-label="Suggested team">
+          <h3 class="team-title">Team shape</h3>
+          <ul class="roles">
+            <li>1 full-stack tech lead</li>
+            <li>2 senior React engineers</li>
+            <li>1 QA automation engineer</li>
+            <li>1 part-time DevOps engineer</li>
+          </ul>
+          <div class="stack" aria-label="Relevant stack">
+            <span>React</span>
+            <span>Node.js</span>
+            <span>Python</span>
+            <span>Java</span>
+            <span>AWS</span>
+            <span>QA automation</span>
+          </div>
+        </aside>
+        <div class="steps">
+          <article class="step">
+            <div class="step-head"><span class="num">1</span><h3>Trace first value</h3></div>
+            <p>Review Ignion pages, Oxion entry routes, PCB upload steps, and result screens to find the slowest trust points.</p>
+          </article>
+          <article class="step">
+            <div class="step-head"><span class="num">2</span><h3>Stabilize key flows</h3></div>
+            <p>Add browser tests for upload, frequency setup, recommendation output, and partner-specific journeys before more features ship.</p>
+          </article>
+          <article class="step">
+            <div class="step-head"><span class="num">3</span><h3>Improve load paths</h3></div>
+            <p>Split heavy JavaScript, tune assets, and keep the first Oxion action fast on mobile and desktop networks.</p>
+          </article>
+          <article class="step">
+            <div class="step-head"><span class="num">4</span><h3>Hand over cleanly</h3></div>
+            <p>Leave dashboards, test reports, and a ranked backlog so Ignion's new hire can continue without context loss.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" aria-labelledby="about-title">
+    <div class="wrap">
+      <h2 class="section-title" id="about-title">Who is Elinext</h2>
+      <div class="about-copy">
+        <p>Elinext is a full-cycle software development company, working since 1997 with about 700 in-house specialists and no freelancers. For Ignion, the fit is a dedicated team model, strong web and backend skills, QA automation, DevOps, and ISO 9001 and ISO 27001 discipline. Our reference base includes industrial and connected-product work for names like <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong>. That maps to the Oxion pilot above: product engineers who can ship under your lead.</p>
+        <div class="customer-list" aria-label="Named customers">
+          <span>Siemens</span><span>Broadcom</span><span>Volkswagen</span><span>TRUMPF</span><span>TUI</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="proof-title">
+    <div class="wrap">
+      <h2 class="section-title" id="proof-title">Proof</h2>
+      <div class="proof-grid">
+        <article class="proof-card">
+          <img src="assets/case-remote-network.jpg" alt="Remote network management case study visual">
+          <div class="proof-copy">
+            <h3>Remote network and router management</h3>
+            <p>Elinext built an AI-powered telecom platform handling large router data flows and ongoing product improvement.</p>
+            <a href="https://www.elinext.com/case-study/web-application-for-remote-network-and-router-management/">View case study</a>
+          </div>
+        </article>
+        <article class="proof-card">
+          <img src="assets/case-iot-monitoring.jpg" alt="IoT monitoring web app case study visual">
+          <div class="proof-copy">
+            <h3>Real-time IoT monitoring web app</h3>
+            <p>Elinext improved a React and TypeScript web app with large datasets, onboarding, and responsiveness needs.</p>
+            <a href="https://www.elinext.com/case-study/web-app-for-iot-devices-monitoring/">View case study</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="talk" aria-labelledby="talk-title">
+    <div class="wrap">
+      <h2 id="talk-title">Start the conversation</h2>
+      <p>Talk through a six-week Oxion pilot with Elinext.</p>
+      <a class="button" href="https://www.elinext.com/contacts/">Contact Elinext</a>
+    </div>
+  </section>
+</body>
+</html>
