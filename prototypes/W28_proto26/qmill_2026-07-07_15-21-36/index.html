@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>
+    /* EMASE_PROTOTYPE_BEACON */
+    (function() {
+      try {
+        var parts = location.pathname.split('/').filter(Boolean);
+        var protoIndex = parts.indexOf('prototypes');
+        var protoParts = protoIndex >= 0 ? parts.slice(protoIndex + 1) : [];
+        if (protoParts.length && /^index\.html?$/i.test(protoParts[protoParts.length - 1])) protoParts.pop();
+        var firstSegment = protoParts[0] || '';
+        var secondSegment = protoParts[1] || '';
+        var weekDir = 'W28_proto26';
+        var isGroupedPath = weekDir ? firstSegment === weekDir : /^W\d{2}_proto\d{2}$/.test(firstSegment);
+        var slug = isGroupedPath ? secondSegment : firstSegment;
+        var leadHint = new URLSearchParams(location.search).get('lead') || '';
+        if (!slug && !leadHint) return;
+        fetch('http://172.16.24.82/emase-dev/api/webhooks/prototype-visit', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'content-type': 'application/json', 'x-prototype-secret': 'a08kxPbidobTe80MPBRXcRg2QY1PwY3s'},
+          body: JSON.stringify({slug: slug, lead_hint: leadHint, referrer: document.referrer || '', ua: navigator.userAgent || '', page_template_version: 'brief-v2'}),
+          keepalive: true
+        }).catch(function() {});
+      } catch (e) {}
+    })();
+  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZR415HX0B2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZR415HX0B2');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QMill platform sprint brief</title>
+  <meta name="description" content="A short platform engineering brief for QMill Quantum Advantage Services.">
+  <link rel="canonical" href="https://elinext-lab.github.io/prototypes/W28_proto26/qmill_2026-07-07_15-21-36/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://elinext-lab.github.io/prototypes/W28_proto26/qmill_2026-07-07_15-21-36/">
+  <meta property="og:title" content="QMill platform sprint brief">
+  <meta property="og:description" content="A QAS platform sprint shaped around QMill's full-stack hiring signal.">
+  <meta property="og:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/qmill_2026-07-07_15-21-36/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="QMill platform sprint brief - prepared by Elinext">
+  <meta property="og:site_name" content="Elinext">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="QMill platform sprint brief">
+  <meta name="twitter:description" content="A QAS platform sprint shaped around QMill's full-stack hiring signal.">
+  <meta name="twitter:image" content="https://elinext-lab.github.io/prototypes/W28_proto26/qmill_2026-07-07_15-21-36/og-image.jpg">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #10151f;
+      --muted: #526071;
+      --line: #dce4ee;
+      --paper: #fbfcfe;
+      --soft: #eef5f8;
+      --panel: #ffffff;
+      --deep: #0f1629;
+      --accent: #ff7a00;
+      --green: #0f7b65;
+      --blue: #245a88;
+      --shadow: 0 18px 50px rgba(15, 22, 41, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .section {
+      width: 100%;
+      padding: 48px 0;
+      background: var(--paper);
+    }
+
+    .wrap {
+      width: min(calc(100% - 32px), 1120px);
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 520px;
+      padding: 56px 0 48px;
+      background: var(--deep);
+      color: #f4f7fb;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero .wrap {
+      display: grid;
+      gap: 28px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #a8b7cb;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 16px;
+      font-size: 40px;
+      line-height: 1.08;
+      overflow-wrap: anywhere;
+    }
+
+    .why {
+      max-width: 760px;
+      margin: 0;
+      color: #d6deea;
+      font-size: 18px;
+    }
+
+    .hero-board {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 760px;
+    }
+
+    .mini {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-left: 4px solid var(--accent);
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+    }
+
+    .mini b {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 14px;
+    }
+
+    .mini span {
+      color: #b8c4d8;
+      font-size: 13px;
+    }
+
+    .section h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 30px;
+      line-height: 1.15;
+    }
+
+    .read-box {
+      max-width: 78ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid #c9dbe8;
+      border-left: 6px solid var(--green);
+      background: #eaf4f1;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .read-box p,
+    .start-card p,
+    .proof-card p,
+    .identity p,
+    .cta p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .start-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .start-card {
+      display: grid;
+      gap: 8px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+    }
+
+    .label {
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .proposal {
+      background: #f2f6fb;
+    }
+
+    .proposal-panel {
+      display: grid;
+      gap: 20px;
+      padding: 24px;
+      border: 1px solid #cfd9e6;
+      background: var(--panel);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .team-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 6px 10px;
+      border: 1px solid #cfd9e6;
+      background: #f8fafc;
+      border-radius: 8px;
+      color: #253144;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      background: #fbfdff;
+      border-radius: 8px;
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--deep);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 16px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .identity {
+      max-width: 82ch;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+    }
+
+    .customer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .proof-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .proof-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .proof-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .proof-body {
+      padding: 18px;
+    }
+
+    .proof-body h3 {
+      margin-bottom: 8px;
+      font-size: 19px;
+    }
+
+    .proof-body a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .cta {
+      background: var(--deep);
+      color: #f4f7fb;
+      text-align: center;
+    }
+
+    .cta p {
+      color: #cbd5e4;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 48px;
+      margin-top: 22px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #111827;
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    @media (min-width: 720px) {
+      .hero {
+        min-height: 560px;
+      }
+
+      h1 {
+        font-size: 56px;
+      }
+
+      .start-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proposal-panel {
+        padding: 34px;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      .section {
+        padding: 40px 0;
+      }
+
+      .hero-board {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .why {
+        font-size: 16px;
+      }
+
+      .step {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <p class="eyebrow">Prepared for QMill</p>
+          <h1>A platform sprint for QMill Quantum Advantage Services</h1>
+          <p class="why">Saw QMill is hiring a Full Stack Software Developer to lead the platform behind its quantum algorithms, APIs, cloud operations, identity, billing, governance, and remote quantum or HPC workflows.</p>
+        </div>
+        <div class="hero-board" aria-label="Brief focus">
+          <div class="mini"><b>Product moment</b><span>QAS has public registration, SDK, and API paths.</span></div>
+          <div class="mini"><b>Delivery need</b><span>The job signal points to platform depth.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Our read</h2>
+        <div class="read-box">
+          <p>The signal says QMill is moving from research proof to a user-facing platform. QMill Circuit Compression already has a Python SDK, qBraid Lab path, and access flow for QAS users. The hard part now is making each run reliable across login, API calls, job status, and remote compute. If one senior hire owns React, Python APIs, AWS, Kubernetes, billing, and HPC links, product speed can slow. The business risk is simple: pilots wait while the core team fixes platform work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Where we'd start</h2>
+        <div class="start-grid">
+          <div class="start-card">
+            <span class="label">What we noticed</span>
+            <p>QAS asks new users to register, then points SDK users to `pip install qas-sdk` and GitHub. Add a sandbox path that lets approved prospects run a demo job before a full HPC run.</p>
+          </div>
+          <div class="start-card">
+            <span class="label">Useful next step</span>
+            <p>The job names OIDC/OAuth2, RBAC, billing, governance, and remote compute callbacks. Split those into one platform backlog, with test cases for auth, retries, timeouts, and audit logs.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proposal">
+      <div class="wrap">
+        <h2>What we'd do</h2>
+        <div class="proposal-panel">
+          <p><strong>Engagement model:</strong> a dedicated squad under QMill's product owner and lead architect.</p>
+          <div class="team-row" aria-label="Team shape">
+            <span class="pill">Platform lead</span>
+            <span class="pill">React/TypeScript</span>
+            <span class="pill">Python API</span>
+            <span class="pill">DevOps/QA</span>
+          </div>
+          <p><strong>Duration:</strong> six-week pilot, with a demo every week and a short handover note.</p>
+          <div class="steps">
+            <div class="step"><span class="num">1</span><div><strong>Platform map</strong><p>Map the QAS user path from registration to SDK login, job submit, status polling, result fetch, and support handoff.</p></div></div>
+            <div class="step"><span class="num">2</span><div><strong>Auth foundation</strong><p>Tighten OIDC/OAuth2, RBAC, token refresh, and audit events so pilots can safely move from demo to private runs.</p></div></div>
+            <div class="step"><span class="num">3</span><div><strong>Compute workflow</strong><p>Build retry, timeout, callback, and queue patterns for LUMI, AWS ParallelCluster, and future quantum vendor paths.</p></div></div>
+            <div class="step"><span class="num">4</span><div><strong>Release discipline</strong><p>Add focused integration tests, CI checks, and light runbooks for the React, Python, and Kubernetes release path.</p></div></div>
+          </div>
+          <div class="team-row" aria-label="Relevant stack">
+            <span class="pill">React</span>
+            <span class="pill">TypeScript</span>
+            <span class="pill">Python</span>
+            <span class="pill">FastAPI</span>
+            <span class="pill">PostgreSQL</span>
+            <span class="pill">AWS/EKS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Who is Elinext</h2>
+        <div class="identity">
+          <p>Elinext is a full-cycle software development company, active since 1997, with about 700 in-house specialists and no freelancers. For QMill, the useful fit is a small senior team that can work under your product owner and lead architect. We bring ISO 27001 and ISO 9001 practices, plus secure web platform, cloud, QA, DevOps, and AI/ML work. Teams at <strong>Siemens</strong>, <strong>Broadcom</strong>, <strong>Volkswagen</strong>, <strong>TRUMPF</strong>, and <strong>TUI</strong> have trusted Elinext delivery. That gives QMill extra platform capacity while your quantum team keeps focus on algorithms and customer use cases.</p>
+          <div class="customer-tags" aria-hidden="true">
+            <span class="pill">Siemens</span><span class="pill">Broadcom</span><span class="pill">Volkswagen</span><span class="pill">TRUMPF</span><span class="pill">TUI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Proof</h2>
+        <div class="proof-grid">
+          <article class="proof-card">
+            <img src="assets/case-pim-software-development.jpg" alt="PIM Software Development case study image">
+            <div class="proof-body">
+              <h3>PIM Software Development</h3>
+              <p>FastAPI, Python, AWS, Cognito, RDS, and Next.js for a production data platform with focused QA.</p>
+              <a href="https://www.elinext.com/case-study/pim-software-development/">Read case study</a>
+            </div>
+          </article>
+          <article class="proof-card">
+            <img src="assets/case-saas-platform-design.jpg" alt="SaaS Platform Design case study image">
+            <div class="proof-body">
+              <h3>SaaS Platform Design for M365 Security Monitoring</h3>
+              <p>Secure SaaS design with clear user flows, audit work, Azure, .NET Core, and Angular delivery.</p>
+              <a href="https://www.elinext.com/case-study/saas-platform-design/">Read case study</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="wrap">
+        <h2>Talk through the platform sprint</h2>
+        <p>Share the QAS bottleneck, and we will map the squad.</p>
+        <a class="button" href="https://www.elinext.com/contacts/">Start the conversation</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
